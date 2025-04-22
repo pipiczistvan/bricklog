@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Bricklog.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FF595449</item>
+        <item name="postSplashScreenTheme">@android:style/Theme.Material.Light.NoActionBar</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/app_logo</item>
+    </style>
+</resources>

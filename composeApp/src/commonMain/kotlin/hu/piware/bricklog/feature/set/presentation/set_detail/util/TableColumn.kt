@@ -1,0 +1,129 @@
+package hu.piware.bricklog.feature.set.presentation.set_detail.util
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.EuroSymbol
+import androidx.compose.material.icons.filled.EventAvailable
+import androidx.compose.material.icons.filled.EventBusy
+import androidx.compose.material.icons.filled.Height
+import androidx.compose.material.icons.filled.OpenInFull
+import androidx.compose.material.icons.filled.Tag
+import androidx.compose.ui.graphics.vector.ImageVector
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.arrow_range
+import bricklog.composeapp.generated.resources.lego_brick_1x1
+import bricklog.composeapp.generated.resources.lego_figure_head
+import bricklog.composeapp.generated.resources.set_details_depth
+import bricklog.composeapp.generated.resources.set_details_eu_price
+import bricklog.composeapp.generated.resources.set_details_exit_date
+import bricklog.composeapp.generated.resources.set_details_height
+import bricklog.composeapp.generated.resources.set_details_launch_date
+import bricklog.composeapp.generated.resources.set_details_minifigures
+import bricklog.composeapp.generated.resources.set_details_number
+import bricklog.composeapp.generated.resources.set_details_pieces
+import bricklog.composeapp.generated.resources.set_details_us_price
+import bricklog.composeapp.generated.resources.set_details_weight
+import bricklog.composeapp.generated.resources.set_details_width
+import bricklog.composeapp.generated.resources.set_details_year
+import bricklog.composeapp.generated.resources.weight
+import hu.piware.bricklog.feature.core.presentation.util.formatDate
+import hu.piware.bricklog.feature.set.domain.model.EUPrice
+import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.localExitDate
+import hu.piware.bricklog.feature.set.domain.model.localLaunchDate
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
+import kotlin.math.round
+
+sealed class TableColumn(
+    val titleRes: StringResource,
+    val data: String?,
+) {
+    class ImageVectorTableColumn(
+        titleRes: StringResource,
+        data: String?,
+        val icon: ImageVector,
+    ) : TableColumn(titleRes, data)
+
+    class DrawableTableColumn(
+        titleRes: StringResource,
+        data: String?,
+        val drawableRes: DrawableResource,
+    ) : TableColumn(titleRes, data)
+}
+
+fun createFirstSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+    return listOf(
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_number,
+            data = setUI.set.number,
+            icon = Icons.Default.Tag
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_year,
+            data = setUI.set.year?.toString(),
+            icon = Icons.Default.CalendarToday
+        ),
+        TableColumn.DrawableTableColumn(
+            titleRes = Res.string.set_details_pieces,
+            data = setUI.set.pieces?.toString(),
+            drawableRes = Res.drawable.lego_brick_1x1
+        ),
+        TableColumn.DrawableTableColumn(
+            titleRes = Res.string.set_details_minifigures,
+            data = setUI.set.minifigs?.toString(),
+            drawableRes = Res.drawable.lego_figure_head
+        )
+    )
+}
+
+fun createSecondSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+    return listOf(
+        TableColumn.DrawableTableColumn(
+            titleRes = Res.string.set_details_width,
+            data = setUI.set.width?.let { "${round(it * 10) / 10.0} cm" },
+            drawableRes = Res.drawable.arrow_range
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_height,
+            data = setUI.set.height?.let { "${round(it * 10) / 10.0} cm" },
+            icon = Icons.Default.Height
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_depth,
+            data = setUI.set.depth?.let { "${round(it * 10) / 10.0} cm" },
+            icon = Icons.Default.OpenInFull
+        ),
+        TableColumn.DrawableTableColumn(
+            titleRes = Res.string.set_details_weight,
+            data = setUI.set.weight?.let { "${round(it * 10) / 10.0} kg" },
+            drawableRes = Res.drawable.weight
+        )
+    )
+}
+
+fun createThirdSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+    return listOf(
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_launch_date,
+            data = setUI.localLaunchDate?.let { formatDate(it) },
+            icon = Icons.Default.EventAvailable
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_exit_date,
+            data = setUI.localExitDate?.let { formatDate(it) },
+            icon = Icons.Default.EventBusy
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_eu_price,
+            data = setUI.EUPrice?.let { "€ ${round(it * 100) / 100}" },
+            icon = Icons.Default.EuroSymbol
+        ),
+        TableColumn.ImageVectorTableColumn(
+            titleRes = Res.string.set_details_us_price,
+            data = setUI.set.USPrice?.let { "$ ${round(it * 100) / 100}" },
+            icon = Icons.Default.AttachMoney
+        )
+    )
+}

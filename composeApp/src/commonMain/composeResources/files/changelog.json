@@ -1,0 +1,14 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "build": 25041801,
+      "changes": [
+        {
+          "description": "Initial version",
+          "type": "feature"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.set_search_bar_button_show_all
+import bricklog.composeapp.generated.resources.set_search_bar_search_results
+import hu.piware.bricklog.feature.set.domain.model.setID
+import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarInputField
+import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectArguments
+import hu.piware.bricklog.ui.theme.Dimens
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun SetSearchBar(
+    state: SetSearchBarState,
+    onAction: (SetSearchBarAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    SearchBar(
+        modifier = modifier,
+        inputField = {
+            SearchBarInputField(
+                modifier = Modifier
+                    .testTag("search_bar:input_field"),
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+                onDrawerClick = { onAction(SetSearchBarAction.OnDrawerClick) },
+                onScanClick = { onAction(SetSearchBarAction.OnScanClick) },
+                onSearch = {
+                    expanded = false
+                },
+                query = state.typedQuery,
+                onQueryChange = { onAction(SetSearchBarAction.OnQueryChange(it)) },
+                onClearClick = { onAction(SetSearchBarAction.OnClearClick) }
+            )
+        },
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        colors = SearchBarDefaults.colors(
+            dividerColor = Color.Transparent
+        )
+    ) {
+        Content(
+            state = state,
+            onAction = { action ->
+                onAction(action)
+            }
+        )
+    }
+}
+
+@Composable
+private fun Content(
+    state: SetSearchBarState,
+    onAction: (SetSearchBarAction) -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+
+    SetFilterRow(
+        filter = state.filter,
+        onFilterChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
+        onThemeMultiselectClick = {
+            onAction(
+                SetSearchBarAction.OnThemeMultiselectClick(
+                    ThemeMultiSelectArguments(
+                        themes = state.filter.themes
+                    )
+                )
+            )
+        }
+    )
+
+    if (state.searchResults.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(Res.string.set_search_bar_search_results),
+                style = MaterialTheme.typography.titleLarge
+            )
+            TextButton(
+                modifier = Modifier
+                    .testTag("search_bar:show_all_button"),
+                onClick = {
+                    scope.launch {
+                        onAction(
+                            SetSearchBarAction.OnShowAllClick(
+                                SetListArguments(
+                                    filter = state.filter.copy(),
+                                    title = getString(Res.string.set_search_bar_search_results),
+                                    searchQuery = state.typedQuery,
+                                    themeMultiSelectEnabled = true
+                                )
+                            )
+                        )
+                    }
+                }
+            ) {
+                Text(stringResource(Res.string.set_search_bar_button_show_all))
+            }
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            items(state.searchResults) { setUI ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAction(
+                                SetSearchBarAction.OnSetClick(
+                                    SetDetailArguments(
+                                        setId = setUI.setID,
+                                        sharedElementPrefix = "search_bar"
+                                    )
+                                )
+                            )
+                        }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                horizontal = Dimens.MediumPadding.size,
+                                vertical = Dimens.SmallPadding.size
+                            ),
+                        text = setUI.set.name ?: "",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.navigationBarsPadding())
+            }
+        }
+    }
+}
