@@ -169,7 +169,7 @@ private fun Content(
             .padding(horizontal = Dimens.MediumPadding.size),
         contentPadding = PaddingValues(
             top = paddingValues.calculateTopPadding(),
-            bottom = paddingValues.calculateBottomPadding()
+            bottom = Dimens.MediumPadding.size + paddingValues.calculateBottomPadding()
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
