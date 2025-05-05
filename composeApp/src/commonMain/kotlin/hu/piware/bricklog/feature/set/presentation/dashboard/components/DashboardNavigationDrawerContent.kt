@@ -115,9 +115,8 @@ private val collectionsSection = NavigationSection(
             action = {
                 DashboardAction.OnSearchSets(
                     SetListArguments(
-                        filter = favouriteSetsFilter,
-                        title = getString(Res.string.dashboard_navigation_drawer_item_favourite_sets),
-                        themeMultiSelectEnabled = true
+                        filterOverrides = favouriteSetsFilter,
+                        title = getString(Res.string.dashboard_navigation_drawer_item_favourite_sets)
                     )
                 )
             }

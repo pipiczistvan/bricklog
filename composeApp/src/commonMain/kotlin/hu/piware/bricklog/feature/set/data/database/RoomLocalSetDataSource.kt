@@ -11,7 +11,7 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.Set
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -20,8 +20,8 @@ class RoomLocalSetDataSource(
     private val setDao: SetDao,
 ) : LocalSetDataSource {
 
-    override fun watchSets(queries: List<String>, filter: SetFilter): Flow<List<Set>> {
-        val query = RoomRawQuery(buildGetSetSql(filter, queries))
+    override fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>> {
+        val query = RoomRawQuery(buildGetSetSql(queryOptions))
 
         return setDao.watchSets(query)
             .map { setEntities ->
@@ -45,7 +45,7 @@ class RoomLocalSetDataSource(
         }
     }
 
-    override fun watchSetsPaged(queries: List<String>, filter: SetFilter): Flow<PagingData<Set>> {
+    override fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>> {
         return Pager(
             PagingConfig(
                 pageSize = 20,
@@ -53,7 +53,7 @@ class RoomLocalSetDataSource(
                 enablePlaceholders = false
             )
         ) {
-            val query = RoomRawQuery(buildGetSetSql(filter, queries))
+            val query = RoomRawQuery(buildGetSetSql(queryOptions))
             setDao.pagingSource(query)
         }.flow.map { pagingData ->
             pagingData.map { it.toDomainModel() }
@@ -71,5 +71,9 @@ class RoomLocalSetDataSource(
 
     override fun watchThemes(): Flow<List<String>> {
         return setDao.watchThemes()
+    }
+
+    override fun watchPackagingTypes(): Flow<List<String>> {
+        return setDao.watchPackagingTypes()
     }
 }

@@ -12,16 +12,12 @@ data class Set(
     val themeGroup: String? = null,
     val subTheme: String? = null,
     val category: String? = null,
-    val released: Boolean? = null,
     val pieces: Int? = null,
     val minifigs: Int? = null,
     val image: Image = Image(),
     val bricksetURL: String? = null,
     val USPrice: Double? = null,
-    val UKPrice: Double? = null,
-    val CAPrice: Double? = null,
     val DEPrice: Double? = null,
-    val rating: Float? = null,
     val launchDate: Instant? = null,
     val exitDate: Instant? = null,
     val packagingType: String? = null,
@@ -34,15 +30,16 @@ data class Set(
     val weight: Float? = null,
     val barcodeEAN: String? = null,
     val barcodeUPC: String? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
+    val infoCompleteDate: Instant? = null,
 )
 
 data class Image(
     val thumbnailURL: String? = null,
-    val imageURL: String? = null
+    val imageURL: String? = null,
 )
 
 data class Instruction(
     val URL: String? = null,
-    val description: String? = null
+    val description: String? = null,
 )

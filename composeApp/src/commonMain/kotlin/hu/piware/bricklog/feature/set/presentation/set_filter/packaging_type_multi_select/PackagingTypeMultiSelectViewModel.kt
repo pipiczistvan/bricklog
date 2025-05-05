@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.set.presentation.theme_multi_select
+package hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
-import hu.piware.bricklog.feature.set.domain.usecase.WatchThemes
+import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -17,36 +17,36 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlin.reflect.typeOf
 
-class ThemeMultiSelectViewModel(
-    private val watchThemes: WatchThemes,
+class PackagingTypeMultiSelectViewModel(
+    private val watchPackagingTypes: WatchPackagingTypes,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _arguments = savedStateHandle.toRoute<SetRoute.ThemeMultiSelect>(
-        typeMap = mapOf(typeOf<ThemeMultiSelectArguments>() to CustomNavType.ThemeMultiSelectArgumentsType)
+    private val _arguments = savedStateHandle.toRoute<SetRoute.PackagingTypeMultiSelect>(
+        typeMap = mapOf(typeOf<PackagingTypeMultiSelectArguments>() to CustomNavType.PackagingTypeMultiSelectArgumentsType)
     ).arguments
 
     private val _uiState = MutableStateFlow(
-        ThemeMultiSelectState(
-            selectedThemes = _arguments.themes
+        PackagingTypeMultiSelectState(
+            selectedPackagingTypes = _arguments.packagingTypes
         )
     )
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
-            observeAvailableThemes()
+            observeAvailablePackagingTypes()
         }
 
     private val _query = _uiState
         .map { it.searchQuery }
         .distinctUntilChanged()
 
-    fun onAction(action: ThemeMultiSelectAction) {
+    fun onAction(action: PackagingTypeMultiSelectAction) {
         when (action) {
-            is ThemeMultiSelectAction.OnQueryChange -> _uiState.update { it.copy(searchQuery = action.query) }
-            is ThemeMultiSelectAction.OnThemeSelectionChange -> _uiState.update {
+            is PackagingTypeMultiSelectAction.OnQueryChange -> _uiState.update { it.copy(searchQuery = action.query) }
+            is PackagingTypeMultiSelectAction.OnSelectionChange -> _uiState.update {
                 it.copy(
-                    selectedThemes = action.themes
+                    selectedPackagingTypes = action.packagingTypes
                 )
             }
 
@@ -54,14 +54,14 @@ class ThemeMultiSelectViewModel(
         }
     }
 
-    private fun observeAvailableThemes() {
-        combine(_query, watchThemes()) { query, themes ->
-            themes.filter {
+    private fun observeAvailablePackagingTypes() {
+        combine(_query, watchPackagingTypes()) { query, packagingTypes ->
+            packagingTypes.filter {
                 it.contains(query, ignoreCase = true)
             }
         }
-            .onEach { themes ->
-                _uiState.update { it.copy(availableThemes = themes) }
+            .onEach { packagingTypes ->
+                _uiState.update { it.copy(availablePackagingTypes = packagingTypes) }
             }
             .launchIn(viewModelScope)
     }

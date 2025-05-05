@@ -16,17 +16,13 @@ fun Set.toEntity(): SetEntity {
         themeGroup = themeGroup,
         subTheme = subTheme,
         category = category,
-        released = released,
         pieces = pieces,
         minifigs = minifigs,
         thumbnailURL = image.thumbnailURL,
         imageURL = image.imageURL,
         bricksetURL = bricksetURL,
         USPrice = USPrice,
-        UKPrice = UKPrice,
-        CAPrice = CAPrice,
         DEPrice = DEPrice,
-        rating = rating,
         launchDate = launchDate,
         exitDate = exitDate,
         packagingType = packagingType,
@@ -39,7 +35,8 @@ fun Set.toEntity(): SetEntity {
         weight = weight,
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
+        infoCompleteDate = infoCompleteDate
     )
 }
 
@@ -54,7 +51,6 @@ fun SetEntity.toDomainModel(): Set {
         themeGroup = themeGroup,
         subTheme = subTheme,
         category = category,
-        released = released,
         pieces = pieces,
         minifigs = minifigs,
         image = Image(
@@ -63,10 +59,7 @@ fun SetEntity.toDomainModel(): Set {
         ),
         bricksetURL = bricksetURL,
         USPrice = USPrice,
-        UKPrice = UKPrice,
-        CAPrice = CAPrice,
         DEPrice = DEPrice,
-        rating = rating,
         launchDate = launchDate,
         exitDate = exitDate,
         packagingType = packagingType,
@@ -79,7 +72,8 @@ fun SetEntity.toDomainModel(): Set {
         weight = weight,
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
+        infoCompleteDate = infoCompleteDate
     )
 }
 

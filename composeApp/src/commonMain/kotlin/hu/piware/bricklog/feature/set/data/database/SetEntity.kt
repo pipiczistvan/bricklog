@@ -14,10 +14,10 @@ import kotlinx.datetime.Instant
             "launchDate",
             "exitDate",
             "theme",
+            "packagingType",
             "barcodeEAN",
             "barcodeUPC",
-            "imageURL",
-            "thumbnailURL",
+            "infoCompleteDate"
         ), // composite index for buildGetSetSql
         Index("theme"),
     ]
@@ -32,17 +32,13 @@ data class SetEntity(
     val themeGroup: String?,
     val subTheme: String?,
     val category: String?,
-    val released: Boolean?,
     val pieces: Int?,
     val minifigs: Int?,
     val thumbnailURL: String?,
     val imageURL: String?,
     val bricksetURL: String?,
     val USPrice: Double?,
-    val UKPrice: Double?,
-    val CAPrice: Double?,
     val DEPrice: Double?,
-    val rating: Float?,
     val launchDate: Instant?,
     val exitDate: Instant?,
     val packagingType: String?,
@@ -56,4 +52,5 @@ data class SetEntity(
     val barcodeEAN: String?,
     val barcodeUPC: String?,
     val lastUpdated: Instant,
+    val infoCompleteDate: Instant?,
 )

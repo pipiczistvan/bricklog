@@ -1,8 +1,9 @@
 package hu.piware.bricklog.feature.set.data.database
 
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.data.database.InstantConverter
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
 import kotlinx.datetime.Clock
@@ -10,43 +11,48 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.days
 
 private val instantConverter = InstantConverter()
+private val logger = Logger.withTag("buildGetSetSql")
 
-fun buildGetSetSql(filter: SetFilter, queries: List<String> = listOf("")): String {
+fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     val now = Clock.System.now()
 
-    val querySelect = queries.joinToString(
+    val querySelect = queryOptions.queries.joinToString(
         separator = " OR "
     ) {
         "name LIKE '%$it%' OR number LIKE '%$it%'"
     }
 
-    val launchDateSelect = buildLaunchDateSelect(filter.launchDate, now)
-    val themeSelect = buildThemeSelect(filter.themes)
-    val statusSelect = buildStatusSelect(filter.status, now)
-    val mustHaveImageSelect = buildMustHaveImageSelect(!filter.showIncomplete)
-    val mustHaveNameSelect = buildMustHaveNameSelect(!filter.showIncomplete)
-    val barcodeSelect = buildBarcodeSelect(filter.barcode)
-    val favouriteSelect = buildFavouriteSelect(filter.isFavourite)
-    val orderBy = buildOrderBy(filter.sortOption)
-    val limit = when (filter.limit) {
+    val launchDateSelect = buildLaunchDateSelect(queryOptions.launchDate, now)
+    val themeSelect = buildThemeSelect(queryOptions.themes)
+    val packagingTypeSelect = buildPackagingTypeSelect(queryOptions.packagingTypes)
+    val statusSelect = buildStatusSelect(queryOptions.status, now)
+    val showIncomplete = buildShowIncompleteSelect(queryOptions.showIncomplete)
+    val barcodeSelect = buildBarcodeSelect(queryOptions.barcode)
+    val favouriteSelect = buildFavouriteSelect(queryOptions.isFavourite)
+    val orderBy = buildOrderBy(queryOptions.sortOption)
+    val limit = when (queryOptions.limit) {
         null -> ""
-        else -> "LIMIT ${filter.limit}"
+        else -> "LIMIT ${queryOptions.limit}"
     }
 
-    return """
+    val sql = """
             SELECT * FROM sets 
             WHERE 
                 ($querySelect) 
                 AND ($launchDateSelect)
                 AND ($themeSelect)
+                AND ($packagingTypeSelect)
                 AND ($statusSelect)
-                AND ($mustHaveImageSelect)
-                AND ($mustHaveNameSelect)
+                AND ($showIncomplete)
                 AND ($barcodeSelect)
                 AND ($favouriteSelect)
-            $orderBy
+            ORDER BY $orderBy
             $limit
             """.trimMargin()
+
+    logger.d { sql }
+
+    return sql
 }
 
 private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String {
@@ -75,6 +81,13 @@ private fun buildThemeSelect(themes: Set<String>): String {
         "1"
 }
 
+private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String {
+    return if (packagingTypes.isNotEmpty())
+        "packagingType IN (${packagingTypes.joinToString(separator = ", ") { "'$it'" }})"
+    else
+        "1"
+}
+
 private fun buildStatusSelect(status: StatusFilterOption, now: Instant): String {
     val nowMillis = instantConverter.fromInstant(now)
 
@@ -86,16 +99,9 @@ private fun buildStatusSelect(status: StatusFilterOption, now: Instant): String 
     }
 }
 
-private fun buildMustHaveImageSelect(mustHaveImage: Boolean): String {
-    return if (mustHaveImage)
-        "imageURL IS NOT NULL AND thumbnailURL IS NOT NULL"
-    else
-        "1"
-}
-
-private fun buildMustHaveNameSelect(mustHaveName: Boolean): String {
-    return if (mustHaveName)
-        "name IS NOT NULL AND name != '{?}'"
+private fun buildShowIncompleteSelect(showIncomplete: Boolean): String {
+    return if (!showIncomplete)
+        "infoCompleteDate IS NOT NULL"
     else
         "1"
 }
@@ -116,9 +122,10 @@ private fun buildFavouriteSelect(isFavourite: Boolean): String {
 
 private fun buildOrderBy(sortOption: SetSortOption): String {
     return when (sortOption) {
-        SetSortOption.LAUNCH_DATE_ASCENDING -> "ORDER BY COALESCE(launchDate, year) ASC"
-        SetSortOption.LAUNCH_DATE_DESCENDING -> "ORDER BY COALESCE(launchDate, year) DESC"
-        SetSortOption.RETIRING_DATE_ASCENDING -> "ORDER BY COALESCE(exitDate, year) ASC"
-        SetSortOption.RETIRING_DATE_DESCENDING -> "ORDER BY COALESCE(exitDate, year) DESC"
+        SetSortOption.LAUNCH_DATE_ASCENDING -> "COALESCE(launchDate, year) ASC"
+        SetSortOption.LAUNCH_DATE_DESCENDING -> "COALESCE(launchDate, year) DESC"
+        SetSortOption.RETIRING_DATE_ASCENDING -> "COALESCE(exitDate, year) ASC"
+        SetSortOption.RETIRING_DATE_DESCENDING -> "COALESCE(exitDate, year) DESC"
+        SetSortOption.APPEARANCE_DATE_DESCENDING -> "infoCompleteDate DESC"
     }
 }

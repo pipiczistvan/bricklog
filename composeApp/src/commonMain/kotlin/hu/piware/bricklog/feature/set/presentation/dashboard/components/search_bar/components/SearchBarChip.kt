@@ -16,6 +16,7 @@ fun SearchBarChip(
     isDefaultSelected: Boolean,
     showTrailingIcon: Boolean = false,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val colors = when (isDefaultSelected) {
@@ -38,6 +39,7 @@ fun SearchBarChip(
                 )
             }
         },
+        enabled = enabled,
         onClick = onClick
     )
 }

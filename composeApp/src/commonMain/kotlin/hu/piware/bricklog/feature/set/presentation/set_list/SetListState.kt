@@ -2,10 +2,11 @@ package hu.piware.bricklog.feature.set.presentation.set_list
 
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
+import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 
 data class SetListState(
     val title: String = "",
-    val filter: SetFilter = SetFilter(),
-    val themeMultiSelectEnabled: Boolean = true,
-    val displayMode: SetListDisplayMode = SetListDisplayMode.COLUMN
+    val filterOverrides: SetFilter? = null,
+    val filterPreferences: SetFilterPreferences = SetFilterPreferences(),
+    val displayMode: SetListDisplayMode = SetListDisplayMode.COLUMN,
 )

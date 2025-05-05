@@ -1,21 +1,25 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard.utils
 
+import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
 
 val latestSetsFilter = SetFilter(
-    sortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
-    status = StatusFilterOption.ACTIVE
+    sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
+    status = StatusFilterOption.ANY_STATUS,
+    launchDate = DateFilter.AnyTime,
+    showIncomplete = false
 )
 
 val retiringSetsFilter = SetFilter(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
-    status = StatusFilterOption.ACTIVE
+    status = StatusFilterOption.ACTIVE,
+    launchDate = DateFilter.AnyTime,
+    showIncomplete = false
 )
 
 val favouriteSetsFilter = SetFilter(
-    showIncomplete = true,
+    status = StatusFilterOption.ANY_STATUS,
     isFavourite = true,
-    sortOption = SetSortOption.LAUNCH_DATE_DESCENDING
 )

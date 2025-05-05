@@ -28,4 +28,7 @@ interface SetDao {
 
     @Query("SELECT DISTINCT theme FROM sets WHERE theme IS NOT NULL")
     fun watchThemes(): Flow<List<String>>
+
+    @Query("SELECT DISTINCT packagingType FROM sets WHERE packagingType IS NOT NULL")
+    fun watchPackagingTypes(): Flow<List<String>>
 }

@@ -39,7 +39,6 @@ import bricklog.composeapp.generated.resources.dashboard_theme_carousel_title
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
@@ -50,8 +49,9 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
-import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import kotlinx.coroutines.launch
@@ -69,7 +69,9 @@ fun DashboardScreenRoot(
     onAppearanceClick: () -> Unit,
     onScanClick: () -> Unit,
     onThemeMultiselectClick: (ThemeMultiSelectArguments) -> Unit,
+    onPackagingTypeMultiselectClick: (PackagingTypeMultiSelectArguments) -> Unit,
     selectedThemes: Set<String>?,
+    selectedPackagingTypes: Set<String>?,
 ) {
     App.firstScreenLoaded = true
 
@@ -78,7 +80,25 @@ fun DashboardScreenRoot(
 
     LaunchedEffect(selectedThemes) {
         if (selectedThemes != null) {
-            viewModel.onAction(SetSearchBarAction.OnFilterChange(searchBarState.filter.copy(themes = selectedThemes)))
+            viewModel.onAction(
+                SetSearchBarAction.OnFilterChange(
+                    searchBarState.filterPreferences.copy(
+                        themes = selectedThemes
+                    )
+                )
+            )
+        }
+    }
+
+    LaunchedEffect(selectedPackagingTypes) {
+        if (selectedPackagingTypes != null) {
+            viewModel.onAction(
+                SetSearchBarAction.OnFilterChange(
+                    searchBarState.filterPreferences.copy(
+                        packagingTypes = selectedPackagingTypes
+                    )
+                )
+            )
         }
     }
 
@@ -101,6 +121,10 @@ fun DashboardScreenRoot(
             when (action) {
                 SetSearchBarAction.OnScanClick -> onScanClick()
                 is SetSearchBarAction.OnThemeMultiselectClick -> onThemeMultiselectClick(action.arguments)
+                is SetSearchBarAction.OnPackagingTypeMultiselectClick -> onPackagingTypeMultiselectClick(
+                    action.arguments
+                )
+
                 is SetSearchBarAction.OnSetClick -> onSetClick(action.arguments)
                 is SetSearchBarAction.OnShowAllClick -> onSearchSets(action.arguments)
                 else -> Unit
@@ -195,12 +219,10 @@ fun DashboardScreen(
                                     onAction(
                                         DashboardAction.OnSearchSets(
                                             arguments = SetListArguments(
-                                                filter = SetFilter(
-                                                    themes = setOf(item.theme),
-                                                    sortOption = SetSortOption.LAUNCH_DATE_DESCENDING
+                                                filterOverrides = SetFilter(
+                                                    themes = setOf(item.theme)
                                                 ),
-                                                title = title,
-                                                themeMultiSelectEnabled = false
+                                                title = title
                                             )
                                         )
                                     )
@@ -216,9 +238,8 @@ fun DashboardScreen(
                                     onAction(
                                         DashboardAction.OnSearchSets(
                                             arguments = SetListArguments(
-                                                filter = latestSetsFilter,
-                                                title = getString(Res.string.dashboard_section_latest_sets),
-                                                themeMultiSelectEnabled = true
+                                                filterOverrides = latestSetsFilter,
+                                                title = getString(Res.string.dashboard_section_latest_sets)
                                             )
                                         )
                                     )
@@ -241,9 +262,8 @@ fun DashboardScreen(
                                     onAction(
                                         DashboardAction.OnSearchSets(
                                             arguments = SetListArguments(
-                                                filter = retiringSetsFilter,
-                                                title = getString(Res.string.dashboard_section_retiring_sets),
-                                                themeMultiSelectEnabled = true
+                                                filterOverrides = retiringSetsFilter,
+                                                title = getString(Res.string.dashboard_section_retiring_sets)
                                             )
                                         )
                                     )

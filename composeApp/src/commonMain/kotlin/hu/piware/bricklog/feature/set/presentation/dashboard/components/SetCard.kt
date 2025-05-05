@@ -21,11 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.AnimatedBorderCard
+import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 
 @Composable
@@ -106,14 +106,13 @@ fun SetCard(
                 .background(Color.White),
             contentAlignment = Alignment.BottomStart
         ) {
-            AsyncImage(
+            SetImage(
                 modifier = Modifier
                     .size(
                         width = 150.dp,
                         height = 200.dp
                     ),
-                model = setUI.set.image.imageURL,
-                contentDescription = null,
+                image = setUI.set.image,
                 contentScale = ContentScale.FillHeight
             )
             Box(

@@ -5,8 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SetListArguments(
-    val filter: SetFilter,
+    val filterOverrides: SetFilter? = null,
     val title: String,
     val searchQuery: String = "",
-    val themeMultiSelectEnabled: Boolean,
 )

@@ -36,8 +36,9 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarInputField
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
-import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -92,13 +93,22 @@ private fun Content(
     val scope = rememberCoroutineScope()
 
     SetFilterRow(
-        filter = state.filter,
+        filterPreferences = state.filterPreferences,
         onFilterChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
         onThemeMultiselectClick = {
             onAction(
                 SetSearchBarAction.OnThemeMultiselectClick(
                     ThemeMultiSelectArguments(
-                        themes = state.filter.themes
+                        themes = state.filterPreferences.themes
+                    )
+                )
+            )
+        },
+        onPackagingTypeMultiselectClick = {
+            onAction(
+                SetSearchBarAction.OnPackagingTypeMultiselectClick(
+                    PackagingTypeMultiSelectArguments(
+                        packagingTypes = state.filterPreferences.packagingTypes
                     )
                 )
             )
@@ -125,10 +135,8 @@ private fun Content(
                         onAction(
                             SetSearchBarAction.OnShowAllClick(
                                 SetListArguments(
-                                    filter = state.filter.copy(),
                                     title = getString(Res.string.set_search_bar_search_results),
-                                    searchQuery = state.typedQuery,
-                                    themeMultiSelectEnabled = true
+                                    searchQuery = state.typedQuery
                                 )
                             )
                         )

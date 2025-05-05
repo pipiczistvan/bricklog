@@ -14,19 +14,15 @@ fun SetRow.toDomainModel(): Set {
         themeGroup = themeGroup,
         subTheme = subTheme,
         category = category,
-        released = released,
         pieces = pieces,
         minifigs = minifigs,
         image = Image(
-            thumbnailURL = thumbnailURL,
-            imageURL = imageURL
+            thumbnailURL = thumbnailURL?.let { "https://images.brickset.com/sets/small/$it" },
+            imageURL = imageURL?.let { "https://images.brickset.com/sets/images/$it" }
         ),
-        bricksetURL = bricksetURL,
+        bricksetURL = bricksetURL?.let { "https://brickset.com/sets/$it" },
         USPrice = USPrice,
-        UKPrice = UKPrice,
-        CAPrice = CAPrice,
         DEPrice = DEPrice,
-        rating = rating,
         launchDate = launchDate,
         exitDate = exitDate,
         packagingType = packagingType,
@@ -39,6 +35,7 @@ fun SetRow.toDomainModel(): Set {
         weight = weight,
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
+        infoCompleteDate = infoCompleteDate
     )
 }

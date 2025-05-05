@@ -10,13 +10,15 @@ import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailScreenRoot
+import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectScreenRoot
+import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
+import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerScreenRoot
-import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectScreenRoot
 import hu.piware.bricklog.feature.settings.presentation.SettingsRoute
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
@@ -38,6 +40,9 @@ sealed interface SetRoute {
     data class ThemeMultiSelect(val arguments: ThemeMultiSelectArguments) : SetRoute
 
     @Serializable
+    data class PackagingTypeMultiSelect(val arguments: PackagingTypeMultiSelectArguments) : SetRoute
+
+    @Serializable
     data class SetListScreen(val arguments: SetListArguments) : SetRoute
 
     @Serializable
@@ -50,6 +55,8 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
     ) {
         composable<SetRoute.DashboardScreen> { entry ->
             val selectedThemes = entry.savedStateHandle.get<Set<String>>("selected_themes")
+            val selectedPackagingTypes =
+                entry.savedStateHandle.get<Set<String>>("selected_packaging_types")
 
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 DashboardScreenRoot(
@@ -71,10 +78,14 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     onThemeMultiselectClick = { arguments ->
                         navController.navigate(SetRoute.ThemeMultiSelect(arguments))
                     },
+                    onPackagingTypeMultiselectClick = { arguments ->
+                        navController.navigate(SetRoute.PackagingTypeMultiSelect(arguments))
+                    },
                     onScanClick = {
                         navController.navigate(SetRoute.SetScannerScreen)
                     },
-                    selectedThemes = selectedThemes
+                    selectedThemes = selectedThemes,
+                    selectedPackagingTypes = selectedPackagingTypes
                 )
             }
         }
@@ -123,12 +134,34 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                 )
             }
         }
+        composable<SetRoute.PackagingTypeMultiSelect>(
+            typeMap = mapOf(
+                typeOf<PackagingTypeMultiSelectArguments>() to CustomNavType.PackagingTypeMultiSelectArgumentsType
+            )
+        ) {
+            CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+                PackagingTypeMultiSelectScreenRoot(
+                    onBackClick = {
+                        navController.navigateUp()
+                    },
+                    onApplyClick = { arguments ->
+                        navController.previousBackStackEntry?.savedStateHandle?.set(
+                            "selected_packaging_types",
+                            arguments.packagingTypes
+                        )
+                        navController.navigateUp()
+                    }
+                )
+            }
+        }
         composable<SetRoute.SetListScreen>(
             typeMap = mapOf(
                 typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType
             )
         ) { entry ->
             val selectedThemes = entry.savedStateHandle.get<Set<String>>("selected_themes")
+            val selectedPackagingTypes =
+                entry.savedStateHandle.get<Set<String>>("selected_packaging_types")
 
             SetListScreenRoot(
                 onBackClick = navController::navigateUp,
@@ -138,7 +171,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                 onThemeMultiselectClick = { arguments ->
                     navController.navigate(SetRoute.ThemeMultiSelect(arguments))
                 },
-                selectedThemes = selectedThemes
+                onPackagingTypeMultiselectClick = { arguments ->
+                    navController.navigate(SetRoute.PackagingTypeMultiSelect(arguments))
+                },
+                selectedThemes = selectedThemes,
+                selectedPackagingTypes = selectedPackagingTypes
             )
         }
         composable<SetRoute.SetScannerScreen> {

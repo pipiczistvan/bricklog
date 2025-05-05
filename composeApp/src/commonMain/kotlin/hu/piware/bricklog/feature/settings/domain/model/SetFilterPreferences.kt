@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SetFilterPreferences(
-    val showOnlyActive: Boolean = true,
-    val sortOption: SetSortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
+    val sortOption: SetSortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     val launchDate: DateFilter = DateFilter.AnyTime,
     val themes: Set<String> = emptySet(),
+    val packagingTypes: Set<String> = setOf("Box"),
     val status: StatusFilterOption = StatusFilterOption.ANY_STATUS,
     val showIncomplete: Boolean = false,
 )

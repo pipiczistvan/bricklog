@@ -16,9 +16,7 @@ import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.DataType
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.usecase.SaveSetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSavedSetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
@@ -26,12 +24,14 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
+import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -44,10 +44,10 @@ class DashboardViewModel(
     private val watchSetUIs: WatchSetUIs,
     private val updateSets: UpdateSets,
     private val watchUpdateInfo: WatchUpdateInfo,
-    private val watchSavedSetFilter: WatchSavedSetFilter,
-    private val saveSetFilter: SaveSetFilter,
+    private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val saveNotificationPreferences: SaveNotificationPreferences,
     private val permissionsController: PermissionsController,
+    private val watchSetFilterPreferences: WatchSetFilterPreferences,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -65,7 +65,7 @@ class DashboardViewModel(
 
     val searchBarState = _searchBarState
         .asStateFlowIn(viewModelScope) {
-            observeFilter()
+            observeFilterPreferences()
             observeTypedQuery()
             observeSets()
         }
@@ -80,7 +80,7 @@ class DashboardViewModel(
     fun onAction(action: SetSearchBarAction) {
         when (action) {
             is SetSearchBarAction.OnQueryChange -> _searchBarState.update { it.copy(typedQuery = action.query) }
-            is SetSearchBarAction.OnFilterChange -> saveFilter(action.filter)
+            is SetSearchBarAction.OnFilterChange -> saveFilter(action.filterPreferences)
             SetSearchBarAction.OnClearClick -> {
                 _searchBarState.update {
                     it.copy(
@@ -94,10 +94,10 @@ class DashboardViewModel(
         }
     }
 
-    private fun observeFilter() {
-        watchSavedSetFilter()
+    private fun observeFilterPreferences() {
+        watchSetFilterPreferences()
             .onEach { filter ->
-                _searchBarState.update { it.copy(filter = filter) }
+                _searchBarState.update { it.copy(filterPreferences = filter) }
             }
             .launchIn(viewModelScope)
     }
@@ -112,18 +112,12 @@ class DashboardViewModel(
     }
 
     private fun observeSets() {
-        val searchFilter = searchBarState
-            .mapNotNull { it.filter }
-            .distinctUntilChanged()
-
-        val searchQuery = searchBarState
+        searchBarState
             .mapNotNull { it.searchQuery }
             .distinctUntilChanged()
-
-        combine(searchQuery, searchFilter) { query, filter -> Pair(query, filter) }
-            .flatMapLatest { (query, filter) ->
+            .flatMapLatest { query ->
                 watchSetUIs(
-                    filter = filter.copy(limit = 10),
+                    filterOverrides = SetFilter(limit = 10),
                     query = query
                 )
             }
@@ -140,13 +134,13 @@ class DashboardViewModel(
     }
 
     private fun observeLatestSets() {
-        watchSetUIs(filter = latestSetsFilter.copy(limit = 12))
+        watchSetUIs(filterOverrides = latestSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
-        watchSetUIs(filter = retiringSetsFilter.copy(limit = 12))
+        watchSetUIs(filterOverrides = retiringSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
             .launchIn(viewModelScope)
     }
@@ -159,9 +153,9 @@ class DashboardViewModel(
         }
     }
 
-    private fun saveFilter(filter: SetFilter) {
+    private fun saveFilter(filterPreferences: SetFilterPreferences) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveSetFilter(filter)
+            saveSetFilterPreferences(filterPreferences)
         }
     }
 

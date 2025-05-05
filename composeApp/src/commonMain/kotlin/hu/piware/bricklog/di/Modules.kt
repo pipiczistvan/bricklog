@@ -41,11 +41,10 @@ import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import hu.piware.bricklog.feature.set.domain.usecase.GetAdditionalImages
 import hu.piware.bricklog.feature.set.domain.usecase.GetInstructions
-import hu.piware.bricklog.feature.set.domain.usecase.SaveSetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSavedSetFilter
+import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
@@ -53,10 +52,11 @@ import hu.piware.bricklog.feature.set.domain.usecase.WatchThemes
 import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
+import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectViewModel
+import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerViewModel
-import hu.piware.bricklog.feature.set.presentation.theme_multi_select.ThemeMultiSelectViewModel
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource
 import hu.piware.bricklog.feature.settings.data.repository.OfflineSettingsRepository
 import hu.piware.bricklog.feature.settings.domain.datasource.LocalSettingsDataSource
@@ -64,9 +64,11 @@ import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import hu.piware.bricklog.feature.settings.domain.usecase.ReadChangelog
 import hu.piware.bricklog.feature.settings.domain.usecase.ReadTextFile
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetListDisplayMode
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveThemeOption
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchNotificationPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetListDisplayMode
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
 import hu.piware.bricklog.feature.settings.presentation.appearance.AppearanceViewModel
@@ -128,8 +130,8 @@ val sharedModule = module {
     singleOf(::WatchUpdateInfo)
     singleOf(::ToggleFavouriteSet)
     singleOf(::GetAdditionalImages)
-    singleOf(::WatchSavedSetFilter)
-    singleOf(::SaveSetFilter)
+    singleOf(::SaveSetFilterPreferences)
+    singleOf(::WatchSetFilterPreferences)
     singleOf(::WatchThemes)
     singleOf(::GetInstructions)
     singleOf(::SaveNotificationPreferences)
@@ -140,6 +142,7 @@ val sharedModule = module {
     singleOf(::SaveThemeOption)
     singleOf(::SaveSetListDisplayMode)
     singleOf(::WatchSetListDisplayMode)
+    singleOf(::WatchPackagingTypes)
 
     viewModelOf(::DispatcherViewModel)
     viewModelOf(::DataFetchViewModel)
@@ -153,4 +156,5 @@ val sharedModule = module {
     viewModelOf(::LicenseViewModel)
     viewModelOf(::ChangelogViewModel)
     viewModelOf(::AppearanceViewModel)
+    viewModelOf(::PackagingTypeMultiSelectViewModel)
 }

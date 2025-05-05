@@ -24,8 +24,8 @@
     <string name="app_theme_dark">Dark</string>
     <string name="app_theme_light">Light</string>
     <string name="app_theme_system">System</string>
-    <string name="appearance_title">Appearance</string>
     <string name="appearance_section_theme">Theme</string>
+    <string name="appearance_title">Appearance</string>
     <string name="barcode_ean">EAN (Europe / Rest of World)</string>
     <string name="barcode_upc">UPC (North America)</string>
     <string name="changelog_build_version">v%1$s (build %2$s)</string>
@@ -64,6 +64,8 @@
     <string name="notification_settings_permission_open_settings">Open Device Settings</string>
     <string name="notification_settings_permission_title">Allow Push Notifications</string>
     <string name="notification_settings_title">Notification Settings</string>
+    <string name="packaging_type_multi_select_clear_selection">Clear selection</string>
+    <string name="packaging_type_multi_select_search_hint">Search packaging types</string>
     <string name="pull_to_refresh_complete_label">Up-to-date!</string>
     <string name="pull_to_refresh_pull_label">Pull down…</string>
     <string name="pull_to_refresh_refreshing_label">Refreshing…</string>
@@ -96,11 +98,13 @@
     <string name="set_pieces">Pieces</string>
     <string name="set_rating">Rating</string>
     <string name="set_search_bar_button_show_all">Show All</string>
+    <string name="set_search_bar_chip_packaging_types">Packaging types</string>
     <string name="set_search_bar_chip_release_date">Release date</string>
+    <string name="set_search_bar_chip_show_incomplete">Show incomplete sets</string>
     <string name="set_search_bar_chip_status">Status</string>
     <string name="set_search_bar_chip_themes">Themes</string>
     <string name="set_search_bar_search_results">Search Results</string>
-    <string name="set_search_bar_chip_show_incomplete">Show incomplete sets</string>
+    <string name="set_sort_appear_date_descending">By appearance</string>
     <string name="set_sort_launch_date_ascending">Ascending by launch date</string>
     <string name="set_sort_launch_date_descending">Descending by launch date</string>
     <string name="set_sort_retiring_date_ascending">Ascending by retiring date</string>

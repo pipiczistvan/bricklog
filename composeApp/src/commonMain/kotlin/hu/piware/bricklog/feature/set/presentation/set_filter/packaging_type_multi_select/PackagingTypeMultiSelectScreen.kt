@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package hu.piware.bricklog.feature.set.presentation.theme_multi_select
+package hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -33,37 +33,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.theme_multi_select_clear_selection
-import bricklog.composeapp.generated.resources.theme_multi_select_search_hint
+import bricklog.composeapp.generated.resources.packaging_type_multi_select_clear_selection
+import bricklog.composeapp.generated.resources.packaging_type_multi_select_search_hint
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ThemeMultiSelectScreenRoot(
-    viewModel: ThemeMultiSelectViewModel = koinViewModel(),
+fun PackagingTypeMultiSelectScreenRoot(
+    viewModel: PackagingTypeMultiSelectViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onApplyClick: (ThemeMultiSelectArguments) -> Unit,
+    onApplyClick: (PackagingTypeMultiSelectArguments) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    ThemeMultiSelectScreen(
+    PackagingTypeMultiSelectScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is ThemeMultiSelectAction.OnBackClick -> onBackClick()
-                is ThemeMultiSelectAction.OnApplyClick -> onApplyClick(action.arguments)
+                is PackagingTypeMultiSelectAction.OnBackClick -> onBackClick()
+                is PackagingTypeMultiSelectAction.OnApplyClick -> onApplyClick(action.arguments)
                 else -> Unit
             }
             viewModel.onAction(action)
         },
-        modifier = Modifier.testTag("theme_multi_select_screen"),
+        modifier = Modifier.testTag("packaging_type_multi_select_screen"),
     )
 }
 
 @Composable
-private fun ThemeMultiSelectScreen(
-    state: ThemeMultiSelectState,
-    onAction: (ThemeMultiSelectAction) -> Unit,
+private fun PackagingTypeMultiSelectScreen(
+    state: PackagingTypeMultiSelectState,
+    onAction: (PackagingTypeMultiSelectAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -80,12 +80,12 @@ private fun ThemeMultiSelectScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = state.searchQuery,
-                    onValueChange = { onAction(ThemeMultiSelectAction.OnQueryChange(it)) },
+                    onValueChange = { onAction(PackagingTypeMultiSelectAction.OnQueryChange(it)) },
                     placeholder = {
-                        Text(stringResource(Res.string.theme_multi_select_search_hint))
+                        Text(stringResource(Res.string.packaging_type_multi_select_search_hint))
                     },
                     leadingIcon = {
-                        IconButton(onClick = { onAction(ThemeMultiSelectAction.OnBackClick) }) {
+                        IconButton(onClick = { onAction(PackagingTypeMultiSelectAction.OnBackClick) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                 contentDescription = null
@@ -95,7 +95,7 @@ private fun ThemeMultiSelectScreen(
                     trailingIcon = {
                         Row {
                             IconButton(onClick = {
-                                onAction(ThemeMultiSelectAction.OnQueryChange(""))
+                                onAction(PackagingTypeMultiSelectAction.OnQueryChange(""))
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
@@ -106,11 +106,11 @@ private fun ThemeMultiSelectScreen(
                             TextButton(
                                 onClick = {
                                     onAction(
-                                        ThemeMultiSelectAction.OnThemeSelectionChange(emptySet())
+                                        PackagingTypeMultiSelectAction.OnSelectionChange(emptySet())
                                     )
                                 }
                             ) {
-                                Text(stringResource(Res.string.theme_multi_select_clear_selection))
+                                Text(stringResource(Res.string.packaging_type_multi_select_clear_selection))
                             }
                         }
                     },
@@ -134,7 +134,11 @@ private fun ThemeMultiSelectScreen(
                     )
                 },
                 onClick = {
-                    onAction(ThemeMultiSelectAction.OnApplyClick(ThemeMultiSelectArguments(state.selectedThemes)))
+                    onAction(
+                        PackagingTypeMultiSelectAction.OnApplyClick(
+                            PackagingTypeMultiSelectArguments(state.selectedPackagingTypes)
+                        )
+                    )
                 }
             )
         },
@@ -142,27 +146,27 @@ private fun ThemeMultiSelectScreen(
     ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .testTag("theme_multi_select:list")
+                .testTag("packaging_type_multi_select:list")
                 .fillMaxSize(),
             contentPadding = padding
         ) {
-            items(state.availableThemes) { theme ->
+            items(state.availablePackagingTypes) { packagingType ->
                 ListItem(
                     headlineContent = {
-                        Text(theme)
+                        Text(packagingType)
                     },
                     leadingContent = {
                         Checkbox(
-                            checked = state.selectedThemes.contains(theme),
+                            checked = state.selectedPackagingTypes.contains(packagingType),
                             onCheckedChange = { checked ->
-                                val themes = if (checked) {
-                                    state.selectedThemes + theme
+                                val packagingTypes = if (checked) {
+                                    state.selectedPackagingTypes + packagingType
                                 } else {
-                                    state.selectedThemes - theme
+                                    state.selectedPackagingTypes - packagingType
                                 }
 
                                 onAction(
-                                    ThemeMultiSelectAction.OnThemeSelectionChange(themes)
+                                    PackagingTypeMultiSelectAction.OnSelectionChange(packagingTypes)
                                 )
                             }
                         )

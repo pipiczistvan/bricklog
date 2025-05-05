@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -26,8 +26,8 @@ class OfflineFirstSetRepository(
 
     private val logger = Logger.withTag("OfflineFirstSetRepository")
 
-    override fun watchSets(queries: List<String>, filter: SetFilter): Flow<List<Set>> {
-        return localDataSource.watchSets(queries, filter)
+    override fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>> {
+        return localDataSource.watchSets(queryOptions)
     }
 
     override fun watchSet(id: Int): Flow<Set> {
@@ -70,8 +70,8 @@ class OfflineFirstSetRepository(
         }
     }
 
-    override fun watchSetsPaged(queries: List<String>, filter: SetFilter): Flow<PagingData<Set>> {
-        return localDataSource.watchSetsPaged(queries, filter)
+    override fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>> {
+        return localDataSource.watchSetsPaged(queryOptions)
     }
 
     override suspend fun getSetCount(): Result<Int, DataError> {
@@ -80,6 +80,10 @@ class OfflineFirstSetRepository(
 
     override fun watchThemes(): Flow<List<String>> {
         return localDataSource.watchThemes()
+    }
+
+    override fun watchPackagingTypes(): Flow<List<String>> {
+        return localDataSource.watchPackagingTypes()
     }
 
     private suspend fun downloadSets(fileUploads: List<FileUploadResult>): Result<ByteArray, DataError.Remote> {

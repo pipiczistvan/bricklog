@@ -18,7 +18,10 @@ import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.presentation.SetRoute
+import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetListDisplayMode
+import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetListDisplayMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,6 +44,8 @@ class SetListViewModel(
     private val toggleFavouriteSet: ToggleFavouriteSet,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
+    private val saveSetFilterPreferences: SaveSetFilterPreferences,
+    private val watchSetFilterPreferences: WatchSetFilterPreferences,
 ) : ViewModel() {
 
     private val _arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
@@ -50,22 +55,27 @@ class SetListViewModel(
     private val _uiState = MutableStateFlow(
         SetListState(
             title = _arguments.title,
-            filter = _arguments.filter,
-            themeMultiSelectEnabled = _arguments.themeMultiSelectEnabled
+            filterOverrides = _arguments.filterOverrides
         )
     )
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
             observeSetListDisplayMode()
+            observeFilterPreferences()
         }
 
-    private val _filter = _uiState
-        .mapNotNull { it.filter }
+    private val _filterOverrides = _uiState
+        .mapNotNull { it.filterOverrides }
         .distinctUntilChanged()
 
-    private val _pagingData = _filter
-        .flatMapLatest { filter -> watchSetsPaged(filter, _arguments.searchQuery) }
+    private val _pagingData = _filterOverrides
+        .flatMapLatest { filterOverrides ->
+            watchSetsPaged(
+                filterOverrides,
+                _arguments.searchQuery
+            )
+        }
         .cachedIn(viewModelScope)
 
     private val _favouriteSetIds = watchFavouriteSetIds()
@@ -83,7 +93,7 @@ class SetListViewModel(
     fun onAction(action: SetListAction) {
         when (action) {
             is SetListAction.OnFavouriteClick -> toggleFavourite(action.setId)
-            is SetListAction.OnFilterChange -> _uiState.update { it.copy(filter = action.filter) }
+            is SetListAction.OnFilterChange -> saveFilter(action.filterPreferences)
             is SetListAction.OnDisplayModeChange -> saveDisplayMode(action.mode)
             else -> Unit
         }
@@ -105,6 +115,20 @@ class SetListViewModel(
         watchSetListDisplayMode()
             .onEach { mode ->
                 _uiState.update { it.copy(displayMode = mode) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun saveFilter(filterPreferences: SetFilterPreferences) {
+        viewModelScope.launch(Dispatchers.IO) {
+            saveSetFilterPreferences(filterPreferences)
+        }
+    }
+
+    private fun observeFilterPreferences() {
+        watchSetFilterPreferences()
+            .onEach { filter ->
+                _uiState.update { it.copy(filterPreferences = filter) }
             }
             .launchIn(viewModelScope)
     }

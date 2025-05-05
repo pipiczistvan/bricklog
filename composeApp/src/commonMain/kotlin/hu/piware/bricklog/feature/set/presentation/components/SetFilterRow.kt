@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.set_search_bar_chip_packaging_types
 import bricklog.composeapp.generated.resources.set_search_bar_chip_release_date
 import bricklog.composeapp.generated.resources.set_search_bar_chip_show_incomplete
 import bricklog.composeapp.generated.resources.set_search_bar_chip_status
@@ -26,14 +27,17 @@ import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.DateFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarChip
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.StatusFilterBottomSheet
+import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SetFilterRow(
-    filter: SetFilter,
-    onFilterChange: (SetFilter) -> Unit,
-    onThemeMultiselectClick: (() -> Unit)?,
+    filterPreferences: SetFilterPreferences,
+    filterOverrides: SetFilter? = null,
+    onFilterChange: (SetFilterPreferences) -> Unit,
+    onThemeMultiselectClick: () -> Unit,
+    onPackagingTypeMultiselectClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showReleaseDateFilterSheet by remember { mutableStateOf(false) }
@@ -46,22 +50,30 @@ fun SetFilterRow(
     ) {
         Spacer(Modifier.size(Dimens.SmallPadding.size))
         StatusChip(
-            status = filter.status,
+            enabled = filterOverrides?.status == null,
+            status = filterOverrides?.status ?: filterPreferences.status,
             onClick = { showStatusFilterSheet = true }
         )
         ReleaseDateChip(
-            dateFilter = filter.launchDate,
+            enabled = filterOverrides?.launchDate == null,
+            dateFilter = filterOverrides?.launchDate ?: filterPreferences.launchDate,
             onClick = { showReleaseDateFilterSheet = true }
         )
-        if (onThemeMultiselectClick != null) {
-            ThemeChip(
-                selectedThemes = filter.themes,
-                onClick = onThemeMultiselectClick
-            )
-        }
+        ThemeChip(
+            enabled = filterOverrides?.themes == null,
+            selectedThemes = filterOverrides?.themes ?: filterPreferences.themes,
+            onClick = onThemeMultiselectClick
+        )
+        PackagingTypeChip(
+            enabled = filterOverrides?.packagingTypes == null,
+            selectedPackagingTypes = filterOverrides?.packagingTypes
+                ?: filterPreferences.packagingTypes,
+            onClick = onPackagingTypeMultiselectClick
+        )
         ShowIncompleteChip(
-            show = filter.showIncomplete,
-            onClick = { onFilterChange(filter.copy(showIncomplete = it)) }
+            enabled = filterOverrides?.showIncomplete == null,
+            show = filterOverrides?.showIncomplete ?: filterPreferences.showIncomplete,
+            onClick = { onFilterChange(filterPreferences.copy(showIncomplete = it)) }
         )
         Spacer(Modifier.size(Dimens.SmallPadding.size))
     }
@@ -69,20 +81,21 @@ fun SetFilterRow(
     DateFilterBottomSheet(
         showBottomSheet = showReleaseDateFilterSheet,
         onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
-        selectedFilter = filter.launchDate,
-        onSelectFilter = { onFilterChange(filter.copy(launchDate = it)) }
+        selectedFilter = filterPreferences.launchDate,
+        onSelectFilter = { onFilterChange(filterPreferences.copy(launchDate = it)) }
     )
 
     StatusFilterBottomSheet(
         showBottomSheet = showStatusFilterSheet,
         onShowBottomSheetChanged = { showStatusFilterSheet = it },
-        selectedOption = filter.status,
-        onSelectOption = { onFilterChange(filter.copy(status = it)) }
+        selectedOption = filterPreferences.status,
+        onSelectOption = { onFilterChange(filterPreferences.copy(status = it)) }
     )
 }
 
 @Composable
 private fun ReleaseDateChip(
+    enabled: Boolean,
     dateFilter: DateFilter,
     onClick: () -> Unit,
 ) {
@@ -102,12 +115,14 @@ private fun ReleaseDateChip(
         },
         isDefaultSelected = dateFilter is DateFilter.AnyTime,
         showTrailingIcon = true,
+        enabled = enabled,
         onClick = onClick
     )
 }
 
 @Composable
 private fun ThemeChip(
+    enabled: Boolean,
     selectedThemes: Set<String>,
     onClick: () -> Unit,
 ) {
@@ -120,12 +135,34 @@ private fun ThemeChip(
         },
         isDefaultSelected = selectedThemes.isEmpty(),
         showTrailingIcon = true,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun PackagingTypeChip(
+    enabled: Boolean,
+    selectedPackagingTypes: Set<String>,
+    onClick: () -> Unit,
+) {
+    SearchBarChip(
+        modifier = Modifier.testTag("search_bar:packaging_type_chip"),
+        title = when (selectedPackagingTypes.size) {
+            0 -> stringResource(Res.string.set_search_bar_chip_packaging_types)
+            1 -> selectedPackagingTypes.first()
+            else -> "${selectedPackagingTypes.first()} + ${selectedPackagingTypes.size - 1}"
+        },
+        isDefaultSelected = selectedPackagingTypes.isEmpty(),
+        showTrailingIcon = true,
+        enabled = enabled,
         onClick = onClick
     )
 }
 
 @Composable
 private fun StatusChip(
+    enabled: Boolean,
     status: StatusFilterOption,
     onClick: () -> Unit,
 ) {
@@ -137,12 +174,14 @@ private fun StatusChip(
         },
         isDefaultSelected = status == StatusFilterOption.ANY_STATUS,
         showTrailingIcon = true,
+        enabled = enabled,
         onClick = onClick
     )
 }
 
 @Composable
 private fun ShowIncompleteChip(
+    enabled: Boolean,
     show: Boolean,
     onClick: (Boolean) -> Unit,
 ) {
@@ -150,6 +189,7 @@ private fun ShowIncompleteChip(
         modifier = Modifier.testTag("search_bar:show_incomplete_chip"),
         title = stringResource(Res.string.set_search_bar_chip_show_incomplete),
         isDefaultSelected = !show,
+        enabled = enabled,
         onClick = { onClick(!show) }
     )
 }
