@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface SetRepository {
     fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>>
     fun watchSet(id: Int): Flow<Set>
+    suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local>
     suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError>
     fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>>
     suspend fun getSetCount(): Result<Int, DataError>

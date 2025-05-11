@@ -12,10 +12,7 @@ import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import kotlin.time.measureTimedValue
 
 class OfflineFirstSetRepository(
@@ -34,40 +31,42 @@ class OfflineFirstSetRepository(
         return localDataSource.watchSet(id)
     }
 
+    override suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local> {
+        return localDataSource.getSets(queryOptions)
+    }
+
     override suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError> {
-        return withContext(Dispatchers.IO) {
-            // Downloading
-            logger.i { "Downloading sets" }
-            val (downloadResult, downloadTimeTaken) = measureTimedValue {
-                downloadSets(fileUploads)
-            }
-            logger.i { "Downloading sets took $downloadTimeTaken" }
-            if (downloadResult is Result.Error) {
-                return@withContext downloadResult
-            }
-
-            val setsData = (downloadResult as Result.Success).data
-
-            // Parsing
-            logger.i { "Parsing sets" }
-            val (parseResult, parseTimeTaken) = measureTimedValue {
-                val parsedSets = mutableListOf<Set>()
-                csvParser.parseInChunksAsync(setsData, SET_CSV_CHUNK_SIZE) { sets ->
-                    parsedSets.addAll(sets)
-                }
-                parsedSets
-            }
-            logger.i { "Parsing sets took $parseTimeTaken" }
-
-            // Storing
-            logger.i { "Storing ${parseResult.size} sets" }
-            val (storeResult, storeTimeTaken) = measureTimedValue {
-                localDataSource.updateSets(parseResult)
-            }
-            logger.i { "Storing sets took $storeTimeTaken" }
-
-            return@withContext storeResult
+        // Downloading
+        logger.i { "Downloading sets" }
+        val (downloadResult, downloadTimeTaken) = measureTimedValue {
+            downloadSets(fileUploads)
         }
+        logger.i { "Downloading sets took $downloadTimeTaken" }
+        if (downloadResult is Result.Error) {
+            return downloadResult
+        }
+
+        val setsData = (downloadResult as Result.Success).data
+
+        // Parsing
+        logger.i { "Parsing sets" }
+        val (parseResult, parseTimeTaken) = measureTimedValue {
+            val parsedSets = mutableListOf<Set>()
+            csvParser.parseInChunksAsync(setsData, SET_CSV_CHUNK_SIZE) { sets ->
+                parsedSets.addAll(sets)
+            }
+            parsedSets
+        }
+        logger.i { "Parsing sets took $parseTimeTaken" }
+
+        // Storing
+        logger.i { "Storing ${parseResult.size} sets" }
+        val (storeResult, storeTimeTaken) = measureTimedValue {
+            localDataSource.updateSets(parseResult)
+        }
+        logger.i { "Storing sets took $storeTimeTaken" }
+
+        return storeResult
     }
 
     override fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>> {

@@ -17,6 +17,7 @@ androidx-profileinstaller = "1.4.1"             # https://developer.android.com/
 androidx-room = "2.7.0"                         # https://developer.android.com/jetpack/androidx/releases/room
 androidx-sqlite = "2.5.0"                       # https://developer.android.com/jetpack/androidx/releases/sqlite
 androidx-uiautomator = "2.3.0"                  # https://developer.android.com/jetpack/androidx/releases/test-uiautomator
+androidx-work = "2.10.1"                        # https://developer.android.com/jetpack/androidx/releases/work
 buildkonfig = "0.17.1"                          # https://github.com/yshrsmz/BuildKonfig
 coil3 = "3.1.0"                                 # https://github.com/coil-kt/coil
 compose-multiplatform = "1.7.3"                 # https://github.com/JetBrains/compose-multiplatform
@@ -47,6 +48,7 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation-compose" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
+androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-csv = { module = "app.softwork:kotlinx-serialization-csv", version.ref = "kotlinxSerializationCsv" }
 

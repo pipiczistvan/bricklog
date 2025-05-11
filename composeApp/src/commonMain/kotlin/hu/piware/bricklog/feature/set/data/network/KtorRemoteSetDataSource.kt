@@ -9,6 +9,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import korlibs.io.compression.deflate.GZIP
 import korlibs.io.compression.uncompress
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 import kotlin.time.measureTimedValue
 
 class KtorRemoteSetDataSource(
@@ -21,9 +24,9 @@ class KtorRemoteSetDataSource(
             logger.i { "Downloading sets zip" }
             val (downloadResult, downloadTimeTaken) = measureTimedValue {
                 safeCall<ByteArray> {
-                    httpClient.get(
-                        url
-                    )
+                    withContext(Dispatchers.IO) {
+                        httpClient.get(url)
+                    }
                 }
             }
             if (downloadResult is Result.Error) {

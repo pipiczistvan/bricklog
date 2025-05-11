@@ -1,10 +1,17 @@
 package hu.piware.bricklog
 
 import android.app.Application
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import hu.piware.bricklog.util.AppInitializer
+import hu.piware.bricklog.worker.UpdateSetsWorker
 import org.koin.android.ext.koin.androidContext
+import java.util.concurrent.TimeUnit
 
 class BricklogApplication : Application() {
 
@@ -19,5 +26,26 @@ class BricklogApplication : Application() {
         AppInitializer.initialize {
             androidContext(this@BricklogApplication)
         }
+        scheduleWorker()
+    }
+
+    private fun scheduleWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<UpdateSetsWorker>(12, TimeUnit.HOURS)
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.UNMETERED,
+                    requiresCharging = false,
+                    requiresDeviceIdle = false,
+                    requiresBatteryNotLow = false,
+                    requiresStorageNotLow = true
+                )
+            )
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "UpdateSetsWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 }

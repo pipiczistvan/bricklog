@@ -34,6 +34,17 @@ class RoomLocalSetDataSource(
             .mapNotNull { it?.toDomainModel() }
     }
 
+    override suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local> {
+        val query = RoomRawQuery(buildGetSetSql(queryOptions))
+
+        return try {
+            val sets = setDao.getSets(query).map { it.toDomainModel() }
+            return Result.Success(sets)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
     override suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local> {
         return try {
             setDao.upsertAll(sets.map { it.toEntity() })

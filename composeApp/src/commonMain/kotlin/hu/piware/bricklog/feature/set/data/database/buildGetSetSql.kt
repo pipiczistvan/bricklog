@@ -23,6 +23,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     }
 
     val launchDateSelect = buildLaunchDateSelect(queryOptions.launchDate, now)
+    val infoCompleteDateSelect = buildInfoCompleteDateSelect(queryOptions.appearanceDate, now)
     val themeSelect = buildThemeSelect(queryOptions.themes)
     val packagingTypeSelect = buildPackagingTypeSelect(queryOptions.packagingTypes)
     val statusSelect = buildStatusSelect(queryOptions.status, now)
@@ -40,6 +41,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
             WHERE 
                 ($querySelect) 
                 AND ($launchDateSelect)
+                AND ($infoCompleteDateSelect)
                 AND ($themeSelect)
                 AND ($packagingTypeSelect)
                 AND ($statusSelect)
@@ -56,6 +58,14 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
 }
 
 private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String {
+    return buildDateFilterSelect("launchDate", dateFilter, now)
+}
+
+private fun buildInfoCompleteDateSelect(dateFilter: DateFilter, now: Instant): String {
+    return buildDateFilterSelect("infoCompleteDate", dateFilter, now)
+}
+
+private fun buildDateFilterSelect(dateField: String, dateFilter: DateFilter, now: Instant): String {
     val (startDate, endDate) = when (dateFilter) {
         DateFilter.AnyTime -> Pair(null, null)
         DateFilter.OneWeek -> Pair(now - 7.days, now)
@@ -68,8 +78,8 @@ private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String 
     }
 
     val startDateSelect =
-        startDate?.let { "launchDate >= ${instantConverter.fromInstant(it)}" } ?: "1"
-    val endDateSelect = endDate?.let { "launchDate <= ${instantConverter.fromInstant(it)}" } ?: "1"
+        startDate?.let { "$dateField >= ${instantConverter.fromInstant(it)}" } ?: "1"
+    val endDateSelect = endDate?.let { "$dateField <= ${instantConverter.fromInstant(it)}" } ?: "1"
 
     return "$startDateSelect AND $endDateSelect"
 }

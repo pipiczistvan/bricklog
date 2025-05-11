@@ -14,6 +14,8 @@ interface LocalSetDataSource {
 
     fun watchSet(id: Int): Flow<Set>
 
+    suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local>
+
     suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local>
 
     fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>>

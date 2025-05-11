@@ -21,6 +21,9 @@ interface SetDao {
     fun watchSet(id: Int): Flow<SetEntity?>
 
     @RawQuery(observedEntities = [SetEntity::class])
+    suspend fun getSets(query: RoomRawQuery): List<SetEntity>
+
+    @RawQuery(observedEntities = [SetEntity::class])
     fun pagingSource(query: RoomRawQuery): PagingSource<Int, SetEntity>
 
     @Query("SELECT COUNT(*) FROM sets")
