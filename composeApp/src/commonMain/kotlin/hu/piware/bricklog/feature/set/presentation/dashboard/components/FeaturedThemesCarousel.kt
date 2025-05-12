@@ -24,115 +24,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.theme_architecture
-import bricklog.composeapp.generated.resources.theme_city
-import bricklog.composeapp.generated.resources.theme_creator
-import bricklog.composeapp.generated.resources.theme_disney
-import bricklog.composeapp.generated.resources.theme_harry_potter
-import bricklog.composeapp.generated.resources.theme_icons
-import bricklog.composeapp.generated.resources.theme_ideas
-import bricklog.composeapp.generated.resources.theme_minecraft
-import bricklog.composeapp.generated.resources.theme_name_architecture
-import bricklog.composeapp.generated.resources.theme_name_city
-import bricklog.composeapp.generated.resources.theme_name_creator
-import bricklog.composeapp.generated.resources.theme_name_disney
-import bricklog.composeapp.generated.resources.theme_name_harry_potter
-import bricklog.composeapp.generated.resources.theme_name_icons
-import bricklog.composeapp.generated.resources.theme_name_ideas
-import bricklog.composeapp.generated.resources.theme_name_minecraft
-import bricklog.composeapp.generated.resources.theme_name_ninjago
-import bricklog.composeapp.generated.resources.theme_name_star_wars
-import bricklog.composeapp.generated.resources.theme_name_super_mario
-import bricklog.composeapp.generated.resources.theme_name_technic
-import bricklog.composeapp.generated.resources.theme_ninjago
-import bricklog.composeapp.generated.resources.theme_star_wars
-import bricklog.composeapp.generated.resources.theme_super_mario
-import bricklog.composeapp.generated.resources.theme_technic
-import hu.piware.bricklog.feature.set.presentation.dashboard.domain.ThemeCarouselItem
+import hu.piware.bricklog.feature.set.presentation.dashboard.domain.FeaturedTheme
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FEATURED_THEMES
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
 
-val FEATURED_THEMES = listOf(
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_architecture,
-        contentDescriptionResId = Res.string.theme_name_architecture,
-        color = Color(0xFF2D2D2D),
-        theme = "Architecture"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_harry_potter,
-        contentDescriptionResId = Res.string.theme_name_harry_potter,
-        color = Color(0xFF002539),
-        theme = "Harry Potter"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_icons,
-        contentDescriptionResId = Res.string.theme_name_icons,
-        color = Color(0xFF242424),
-        theme = "Icons"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_ideas,
-        contentDescriptionResId = Res.string.theme_name_ideas,
-        color = Color(0xFF426B38),
-        theme = "Ideas"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_city,
-        contentDescriptionResId = Res.string.theme_name_city,
-        color = Color(0xFF304A5E),
-        theme = "City"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_star_wars,
-        contentDescriptionResId = Res.string.theme_name_star_wars,
-        color = Color(0xFF121212),
-        theme = "Star Wars"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_technic,
-        contentDescriptionResId = Res.string.theme_name_technic,
-        color = Color(0xFF6E2525),
-        theme = "Technic"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_disney,
-        contentDescriptionResId = Res.string.theme_name_disney,
-        color = Color(0xFF165947),
-        theme = "Disney"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_creator,
-        contentDescriptionResId = Res.string.theme_name_creator,
-        color = Color(0xFFDBA191),
-        theme = "Creator"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_minecraft,
-        contentDescriptionResId = Res.string.theme_name_minecraft,
-        color = Color(0xFF3E2745),
-        theme = "Minecraft"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_ninjago,
-        contentDescriptionResId = Res.string.theme_name_ninjago,
-        color = Color(0XFF7A6000),
-        theme = "Ninjago"
-    ),
-    ThemeCarouselItem(
-        imageResId = Res.drawable.theme_super_mario,
-        contentDescriptionResId = Res.string.theme_name_super_mario,
-        color = Color(0xFF6b0000),
-        theme = "Super Mario"
-    )
-)
-
 @Composable
 fun FeaturedThemesCarousel(
     modifier: Modifier = Modifier,
-    onItemClick: (ThemeCarouselItem) -> Unit,
+    onItemClick: (FeaturedTheme) -> Unit,
 ) {
     val carouselState = rememberCarouselState { FEATURED_THEMES.count() }
 

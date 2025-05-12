@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
-data class ThemeCarouselItem(
+data class FeaturedTheme(
     val imageResId: DrawableResource,
     val contentDescriptionResId: StringResource,
     val color: Color,

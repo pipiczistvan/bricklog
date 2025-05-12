@@ -11,15 +11,14 @@ import kotlinx.datetime.Instant
         Index(
             "name",
             "number",
-            "launchDate",
-            "exitDate",
             "theme",
             "packagingType",
             "barcodeEAN",
             "barcodeUPC",
-            "infoCompleteDate"
         ), // composite index for buildGetSetSql
-        Index("theme"),
+        Index("launchDate"),
+        Index("exitDate"),
+        Index("infoCompleteDate"),
     ]
 )
 data class SetEntity(
