@@ -14,15 +14,15 @@ androidx-lifecycle = "2.8.4"                    # https://mvnrepository.com/arti
 androidx-navigation-compose = "2.9.0-alpha16"   # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 androidx-paging = "3.3.6"                       # https://developer.android.com/jetpack/androidx/releases/paging
 androidx-profileinstaller = "1.4.1"             # https://developer.android.com/jetpack/androidx/releases/profileinstaller
-androidx-room = "2.7.0"                         # https://developer.android.com/jetpack/androidx/releases/room
-androidx-sqlite = "2.5.0"                       # https://developer.android.com/jetpack/androidx/releases/sqlite
+androidx-room = "2.7.1"                         # https://developer.android.com/jetpack/androidx/releases/room
+androidx-sqlite = "2.5.1"                       # https://developer.android.com/jetpack/androidx/releases/sqlite
 androidx-uiautomator = "2.3.0"                  # https://developer.android.com/jetpack/androidx/releases/test-uiautomator
 androidx-work = "2.10.1"                        # https://developer.android.com/jetpack/androidx/releases/work
 buildkonfig = "0.17.1"                          # https://github.com/yshrsmz/BuildKonfig
 coil3 = "3.1.0"                                 # https://github.com/coil-kt/coil
 compose-multiplatform = "1.7.3"                 # https://github.com/JetBrains/compose-multiplatform
 crashlytics = "3.0.3"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
-firebase-bom = "33.12.0"                        # https://firebase.google.com/support/release-notes/android
+firebase-bom = "33.13.0"                        # https://firebase.google.com/support/release-notes/android
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
 google-services = "4.4.2"                       # https://developers.google.com/android/guides/google-services-plugin
 kermit = "2.0.5"                                # https://github.com/touchlab/Kermit
@@ -32,12 +32,12 @@ korlibsIo = "6.0.1"                             # https://github.com/korlibs/kor
 kotlin = "2.1.20"                               # https://kotlinlang.org/docs/releases.html
 kotlinx-datetime = "0.6.2"                      # https://github.com/Kotlin/kotlinx-datetime
 kotlinxSerializationCsv = "0.0.20"              # https://github.com/hfhbd/kotlinx-serialization-csv
-ksp = "2.1.20-2.0.0"                            # https://github.com/google/ksp
-ktor = "3.1.2"                                  # https://github.com/ktorio/ktor
+ksp = "2.1.20-2.0.1"                            # https://github.com/google/ksp
+ktor = "3.1.3"                                  # https://github.com/ktorio/ktor
 moko = "0.19.1"                                 # https://github.com/icerockdev/moko-permissions
 qr-kit = "3.0.6"                                # https://github.com/Chaintech-Network/QRKitComposeMultiplatform
 uri-kmp = "0.0.19"                              # https://github.com/eygraber/uri-kmp
-zoomable = "2.6.0"                              # https://github.com/usuiat/Zoomable
+zoomable = "2.7.0"                              # https://github.com/usuiat/Zoomable
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
