@@ -12,6 +12,13 @@ val latestSetsFilter = SetFilter(
     showIncomplete = false
 )
 
+val arrivingSetsFilter = SetFilter(
+    sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
+    status = StatusFilterOption.FUTURE,
+    launchDate = DateFilter.AnyTime,
+    showIncomplete = false
+)
+
 val retiringSetsFilter = SetFilter(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
     status = StatusFilterOption.ACTIVE,

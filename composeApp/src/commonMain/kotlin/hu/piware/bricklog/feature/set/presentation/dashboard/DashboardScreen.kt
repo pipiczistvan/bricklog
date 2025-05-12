@@ -2,25 +2,19 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,11 +22,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.dashboard_section_arriving_sets
 import bricklog.composeapp.generated.resources.dashboard_section_latest_sets
 import bricklog.composeapp.generated.resources.dashboard_section_retiring_sets
 import bricklog.composeapp.generated.resources.dashboard_theme_carousel_title
@@ -41,11 +35,12 @@ import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
-import hu.piware.bricklog.feature.set.presentation.dashboard.components.SetCardRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBar
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
@@ -53,7 +48,6 @@ import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_mul
 import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.ui.theme.Dimens
-import hu.piware.bricklog.ui.theme.Shapes
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -230,51 +224,27 @@ fun DashboardScreen(
                             }
                         )
 
-                        SectionTitle(
-                            modifier = Modifier.padding(start = Dimens.MediumPadding.size),
+                        FeaturedSetsRow(
                             title = stringResource(Res.string.dashboard_section_latest_sets),
-                            onClick = {
-                                scope.launch {
-                                    onAction(
-                                        DashboardAction.OnSearchSets(
-                                            arguments = SetListArguments(
-                                                filterOverrides = latestSetsFilter,
-                                                title = getString(Res.string.dashboard_section_latest_sets)
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                        )
-                        SetCardRow(
+                            onDashboardAction = onAction,
                             sets = state.latestSets,
-                            onSetClick = {
-                                onAction(DashboardAction.OnSetClick(it))
-                            },
+                            filterOverrides = latestSetsFilter,
                             sharedElementPrefix = "latest_sets"
                         )
 
-                        SectionTitle(
-                            modifier = Modifier.padding(start = Dimens.MediumPadding.size),
-                            title = stringResource(Res.string.dashboard_section_retiring_sets),
-                            onClick = {
-                                scope.launch {
-                                    onAction(
-                                        DashboardAction.OnSearchSets(
-                                            arguments = SetListArguments(
-                                                filterOverrides = retiringSetsFilter,
-                                                title = getString(Res.string.dashboard_section_retiring_sets)
-                                            )
-                                        )
-                                    )
-                                }
-                            }
+                        FeaturedSetsRow(
+                            title = stringResource(Res.string.dashboard_section_arriving_sets),
+                            onDashboardAction = onAction,
+                            sets = state.arrivingSets,
+                            filterOverrides = arrivingSetsFilter,
+                            sharedElementPrefix = "arriving_sets"
                         )
-                        SetCardRow(
+
+                        FeaturedSetsRow(
+                            title = stringResource(Res.string.dashboard_section_retiring_sets),
+                            onDashboardAction = onAction,
                             sets = state.retiringSets,
-                            onSetClick = {
-                                onAction(DashboardAction.OnSetClick(it))
-                            },
+                            filterOverrides = retiringSetsFilter,
                             sharedElementPrefix = "retiring_sets"
                         )
                     }
@@ -284,32 +254,3 @@ fun DashboardScreen(
     }
 }
 
-@Composable
-private fun SectionTitle(
-    title: String,
-    onClick: (() -> Unit),
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .clip(Shapes.large)
-                .clickable(onClick = onClick)
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
-            )
-        }
-    }
-}

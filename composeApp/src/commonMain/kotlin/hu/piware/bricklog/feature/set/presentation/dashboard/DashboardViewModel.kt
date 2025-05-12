@@ -21,6 +21,7 @@ import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
@@ -59,6 +60,7 @@ class DashboardViewModel(
         .asStateFlowIn(viewModelScope) {
             observeUpdateInfo()
             observeLatestSets()
+            observeArrivingSets()
             observeRetiringSets()
             askNotificationPermission()
         }
@@ -136,6 +138,12 @@ class DashboardViewModel(
     private fun observeLatestSets() {
         watchSetUIs(filterOverrides = latestSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeArrivingSets() {
+        watchSetUIs(filterOverrides = arrivingSetsFilter.copy(limit = 12))
+            .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
             .launchIn(viewModelScope)
     }
 
