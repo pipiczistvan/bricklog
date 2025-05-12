@@ -26,10 +26,12 @@ class UpdateSets(
     private val logger = Logger.withTag("UpdateSets")
 
     suspend operator fun invoke(force: Boolean = false): Result<UpdateSetsResult, DataError> {
+        logger.i { "Getting export info" }
         val exportInfo = dataServiceRepository.getExportInfo()
             .onError { return@invoke it }
             .data()
 
+        logger.i { "Getting update info" }
         val updateInfo = updateInfoRepository.getUpdateInfo(DataType.BRICKSET_SETS)
             .onError { return@invoke it }
             .data()
@@ -47,6 +49,7 @@ class UpdateSets(
             UpdateSetsResult(emptyList())
         }
 
+        logger.i { "Storing update info" }
         updateInfoRepository.storeUpdateInfo(
             updateInfo = UpdateInfo(
                 dataType = DataType.BRICKSET_SETS,
