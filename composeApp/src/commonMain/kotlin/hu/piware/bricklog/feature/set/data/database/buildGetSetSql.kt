@@ -39,7 +39,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     val sql = """
             SELECT * FROM sets 
             WHERE 
-                ($querySelect) 
+                ($querySelect)
                 AND ($launchDateSelect)
                 AND ($infoCompleteDateSelect)
                 AND ($themeSelect)

@@ -38,6 +38,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.lego_brick_2x3
 import bricklog.composeapp.generated.resources.no_search_results
+import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
@@ -61,6 +62,8 @@ fun SetListScreenRoot(
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
 ) {
+    App.firstScreenLoaded = true
+
     val sets = viewModel.setUiPagingData.collectAsLazyPagingItems()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -167,29 +170,31 @@ private fun SetListScreen(
             modifier = Modifier
                 .padding(top = padding.calculateTopPadding())
         ) {
-            SetFilterRow(
-                filterPreferences = state.filterPreferences,
-                filterOverrides = state.filterOverrides,
-                onFilterChange = { onAction(SetListAction.OnFilterChange(it)) },
-                onThemeMultiselectClick = {
-                    onAction(
-                        SetListAction.OnThemeMultiselectClick(
-                            ThemeMultiSelectArguments(
-                                themes = state.filterPreferences.themes
+            if (state.showFilterBar) {
+                SetFilterRow(
+                    filterPreferences = state.filterPreferences,
+                    filterOverrides = state.filterOverrides,
+                    onFilterChange = { onAction(SetListAction.OnFilterChange(it)) },
+                    onThemeMultiselectClick = {
+                        onAction(
+                            SetListAction.OnThemeMultiselectClick(
+                                ThemeMultiSelectArguments(
+                                    themes = state.filterPreferences.themes
+                                )
                             )
                         )
-                    )
-                },
-                onPackagingTypeMultiselectClick = {
-                    onAction(
-                        SetListAction.OnPackagingTypeMultiselectClick(
-                            PackagingTypeMultiSelectArguments(
-                                packagingTypes = state.filterPreferences.packagingTypes
+                    },
+                    onPackagingTypeMultiselectClick = {
+                        onAction(
+                            SetListAction.OnPackagingTypeMultiselectClick(
+                                PackagingTypeMultiSelectArguments(
+                                    packagingTypes = state.filterPreferences.packagingTypes
+                                )
                             )
                         )
-                    )
-                }
-            )
+                    }
+                )
+            }
 
             if (sets.itemCount != 0) {
                 PagedSetList(

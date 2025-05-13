@@ -6,12 +6,12 @@ import kotlinx.datetime.Instant
 class InstantConverter {
 
     @TypeConverter
-    fun fromInstant(value: Instant): Long {
-        return value.toEpochMilliseconds()
+    fun fromInstant(value: Instant?): Long? {
+        return value?.toEpochMilliseconds()
     }
 
     @TypeConverter
-    fun toInstant(value: Long): Instant {
-        return Instant.fromEpochMilliseconds(value)
+    fun toInstant(value: Long?): Instant? {
+        return value?.let { Instant.fromEpochMilliseconds(value) }
     }
 }

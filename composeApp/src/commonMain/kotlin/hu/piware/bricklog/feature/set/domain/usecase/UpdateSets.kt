@@ -85,8 +85,7 @@ class UpdateSets(
     private val List<Set>.appearanceDateFilter: DateFilter
         get() = firstOrNull()?.infoCompleteDate?.let { lastSetAppearanceDate ->
             DateFilter.Custom(
-                startDate = lastSetAppearanceDate.toEpochMilliseconds() + 1,
-                endDate = Clock.System.now().toEpochMilliseconds()
+                startDate = lastSetAppearanceDate.toEpochMilliseconds() + 1
             )
         } ?: DateFilter.AnyTime
 

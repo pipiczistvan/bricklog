@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import co.touchlab.kermit.Logger
 import com.mmk.kmpnotifier.notification.NotifierManager
+import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.Set
@@ -12,7 +13,7 @@ import hu.piware.bricklog.feature.set.domain.model.UpdateSetsResult
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchNotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.util.newSetsEnabled
-import kotlinx.coroutines.flow.lastOrNull
+import kotlinx.coroutines.flow.firstOrNull
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -42,12 +43,19 @@ class UpdateSetsWorker(
     }
 
     private suspend fun sendNotificationIfNecessary(updateResult: UpdateSetsResult) {
-        val notificationPreferences = watchNotificationPreferences().lastOrNull()
+        logger.i { "Reading notification preferences" }
+        val notificationPreferences = watchNotificationPreferences().firstOrNull()
+        logger.i { "Read notification preferences" }
         if (updateResult.newSets.isNotEmpty() && notificationPreferences.newSetsEnabled()) {
             logger.i { "Sending notifications" }
             NotifierManager.getLocalNotifier().notify {
                 title = "New sets"
                 body = updateResult.newSets.buildNotificationMessage()
+                payloadData = mapOf(
+                    "type" to NOTIFICATION_EVENT_NEW_SETS,
+                    "minAppearanceDate" to updateResult.newSets.minOf { it.infoCompleteDate!! }
+                        .toEpochMilliseconds().toString()
+                )
             }
         }
     }

@@ -9,4 +9,5 @@ data class SetListState(
     val filterOverrides: SetFilter? = null,
     val filterPreferences: SetFilterPreferences = SetFilterPreferences(),
     val displayMode: SetListDisplayMode = SetListDisplayMode.COLUMN,
+    val showFilterBar: Boolean = true,
 )

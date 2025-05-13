@@ -23,6 +23,7 @@ import kotlin.collections.Set
 data class SetFilter(
     val sortOption: SetSortOption? = null,
     val launchDate: DateFilter? = null,
+    val appearanceDate: DateFilter? = null,
     val themes: Set<String>? = null,
     val packagingTypes: Set<String>? = null,
     val status: StatusFilterOption? = null,
@@ -70,7 +71,8 @@ sealed class DateFilter(
     data object OneYear : DateFilter(DateFilterOption.ONE_YEAR)
 
     @Serializable
-    data class Custom(val startDate: Long, val endDate: Long) : DateFilter(DateFilterOption.CUSTOM)
+    data class Custom(val startDate: Long? = null, val endDate: Long? = null) :
+        DateFilter(DateFilterOption.CUSTOM)
 }
 
 enum class DateFilterOption(

@@ -8,4 +8,5 @@ data class SetListArguments(
     val filterOverrides: SetFilter? = null,
     val title: String,
     val searchQuery: String = "",
+    val showFilterBar: Boolean = true,
 )

@@ -55,7 +55,8 @@ class SetListViewModel(
     private val _uiState = MutableStateFlow(
         SetListState(
             title = _arguments.title,
-            filterOverrides = _arguments.filterOverrides
+            filterOverrides = _arguments.filterOverrides,
+            showFilterBar = _arguments.showFilterBar
         )
     )
 

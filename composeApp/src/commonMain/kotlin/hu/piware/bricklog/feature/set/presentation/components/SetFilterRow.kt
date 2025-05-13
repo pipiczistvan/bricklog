@@ -103,11 +103,7 @@ private fun ReleaseDateChip(
         modifier = Modifier.testTag("search_bar:release_date_chip"),
         title = when (dateFilter) {
             is DateFilter.AnyTime -> stringResource(Res.string.set_search_bar_chip_release_date)
-            is DateFilter.Custom -> "${formatDate(dateFilter.startDate.toLocalDateTime())} - ${
-                formatDate(
-                    dateFilter.endDate.toLocalDateTime()
-                )
-            }"
+            is DateFilter.Custom -> dateFilter.format()
 
             is DateFilter.OneWeek, DateFilter.OneMonth, DateFilter.OneYear -> stringResource(
                 dateFilter.option.titleRes
@@ -118,6 +114,10 @@ private fun ReleaseDateChip(
         enabled = enabled,
         onClick = onClick
     )
+}
+
+private fun DateFilter.Custom.format(): String {
+    return "${startDate?.let { formatDate(it.toLocalDateTime()) }} - ${endDate?.let { formatDate(it.toLocalDateTime()) }}"
 }
 
 @Composable
