@@ -255,4 +255,4 @@ val FEATURED_THEMES = listOf(
     marvel,
     speedChampions,
     wednesday
-).shuffled().take(12)
+)
