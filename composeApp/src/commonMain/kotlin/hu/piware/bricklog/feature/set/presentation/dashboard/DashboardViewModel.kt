@@ -16,6 +16,7 @@ import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.DataType
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 
 class DashboardViewModel(
     private val watchSetUIs: WatchSetUIs,
@@ -49,6 +51,7 @@ class DashboardViewModel(
     private val saveNotificationPreferences: SaveNotificationPreferences,
     private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
+    private val resetSets: ResetSets,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -75,6 +78,7 @@ class DashboardViewModel(
     fun onAction(action: DashboardAction) {
         when (action) {
             is DashboardAction.OnRefreshSets -> refreshSets()
+            is DashboardAction.OnResetSets -> resetSetsClick()
             else -> Unit
         }
     }
@@ -189,6 +193,13 @@ class DashboardViewModel(
             } catch (e: RequestCanceledException) {
                 logger.w { "Notification permission canceled." }
             }
+        }
+    }
+
+    private fun resetSetsClick() {
+        viewModelScope.launch {
+            resetSets(Instant.parse("2025-05-12T00:00:00Z"))
+                .showSnackbarOnError()
         }
     }
 }

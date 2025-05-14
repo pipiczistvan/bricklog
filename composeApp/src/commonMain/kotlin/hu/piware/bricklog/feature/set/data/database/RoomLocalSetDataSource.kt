@@ -15,6 +15,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.datetime.Instant
 
 class RoomLocalSetDataSource(
     private val setDao: SetDao,
@@ -86,5 +87,14 @@ class RoomLocalSetDataSource(
 
     override fun watchPackagingTypes(): Flow<List<String>> {
         return setDao.watchPackagingTypes()
+    }
+
+    override suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local> {
+        return try {
+            setDao.deleteSetsUpdatedAfter(date)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
     }
 }

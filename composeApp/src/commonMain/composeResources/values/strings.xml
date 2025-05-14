@@ -35,7 +35,9 @@
     <string name="dashboard_navigation_drawer_item_appearance">Appearance</string>
     <string name="dashboard_navigation_drawer_item_favourite_sets">Favourite Sets</string>
     <string name="dashboard_navigation_drawer_item_notification_settings">Notification Settings</string>
+    <string name="dashboard_navigation_drawer_item_reset_sets">Reset Sets</string>
     <string name="dashboard_navigation_drawer_section_collections">Collections</string>
+    <string name="dashboard_navigation_drawer_section_developer">Developer Tools</string>
     <string name="dashboard_navigation_drawer_section_settings">Settings</string>
     <string name="dashboard_section_arriving_sets">Arriving Sets</string>
     <string name="dashboard_section_latest_sets">Latest Sets</string>

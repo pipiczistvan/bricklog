@@ -7,6 +7,7 @@ import androidx.room.RawQuery
 import androidx.room.RoomRawQuery
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 
 @Dao
 interface SetDao {
@@ -34,4 +35,7 @@ interface SetDao {
 
     @Query("SELECT DISTINCT packagingType FROM sets WHERE packagingType IS NOT NULL")
     fun watchPackagingTypes(): Flow<List<String>>
+
+    @Query("DELETE FROM sets WHERE lastUpdated > :date")
+    suspend fun deleteSetsUpdatedAfter(date: Instant)
 }

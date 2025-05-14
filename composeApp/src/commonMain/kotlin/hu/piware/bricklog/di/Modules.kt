@@ -41,6 +41,7 @@ import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import hu.piware.bricklog.feature.set.domain.usecase.GetAdditionalImages
 import hu.piware.bricklog.feature.set.domain.usecase.GetInstructions
+import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
@@ -143,6 +144,7 @@ val sharedModule = module {
     singleOf(::SaveSetListDisplayMode)
     singleOf(::WatchSetListDisplayMode)
     singleOf(::WatchPackagingTypes)
+    singleOf(::ResetSets)
 
     viewModelOf(::DispatcherViewModel)
     viewModelOf(::DataFetchViewModel)

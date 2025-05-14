@@ -10,4 +10,5 @@ sealed interface DashboardAction {
     data object OnAboutClick : DashboardAction
     data object OnAppearanceClick : DashboardAction
     data object OnRefreshSets : DashboardAction
+    data object OnResetSets : DashboardAction
 }

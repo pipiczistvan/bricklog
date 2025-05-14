@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
@@ -184,7 +185,10 @@ buildkonfig {
             "Register your api key from developer and place it in local.properties as `BRICKSET_API_KEY`"
         }
 
+        val devMode: String = properties["DEV_MODE"]?.toString() ?: "false"
+
         buildConfigField(STRING, "BRICKSET_API_KEY", apiKey)
+        buildConfigField(BOOLEAN, "DEV_MODE", devMode)
     }
 
     tasks.build.dependsOn("generateBuildKonfig")

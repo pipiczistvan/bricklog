@@ -13,6 +13,7 @@ import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 import kotlin.time.measureTimedValue
 
 class OfflineFirstSetRepository(
@@ -83,6 +84,10 @@ class OfflineFirstSetRepository(
 
     override fun watchPackagingTypes(): Flow<List<String>> {
         return localDataSource.watchPackagingTypes()
+    }
+
+    override suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local> {
+        return localDataSource.deleteSetsUpdatedAfter(date)
     }
 
     private suspend fun downloadSets(fileUploads: List<FileUploadResult>): Result<ByteArray, DataError.Remote> {

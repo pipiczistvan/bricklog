@@ -10,10 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
@@ -33,8 +35,11 @@ import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_appearance
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_favourite_sets
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_notification_settings
+import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_reset_sets
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_collections
+import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_developer
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_settings
+import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.favouriteSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
@@ -148,7 +153,21 @@ private val settingsSection = NavigationSection(
     )
 )
 
+private val developerSection = NavigationSection(
+    titleRes = Res.string.dashboard_navigation_drawer_section_developer,
+    items = listOf(
+        NavigationItem(
+            titleRes = Res.string.dashboard_navigation_drawer_item_reset_sets,
+            selectedIcon = Icons.Filled.Restore,
+            unselectedIcon = Icons.Outlined.Restore,
+            action = { DashboardAction.OnResetSets }
+        )
+    )
+)
+
 private val navigationSections = listOf(
     collectionsSection,
-    settingsSection
-)
+    settingsSection,
+).let {
+    if (BuildKonfig.DEV_MODE) it + developerSection else it
+}
