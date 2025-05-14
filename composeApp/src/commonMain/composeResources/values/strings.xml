@@ -41,7 +41,7 @@
     <string name="dashboard_navigation_drawer_section_settings">Settings</string>
     <string name="dashboard_section_arriving_sets">Arriving Sets</string>
     <string name="dashboard_section_latest_sets">Latest Sets</string>
-    <string name="dashboard_section_new_sets">New Sets</string>
+    <string name="dashboard_section_new_sets">New Items</string>
     <string name="dashboard_section_retiring_sets">Retiring Sets</string>
     <string name="dashboard_theme_carousel_title">%1$s Sets</string>
     <string name="data_fetch_button_retry">Retry</string>
@@ -63,7 +63,7 @@
     <string name="license_title">License</string>
     <string name="no_search_results">Oops, there aren't any sets for your search query.</string>
     <string name="notification_settings_general">Allow notifications</string>
-    <string name="notification_settings_new_sets">When new sets added to the database</string>
+    <string name="notification_settings_new_sets">When new items added to the database</string>
     <string name="notification_settings_permission_description">To start receiving notifications, please turn on Show Notifications in your device settings.</string>
     <string name="notification_settings_permission_open_settings">Open Device Settings</string>
     <string name="notification_settings_permission_title">Allow Push Notifications</string>

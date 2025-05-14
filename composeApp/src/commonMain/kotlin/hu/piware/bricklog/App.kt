@@ -35,8 +35,8 @@ import hu.piware.bricklog.feature.core.presentation.LocalizedApp
 import hu.piware.bricklog.feature.core.presentation.SnackbarController
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.SetRoute
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newSetsNotificationFilter
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
@@ -166,7 +166,7 @@ private fun observeNotificationEvents(
                         SetRoute.SetListScreen(
                             arguments = SetListArguments(
                                 title = getString(Res.string.dashboard_section_new_sets),
-                                filterOverrides = SetFilter(
+                                filterOverrides = newSetsNotificationFilter.copy(
                                     appearanceDate = DateFilter.Custom(
                                         startDate = event.startDate
                                     ),

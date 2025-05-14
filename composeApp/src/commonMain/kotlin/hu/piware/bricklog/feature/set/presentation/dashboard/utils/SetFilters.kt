@@ -30,3 +30,13 @@ val favouriteSetsFilter = SetFilter(
     status = StatusFilterOption.ANY_STATUS,
     isFavourite = true,
 )
+
+val newSetsNotificationFilter = SetFilter(
+    sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
+    launchDate = DateFilter.AnyTime,
+    appearanceDate = DateFilter.AnyTime,
+    themes = emptySet(),
+    packagingTypes = emptySet(),
+    status = StatusFilterOption.ANY_STATUS,
+    showIncomplete = false
+)

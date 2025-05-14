@@ -4,10 +4,10 @@ package hu.piware.bricklog.feature.set.domain.usecase
 
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.calculateStatus
 import hu.piware.bricklog.feature.set.domain.repository.SetPreferencesRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
-import hu.piware.bricklog.feature.set.domain.util.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -31,8 +31,8 @@ class BricklogApplication : Application() {
 
     private fun scheduleWorker() {
         val workRequest = PeriodicWorkRequestBuilder<UpdateSetsWorker>(
-            repeatInterval = 1,
-            repeatIntervalTimeUnit = TimeUnit.MINUTES
+            repeatInterval = 4,
+            repeatIntervalTimeUnit = TimeUnit.HOURS
         ).setConstraints(
             Constraints(
                 requiredNetworkType = NetworkType.UNMETERED,
