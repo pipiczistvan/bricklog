@@ -26,7 +26,7 @@ class UpdateSets(
             .data()
 
         logger.i { "Getting update info" }
-        val updateInfo = updateInfoRepository.getUpdateInfo(DataType.BRICKSET_SETS)
+        val updateInfo = updateInfoRepository.getUpdateInfo(DataType.BRICKSET_SETS, null)
             .onError { return@invoke it }
             .data()
 

@@ -14,17 +14,20 @@ class RoomLocalUpdateInfoDataSource(
     private val updateInfoDao: UpdateInfoDao,
 ) : LocalUpdateInfoDataSource {
 
-    override suspend fun getUpdateInfo(type: DataType): Result<UpdateInfo?, DataError.Local> {
+    override suspend fun getUpdateInfo(
+        type: DataType,
+        setId: Int?,
+    ): Result<UpdateInfo?, DataError.Local> {
         return try {
-            val updateInfo = updateInfoDao.getByType(type)?.toDomainModel()
+            val updateInfo = updateInfoDao.getByType(type, setId)?.toDomainModel()
             Result.Success(updateInfo)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
 
-    override fun watchUpdateInfo(type: DataType): Flow<UpdateInfo?> {
-        return updateInfoDao.watchByType(type)
+    override fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?> {
+        return updateInfoDao.watchByType(type, setId)
             .map { it?.toDomainModel() }
     }
 

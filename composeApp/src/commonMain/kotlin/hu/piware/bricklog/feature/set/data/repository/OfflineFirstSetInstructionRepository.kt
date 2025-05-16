@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.data.repository
 
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.data
@@ -14,16 +15,30 @@ class OfflineFirstSetInstructionRepository(
     private val localDataSource: LocalSetInstructionDataSource,
 ) : SetInstructionRepository {
 
-    override suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError> {
+    private val logger = Logger.withTag("OfflineFirstSetInstructionRepository")
+
+    override suspend fun getInstructions(
+        setId: Int,
+        forceUpdate: Boolean,
+    ): Result<List<Instruction>, DataError> {
+        if (forceUpdate) {
+            logger.d { "Force update enabled. Deleting instructions <setId=$setId>." }
+            localDataSource.deleteInstructions(setId)
+                .onError { return it }
+        }
+
+        logger.d { "Getting local instructions <setId=$setId>." }
         val localInstructions = localDataSource.getInstructions(setId)
             .onError { return it }
             .data()
 
         return if (localInstructions.isEmpty()) {
+            logger.d { "Local instructions not found. Getting remote instructions <setId=$setId>." }
             val remoteInstructions = remoteDataSource.getInstructions(setId)
                 .onError { return it }
                 .data()
 
+            logger.d { "Storing remote instructions <setId=$setId>." }
             localDataSource.updateInstructions(setId, remoteInstructions)
                 .onError { return it }
 

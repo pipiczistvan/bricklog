@@ -5,10 +5,10 @@ import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import kotlinx.coroutines.flow.Flow
 
-class WatchUpdateInfo(
+class WatchBricksetUpdateInfo(
     private val updateInfoRepository: UpdateInfoRepository,
 ) {
-    operator fun invoke(type: DataType): Flow<UpdateInfo?> {
-        return updateInfoRepository.watchUpdateInfo(type)
+    operator fun invoke(): Flow<UpdateInfo?> {
+        return updateInfoRepository.watchUpdateInfo(DataType.BRICKSET_SETS, null)
     }
 }

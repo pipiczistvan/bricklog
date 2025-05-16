@@ -16,7 +16,6 @@ class RoomLocalSetImageDataSource(
         images: List<Image>,
     ): EmptyResult<DataError.Local> {
         return try {
-            dao.deleteImages(setId)
             dao.upsertAll(images.map { it.toEntity(setId) })
             Result.Success(Unit)
         } catch (e: SQLiteException) {
@@ -30,6 +29,15 @@ class RoomLocalSetImageDataSource(
         return try {
             val images = dao.getImages(setId).map { it.toDomainModel() }
             Result.Success(images)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteImages(setId: Int): EmptyResult<DataError.Local> {
+        return try {
+            dao.deleteImages(setId)
+            Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }

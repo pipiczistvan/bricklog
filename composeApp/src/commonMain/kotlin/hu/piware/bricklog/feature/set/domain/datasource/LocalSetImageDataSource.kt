@@ -10,4 +10,6 @@ interface LocalSetImageDataSource {
     suspend fun updateImages(setId: Int, images: List<Image>): EmptyResult<DataError.Local>
 
     suspend fun getImages(setId: Int): Result<List<Image>, DataError.Local>
+
+    suspend fun deleteImages(setId: Int): EmptyResult<DataError.Local>
 }

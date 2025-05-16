@@ -16,7 +16,6 @@ class RoomLocalSetInstructionDataSource(
         instructions: List<Instruction>,
     ): EmptyResult<DataError.Local> {
         return try {
-            dao.deleteInstructions(setId)
             dao.upsertAll(instructions.map { it.toEntity(setId) })
             Result.Success(Unit)
         } catch (e: SQLiteException) {
@@ -30,6 +29,15 @@ class RoomLocalSetInstructionDataSource(
         return try {
             val images = dao.getInstructions(setId).map { it.toDomainModel() }
             Result.Success(images)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteInstructions(setId: Int): EmptyResult<DataError.Local> {
+        return try {
+            dao.deleteInstructions(setId)
+            Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }

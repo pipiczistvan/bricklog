@@ -80,6 +80,7 @@ fun SetEntity.toDomainModel(): Set {
 fun UpdateInfoEntity.toDomainModel(): UpdateInfo {
     return UpdateInfo(
         dataType = dataType,
+        setId = setId,
         lastUpdated = lastUpdated
     )
 }
@@ -87,6 +88,7 @@ fun UpdateInfoEntity.toDomainModel(): UpdateInfo {
 fun UpdateInfo.toEntity(): UpdateInfoEntity {
     return UpdateInfoEntity(
         dataType = dataType,
+        setId = setId,
         lastUpdated = lastUpdated
     )
 }

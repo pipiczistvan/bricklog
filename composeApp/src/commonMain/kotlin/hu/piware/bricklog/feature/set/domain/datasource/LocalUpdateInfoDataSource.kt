@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalUpdateInfoDataSource {
 
-    suspend fun getUpdateInfo(type: DataType): Result<UpdateInfo?, DataError.Local>
+    suspend fun getUpdateInfo(type: DataType, setId: Int?): Result<UpdateInfo?, DataError.Local>
 
-    fun watchUpdateInfo(type: DataType): Flow<UpdateInfo?>
+    fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?>
 
     suspend fun storeUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError.Local>
 }

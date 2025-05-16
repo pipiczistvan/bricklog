@@ -8,7 +8,7 @@ import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import kotlinx.coroutines.flow.Flow
 
 interface UpdateInfoRepository {
-    suspend fun getUpdateInfo(type: DataType): Result<UpdateInfo?, DataError>
-    fun watchUpdateInfo(type: DataType): Flow<UpdateInfo?>
+    suspend fun getUpdateInfo(type: DataType, setId: Int?): Result<UpdateInfo?, DataError>
+    fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?>
     suspend fun storeUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError>
 }

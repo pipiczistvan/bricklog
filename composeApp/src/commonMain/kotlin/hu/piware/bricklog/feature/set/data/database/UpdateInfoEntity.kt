@@ -1,14 +1,19 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import hu.piware.bricklog.feature.set.domain.model.DataType
 import kotlinx.datetime.Instant
 
 @Entity(
     tableName = "update_info",
-    primaryKeys = ["dataType"]
+    indices = [
+        Index(value = ["setId"])
+    ]
 )
 data class UpdateInfoEntity(
-    val dataType: DataType,
-    val lastUpdated: Instant
+    @PrimaryKey(autoGenerate = false) val dataType: DataType,
+    val setId: Int?,
+    val lastUpdated: Instant,
 )

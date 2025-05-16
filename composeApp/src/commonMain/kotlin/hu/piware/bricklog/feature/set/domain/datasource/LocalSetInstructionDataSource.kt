@@ -13,4 +13,6 @@ interface LocalSetInstructionDataSource {
     ): EmptyResult<DataError.Local>
 
     suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Local>
+
+    suspend fun deleteInstructions(setId: Int): EmptyResult<DataError.Local>
 }

@@ -12,9 +12,9 @@ interface UpdateInfoDao {
     @Upsert
     suspend fun upsert(updateInfo: UpdateInfoEntity)
 
-    @Query("SELECT * FROM update_info WHERE dataType = :type")
-    suspend fun getByType(type: DataType): UpdateInfoEntity?
+    @Query("SELECT * FROM update_info WHERE dataType = :type AND (:setId IS NULL OR setId = :setId)")
+    suspend fun getByType(type: DataType, setId: Int?): UpdateInfoEntity?
 
-    @Query("SELECT * FROM update_info WHERE dataType = :type")
-    fun watchByType(type: DataType): Flow<UpdateInfoEntity?>
+    @Query("SELECT * FROM update_info WHERE dataType = :type AND (:setId IS NULL OR setId = :setId)")
+    fun watchByType(type: DataType, setId: Int?): Flow<UpdateInfoEntity?>
 }

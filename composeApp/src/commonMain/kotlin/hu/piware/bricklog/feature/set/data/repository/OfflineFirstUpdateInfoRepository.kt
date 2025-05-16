@@ -13,12 +13,15 @@ class OfflineFirstUpdateInfoRepository(
     private val localDataSource: LocalUpdateInfoDataSource,
 ) : UpdateInfoRepository {
 
-    override suspend fun getUpdateInfo(type: DataType): Result<UpdateInfo?, DataError> {
-        return localDataSource.getUpdateInfo(type)
+    override suspend fun getUpdateInfo(
+        type: DataType,
+        setId: Int?,
+    ): Result<UpdateInfo?, DataError> {
+        return localDataSource.getUpdateInfo(type, setId)
     }
 
-    override fun watchUpdateInfo(type: DataType): Flow<UpdateInfo?> {
-        return localDataSource.watchUpdateInfo(type)
+    override fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?> {
+        return localDataSource.watchUpdateInfo(type, setId)
     }
 
     override suspend fun storeUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError> {

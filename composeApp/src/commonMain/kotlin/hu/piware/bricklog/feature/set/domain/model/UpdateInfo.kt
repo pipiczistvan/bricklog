@@ -4,5 +4,6 @@ import kotlinx.datetime.Instant
 
 data class UpdateInfo(
     val dataType: DataType,
-    val lastUpdated: Instant
+    val setId: Int? = null,
+    val lastUpdated: Instant,
 )

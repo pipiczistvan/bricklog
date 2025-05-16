@@ -14,12 +14,11 @@ import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
-import hu.piware.bricklog.feature.set.domain.model.DataType
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
+import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
-import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
@@ -46,7 +45,7 @@ import kotlinx.datetime.Instant
 class DashboardViewModel(
     private val watchSetUIs: WatchSetUIs,
     private val updateSets: UpdateSets,
-    private val watchUpdateInfo: WatchUpdateInfo,
+    private val watchBricksetUpdateInfo: WatchBricksetUpdateInfo,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val saveNotificationPreferences: SaveNotificationPreferences,
     private val permissionsController: PermissionsController,
@@ -132,7 +131,7 @@ class DashboardViewModel(
     }
 
     private fun observeUpdateInfo() {
-        watchUpdateInfo(DataType.BRICKSET_SETS)
+        watchBricksetUpdateInfo()
             .onEach { updateInfo ->
                 _uiState.update { it.copy(lastUpdated = updateInfo?.lastUpdated) }
             }

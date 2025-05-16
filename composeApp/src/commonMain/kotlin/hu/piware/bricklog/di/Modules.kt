@@ -46,13 +46,13 @@ import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.SendNewSetNotification
 import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
+import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
 import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchThemes
-import hu.piware.bricklog.feature.set.domain.usecase.WatchUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectViewModel
@@ -130,7 +130,7 @@ val sharedModule = module {
     singleOf(::WatchSetsPaged)
     singleOf(::WatchFavouriteSetIds)
     singleOf(::HasAnySets)
-    singleOf(::WatchUpdateInfo)
+    singleOf(::WatchBricksetUpdateInfo)
     singleOf(::ToggleFavouriteSet)
     singleOf(::GetAdditionalImages)
     singleOf(::SaveSetFilterPreferences)
