@@ -33,19 +33,21 @@ class BricklogApplication : Application() {
         val workRequest = PeriodicWorkRequestBuilder<UpdateSetsWorker>(
             repeatInterval = 4,
             repeatIntervalTimeUnit = TimeUnit.HOURS
-        ).setConstraints(
-            Constraints(
-                requiredNetworkType = NetworkType.UNMETERED,
-                requiresCharging = false,
-                requiresDeviceIdle = false,
-                requiresBatteryNotLow = false,
-                requiresStorageNotLow = true
-            )
-        ).build()
+        )
+            .setInitialDelay(4, TimeUnit.HOURS)
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.UNMETERED,
+                    requiresCharging = false,
+                    requiresDeviceIdle = false,
+                    requiresBatteryNotLow = false,
+                    requiresStorageNotLow = true
+                )
+            ).build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             uniqueWorkName = "UpdateSetsWorker",
-            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
+            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP,
             request = workRequest
         )
     }
