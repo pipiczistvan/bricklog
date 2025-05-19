@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
-import hu.piware.bricklog.feature.settings.domain.usecase.ReadChangelog
+import hu.piware.bricklog.feature.settings.domain.usecase.GetChangelog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChangelogViewModel(
-    private val readChangelog: ReadChangelog,
+    private val getChangelog: GetChangelog,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChangelogState())
@@ -23,7 +23,7 @@ class ChangelogViewModel(
 
     private fun loadLicense() {
         viewModelScope.launch {
-            readChangelog()
+            getChangelog()
                 .showSnackbarOnError()
                 .onSuccess { changelog ->
                     _uiState.update { it.copy(changelog = changelog) }

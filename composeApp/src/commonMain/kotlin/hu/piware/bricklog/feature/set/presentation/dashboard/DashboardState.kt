@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
 import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import kotlinx.datetime.Instant
 
 data class DashboardState(
@@ -9,4 +10,5 @@ data class DashboardState(
     val retiringSets: List<SetUI> = emptyList(),
     val areSetsRefreshing: Boolean = false,
     val lastUpdated: Instant? = null,
+    val changelog: Changelog? = null,
 )

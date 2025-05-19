@@ -34,6 +34,7 @@ import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
@@ -243,5 +244,15 @@ fun DashboardScreen(
             }
         }
     }
-}
 
+    if (state.changelog != null && state.changelog.releases.isNotEmpty()) {
+        ChangelogBottomSheet(
+            changelog = state.changelog,
+            onShowBottomSheetChanged = { show ->
+                if (!show) {
+                    onAction(DashboardAction.OnUpdateChangelogReadVersion)
+                }
+            }
+        )
+    }
+}

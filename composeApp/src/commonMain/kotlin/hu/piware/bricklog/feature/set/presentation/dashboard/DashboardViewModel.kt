@@ -16,8 +16,10 @@ import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
+import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
+import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
@@ -26,13 +28,10 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsF
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
-import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -53,6 +52,8 @@ class DashboardViewModel(
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val resetSets: ResetSets,
     private val watchSetFilterDomain: WatchSetFilterDomain,
+    private val watchNewChangelog: WatchNewChangelog,
+    private val updateChangelogReadVersion: UpdateChangelogReadVersion,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -67,6 +68,7 @@ class DashboardViewModel(
             observeArrivingSets()
             observeRetiringSets()
             observeSetFilterDomain()
+            observeNewChangelog()
             askNotificationPermission()
         }
 
@@ -81,14 +83,24 @@ class DashboardViewModel(
         when (action) {
             is DashboardAction.OnRefreshSets -> refreshSets()
             is DashboardAction.OnResetSets -> resetSetsClick()
+            is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
+                updateChangelogReadVersion()
+            }
+
             else -> Unit
         }
     }
 
     fun onAction(action: SetSearchBarAction) {
         when (action) {
-            is SetSearchBarAction.OnQueryChange -> _searchBarState.update { it.copy(typedQuery = action.query) }
-            is SetSearchBarAction.OnFilterChange -> saveFilter(action.filterPreferences)
+            is SetSearchBarAction.OnQueryChange -> _searchBarState.update {
+                it.copy(typedQuery = action.query)
+            }
+
+            is SetSearchBarAction.OnFilterChange -> viewModelScope.launch {
+                saveSetFilterPreferences(action.filterPreferences)
+            }
+
             SetSearchBarAction.OnClearClick -> {
                 _searchBarState.update {
                     it.copy(
@@ -165,17 +177,17 @@ class DashboardViewModel(
             .launchIn(viewModelScope)
     }
 
+    private fun observeNewChangelog() {
+        watchNewChangelog()
+            .onEach { changelog -> _uiState.update { it.copy(changelog = changelog) } }
+            .launchIn(viewModelScope)
+    }
+
     private fun refreshSets() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _uiState.update { it.copy(areSetsRefreshing = true) }
             updateSets().showSnackbarOnError()
             _uiState.update { it.copy(areSetsRefreshing = false) }
-        }
-    }
-
-    private fun saveFilter(filterPreferences: SetFilterPreferences) {
-        viewModelScope.launch(Dispatchers.IO) {
-            saveSetFilterPreferences(filterPreferences)
         }
     }
 

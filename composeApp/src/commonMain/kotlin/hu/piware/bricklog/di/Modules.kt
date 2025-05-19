@@ -6,6 +6,7 @@ import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.onboarding.domain.usecase.HasAnySets
+import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogReadVersion
 import hu.piware.bricklog.feature.onboarding.presentation.data_fetch.DataFetchViewModel
 import hu.piware.bricklog.feature.onboarding.presentation.dispatcher.DispatcherViewModel
 import hu.piware.bricklog.feature.set.data.csv.SetListCsvParser
@@ -45,9 +46,11 @@ import hu.piware.bricklog.feature.set.domain.usecase.GetSets
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.SendNewSetNotification
 import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
+import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
+import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
@@ -59,11 +62,15 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerViewModel
+import hu.piware.bricklog.feature.settings.data.asset.AssetLocalChangelogDataSource
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource
+import hu.piware.bricklog.feature.settings.data.repository.OfflineChangelogRepository
 import hu.piware.bricklog.feature.settings.data.repository.OfflineSettingsRepository
+import hu.piware.bricklog.feature.settings.domain.datasource.LocalChangelogDataSource
 import hu.piware.bricklog.feature.settings.domain.datasource.LocalSettingsDataSource
+import hu.piware.bricklog.feature.settings.domain.repository.ChangelogRepository
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
-import hu.piware.bricklog.feature.settings.domain.usecase.ReadChangelog
+import hu.piware.bricklog.feature.settings.domain.usecase.GetChangelog
 import hu.piware.bricklog.feature.settings.domain.usecase.ReadTextFile
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
@@ -109,6 +116,7 @@ val sharedModule = module {
     singleOf(::RoomLocalSetImageDataSource).bind<LocalSetImageDataSource>()
     singleOf(::DataStoreLocalSettingsDataSource).bind<LocalSettingsDataSource>()
     singleOf(::RoomLocalSetInstructionDataSource).bind<LocalSetInstructionDataSource>()
+    singleOf(::AssetLocalChangelogDataSource).bind<LocalChangelogDataSource>()
 
     singleOf(::FirestoreDataServiceDataSource).bind<RemoteDataServiceDataSource>()
     single { KtorRemoteSetDataSource(get(named(HttpClientFactory.DOWNLOAD))) }.bind<RemoteSetDataSource>()
@@ -122,6 +130,7 @@ val sharedModule = module {
     singleOf(::OfflineFirstSetImageRepository).bind<SetImageRepository>()
     singleOf(::OfflineSettingsRepository).bind<SettingsRepository>()
     singleOf(::OfflineFirstSetInstructionRepository).bind<SetInstructionRepository>()
+    singleOf(::OfflineChangelogRepository).bind<ChangelogRepository>()
 
     singleOf(::UpdateSets)
     singleOf(::WatchSetUI)
@@ -139,7 +148,7 @@ val sharedModule = module {
     singleOf(::SaveNotificationPreferences)
     singleOf(::WatchNotificationPreferences)
     singleOf(::ReadTextFile)
-    singleOf(::ReadChangelog)
+    singleOf(::GetChangelog)
     singleOf(::WatchThemeOption)
     singleOf(::SaveThemeOption)
     singleOf(::SaveSetListDisplayMode)
@@ -149,6 +158,9 @@ val sharedModule = module {
     singleOf(::GetSets)
     singleOf(::SendNewSetNotification)
     singleOf(::WatchSetFilterDomain)
+    singleOf(::InitializeChangelogReadVersion)
+    singleOf(::WatchNewChangelog)
+    singleOf(::UpdateChangelogReadVersion)
 
     viewModelOf(::DispatcherViewModel)
     viewModelOf(::DataFetchViewModel)

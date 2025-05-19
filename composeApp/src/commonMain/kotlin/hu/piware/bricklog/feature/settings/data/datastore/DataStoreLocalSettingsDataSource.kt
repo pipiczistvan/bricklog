@@ -3,8 +3,10 @@ package hu.piware.bricklog.feature.settings.data.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
+import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_CHANGELOG_READ_VERSION
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_LANGUAGE
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_NOTIFICATION
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_SET_FILTER
@@ -77,6 +79,16 @@ class DataStoreLocalSettingsDataSource(
             }
     }
 
+    override fun watchChangelogReadVersion(): Flow<Int> {
+        return dataStore.data
+            .map { preferences ->
+                preferences[KEY_CHANGELOG_READ_VERSION]
+            }
+            .map { version ->
+                version ?: -1
+            }
+    }
+
     override suspend fun saveSetFilterPreferences(filter: SetFilterPreferences) {
         dataStore.edit { preferences ->
             preferences[KEY_SET_FILTER] = json.encodeToString(filter)
@@ -107,11 +119,18 @@ class DataStoreLocalSettingsDataSource(
         }
     }
 
+    override suspend fun saveChangelogReadVersion(version: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_CHANGELOG_READ_VERSION] = version
+        }
+    }
+
     private object PreferenceKeys {
         val KEY_SET_FILTER = stringPreferencesKey(name = "set_filter")
         val KEY_NOTIFICATION = stringPreferencesKey(name = "notification")
         val KEY_LANGUAGE = stringPreferencesKey(name = "language")
         val KEY_THEME = stringPreferencesKey(name = "theme")
         val KEY_SET_LIST_DISPLAY_MODE = stringPreferencesKey(name = "set_list_display_mode")
+        val KEY_CHANGELOG_READ_VERSION = intPreferencesKey(name = "changelog_read_version")
     }
 }

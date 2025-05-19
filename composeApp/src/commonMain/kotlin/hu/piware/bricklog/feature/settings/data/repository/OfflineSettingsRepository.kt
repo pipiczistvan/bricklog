@@ -22,6 +22,8 @@ class OfflineSettingsRepository(
 
     override val setListDisplayMode = localDataSource.watchSetListDisplayMode()
 
+    override val changelogReadVersion = localDataSource.watchChangelogReadVersion()
+
     override suspend fun saveSetFilterPreferences(preferences: SetFilterPreferences) {
         localDataSource.saveSetFilterPreferences(preferences)
     }
@@ -40,5 +42,9 @@ class OfflineSettingsRepository(
 
     override suspend fun saveSetListDisplayMode(mode: SetListDisplayMode) {
         localDataSource.saveSetListDisplayMode(mode)
+    }
+
+    override suspend fun saveChangelogReadVersion(version: Int) {
+        localDataSource.saveChangelogReadVersion(version)
     }
 }

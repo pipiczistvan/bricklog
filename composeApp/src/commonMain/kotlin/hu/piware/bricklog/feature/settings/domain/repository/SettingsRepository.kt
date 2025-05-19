@@ -13,6 +13,7 @@ interface SettingsRepository {
     val languageOption: Flow<LanguageOption>
     val themeOption: Flow<ThemeOption>
     val setListDisplayMode: Flow<SetListDisplayMode>
+    val changelogReadVersion: Flow<Int>
 
     suspend fun saveSetFilterPreferences(preferences: SetFilterPreferences)
 
@@ -23,4 +24,6 @@ interface SettingsRepository {
     suspend fun saveThemeOption(option: ThemeOption)
 
     suspend fun saveSetListDisplayMode(mode: SetListDisplayMode)
+
+    suspend fun saveChangelogReadVersion(version: Int)
 }

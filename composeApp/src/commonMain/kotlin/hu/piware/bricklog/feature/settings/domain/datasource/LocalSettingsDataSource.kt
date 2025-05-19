@@ -19,6 +19,8 @@ interface LocalSettingsDataSource {
 
     fun watchSetListDisplayMode(): Flow<SetListDisplayMode>
 
+    fun watchChangelogReadVersion(): Flow<Int>
+
     suspend fun saveSetFilterPreferences(filter: SetFilterPreferences)
 
     suspend fun saveNotificationPreferences(notification: NotificationPreferences)
@@ -28,4 +30,6 @@ interface LocalSettingsDataSource {
     suspend fun saveThemeOption(theme: ThemeOption)
 
     suspend fun saveSetListDisplayMode(mode: SetListDisplayMode)
+
+    suspend fun saveChangelogReadVersion(version: Int)
 }
