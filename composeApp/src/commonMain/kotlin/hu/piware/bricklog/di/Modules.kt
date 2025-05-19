@@ -51,12 +51,10 @@ import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
-import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
-import hu.piware.bricklog.feature.set.domain.usecase.WatchThemes
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
@@ -143,7 +141,6 @@ val sharedModule = module {
     singleOf(::GetAdditionalImages)
     singleOf(::SaveSetFilterPreferences)
     singleOf(::WatchSetFilterPreferences)
-    singleOf(::WatchThemes)
     singleOf(::GetInstructions)
     singleOf(::SaveNotificationPreferences)
     singleOf(::WatchNotificationPreferences)
@@ -153,7 +150,6 @@ val sharedModule = module {
     singleOf(::SaveThemeOption)
     singleOf(::SaveSetListDisplayMode)
     singleOf(::WatchSetListDisplayMode)
-    singleOf(::WatchPackagingTypes)
     singleOf(::ResetSets)
     singleOf(::GetSets)
     singleOf(::SendNewSetNotification)
