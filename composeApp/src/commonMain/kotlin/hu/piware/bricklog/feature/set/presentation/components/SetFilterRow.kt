@@ -23,10 +23,13 @@ import hu.piware.bricklog.feature.core.presentation.toLocalDateTime
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.DateFilterBottomSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.PackagingTypeFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarChip
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.StatusFilterBottomSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.ThemeFilterBottomSheet
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
@@ -35,13 +38,14 @@ import org.jetbrains.compose.resources.stringResource
 fun SetFilterRow(
     filterPreferences: SetFilterPreferences,
     filterOverrides: SetFilter? = null,
-    onFilterChange: (SetFilterPreferences) -> Unit,
-    onThemeMultiselectClick: () -> Unit,
-    onPackagingTypeMultiselectClick: () -> Unit,
+    onFilterPreferencesChange: (SetFilterPreferences) -> Unit,
+    filterDomain: SetFilterDomain,
     modifier: Modifier = Modifier,
 ) {
     var showReleaseDateFilterSheet by remember { mutableStateOf(false) }
     var showStatusFilterSheet by remember { mutableStateOf(false) }
+    var showThemeFilterSheet by remember { mutableStateOf(false) }
+    var showPackagingTypeFilterSheet by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier
@@ -62,35 +66,55 @@ fun SetFilterRow(
         ThemeChip(
             enabled = filterOverrides?.themes == null,
             selectedThemes = filterOverrides?.themes ?: filterPreferences.themes,
-            onClick = onThemeMultiselectClick
+            onClick = { showThemeFilterSheet = true }
         )
         PackagingTypeChip(
             enabled = filterOverrides?.packagingTypes == null,
             selectedPackagingTypes = filterOverrides?.packagingTypes
                 ?: filterPreferences.packagingTypes,
-            onClick = onPackagingTypeMultiselectClick
+            onClick = { showPackagingTypeFilterSheet = true }
         )
         ShowIncompleteChip(
             enabled = filterOverrides?.showIncomplete == null,
             show = filterOverrides?.showIncomplete ?: filterPreferences.showIncomplete,
-            onClick = { onFilterChange(filterPreferences.copy(showIncomplete = it)) }
+            onClick = { onFilterPreferencesChange(filterPreferences.copy(showIncomplete = it)) }
         )
         Spacer(Modifier.size(Dimens.SmallPadding.size))
     }
 
-    DateFilterBottomSheet(
-        showBottomSheet = showReleaseDateFilterSheet,
-        onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
-        selectedFilter = filterPreferences.launchDate,
-        onSelectFilter = { onFilterChange(filterPreferences.copy(launchDate = it)) }
-    )
+    if (showReleaseDateFilterSheet) {
+        DateFilterBottomSheet(
+            onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
+            selected = filterPreferences.launchDate,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) }
+        )
+    }
 
-    StatusFilterBottomSheet(
-        showBottomSheet = showStatusFilterSheet,
-        onShowBottomSheetChanged = { showStatusFilterSheet = it },
-        selectedOption = filterPreferences.status,
-        onSelectOption = { onFilterChange(filterPreferences.copy(status = it)) }
-    )
+    if (showStatusFilterSheet) {
+        StatusFilterBottomSheet(
+            onShowBottomSheetChanged = { showStatusFilterSheet = it },
+            selected = filterPreferences.status,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(status = it)) }
+        )
+    }
+
+    if (showThemeFilterSheet) {
+        ThemeFilterBottomSheet(
+            onShowBottomSheetChanged = { showThemeFilterSheet = it },
+            availableOptions = filterDomain.themes,
+            selected = filterPreferences.themes,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) }
+        )
+    }
+
+    if (showPackagingTypeFilterSheet) {
+        PackagingTypeFilterBottomSheet(
+            onShowBottomSheetChanged = { showPackagingTypeFilterSheet = it },
+            availableOptions = filterDomain.packagingTypes,
+            selected = filterPreferences.packagingTypes,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) }
+        )
+    }
 }
 
 @Composable

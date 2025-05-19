@@ -37,98 +37,95 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DateFilterBottomSheet(
-    showBottomSheet: Boolean,
     onShowBottomSheetChanged: (Boolean) -> Unit,
-    selectedFilter: DateFilter,
-    onSelectFilter: (DateFilter) -> Unit,
+    selected: DateFilter,
+    onSelectionChange: (DateFilter) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var customDateRangePickerVisible by remember { mutableStateOf(false) }
 
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            modifier = Modifier.testTag("search_bar:date_filter_bottom_sheet"),
-            onDismissRequest = {
-                onShowBottomSheetChanged(false)
-            },
-            sheetState = sheetState
-        ) {
-            BottomSheetHeader(
-                title = stringResource(Res.string.date_filter_sheet_title),
-                onCloseClick = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onShowBottomSheetChanged(false)
-                        }
+    ModalBottomSheet(
+        modifier = Modifier.testTag("search_bar:date_filter_bottom_sheet"),
+        onDismissRequest = {
+            onShowBottomSheetChanged(false)
+        },
+        sheetState = sheetState
+    ) {
+        BottomSheetHeader(
+            title = stringResource(Res.string.date_filter_sheet_title),
+            onCloseClick = {
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onShowBottomSheetChanged(false)
                     }
                 }
-            )
+            }
+        )
 
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimens.MediumPadding.size)
-            ) {
-                items(DateFilterOption.entries.toTypedArray()) { option ->
-                    DateFilterSheetOption(
-                        option = option,
-                        selected = option == selectedFilter.option,
-                        onClick = {
-                            when (option) {
-                                DateFilterOption.CUSTOM -> {
-                                    customDateRangePickerVisible = true
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.MediumPadding.size)
+        ) {
+            items(DateFilterOption.entries.toTypedArray()) { option ->
+                DateFilterSheetOption(
+                    option = option,
+                    selected = option == selected.option,
+                    onClick = {
+                        when (option) {
+                            DateFilterOption.CUSTOM -> {
+                                customDateRangePickerVisible = true
+                            }
+
+                            else -> {
+                                val filter = when (option) {
+                                    DateFilterOption.ANY_TIME -> DateFilter.AnyTime
+                                    DateFilterOption.ONE_WEEK -> DateFilter.OneWeek
+                                    DateFilterOption.ONE_MONTH -> DateFilter.OneMonth
+                                    DateFilterOption.ONE_YEAR -> DateFilter.OneYear
+                                    DateFilterOption.CUSTOM -> throw IllegalStateException("Custom filter should be handled separately.")
                                 }
-
-                                else -> {
-                                    val filter = when (option) {
-                                        DateFilterOption.ANY_TIME -> DateFilter.AnyTime
-                                        DateFilterOption.ONE_WEEK -> DateFilter.OneWeek
-                                        DateFilterOption.ONE_MONTH -> DateFilter.OneMonth
-                                        DateFilterOption.ONE_YEAR -> DateFilter.OneYear
-                                        DateFilterOption.CUSTOM -> throw IllegalStateException("Custom filter should be handled separately.")
-                                    }
-                                    onSelectFilter(filter)
-                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                        if (!sheetState.isVisible) {
-                                            onShowBottomSheetChanged(false)
-                                        }
+                                onSelectionChange(filter)
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onShowBottomSheetChanged(false)
                                     }
                                 }
                             }
                         }
-                    )
-                }
-            }
-        }
-
-        if (customDateRangePickerVisible) {
-            val customDateRangeFilter = when (selectedFilter) {
-                is DateFilter.Custom -> selectedFilter
-                else -> null
-            }
-            val dateRangePickerState = rememberDateRangePickerState(
-                customDateRangeFilter?.startDate,
-                customDateRangeFilter?.endDate
-            )
-
-            DateRangePickerModal(
-                state = dateRangePickerState,
-                onDateRangeSelected = {
-                    onSelectFilter(DateFilter.Custom(it.first, it.second))
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onShowBottomSheetChanged(false)
-                        }
                     }
-                    customDateRangePickerVisible = false
-                },
-                onDismiss = {
-                    customDateRangePickerVisible = false
-                }
-            )
+                )
+            }
         }
+    }
+
+    if (customDateRangePickerVisible) {
+        val customDateRangeFilter = when (selected) {
+            is DateFilter.Custom -> selected
+            else -> null
+        }
+        val dateRangePickerState = rememberDateRangePickerState(
+            customDateRangeFilter?.startDate,
+            customDateRangeFilter?.endDate
+        )
+
+        DateRangePickerModal(
+            state = dateRangePickerState,
+            onDateRangeSelected = {
+                onSelectionChange(DateFilter.Custom(it.first, it.second))
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onShowBottomSheetChanged(false)
+                    }
+                }
+                customDateRangePickerVisible = false
+            },
+            onDismiss = {
+                customDateRangePickerVisible = false
+            }
+        )
     }
 }
 

@@ -23,7 +23,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +43,6 @@ import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.components.PagedSetList
 import hu.piware.bricklog.feature.set.presentation.set_list.components.SetSortBottomSheet
 import org.jetbrains.compose.resources.painterResource
@@ -57,33 +54,11 @@ fun SetListScreenRoot(
     viewModel: SetListViewModel = koinViewModel(),
     onBackClick: () -> Unit,
     onSetClick: (SetDetailArguments) -> Unit,
-    onThemeMultiselectClick: (ThemeMultiSelectArguments) -> Unit,
-    onPackagingTypeMultiselectClick: (PackagingTypeMultiSelectArguments) -> Unit,
-    selectedThemes: Set<String>?,
-    selectedPackagingTypes: Set<String>?,
 ) {
     App.firstScreenLoaded = true
 
     val sets = viewModel.setUiPagingData.collectAsLazyPagingItems()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(selectedThemes) {
-        if (selectedThemes != null) {
-            viewModel.onAction(SetListAction.OnFilterChange(state.filterPreferences.copy(themes = selectedThemes)))
-        }
-    }
-
-    LaunchedEffect(selectedPackagingTypes) {
-        if (selectedPackagingTypes != null) {
-            viewModel.onAction(
-                SetListAction.OnFilterChange(
-                    state.filterPreferences.copy(
-                        packagingTypes = selectedPackagingTypes
-                    )
-                )
-            )
-        }
-    }
 
     SetListScreen(
         modifier = Modifier.testTag("set_list_screen"),
@@ -93,11 +68,6 @@ fun SetListScreenRoot(
             when (action) {
                 is SetListAction.OnBackClick -> onBackClick()
                 is SetListAction.OnSetClick -> onSetClick(action.arguments)
-                is SetListAction.OnThemeMultiselectClick -> onThemeMultiselectClick(action.arguments)
-                is SetListAction.OnPackagingTypeMultiselectClick -> onPackagingTypeMultiselectClick(
-                    action.arguments
-                )
-
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -174,25 +144,8 @@ private fun SetListScreen(
                 SetFilterRow(
                     filterPreferences = state.filterPreferences,
                     filterOverrides = state.filterOverrides,
-                    onFilterChange = { onAction(SetListAction.OnFilterChange(it)) },
-                    onThemeMultiselectClick = {
-                        onAction(
-                            SetListAction.OnThemeMultiselectClick(
-                                ThemeMultiSelectArguments(
-                                    themes = state.filterPreferences.themes
-                                )
-                            )
-                        )
-                    },
-                    onPackagingTypeMultiselectClick = {
-                        onAction(
-                            SetListAction.OnPackagingTypeMultiselectClick(
-                                PackagingTypeMultiSelectArguments(
-                                    packagingTypes = state.filterPreferences.packagingTypes
-                                )
-                            )
-                        )
-                    }
+                    onFilterPreferencesChange = { onAction(SetListAction.OnFilterChange(it)) },
+                    filterDomain = state.filterDomain
                 )
             }
 

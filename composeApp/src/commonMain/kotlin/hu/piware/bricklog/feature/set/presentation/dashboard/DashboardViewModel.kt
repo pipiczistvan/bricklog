@@ -18,6 +18,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
@@ -51,6 +52,7 @@ class DashboardViewModel(
     private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val resetSets: ResetSets,
+    private val watchSetFilterDomain: WatchSetFilterDomain,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -64,6 +66,7 @@ class DashboardViewModel(
             observeLatestSets()
             observeArrivingSets()
             observeRetiringSets()
+            observeSetFilterDomain()
             askNotificationPermission()
         }
 
@@ -153,6 +156,12 @@ class DashboardViewModel(
     private fun observeRetiringSets() {
         watchSetUIs(filterOverrides = retiringSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeSetFilterDomain() {
+        watchSetFilterDomain()
+            .onEach { domain -> _searchBarState.update { it.copy(filterDomain = domain) } }
             .launchIn(viewModelScope)
     }
 

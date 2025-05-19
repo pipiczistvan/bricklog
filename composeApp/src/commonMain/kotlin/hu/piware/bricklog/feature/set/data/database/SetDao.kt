@@ -30,10 +30,10 @@ interface SetDao {
     @Query("SELECT COUNT(*) FROM sets")
     suspend fun getSetCount(): Int
 
-    @Query("SELECT DISTINCT theme FROM sets WHERE theme IS NOT NULL")
+    @Query("SELECT DISTINCT theme FROM sets WHERE theme IS NOT NULL ORDER BY theme ASC")
     fun watchThemes(): Flow<List<String>>
 
-    @Query("SELECT DISTINCT packagingType FROM sets WHERE packagingType IS NOT NULL")
+    @Query("SELECT DISTINCT packagingType FROM sets WHERE packagingType IS NOT NULL ORDER BY packagingType ASC")
     fun watchPackagingTypes(): Flow<List<String>>
 
     @Query("DELETE FROM sets WHERE lastUpdated > :date")

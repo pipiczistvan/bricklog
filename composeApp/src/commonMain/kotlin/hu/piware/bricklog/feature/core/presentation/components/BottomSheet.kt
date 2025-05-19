@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
@@ -32,6 +33,8 @@ import hu.piware.bricklog.ui.theme.Shapes
 fun BottomSheetHeader(
     title: String,
     onCloseClick: () -> Unit = { },
+    primaryActionIcon: ImageVector? = null,
+    onPrimaryActionClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -58,15 +61,17 @@ fun BottomSheetHeader(
             overflow = TextOverflow.Ellipsis
         )
 
-        IconButton(
-            onClick = { },
-            enabled = false,
-            modifier = Modifier.alpha(0f)
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Close,
-                contentDescription = null
-            )
+        if (primaryActionIcon != null && onPrimaryActionClick != null) {
+            IconButton(
+                onClick = onPrimaryActionClick
+            ) {
+                Icon(
+                    imageVector = primaryActionIcon,
+                    contentDescription = null
+                )
+            }
+        } else {
+            PlaceHolderIconButton()
         }
     }
 }
@@ -107,5 +112,19 @@ fun BottomSheetOption(
         ) {
             content()
         }
+    }
+}
+
+@Composable
+private fun PlaceHolderIconButton() {
+    IconButton(
+        onClick = { },
+        enabled = false,
+        modifier = Modifier.alpha(0f)
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Close,
+            contentDescription = null
+        )
     }
 }

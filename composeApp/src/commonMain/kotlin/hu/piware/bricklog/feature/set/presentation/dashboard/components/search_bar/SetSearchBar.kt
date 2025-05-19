@@ -36,8 +36,6 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarInputField
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
@@ -94,25 +92,8 @@ private fun Content(
 
     SetFilterRow(
         filterPreferences = state.filterPreferences,
-        onFilterChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
-        onThemeMultiselectClick = {
-            onAction(
-                SetSearchBarAction.OnThemeMultiselectClick(
-                    ThemeMultiSelectArguments(
-                        themes = state.filterPreferences.themes
-                    )
-                )
-            )
-        },
-        onPackagingTypeMultiselectClick = {
-            onAction(
-                SetSearchBarAction.OnPackagingTypeMultiselectClick(
-                    PackagingTypeMultiSelectArguments(
-                        packagingTypes = state.filterPreferences.packagingTypes
-                    )
-                )
-            )
-        }
+        onFilterPreferencesChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
+        filterDomain = state.filterDomain
     )
 
     if (state.searchResults.isNotEmpty()) {

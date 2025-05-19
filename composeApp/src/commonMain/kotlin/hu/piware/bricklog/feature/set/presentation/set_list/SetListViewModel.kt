@@ -16,6 +16,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.calculateStatus
 import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
@@ -46,6 +47,7 @@ class SetListViewModel(
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
+    private val watchSetFilterDomain: WatchSetFilterDomain,
 ) : ViewModel() {
 
     private val _arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
@@ -64,6 +66,7 @@ class SetListViewModel(
         .asStateFlowIn(viewModelScope) {
             observeSetListDisplayMode()
             observeFilterPreferences()
+            observeFilterDomain()
         }
 
     private val _filterOverrides = _uiState
@@ -114,9 +117,7 @@ class SetListViewModel(
 
     private fun observeSetListDisplayMode() {
         watchSetListDisplayMode()
-            .onEach { mode ->
-                _uiState.update { it.copy(displayMode = mode) }
-            }
+            .onEach { mode -> _uiState.update { it.copy(displayMode = mode) } }
             .launchIn(viewModelScope)
     }
 
@@ -128,9 +129,13 @@ class SetListViewModel(
 
     private fun observeFilterPreferences() {
         watchSetFilterPreferences()
-            .onEach { filter ->
-                _uiState.update { it.copy(filterPreferences = filter) }
-            }
+            .onEach { filter -> _uiState.update { it.copy(filterPreferences = filter) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeFilterDomain() {
+        watchSetFilterDomain()
+            .onEach { domain -> _uiState.update { it.copy(filterDomain = domain) } }
             .launchIn(viewModelScope)
     }
 }

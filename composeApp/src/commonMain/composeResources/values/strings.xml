@@ -68,12 +68,15 @@
     <string name="notification_settings_permission_open_settings">Open Device Settings</string>
     <string name="notification_settings_permission_title">Allow Push Notifications</string>
     <string name="notification_settings_title">Notification Settings</string>
-    <string name="packaging_type_multi_select_clear_selection">Clear selection</string>
-    <string name="packaging_type_multi_select_search_hint">Search packaging types</string>
+    <string name="packaging_type_filter_sheet_title">Packaging type</string>
     <string name="pull_to_refresh_complete_label">Up-to-date!</string>
     <string name="pull_to_refresh_pull_label">Pull down…</string>
     <string name="pull_to_refresh_refreshing_label">Refreshing…</string>
     <string name="pull_to_refresh_release_label">Release to refresh!</string>
+    <string name="reset_filter_confirm_dialog_button_cancel">Cancel</string>
+    <string name="reset_filter_confirm_dialog_button_confirm">Confirm</string>
+    <string name="reset_filter_confirm_dialog_text">Are you sure you want to reset the filter?</string>
+    <string name="reset_filter_confirm_dialog_title">Reset filter</string>
     <string name="search_filter_date_any_time">Any time</string>
     <string name="search_filter_date_custom_range">Custom range</string>
     <string name="search_filter_date_one_month">Released in a month</string>
@@ -125,8 +128,7 @@
     <string name="status_filter_expired">Expired sets</string>
     <string name="status_filter_future">Future sets</string>
     <string name="status_filter_sheet_title">Status</string>
-    <string name="theme_multi_select_clear_selection">Clear selection</string>
-    <string name="theme_multi_select_search_hint">Search themes</string>
+    <string name="theme_filter_sheet_title">Theme</string>
     <string name="theme_name_animal_crossing">Animal Crossing™</string>
     <string name="theme_name_architecture">Architecture</string>
     <string name="theme_name_art">Art</string>

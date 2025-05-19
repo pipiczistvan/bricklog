@@ -6,8 +6,6 @@ import androidx.savedstate.read
 import androidx.savedstate.write
 import com.eygraber.uri.UriCodec
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import kotlinx.serialization.KSerializer
@@ -47,7 +45,4 @@ object CustomNavType {
     val SetListArgumentsType = JsonEncodedNavType(SetListArguments.serializer())
     val SetDetailArgumentsType = JsonEncodedNavType(SetDetailArguments.serializer())
     val SetImageArgumentsType = JsonEncodedNavType(SetImageArguments.serializer())
-    val ThemeMultiSelectArgumentsType = JsonEncodedNavType(ThemeMultiSelectArguments.serializer())
-    val PackagingTypeMultiSelectArgumentsType =
-        JsonEncodedNavType(PackagingTypeMultiSelectArguments.serializer())
 }

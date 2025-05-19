@@ -30,53 +30,50 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun StatusFilterBottomSheet(
-    showBottomSheet: Boolean,
     onShowBottomSheetChanged: (Boolean) -> Unit,
-    selectedOption: StatusFilterOption,
-    onSelectOption: (StatusFilterOption) -> Unit,
+    selected: StatusFilterOption,
+    onSelectionChange: (StatusFilterOption) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
-            onDismissRequest = {
-                onShowBottomSheetChanged(false)
-            },
-            sheetState = sheetState
-        ) {
-            BottomSheetHeader(
-                title = stringResource(Res.string.status_filter_sheet_title),
-                onCloseClick = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onShowBottomSheetChanged(false)
-                        }
+    ModalBottomSheet(
+        modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
+        onDismissRequest = {
+            onShowBottomSheetChanged(false)
+        },
+        sheetState = sheetState
+    ) {
+        BottomSheetHeader(
+            title = stringResource(Res.string.status_filter_sheet_title),
+            onCloseClick = {
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onShowBottomSheetChanged(false)
                     }
                 }
-            )
+            }
+        )
 
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimens.MediumPadding.size)
-            ) {
-                items(StatusFilterOption.entries.toTypedArray()) { option ->
-                    StatusFilterSheetOption(
-                        option = option,
-                        selected = option == selectedOption,
-                        onClick = {
-                            onSelectOption(option)
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onShowBottomSheetChanged(false)
-                                }
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.MediumPadding.size)
+        ) {
+            items(StatusFilterOption.entries.toTypedArray()) { option ->
+                StatusFilterSheetOption(
+                    option = option,
+                    selected = option == selected,
+                    onClick = {
+                        onSelectionChange(option)
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                onShowBottomSheetChanged(false)
                             }
                         }
-                    )
-                }
+                    }
+                )
             }
         }
     }

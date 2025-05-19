@@ -44,8 +44,6 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsF
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
@@ -62,8 +60,6 @@ fun DashboardScreenRoot(
     onAboutClick: () -> Unit,
     onAppearanceClick: () -> Unit,
     onScanClick: () -> Unit,
-    onThemeMultiselectClick: (ThemeMultiSelectArguments) -> Unit,
-    onPackagingTypeMultiselectClick: (PackagingTypeMultiSelectArguments) -> Unit,
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
 ) {
@@ -114,11 +110,6 @@ fun DashboardScreenRoot(
         onSearchBarAction = { action ->
             when (action) {
                 SetSearchBarAction.OnScanClick -> onScanClick()
-                is SetSearchBarAction.OnThemeMultiselectClick -> onThemeMultiselectClick(action.arguments)
-                is SetSearchBarAction.OnPackagingTypeMultiselectClick -> onPackagingTypeMultiselectClick(
-                    action.arguments
-                )
-
                 is SetSearchBarAction.OnSetClick -> onSetClick(action.arguments)
                 is SetSearchBarAction.OnShowAllClick -> onSearchSets(action.arguments)
                 else -> Unit

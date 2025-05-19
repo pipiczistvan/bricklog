@@ -49,14 +49,13 @@ import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
 import hu.piware.bricklog.feature.set.domain.usecase.WatchPackagingTypes
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchThemes
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectViewModel
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerViewModel
@@ -149,12 +148,12 @@ val sharedModule = module {
     singleOf(::ResetSets)
     singleOf(::GetSets)
     singleOf(::SendNewSetNotification)
+    singleOf(::WatchSetFilterDomain)
 
     viewModelOf(::DispatcherViewModel)
     viewModelOf(::DataFetchViewModel)
     viewModelOf(::SetDetailViewModel)
     viewModelOf(::SetImageViewModel)
-    viewModelOf(::ThemeMultiSelectViewModel)
     viewModelOf(::DashboardViewModel)
     viewModelOf(::SetListViewModel)
     viewModelOf(::SetScannerViewModel)
@@ -162,5 +161,4 @@ val sharedModule = module {
     viewModelOf(::LicenseViewModel)
     viewModelOf(::ChangelogViewModel)
     viewModelOf(::AppearanceViewModel)
-    viewModelOf(::PackagingTypeMultiSelectViewModel)
 }

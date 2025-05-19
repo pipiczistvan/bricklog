@@ -2,16 +2,10 @@ package hu.piware.bricklog.feature.set.presentation.set_list
 
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.packaging_type_multi_select.PackagingTypeMultiSelectArguments
-import hu.piware.bricklog.feature.set.presentation.set_filter.theme_multi_select.ThemeMultiSelectArguments
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 
 sealed interface SetListAction {
     data object OnBackClick : SetListAction
-    data class OnThemeMultiselectClick(val arguments: ThemeMultiSelectArguments) : SetListAction
-    data class OnPackagingTypeMultiselectClick(val arguments: PackagingTypeMultiSelectArguments) :
-        SetListAction
-
     data class OnSetClick(val arguments: SetDetailArguments) : SetListAction
     data class OnFavouriteClick(val setId: Int) : SetListAction
     data class OnFilterChange(val filterPreferences: SetFilterPreferences) : SetListAction
