@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.feature.set.domain.model.Image
+import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 
 @Composable
@@ -49,6 +50,7 @@ fun BlurredImageBackground(
                 modifier = Modifier
                     .fillMaxSize(),
                 image = image,
+                size = ImageSize.SMALL,
                 contentScale = ContentScale.Crop
             )
         }

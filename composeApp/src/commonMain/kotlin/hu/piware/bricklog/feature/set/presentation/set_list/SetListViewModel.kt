@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -70,7 +70,7 @@ class SetListViewModel(
         }
 
     private val _filterOverrides = _uiState
-        .mapNotNull { it.filterOverrides }
+        .map { it.filterOverrides }
         .distinctUntilChanged()
 
     private val _pagingData = _filterOverrides
