@@ -51,22 +51,34 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 DashboardScreenRoot(
                     onSearchSets = { arguments ->
-                        navController.navigate(SetRoute.SetListScreen(arguments))
+                        navController.navigate(SetRoute.SetListScreen(arguments)) {
+                            launchSingleTop = true
+                        }
                     },
                     onSetClick = { arguments ->
-                        navController.navigate(SetRoute.SetDetails(arguments))
+                        navController.navigate(SetRoute.SetDetails(arguments)) {
+                            launchSingleTop = true
+                        }
                     },
                     onNotificationSettingsClick = {
-                        navController.navigate(SettingsRoute.NotificationsScreen)
+                        navController.navigate(SettingsRoute.NotificationsScreen) {
+                            launchSingleTop = true
+                        }
                     },
                     onAppearanceClick = {
-                        navController.navigate(SettingsRoute.AppearanceScreen)
+                        navController.navigate(SettingsRoute.AppearanceScreen) {
+                            launchSingleTop = true
+                        }
                     },
                     onAboutClick = {
-                        navController.navigate(SettingsRoute.AboutScreen)
+                        navController.navigate(SettingsRoute.AboutScreen) {
+                            launchSingleTop = true
+                        }
                     },
                     onScanClick = {
-                        navController.navigate(SetRoute.SetScannerScreen)
+                        navController.navigate(SetRoute.SetScannerScreen) {
+                            launchSingleTop = true
+                        }
                     },
                     selectedThemes = selectedThemes,
                     selectedPackagingTypes = selectedPackagingTypes
@@ -81,7 +93,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 SetDetailScreenRoot(
                     onBackClick = navController::navigateUp,
-                    onImageClick = { arguments -> navController.navigate(SetRoute.SetImage(arguments)) }
+                    onImageClick = { arguments ->
+                        navController.navigate(SetRoute.SetImage(arguments)) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
         }
@@ -92,9 +108,7 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
         ) {
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 SetImageScreenRoot(
-                    onBackClick = {
-                        navController.navigateUp()
-                    }
+                    onBackClick = navController::navigateUp,
                 )
             }
         }
@@ -106,7 +120,9 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
             SetListScreenRoot(
                 onBackClick = navController::navigateUp,
                 onSetClick = { arguments ->
-                    navController.navigate(SetRoute.SetDetails(arguments))
+                    navController.navigate(SetRoute.SetDetails(arguments)) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -118,6 +134,7 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                         popUpTo(SetRoute.SetScannerScreen) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             )

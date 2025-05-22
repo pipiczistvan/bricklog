@@ -33,6 +33,7 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 },
                 onNavigateToDataFetch = {
@@ -40,6 +41,7 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             )

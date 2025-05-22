@@ -30,47 +30,41 @@ sealed interface SettingsRoute {
 fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     composable<SettingsRoute.NotificationsScreen> {
         NotificationsScreenRoot(
-            onBackClick = {
-                navController.navigateUp()
-            }
+            onBackClick = navController::navigateUp
         )
     }
 
     composable<SettingsRoute.AboutScreen> {
         AboutScreenRoot(
-            onBackClick = {
-                navController.navigateUp()
-            },
+            onBackClick = navController::navigateUp,
             onChangelogClick = {
-                navController.navigate(SettingsRoute.ChangelogScreen)
+                navController.navigate(SettingsRoute.ChangelogScreen) {
+                    launchSingleTop = true
+                }
             },
             onLicenseClick = {
-                navController.navigate(SettingsRoute.LicenseScreen)
+                navController.navigate(SettingsRoute.LicenseScreen) {
+                    launchSingleTop = true
+                }
             }
         )
     }
 
     composable<SettingsRoute.ChangelogScreen> {
         ChangelogScreenRoot(
-            onBackClick = {
-                navController.navigateUp()
-            }
+            onBackClick = navController::navigateUp
         )
     }
 
     composable<SettingsRoute.LicenseScreen> {
         LicenseScreenRoot(
-            onBackClick = {
-                navController.navigateUp()
-            }
+            onBackClick = navController::navigateUp
         )
     }
 
     composable<SettingsRoute.AppearanceScreen> {
         AppearanceScreenRoot(
-            onBackClick = {
-                navController.navigateUp()
-            }
+            onBackClick = navController::navigateUp
         )
     }
 }

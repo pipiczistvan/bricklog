@@ -174,7 +174,9 @@ private fun observeNotificationEvents(
                                 showFilterBar = false
                             )
                         )
-                    )
+                    ) {
+                        launchSingleTop = true
+                    }
                 }
 
             is NotificationEvent.Empty -> Unit
