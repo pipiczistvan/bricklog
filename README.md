@@ -27,7 +27,7 @@ Supports light mode, dark mode.
 
 </div>
 
-## Screenshots
+# Screenshots
 
 <p align="center" width="100%">
   <img src="readme/phone_screenshot_light_1.png" width="30%">
@@ -38,7 +38,7 @@ Supports light mode, dark mode.
   <img src="readme/phone_screenshot_dark_3.png" width="30%">
 </p>
 
-## Features
+# Features
 
 - **Offline access:** After the initial download, the whole lego database is available offline.
 - **Notifications:** Get notifications when a new set is available in the database.
@@ -49,7 +49,7 @@ Supports light mode, dark mode.
 - **Scan barcode:** Scan a set barcode and access its details instantly.
 - **Set instructions:** Download set instructions directly from the app.
 
-## Development
+# Development
 
 <div align="center">
 
@@ -57,23 +57,36 @@ Supports light mode, dark mode.
 
 </div>
 
-### Environment setup
+## Environment setup
 
-1. Either obtain a brickset api key [here](https://brickset.com/tools/webservices/requestkey), or
-   use a random string with a mock datasource.
-2. Include `BRICKSET_API_KEY=<API_KEY>` in [local.properties](local.properties)
-3. For development purposes use the mock remote implementations
-   in [initKoin.kt](composeApp/src/commonMain/kotlin/hu/piware/bricklog/di/initKoin.kt)
+Configure build flavor in [local.properties](local.properties) like this: `buildkonfig.flavor=mock`
 
-### Android setup
+### Available flavors
+
+| 	                           | prod (default) 	 | dev 	 | mock 	 |
+|-----------------------------|------------------|-------|--------|
+| Requires Firebase setup   	 | yes            	 | yes 	 | no   	 |
+| Requires Brickset API key 	 | yes            	 | yes 	 | no   	 |
+| Developer options enabled 	 | no             	 | yes 	 | yes  	 |
+
+### Brickset API key
+
+You can obtain a brickset api key [here](https://brickset.com/tools/webservices/requestkey) and
+include `BRICKSET_API_KEY=<API_KEY>` in [local.properties](local.properties)
+
+### Firebase setup
+
+#### Android
 
 Download a `google-services.json` from Firebase and place in `composeApp` folder
 
-#### Note
+#### iOS
 
-Run `gradle signingreport` to get signing information.
+1. Build the project in Android Studio to generate necessary files.
+2. Open the iosApp.xcworkspace file in Xcode
+3. Download a `GoogleService-Info.plist` and place in `iosApp/iosApp`
 
-#### Baseline Profile
+## Baseline Profile (android)
 
 Generate baseline profile using BaselineProfileGenerator on a rooted emulator.
 Run benchmarks on real device.
@@ -83,12 +96,6 @@ Run benchmarks on real device.
 3. Execute ./gradlew :composeApp:generateReleaseBaselineProfile
 4. Test with benchmarks
 5. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
-
-### iOS setup
-
-1. Build the project in Android Studio to generate necessary files.
-2. Open the iosApp.xcworkspace file in Xcode
-3. Download a `GoogleService-Info.plist` and place in `iosApp/iosApp`
 
 ## Troubleshoot
 

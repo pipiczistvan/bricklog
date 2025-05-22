@@ -13,8 +13,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.crashlytics)
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.baselineprofile)
 }
@@ -178,17 +176,20 @@ room {
 buildkonfig {
     packageName = "hu.piware.bricklog"
 
+    val bricksetApiKey: String = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
+
     defaultConfigs {
-        val apiKey: String? = properties["BRICKSET_API_KEY"]?.toString()
-
-        require(!apiKey.isNullOrEmpty()) {
-            "Register your api key from developer and place it in local.properties as `BRICKSET_API_KEY`"
-        }
-
-        val devMode: String = properties["DEV_MODE"]?.toString() ?: "false"
-
-        buildConfigField(STRING, "BRICKSET_API_KEY", apiKey)
-        buildConfigField(BOOLEAN, "DEV_MODE", devMode)
+        buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
+        buildConfigField(BOOLEAN, "DEV_MODE", "false")
+        buildConfigField(BOOLEAN, "MOCK", "false")
+    }
+    defaultConfigs("mock") {
+        buildConfigField(BOOLEAN, "DEV_MODE", "true")
+        buildConfigField(BOOLEAN, "MOCK", "true")
+    }
+    defaultConfigs("dev") {
+        buildConfigField(BOOLEAN, "DEV_MODE", "true")
+        buildConfigField(BOOLEAN, "MOCK", "false")
     }
 
     tasks.build.dependsOn("generateBuildKonfig")
@@ -203,6 +204,11 @@ dependencies {
     "baselineProfile"(project(":baselineprofile"))
     ksp(libs.room.compiler)
     debugImplementation(compose.uiTooling)
+}
+
+if (file("google-services.json").exists()) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.crashlytics.get().pluginId)
 }
 
 private fun loadLocalProperties() {
