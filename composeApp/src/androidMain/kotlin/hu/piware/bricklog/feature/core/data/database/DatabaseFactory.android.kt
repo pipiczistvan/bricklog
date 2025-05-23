@@ -3,7 +3,9 @@ package hu.piware.bricklog.feature.core.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import org.koin.core.annotation.Single
 
+@Single
 actual class DatabaseFactory(
     private val context: Context
 ) {

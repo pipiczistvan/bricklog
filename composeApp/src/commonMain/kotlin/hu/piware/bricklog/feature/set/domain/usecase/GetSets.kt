@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.first
+import org.koin.core.annotation.Single
 
+@Single
 class GetSets(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,

@@ -41,14 +41,17 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
+@KoinViewModel
 class DashboardViewModel(
     private val watchSetUIs: WatchSetUIs,
     private val updateSets: UpdateSets,
     private val watchBricksetUpdateInfo: WatchBricksetUpdateInfo,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val saveNotificationPreferences: SaveNotificationPreferences,
-    private val permissionsController: PermissionsController,
+    @Provided private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val resetSets: ResetSets,
     private val watchSetFilterDomain: WatchSetFilterDomain,

@@ -13,7 +13,9 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.core.annotation.Single
 
+@Single
 class AssetLocalChangelogDataSource : LocalChangelogDataSource {
 
     private val logger = Logger.withTag("AssetLocalChangelogDataSource")

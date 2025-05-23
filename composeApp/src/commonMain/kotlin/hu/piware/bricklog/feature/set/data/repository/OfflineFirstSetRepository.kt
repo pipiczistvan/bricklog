@@ -14,8 +14,10 @@ import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import org.koin.core.annotation.Single
 import kotlin.time.measureTimedValue
 
+@Single
 class OfflineFirstSetRepository(
     private val remoteDataSource: RemoteSetDataSource,
     private val localDataSource: LocalSetDataSource,

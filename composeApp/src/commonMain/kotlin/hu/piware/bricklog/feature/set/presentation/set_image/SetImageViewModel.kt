@@ -19,9 +19,9 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
 
 class SetImageViewModel(
+    savedStateHandle: SavedStateHandle,
     private val watchSetUI: WatchSetUI,
     private val getAdditionalImages: GetAdditionalImages,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _arguments = savedStateHandle.toRoute<SetRoute.SetImage>(

@@ -13,7 +13,9 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class DataFetchViewModel(
     private val updateSets: UpdateSets,
     private val hasAnySets: HasAnySets,

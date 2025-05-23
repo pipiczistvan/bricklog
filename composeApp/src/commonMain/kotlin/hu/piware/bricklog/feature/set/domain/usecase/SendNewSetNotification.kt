@@ -7,7 +7,9 @@ import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import hu.piware.bricklog.feature.settings.domain.util.newSetsEnabled
 import kotlinx.coroutines.flow.firstOrNull
+import org.koin.core.annotation.Single
 
+@Single
 class SendNewSetNotification(
     private val settingsRepository: SettingsRepository,
 ) {

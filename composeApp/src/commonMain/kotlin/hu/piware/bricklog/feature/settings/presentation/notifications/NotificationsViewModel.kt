@@ -14,9 +14,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
+@KoinViewModel
 class NotificationsViewModel(
-    private val permissionsController: PermissionsController,
+    @Provided private val permissionsController: PermissionsController,
     private val watchNotificationPreferences: WatchNotificationPreferences,
     private val saveNotificationPreferences: SaveNotificationPreferences,
 ) : ViewModel() {

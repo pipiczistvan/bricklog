@@ -1,15 +1,20 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import androidx.sqlite.SQLiteException
+import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetInstructionDataSource
 import hu.piware.bricklog.feature.set.domain.model.Instruction
+import org.koin.core.annotation.Single
 
+@Single
 class RoomLocalSetInstructionDataSource(
-    private val dao: SetInstructionDao,
+    database: BricklogDatabase,
 ) : LocalSetInstructionDataSource {
+
+    private val dao = database.setInstructionsDao
 
     override suspend fun updateInstructions(
         setId: Int,

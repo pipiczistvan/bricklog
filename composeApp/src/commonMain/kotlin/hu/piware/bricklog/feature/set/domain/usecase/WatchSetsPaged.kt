@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
+@Single
 class WatchSetsPaged(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,

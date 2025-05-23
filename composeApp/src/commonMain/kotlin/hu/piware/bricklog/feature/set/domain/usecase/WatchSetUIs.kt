@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
+@Single
 class WatchSetUIs(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,

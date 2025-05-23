@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import kotlinx.datetime.Instant
+import org.koin.core.annotation.Single
 
+@Single
 class ResetSets(
     private val setRepository: SetRepository,
     private val updateInfoRepository: UpdateInfoRepository,

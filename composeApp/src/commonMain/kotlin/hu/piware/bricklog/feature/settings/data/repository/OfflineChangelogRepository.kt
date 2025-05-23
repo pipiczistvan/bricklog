@@ -5,7 +5,9 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.settings.domain.datasource.LocalChangelogDataSource
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import hu.piware.bricklog.feature.settings.domain.repository.ChangelogRepository
+import org.koin.core.annotation.Single
 
+@Single
 class OfflineChangelogRepository(
     private val localDataSource: LocalChangelogDataSource,
 ) : ChangelogRepository {

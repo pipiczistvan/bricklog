@@ -4,7 +4,9 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import org.koin.core.annotation.Single
 
+@Single
 class WatchSetFilterDomain(
     private val setRepository: SetRepository,
 ) {

@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.data.network
 
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.core.data.network.safeCall
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
@@ -12,10 +13,13 @@ import korlibs.io.compression.uncompress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 import kotlin.time.measureTimedValue
 
+@Single
 class KtorRemoteSetDataSource(
-    private val httpClient: HttpClient,
+    @Named(HttpClientFactory.DOWNLOAD) private val httpClient: HttpClient,
 ) : RemoteSetDataSource {
     private val logger = Logger.withTag("KtorRemoteSetDataSource")
 

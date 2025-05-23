@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.set.domain.datasource.LocalSetImageDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetImageDataSource
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.repository.SetImageRepository
+import org.koin.core.annotation.Single
 
+@Single
 class OfflineFirstSetImageRepository(
     private val remoteDataSource: RemoteSetImageDataSource,
     private val localDataSource: LocalSetImageDataSource,

@@ -1,15 +1,20 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import androidx.sqlite.SQLiteException
+import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetImageDataSource
 import hu.piware.bricklog.feature.set.domain.model.Image
+import org.koin.core.annotation.Single
 
+@Single
 class RoomLocalSetImageDataSource(
-    private val dao: SetImageDao,
+    database: BricklogDatabase,
 ) : LocalSetImageDataSource {
+
+    private val dao = database.setImagesDao
 
     override suspend fun updateImages(
         setId: Int,

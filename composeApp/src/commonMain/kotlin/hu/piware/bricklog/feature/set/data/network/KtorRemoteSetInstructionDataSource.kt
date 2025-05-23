@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.data.network
 
 import hu.piware.bricklog.BuildKonfig
+import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.core.data.network.decodeBody
 import hu.piware.bricklog.feature.core.data.network.safeCall
 import hu.piware.bricklog.feature.core.domain.DataError
@@ -13,11 +14,14 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Single
 
 private const val BASE_URL = "https://brickset.com/api/v3.asmx/getInstructions"
 
+@Single
 class KtorRemoteSetInstructionDataSource(
-    private val httpClient: HttpClient,
+    @Named(HttpClientFactory.BRICKSET) private val httpClient: HttpClient,
 ) : RemoteSetInstructionDataSource {
 
     override suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Remote> {

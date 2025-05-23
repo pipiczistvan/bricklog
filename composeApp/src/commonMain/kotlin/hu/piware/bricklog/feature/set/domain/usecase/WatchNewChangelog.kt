@@ -7,7 +7,9 @@ import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
+@Single
 class WatchNewChangelog(
     private val settingsRepository: SettingsRepository,
     private val changelogRepository: ChangelogRepository,

@@ -12,8 +12,10 @@ import hu.piware.bricklog.feature.set.domain.repository.SetInstructionRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import org.koin.core.annotation.Single
 import kotlin.time.Duration.Companion.days
 
+@Single
 class GetInstructions(
     private val setInstructionRepository: SetInstructionRepository,
     private val updateInfoRepository: UpdateInfoRepository,

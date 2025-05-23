@@ -5,7 +5,9 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
+import org.koin.core.annotation.Single
 
+@Single
 class HasAnySets(
     private val setRepository: SetRepository,
 ) {

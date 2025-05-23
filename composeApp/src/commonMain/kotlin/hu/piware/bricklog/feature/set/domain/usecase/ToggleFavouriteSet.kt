@@ -4,7 +4,9 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.repository.SetPreferencesRepository
 import kotlinx.coroutines.flow.firstOrNull
+import org.koin.core.annotation.Single
 
+@Single
 class ToggleFavouriteSet(
     private val setPreferencesRepository: SetPreferencesRepository
 ) {

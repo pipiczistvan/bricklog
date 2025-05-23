@@ -8,7 +8,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
+import org.koin.core.annotation.Single
 
+@Single
 class SetListCsvParser {
 
     private val csvFormat = CSVFormat.Default {

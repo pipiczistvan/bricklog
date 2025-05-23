@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.set.domain.datasource.LocalSetInstructionDataS
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetInstructionDataSource
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.repository.SetInstructionRepository
+import org.koin.core.annotation.Single
 
+@Single
 class OfflineFirstSetInstructionRepository(
     private val remoteDataSource: RemoteSetInstructionDataSource,
     private val localDataSource: LocalSetInstructionDataSource,

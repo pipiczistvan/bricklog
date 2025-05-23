@@ -5,7 +5,9 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetPreferencesDataSource
 import hu.piware.bricklog.feature.set.domain.repository.SetPreferencesRepository
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Single
 
+@Single
 class OfflineSetPreferencesRepository(
     private val localDataSource: LocalSetPreferencesDataSource,
 ) : SetPreferencesRepository {

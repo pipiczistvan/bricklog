@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import androidx.sqlite.SQLiteException
+import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
@@ -8,10 +9,14 @@ import hu.piware.bricklog.feature.set.domain.datasource.LocalSetPreferencesDataS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
+@Single
 class RoomLocalSetPreferencesDataSource(
-    private val dao: SetPreferenceDao,
+    database: BricklogDatabase,
 ) : LocalSetPreferencesDataSource {
+
+    private val dao = database.setPreferenceDao
 
     override fun watchFavouriteSetIds(): Flow<List<Int>> {
         return dao.watchFavouriteSets()

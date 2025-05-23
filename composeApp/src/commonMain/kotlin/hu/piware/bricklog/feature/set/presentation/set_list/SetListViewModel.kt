@@ -39,9 +39,9 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
 
 class SetListViewModel(
+    savedStateHandle: SavedStateHandle,
     watchSetsPaged: WatchSetsPaged,
     watchFavouriteSetIds: WatchFavouriteSetIds,
-    savedStateHandle: SavedStateHandle,
     private val toggleFavouriteSet: ToggleFavouriteSet,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,

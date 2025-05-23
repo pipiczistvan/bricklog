@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogR
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class DispatcherViewModel(
     private val hasAnySets: HasAnySets,
     private val initializeChangelogReadVersion: InitializeChangelogReadVersion,

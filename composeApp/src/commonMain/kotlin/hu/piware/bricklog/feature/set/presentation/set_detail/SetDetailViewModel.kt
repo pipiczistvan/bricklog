@@ -23,10 +23,10 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
 
 class SetDetailViewModel(
+    savedStateHandle: SavedStateHandle,
     private val watchSetUI: WatchSetUI,
     private val getInstructions: GetInstructions,
     private val toggleFavouriteSet: ToggleFavouriteSet,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(

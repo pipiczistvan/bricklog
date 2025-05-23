@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.settings.domain.usecase.ReadTextFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class LicenseViewModel(
     private val readTextFile: ReadTextFile,
 ) : ViewModel() {

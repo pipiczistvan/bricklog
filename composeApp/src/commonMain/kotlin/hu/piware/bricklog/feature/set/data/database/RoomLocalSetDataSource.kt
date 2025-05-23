@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room.RoomRawQuery
 import androidx.sqlite.SQLiteException
+import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
@@ -16,22 +17,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.datetime.Instant
+import org.koin.core.annotation.Single
 
+@Single
 class RoomLocalSetDataSource(
-    private val setDao: SetDao,
+    database: BricklogDatabase,
 ) : LocalSetDataSource {
+
+    private val dao = database.setDao
 
     override fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>> {
         val query = RoomRawQuery(buildGetSetSql(queryOptions))
 
-        return setDao.watchSets(query)
+        return dao.watchSets(query)
             .map { setEntities ->
                 setEntities.map { it.toDomainModel() }
             }
     }
 
     override fun watchSet(id: Int): Flow<Set> {
-        return setDao.watchSet(id)
+        return dao.watchSet(id)
             .mapNotNull { it?.toDomainModel() }
     }
 
@@ -39,7 +44,7 @@ class RoomLocalSetDataSource(
         val query = RoomRawQuery(buildGetSetSql(queryOptions))
 
         return try {
-            val sets = setDao.getSets(query).map { it.toDomainModel() }
+            val sets = dao.getSets(query).map { it.toDomainModel() }
             return Result.Success(sets)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
@@ -48,7 +53,7 @@ class RoomLocalSetDataSource(
 
     override suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local> {
         return try {
-            setDao.upsertAll(sets.map { it.toEntity() })
+            dao.upsertAll(sets.map { it.toEntity() })
             Result.Success(Unit)
         } catch (e: SQLiteException) {
             Result.Error(DataError.Local.DISK_FULL)
@@ -66,7 +71,7 @@ class RoomLocalSetDataSource(
             )
         ) {
             val query = RoomRawQuery(buildGetSetSql(queryOptions))
-            setDao.pagingSource(query)
+            dao.pagingSource(query)
         }.flow.map { pagingData ->
             pagingData.map { it.toDomainModel() }
         }
@@ -74,7 +79,7 @@ class RoomLocalSetDataSource(
 
     override suspend fun getSetCount(): Result<Int, DataError.Local> {
         return try {
-            val count = setDao.getSetCount()
+            val count = dao.getSetCount()
             Result.Success(count)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
@@ -82,16 +87,16 @@ class RoomLocalSetDataSource(
     }
 
     override fun watchThemes(): Flow<List<String>> {
-        return setDao.watchThemes()
+        return dao.watchThemes()
     }
 
     override fun watchPackagingTypes(): Flow<List<String>> {
-        return setDao.watchPackagingTypes()
+        return dao.watchPackagingTypes()
     }
 
     override suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local> {
         return try {
-            setDao.deleteSetsUpdatedAfter(date)
+            dao.deleteSetsUpdatedAfter(date)
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)

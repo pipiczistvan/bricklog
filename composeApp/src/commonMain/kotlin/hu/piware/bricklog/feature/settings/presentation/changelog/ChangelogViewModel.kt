@@ -9,7 +9,9 @@ import hu.piware.bricklog.feature.settings.domain.usecase.GetChangelog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class ChangelogViewModel(
     private val getChangelog: GetChangelog,
 ) : ViewModel() {

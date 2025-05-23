@@ -12,7 +12,7 @@ import org.koin.dsl.module
 actual val platformModule = module {
     single { DatabaseFactory() }
     single { Darwin.create() }
-    single { DatastoreFactory().create() }
+    single { DatastoreFactory() }
     single { PermissionsController() }.bind<PermissionsControllerProtocol>()
     single { LocaleManager() }
 }

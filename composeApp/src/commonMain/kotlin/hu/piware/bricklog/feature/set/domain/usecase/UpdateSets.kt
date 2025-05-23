@@ -11,7 +11,9 @@ import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import kotlinx.datetime.Clock
+import org.koin.core.annotation.Single
 
+@Single
 class UpdateSets(
     private val dataServiceRepository: DataServiceRepository,
     private val setRepository: SetRepository,

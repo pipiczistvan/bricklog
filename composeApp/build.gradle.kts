@@ -1,7 +1,9 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import com.google.devtools.ksp.KspExperimental
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -82,6 +84,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.annotations)
 
             implementation(libs.gitlive.firebase.firestore)
             implementation(libs.gitlive.firebase.analytics)
@@ -108,6 +111,11 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+    }
+
+    // KSP Common sourceSet
+    sourceSets.named("commonMain").configure {
+        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin/org/koin/ksp/generated")
     }
 }
 
@@ -204,6 +212,26 @@ dependencies {
     "baselineProfile"(project(":baselineprofile"))
     ksp(libs.room.compiler)
     debugImplementation(compose.uiTooling)
+
+    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", libs.koin.ksp.compiler)
+    add("kspIosX64", libs.koin.ksp.compiler)
+    add("kspIosArm64", libs.koin.ksp.compiler)
+    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
+}
+
+// Trigger Common Metadata Generation from Native tasks
+project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+ksp {
+    arg("USE_COMPOSE_VIEWMODEL", "true")
+    arg("KOIN_CONFIG_CHECK", "true")
+    @OptIn(KspExperimental::class)
+    useKsp2 = false // Had to disable to 'Trigger Common Metadata Generation from Native tasks' work
 }
 
 if (file("google-services.json").exists()) {

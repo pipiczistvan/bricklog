@@ -20,7 +20,9 @@ import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Single
 
+@Single
 class DataStoreLocalSettingsDataSource(
     private val dataStore: DataStore<Preferences>,
 ) : LocalSettingsDataSource {
