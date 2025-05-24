@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.google.devtools.ksp.KspExperimental
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -127,8 +128,8 @@ android {
         applicationId = "hu.piware.bricklog"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 25041801
-        versionName = "1.0.0"
+        versionCode = libs.versions.app.release.get().toInt()
+        versionName = libs.versions.app.version.get()
     }
     packaging {
         resources {
@@ -190,6 +191,7 @@ buildkonfig {
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
         buildConfigField(BOOLEAN, "DEV_MODE", "false")
         buildConfigField(BOOLEAN, "MOCK", "false")
+        buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
     }
     defaultConfigs("mock") {
         buildConfigField(BOOLEAN, "DEV_MODE", "true")

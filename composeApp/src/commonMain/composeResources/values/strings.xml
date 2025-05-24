@@ -10,7 +10,7 @@
     <string name="about_section_developer_description">piware</string>
     <string name="about_section_developer_title">Developed by</string>
     <string name="about_section_profile_app_name">Bricklog</string>
-    <string name="about_section_profile_build_version">v%1$s (build %2$s)</string>
+    <string name="about_section_profile_build_version">%1$s-%2$s (build %3$s)</string>
     <string name="about_section_tools">Tools</string>
     <string name="about_section_tools_framework">Framework</string>
     <string name="about_section_tools_framework_description">Kotlin Multiplatform</string>
