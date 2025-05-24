@@ -11,7 +11,7 @@ androidx-datastore = "1.1.4"                    # https://developer.android.com/
 androidx-espressoCore = "3.6.1"                 # https://developer.android.com/jetpack/androidx/releases/test
 androidx-junit = "1.2.1"                        # https://developer.android.com/jetpack/androidx/releases/test
 androidx-lifecycle = "2.8.4"                    # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle
-androidx-navigation-compose = "2.9.0-alpha16"   # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+androidx-navigation-compose = "2.9.0-beta02"    # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 androidx-paging = "3.3.6"                       # https://developer.android.com/jetpack/androidx/releases/paging
 androidx-profileinstaller = "1.4.1"             # https://developer.android.com/jetpack/androidx/releases/profileinstaller
 androidx-room = "2.7.1"                         # https://developer.android.com/jetpack/androidx/releases/room
@@ -20,7 +20,7 @@ androidx-uiautomator = "2.3.0"                  # https://developer.android.com/
 androidx-work = "2.10.1"                        # https://developer.android.com/jetpack/androidx/releases/work
 buildkonfig = "0.17.1"                          # https://github.com/yshrsmz/BuildKonfig
 coil3 = "3.1.0"                                 # https://github.com/coil-kt/coil
-compose-multiplatform = "1.7.3"                 # https://github.com/JetBrains/compose-multiplatform
+compose-multiplatform = "1.8.1"                 # https://github.com/JetBrains/compose-multiplatform
 crashlytics = "3.0.3"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 firebase-bom = "33.13.0"                        # https://firebase.google.com/support/release-notes/android
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
