@@ -2,12 +2,10 @@
 
 package hu.piware.bricklog
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -41,7 +39,10 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
 import hu.piware.bricklog.ui.navigation.RootRoute
+import hu.piware.bricklog.ui.navigation.ScaleTransitionDirection
 import hu.piware.bricklog.ui.navigation.rootGraph
+import hu.piware.bricklog.ui.navigation.scaleIntoContainer
+import hu.piware.bricklog.ui.navigation.scaleOutOfContainer
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -94,28 +95,16 @@ fun App(
                             navController = navController,
                             startDestination = RootRoute.Graph,
                             enterTransition = {
-                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Start,
-                                    tween(300)
-                                )
+                                scaleIntoContainer()
                             },
                             exitTransition = {
-                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Start,
-                                    tween(300)
-                                )
+                                scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
                             },
                             popEnterTransition = {
-                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.End,
-                                    tween(300)
-                                )
+                                scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
                             },
                             popExitTransition = {
-                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.End,
-                                    tween(300)
-                                )
+                                scaleOutOfContainer()
                             }
                         ) {
                             rootGraph(navController)
