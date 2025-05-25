@@ -27,7 +27,7 @@ fun ActionRow(
     title: String,
     onClick: () -> Unit,
     startIcon: @Composable () -> Unit = {},
-    navigationType: ActionNavigationType,
+    navigationType: ActionNavigationType? = null,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -45,15 +45,17 @@ fun ActionRow(
                 modifier = Modifier.padding(8.dp),
                 text = title
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = when (navigationType) {
-                    ActionNavigationType.IN_APP -> Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    ActionNavigationType.LINK -> Icons.AutoMirrored.Filled.OpenInNew
-                },
-                contentDescription = null,
-                tint = LocalContentColor.current.copy(alpha = 0.6f)
-            )
+            if (navigationType != null) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = when (navigationType) {
+                        ActionNavigationType.IN_APP -> Icons.AutoMirrored.Filled.KeyboardArrowRight
+                        ActionNavigationType.LINK -> Icons.AutoMirrored.Filled.OpenInNew
+                    },
+                    contentDescription = null,
+                    tint = LocalContentColor.current.copy(alpha = 0.6f)
+                )
+            }
         }
     }
 }

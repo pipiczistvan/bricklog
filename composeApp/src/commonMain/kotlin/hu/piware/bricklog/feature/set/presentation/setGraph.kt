@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hu.piware.bricklog.LocalNavAnimatedVisibilityScope
+import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
@@ -67,6 +68,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     },
                     onAppearanceClick = {
                         navController.navigate(SettingsRoute.AppearanceScreen) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onCollectionEditClick = {
+                        navController.navigate(CollectionRoute.CollectionEditScreen(it)) {
                             launchSingleTop = true
                         }
                     },

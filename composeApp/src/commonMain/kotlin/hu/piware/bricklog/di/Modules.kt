@@ -1,6 +1,7 @@
 package hu.piware.bricklog.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import hu.piware.bricklog.feature.collection.presentation.collection_edit.CollectionEditViewModel
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
@@ -24,6 +25,7 @@ val viewModelModule = module {
     viewModelOf(::SetDetailViewModel)
     viewModelOf(::SetImageViewModel)
     viewModelOf(::SetListViewModel)
+    viewModelOf(::CollectionEditViewModel)
 }
 
 @Module(

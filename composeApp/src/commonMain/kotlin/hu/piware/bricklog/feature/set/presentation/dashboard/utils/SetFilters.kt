@@ -26,11 +26,6 @@ val retiringSetsFilter = SetFilter(
     showIncomplete = false
 )
 
-val favouriteSetsFilter = SetFilter(
-    status = StatusFilterOption.ANY_STATUS,
-    isFavourite = true,
-)
-
 val newSetsNotificationFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     launchDate = DateFilter.AnyTime,

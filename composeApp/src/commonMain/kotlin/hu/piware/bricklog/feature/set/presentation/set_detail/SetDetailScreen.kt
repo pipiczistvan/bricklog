@@ -46,14 +46,18 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.barcode_ean
 import bricklog.composeapp.generated.resources.barcode_upc
 import bricklog.composeapp.generated.resources.go_back
+import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.isFavourite
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.BlurredImageBackground
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetBarcode
+import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetCollectionsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetDetailsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetInstructionsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createFirstSetDetailTableColumns
@@ -123,7 +127,14 @@ fun SetDetailScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onAction(SetDetailAction.OnFavouriteClick(state.setUI.setID)) },
+                        onClick = {
+                            onAction(
+                                SetDetailAction.OnToggleCollection(
+                                    setId = state.setUI.setID,
+                                    collectionId = COLLECTION_ID_FAVOURITE_SETS
+                                )
+                            )
+                        },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
                             containerColor = Color.White
                         )
@@ -148,8 +159,9 @@ fun SetDetailScreen(
         Content(
             setUI = state.setUI,
             instructions = state.instructions,
+            availableCollections = state.availableCollections,
             sharedElementPrefix = state.sharedElementPrefix,
-            onImageClick = { onAction(SetDetailAction.OnImageClick(state.setUI.setID)) },
+            onAction = onAction,
             paddingValues = padding
         )
     }
@@ -159,9 +171,10 @@ fun SetDetailScreen(
 private fun Content(
     setUI: SetUI,
     instructions: List<Instruction>?,
+    availableCollections: List<Collection>,
     sharedElementPrefix: String,
-    onImageClick: () -> Unit,
     paddingValues: PaddingValues,
+    onAction: (SetDetailAction) -> Unit,
 ) {
     ContentColumn(
         modifier = Modifier
@@ -179,7 +192,9 @@ private fun Content(
         SetHeaderImage(
             setUI = setUI,
             sharedElementPrefix = sharedElementPrefix,
-            onClick = onImageClick
+            onClick = {
+                onAction(SetDetailAction.OnImageClick(setUI.setID))
+            }
         )
 
         Text(
@@ -190,7 +205,9 @@ private fun Content(
 
         SetDetails(
             setUI = setUI,
-            instructions = instructions
+            instructions = instructions,
+            availableCollections = availableCollections,
+            onAction = onAction
         )
     }
 }
@@ -232,6 +249,8 @@ private fun SetHeaderImage(
 private fun SetDetails(
     setUI: SetUI,
     instructions: List<Instruction>?,
+    availableCollections: List<Collection>,
+    onAction: (SetDetailAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -250,6 +269,15 @@ private fun SetDetails(
         SetInstructionsTable(
             modifier = Modifier.clip(Shapes.medium),
             instructions = instructions
+        )
+
+        SetCollectionsTable(
+            modifier = Modifier.clip(Shapes.medium),
+            setCollections = setUI.collections,
+            availableCollections = availableCollections,
+            onToggleCollection = {
+                onAction(SetDetailAction.OnToggleCollection(setUI.setID, it))
+            }
         )
 
         setUI.set.barcodeEAN?.let {

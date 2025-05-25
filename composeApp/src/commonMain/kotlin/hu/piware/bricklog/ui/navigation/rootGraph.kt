@@ -3,6 +3,7 @@ package hu.piware.bricklog.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
+import hu.piware.bricklog.feature.collection.collectionGraph
 import hu.piware.bricklog.feature.onboarding.presentation.OnboardingRoute
 import hu.piware.bricklog.feature.onboarding.presentation.onboardingGraph
 import hu.piware.bricklog.feature.set.presentation.setGraph
@@ -21,6 +22,7 @@ fun NavGraphBuilder.rootGraph(navController: NavHostController) {
     ) {
         onboardingGraph(navController)
         setGraph(navController)
+        collectionGraph(navController)
         settingsGraph(navController)
     }
 }

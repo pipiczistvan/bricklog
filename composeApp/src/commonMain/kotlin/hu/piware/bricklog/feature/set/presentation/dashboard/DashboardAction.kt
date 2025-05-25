@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 
@@ -9,6 +10,7 @@ sealed interface DashboardAction {
     data object OnNotificationSettingsClick : DashboardAction
     data object OnAboutClick : DashboardAction
     data object OnAppearanceClick : DashboardAction
+    data class OnCollectionEditClick(val id: CollectionId) : DashboardAction
     data object OnRefreshSets : DashboardAction
     data object OnResetSets : DashboardAction
     data object OnUpdateChangelogReadVersion : DashboardAction

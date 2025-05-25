@@ -8,8 +8,6 @@ import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.onboarding.domain.usecase.HasAnySets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,7 +33,7 @@ class DataFetchViewModel(
     }
 
     private fun fetchSets() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _uiState.update { DataFetchState.Loading }
 
             updateSets(force = true)

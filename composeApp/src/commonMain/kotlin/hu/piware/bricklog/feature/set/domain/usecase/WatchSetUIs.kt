@@ -2,11 +2,11 @@
 
 package hu.piware.bricklog.feature.set.domain.usecase
 
+import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.calculateStatus
-import hu.piware.bricklog.feature.set.domain.repository.SetPreferencesRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
@@ -22,9 +22,9 @@ import org.koin.core.annotation.Single
 class WatchSetUIs(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,
-    setPreferencesRepository: SetPreferencesRepository,
+    collectionRepository: CollectionRepository,
 ) {
-    private val favouriteSetIds = setPreferencesRepository.watchFavouriteSetIds()
+    private val collectionsBySetsFlow = collectionRepository.watchCollectionsBySets()
 
     operator fun invoke(filterOverrides: SetFilter? = null, query: String = ""): Flow<List<SetUI>> {
         val parsedQueries = query.parseQueries()
@@ -38,11 +38,11 @@ class WatchSetUIs(
                 setRepository.watchSets(queryOptions)
             }
 
-        return combine(setsFlow, favouriteSetIds) { sets, favouriteSetIds ->
+        return combine(setsFlow, collectionsBySetsFlow) { sets, collectionsBySets ->
             sets.map { set ->
                 SetUI(
                     set = set,
-                    isFavourite = favouriteSetIds.contains(set.setID),
+                    collections = collectionsBySets[set.setID] ?: emptyList(),
                     status = set.calculateStatus()
                 )
             }

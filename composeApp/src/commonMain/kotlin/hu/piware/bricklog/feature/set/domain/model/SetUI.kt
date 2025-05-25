@@ -10,6 +10,8 @@ import bricklog.composeapp.generated.resources.set_status_discontinued
 import bricklog.composeapp.generated.resources.set_status_discontinued_soon
 import bricklog.composeapp.generated.resources.set_status_future_release
 import bricklog.composeapp.generated.resources.set_status_unknown
+import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -20,9 +22,12 @@ import kotlin.time.Duration.Companion.days
 
 data class SetUI(
     val set: Set,
-    val isFavourite: Boolean,
+    val collections: List<Collection>,
     val status: SetStatus,
 )
+
+val SetUI.isFavourite: Boolean
+    get() = collections.any { it.id == COLLECTION_ID_FAVOURITE_SETS }
 
 val SetUI.setID: Int
     get() = set.setID

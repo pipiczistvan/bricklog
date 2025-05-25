@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -50,6 +52,7 @@ class SetScannerViewModel(
             .onEach { sets ->
                 _uiState.update { it.copy(setUI = sets.firstOrNull()) }
             }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 }

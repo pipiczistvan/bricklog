@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.settings.domain.model
 
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
@@ -13,4 +14,5 @@ data class SetFilterPreferences(
     val packagingTypes: Set<String> = setOf("Box"),
     val status: StatusFilterOption = StatusFilterOption.ANY_STATUS,
     val showIncomplete: Boolean = false,
+    val collectionIds: Set<CollectionId> = emptySet(),
 )

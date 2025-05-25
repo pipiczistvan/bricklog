@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
+import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.onboarding.domain.usecase.HasAnySets
 import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogReadVersion
+import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeDefaultCollections
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ import org.koin.android.annotation.KoinViewModel
 class DispatcherViewModel(
     private val hasAnySets: HasAnySets,
     private val initializeChangelogReadVersion: InitializeChangelogReadVersion,
+    private val initializeDefaultCollections: InitializeDefaultCollections,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<DispatcherState>(DispatcherState.Loading)
@@ -27,6 +30,8 @@ class DispatcherViewModel(
     private fun initializeChangelogStatus() {
         viewModelScope.launch {
             initializeChangelogReadVersion()
+            initializeDefaultCollections()
+                .showSnackbarOnError()
         }
     }
 

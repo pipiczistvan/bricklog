@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.data.database.InstantConverter
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
@@ -29,7 +30,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     val statusSelect = buildStatusSelect(queryOptions.status, now)
     val showIncomplete = buildShowIncompleteSelect(queryOptions.showIncomplete)
     val barcodeSelect = buildBarcodeSelect(queryOptions.barcode)
-    val favouriteSelect = buildFavouriteSelect(queryOptions.isFavourite)
+    val favouriteSelect = buildCollectionIdSelect(queryOptions.collectionIds)
     val orderBy = buildOrderBy(queryOptions.sortOption)
     val limit = when (queryOptions.limit) {
         null -> ""
@@ -123,9 +124,15 @@ private fun buildBarcodeSelect(barcode: String?): String {
         "1"
 }
 
-private fun buildFavouriteSelect(isFavourite: Boolean): String {
-    return if (isFavourite)
-        "id IN (SELECT setId FROM set_preferences WHERE isFavourite = true)"
+private fun buildCollectionIdSelect(collectionIds: Set<CollectionId>): String {
+    return if (collectionIds.isNotEmpty())
+        """EXISTS(
+            SELECT * FROM set_collections 
+            WHERE
+             setId = sets.id
+             AND collectionId IN (${collectionIds.joinToString(separator = ", ") { "'$it'" }})
+             LIMIT 1
+           )""".trimIndent()
     else
         "1"
 }

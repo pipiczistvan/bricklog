@@ -2,6 +2,7 @@ package hu.piware.bricklog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
@@ -44,7 +45,7 @@ private val sets = (1..100).map {
 
     SetUI(
         set = set,
-        isFavourite = true,
+        collections = defaultCollections,
         status = SetStatus.ACTIVE
     )
 }

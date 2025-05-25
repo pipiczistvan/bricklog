@@ -2,8 +2,10 @@ package hu.piware.bricklog.feature.set.domain.model
 
 import kotlinx.datetime.Instant
 
+typealias SetId = Int
+
 data class Set(
-    val setID: Int,
+    val setID: SetId,
     val number: String? = null,
     val numberVariant: Int? = null,
     val name: String? = null,

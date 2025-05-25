@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.containerColor
+import hu.piware.bricklog.feature.set.domain.model.isFavourite
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize

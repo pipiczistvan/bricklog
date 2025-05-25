@@ -11,6 +11,7 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
@@ -31,10 +32,12 @@ import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -57,6 +60,7 @@ class DashboardViewModel(
     private val watchSetFilterDomain: WatchSetFilterDomain,
     private val watchNewChangelog: WatchNewChangelog,
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
+    private val watchCollections: WatchCollections,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -72,6 +76,7 @@ class DashboardViewModel(
             observeRetiringSets()
             observeSetFilterDomain()
             observeNewChangelog()
+            observeCollections()
             askNotificationPermission()
         }
 
@@ -145,6 +150,7 @@ class DashboardViewModel(
                 )
             }
             .onEach { sets -> _searchBarState.update { it.copy(searchResults = sets) } }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
@@ -159,18 +165,21 @@ class DashboardViewModel(
     private fun observeLatestSets() {
         watchSetUIs(filterOverrides = latestSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeArrivingSets() {
         watchSetUIs(filterOverrides = arrivingSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
         watchSetUIs(filterOverrides = retiringSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
@@ -183,6 +192,12 @@ class DashboardViewModel(
     private fun observeNewChangelog() {
         watchNewChangelog()
             .onEach { changelog -> _uiState.update { it.copy(changelog = changelog) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCollections() {
+        watchCollections()
+            .onEach { collections -> _uiState.update { it.copy(collections = collections) } }
             .launchIn(viewModelScope)
     }
 

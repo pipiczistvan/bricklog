@@ -14,17 +14,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.set_search_bar_chip_collections
 import bricklog.composeapp.generated.resources.set_search_bar_chip_packaging_types
 import bricklog.composeapp.generated.resources.set_search_bar_chip_release_date
 import bricklog.composeapp.generated.resources.set_search_bar_chip_show_incomplete
 import bricklog.composeapp.generated.resources.set_search_bar_chip_status
 import bricklog.composeapp.generated.resources.set_search_bar_chip_themes
+import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.toLocalDateTime
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.CollectionFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.DateFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.PackagingTypeFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarChip
@@ -42,10 +45,15 @@ fun SetFilterRow(
     filterDomain: SetFilterDomain,
     modifier: Modifier = Modifier,
 ) {
+    val mergedFilter = remember(filterPreferences, filterOverrides) {
+        filterPreferences.mergeWithFilter(filterOverrides)
+    }
+
     var showReleaseDateFilterSheet by remember { mutableStateOf(false) }
     var showStatusFilterSheet by remember { mutableStateOf(false) }
     var showThemeFilterSheet by remember { mutableStateOf(false) }
     var showPackagingTypeFilterSheet by remember { mutableStateOf(false) }
+    var showCollectionFilterSheet by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier
@@ -55,28 +63,35 @@ fun SetFilterRow(
         Spacer(Modifier.size(Dimens.SmallPadding.size))
         StatusChip(
             enabled = filterOverrides?.status == null,
-            status = filterOverrides?.status ?: filterPreferences.status,
+            status = mergedFilter.status,
             onClick = { showStatusFilterSheet = true }
         )
         ReleaseDateChip(
             enabled = filterOverrides?.launchDate == null,
-            dateFilter = filterOverrides?.launchDate ?: filterPreferences.launchDate,
+            dateFilter = mergedFilter.launchDate,
             onClick = { showReleaseDateFilterSheet = true }
         )
         ThemeChip(
             enabled = filterOverrides?.themes == null,
-            selectedThemes = filterOverrides?.themes ?: filterPreferences.themes,
+            selectedThemes = mergedFilter.themes,
             onClick = { showThemeFilterSheet = true }
         )
         PackagingTypeChip(
             enabled = filterOverrides?.packagingTypes == null,
-            selectedPackagingTypes = filterOverrides?.packagingTypes
-                ?: filterPreferences.packagingTypes,
+            selectedPackagingTypes = mergedFilter.packagingTypes,
             onClick = { showPackagingTypeFilterSheet = true }
+        )
+        CollectionChip(
+            enabled = filterOverrides?.collectionIds == null,
+            selectedCollections = mergedFilter.collectionIds
+                .mapNotNull { collectionId ->
+                    filterDomain.collections.firstOrNull { it.id == collectionId }
+                },
+            onClick = { showCollectionFilterSheet = true }
         )
         ShowIncompleteChip(
             enabled = filterOverrides?.showIncomplete == null,
-            show = filterOverrides?.showIncomplete ?: filterPreferences.showIncomplete,
+            show = mergedFilter.showIncomplete,
             onClick = { onFilterPreferencesChange(filterPreferences.copy(showIncomplete = it)) }
         )
         Spacer(Modifier.size(Dimens.SmallPadding.size))
@@ -85,16 +100,16 @@ fun SetFilterRow(
     if (showReleaseDateFilterSheet) {
         DateFilterBottomSheet(
             onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
-            selected = filterPreferences.launchDate,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) }
+            selected = mergedFilter.launchDate,
+            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(launchDate = it)) }
         )
     }
 
     if (showStatusFilterSheet) {
         StatusFilterBottomSheet(
             onShowBottomSheetChanged = { showStatusFilterSheet = it },
-            selected = filterPreferences.status,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(status = it)) }
+            selected = mergedFilter.status,
+            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(status = it)) }
         )
     }
 
@@ -102,8 +117,8 @@ fun SetFilterRow(
         ThemeFilterBottomSheet(
             onShowBottomSheetChanged = { showThemeFilterSheet = it },
             availableOptions = filterDomain.themes,
-            selected = filterPreferences.themes,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) }
+            selected = mergedFilter.themes,
+            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(themes = it)) }
         )
     }
 
@@ -111,8 +126,17 @@ fun SetFilterRow(
         PackagingTypeFilterBottomSheet(
             onShowBottomSheetChanged = { showPackagingTypeFilterSheet = it },
             availableOptions = filterDomain.packagingTypes,
-            selected = filterPreferences.packagingTypes,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) }
+            selected = mergedFilter.packagingTypes,
+            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(packagingTypes = it)) }
+        )
+    }
+
+    if (showCollectionFilterSheet) {
+        CollectionFilterBottomSheet(
+            onShowBottomSheetChanged = { showCollectionFilterSheet = it },
+            availableOptions = filterDomain.collections,
+            selected = mergedFilter.collectionIds,
+            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(collectionIds = it)) }
         )
     }
 }
@@ -204,6 +228,26 @@ private fun StatusChip(
 }
 
 @Composable
+private fun CollectionChip(
+    enabled: Boolean,
+    selectedCollections: List<Collection>,
+    onClick: () -> Unit,
+) {
+    SearchBarChip(
+        modifier = Modifier.testTag("search_bar:collection_chip"),
+        title = when (selectedCollections.size) {
+            0 -> stringResource(Res.string.set_search_bar_chip_collections)
+            1 -> selectedCollections.first().name
+            else -> "${selectedCollections.first().name} + ${selectedCollections.size - 1}"
+        },
+        isDefaultSelected = selectedCollections.isEmpty(),
+        showTrailingIcon = true,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+@Composable
 private fun ShowIncompleteChip(
     enabled: Boolean,
     show: Boolean,
@@ -215,5 +259,17 @@ private fun ShowIncompleteChip(
         isDefaultSelected = !show,
         enabled = enabled,
         onClick = { onClick(!show) }
+    )
+}
+
+private fun SetFilterPreferences.mergeWithFilter(filter: SetFilter?): SetFilterPreferences {
+    return this.copy(
+        sortOption = filter?.sortOption ?: sortOption,
+        launchDate = filter?.launchDate ?: launchDate,
+        themes = filter?.themes ?: themes,
+        packagingTypes = filter?.packagingTypes ?: packagingTypes,
+        status = filter?.status ?: status,
+        showIncomplete = filter?.showIncomplete ?: showIncomplete,
+        collectionIds = filter?.collectionIds ?: collectionIds
     )
 }

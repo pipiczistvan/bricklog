@@ -15,6 +15,7 @@ import bricklog.composeapp.generated.resources.status_filter_active
 import bricklog.composeapp.generated.resources.status_filter_any_status
 import bricklog.composeapp.generated.resources.status_filter_expired
 import bricklog.composeapp.generated.resources.status_filter_future
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import kotlin.collections.Set
@@ -30,7 +31,7 @@ data class SetFilter(
     val showIncomplete: Boolean? = null,
     val limit: Int? = null,
     val barcode: String? = null,
-    val isFavourite: Boolean? = null,
+    val collectionIds: Set<CollectionId>? = null,
 )
 
 @Serializable

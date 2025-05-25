@@ -31,6 +31,7 @@ import bricklog.composeapp.generated.resources.dashboard_section_latest_sets
 import bricklog.composeapp.generated.resources.dashboard_section_retiring_sets
 import bricklog.composeapp.generated.resources.dashboard_theme_carousel_title
 import hu.piware.bricklog.App
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
@@ -60,6 +61,7 @@ fun DashboardScreenRoot(
     onNotificationSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     onAppearanceClick: () -> Unit,
+    onCollectionEditClick: (CollectionId) -> Unit,
     onScanClick: () -> Unit,
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
@@ -103,6 +105,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnNotificationSettingsClick -> onNotificationSettingsClick()
                 is DashboardAction.OnAboutClick -> onAboutClick()
                 is DashboardAction.OnAppearanceClick -> onAppearanceClick()
+                is DashboardAction.OnCollectionEditClick -> onCollectionEditClick(action.id)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -136,6 +139,7 @@ fun DashboardScreen(
         drawerContent = {
             DashboardNavigationDrawerContent(
                 state = drawerState,
+                collections = state.collections,
                 onAction = onAction
             )
         },

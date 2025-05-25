@@ -8,14 +8,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import androidx.paging.map
+import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionsBySets
+import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.calculateStatus
-import hu.piware.bricklog.feature.set.domain.usecase.ToggleFavouriteSet
-import hu.piware.bricklog.feature.set.domain.usecase.WatchFavouriteSetIds
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.presentation.SetRoute
@@ -26,11 +27,11 @@ import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferen
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetListDisplayMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -41,8 +42,8 @@ import kotlin.reflect.typeOf
 class SetListViewModel(
     savedStateHandle: SavedStateHandle,
     watchSetsPaged: WatchSetsPaged,
-    watchFavouriteSetIds: WatchFavouriteSetIds,
-    private val toggleFavouriteSet: ToggleFavouriteSet,
+    watchCollectionsBySets: WatchCollectionsBySets,
+    private val toggleSetCollection: ToggleSetCollection,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
@@ -80,19 +81,21 @@ class SetListViewModel(
                 _arguments.searchQuery
             )
         }
+        .flowOn(Dispatchers.Default)
         .cachedIn(viewModelScope)
 
-    private val _favouriteSetIds = watchFavouriteSetIds()
+    private val _collectionsBySets = watchCollectionsBySets()
 
-    val setUiPagingData = combine(_pagingData, _favouriteSetIds) { pagingData, favouriteSetIds ->
-        pagingData.map { set ->
-            SetUI(
-                set = set,
-                isFavourite = favouriteSetIds.contains(set.setID),
-                status = set.calculateStatus()
-            )
+    val setUiPagingData =
+        combine(_pagingData, _collectionsBySets) { pagingData, collectionsBySets ->
+            pagingData.map { set ->
+                SetUI(
+                    set = set,
+                    collections = collectionsBySets[set.setID] ?: emptyList(),
+                    status = set.calculateStatus()
+                )
+            }
         }
-    }
 
     fun onAction(action: SetListAction) {
         when (action) {
@@ -104,13 +107,14 @@ class SetListViewModel(
     }
 
     private fun toggleFavourite(setId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            toggleFavouriteSet(setId).showSnackbarOnError()
+        viewModelScope.launch {
+            toggleSetCollection(setId, COLLECTION_ID_FAVOURITE_SETS)
+                .showSnackbarOnError()
         }
     }
 
     private fun saveDisplayMode(mode: SetListDisplayMode) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             saveSetListDisplayMode(mode)
         }
     }
@@ -122,7 +126,7 @@ class SetListViewModel(
     }
 
     private fun saveFilter(filterPreferences: SetFilterPreferences) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             saveSetFilterPreferences(filterPreferences)
         }
     }

@@ -31,9 +31,16 @@
     <string name="changelog_build_version">v%1$s (build %2$s)</string>
     <string name="changelog_title">Changelog</string>
     <string name="close_hint">Clear search</string>
+    <string name="collection_delete_confirm_dialog_button_cancel">Cancel</string>
+    <string name="collection_delete_confirm_dialog_button_confirm">Confirm</string>
+    <string name="collection_delete_confirm_dialog_text">Are you sure you want to delete the collection?</string>
+    <string name="collection_delete_confirm_dialog_title">Delete collection</string>
+    <string name="collection_edit_create_title">Create collection</string>
+    <string name="collection_edit_modify_title">Edit collection</string>
+    <string name="collection_filter_sheet_title">Collections</string>
+    <string name="collection_icon_sheet_title">Collection icon</string>
     <string name="dashboard_navigation_drawer_item_about">About</string>
     <string name="dashboard_navigation_drawer_item_appearance">Appearance</string>
-    <string name="dashboard_navigation_drawer_item_favourite_sets">Favourite Sets</string>
     <string name="dashboard_navigation_drawer_item_notification_settings">Notification Settings</string>
     <string name="dashboard_navigation_drawer_item_reset_sets">Reset Sets</string>
     <string name="dashboard_navigation_drawer_section_collections">Collections</string>
@@ -50,6 +57,9 @@
     <string name="date_range_picker_button_dismiss">Cancel</string>
     <string name="date_range_picker_title">Select date range</string>
     <string name="error_disk_full">Oops, it seems like your disk is full.</string>
+    <string name="error_field_blank">This field cannot be blank.</string>
+    <string name="error_field_too_long">Too long text.</string>
+    <string name="error_field_too_short">Too short text.</string>
     <string name="error_no_internet">Couldn't reach server, please check your internet connection.</string>
     <string name="error_request_timeout">The request timed out.</string>
     <string name="error_serialization">Couldn't parse data.</string>
@@ -84,6 +94,9 @@
     <string name="search_filter_date_one_year">Released in a year</string>
     <string name="search_hint">Search by name or number</string>
     <string name="set_cover">Set cover</string>
+    <string name="set_details_collections">Collections</string>
+    <string name="set_details_collections_not_found">Not in any collections</string>
+    <string name="set_details_collections_sheet_title">Collections</string>
     <string name="set_details_depth">Depth</string>
     <string name="set_details_eu_price">EU price</string>
     <string name="set_details_exit_date">Exit date</string>
@@ -105,6 +118,7 @@
     <string name="set_pieces">Pieces</string>
     <string name="set_rating">Rating</string>
     <string name="set_search_bar_button_show_all">Show All</string>
+    <string name="set_search_bar_chip_collections">User collections</string>
     <string name="set_search_bar_chip_packaging_types">Packaging types</string>
     <string name="set_search_bar_chip_release_date">Release date</string>
     <string name="set_search_bar_chip_show_incomplete">Show incomplete sets</string>

@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.domain.model
 
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import kotlin.collections.Set
@@ -15,7 +16,7 @@ data class SetQueryOptions(
     val showIncomplete: Boolean = false,
     val limit: Int? = null,
     val barcode: String? = null,
-    val isFavourite: Boolean = false,
+    val collectionIds: Set<CollectionId> = emptySet(),
 )
 
 fun buildSetQueryOptions(
@@ -34,6 +35,6 @@ fun buildSetQueryOptions(
         showIncomplete = filter?.showIncomplete ?: preferences.showIncomplete,
         limit = filter?.limit,
         barcode = filter?.barcode,
-        isFavourite = filter?.isFavourite ?: false
+        collectionIds = filter?.collectionIds ?: preferences.collectionIds
     )
 }
