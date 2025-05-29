@@ -22,6 +22,7 @@ import androidx.paging.compose.itemKey
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
+import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 
 
 @Composable
@@ -72,6 +73,33 @@ fun PagedSetList(
             LazyVerticalStaggeredGrid(
                 modifier = modifier,
                 columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
+                verticalItemSpacing = 12.dp,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = contentPadding
+            ) {
+                items(
+                    count = sets.itemCount,
+                    key = sets.itemKey { it.setID }
+                ) { index ->
+                    sets[index]?.let { set ->
+                        SetGridItem(
+                            setUI = set,
+                            modifier = Modifier
+                                .testTag("set_list:item")
+                                .fillMaxWidth(),
+                            onClick = onSetClick,
+                            onFavouriteClick = onFavouriteClick,
+                            imageSize = ImageSize.SMALL
+                        )
+                    }
+                }
+            }
+        }
+
+        SetListDisplayMode.GRID_LARGE -> {
+            LazyVerticalStaggeredGrid(
+                modifier = modifier,
+                columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
                 verticalItemSpacing = 12.dp,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = contentPadding

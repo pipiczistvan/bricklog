@@ -14,8 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.GridOn
+import androidx.compose.material.icons.outlined.Window
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -108,7 +109,8 @@ private fun SetListScreen(
                                 SetListAction.OnDisplayModeChange(
                                     when (state.displayMode) {
                                         SetListDisplayMode.COLUMN -> SetListDisplayMode.GRID
-                                        SetListDisplayMode.GRID -> SetListDisplayMode.COLUMN
+                                        SetListDisplayMode.GRID -> SetListDisplayMode.GRID_LARGE
+                                        SetListDisplayMode.GRID_LARGE -> SetListDisplayMode.COLUMN
                                     }
                                 )
                             )
@@ -116,8 +118,9 @@ private fun SetListScreen(
                     ) {
                         Icon(
                             imageVector = when (state.displayMode) {
-                                SetListDisplayMode.COLUMN -> Icons.AutoMirrored.Outlined.List
-                                SetListDisplayMode.GRID -> Icons.Outlined.GridView
+                                SetListDisplayMode.COLUMN -> Icons.AutoMirrored.Outlined.ViewList
+                                SetListDisplayMode.GRID -> Icons.Outlined.GridOn
+                                SetListDisplayMode.GRID_LARGE -> Icons.Outlined.Window
                             },
                             contentDescription = null
                         )

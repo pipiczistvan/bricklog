@@ -45,6 +45,7 @@ fun SetGridItem(
     setUI: SetUI,
     onClick: (SetUI) -> Unit,
     onFavouriteClick: (SetUI) -> Unit,
+    imageSize: ImageSize = ImageSize.REGULAR,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -77,7 +78,7 @@ fun SetGridItem(
                                 ratio = 1f,
                                 matchHeightConstraintsFirst = true
                             ),
-                        size = ImageSize.SMALL
+                        size = imageSize
                     )
                 }
                 Column(
