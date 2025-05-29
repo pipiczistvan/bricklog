@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import bricklog.composeapp.generated.resources.changelog_build_version
 import hu.piware.bricklog.feature.settings.domain.model.Change
 import hu.piware.bricklog.feature.settings.domain.model.ChangeType
 import hu.piware.bricklog.feature.settings.domain.model.Release
+import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -25,7 +27,7 @@ fun ReleaseItem(
     release: Release,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
     ) {
         Text(
             text = stringResource(
@@ -51,12 +53,13 @@ private fun ChangeRow(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
     ) {
         Icon(
             imageVector = when (change.type) {
                 ChangeType.FEATURE -> Icons.Outlined.StarOutline
                 ChangeType.BUGFIX -> Icons.Outlined.BugReport
+                ChangeType.REFACTOR -> Icons.Outlined.Build
             },
             contentDescription = null
         )

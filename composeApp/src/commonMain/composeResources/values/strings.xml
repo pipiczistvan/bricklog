@@ -28,7 +28,7 @@
     <string name="appearance_title">Appearance</string>
     <string name="barcode_ean">EAN (Europe / Rest of World)</string>
     <string name="barcode_upc">UPC (North America)</string>
-    <string name="changelog_build_version">v%1$s (build %2$s)</string>
+    <string name="changelog_build_version">%1$s (build %2$s)</string>
     <string name="changelog_title">Changelog</string>
     <string name="close_hint">Clear search</string>
     <string name="collection_delete_confirm_dialog_button_cancel">Cancel</string>

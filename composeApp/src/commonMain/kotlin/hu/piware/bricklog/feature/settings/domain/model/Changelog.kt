@@ -23,9 +23,12 @@ data class Change(
 
 @Serializable
 enum class ChangeType {
-    @SerialName("feature")
+    @SerialName("feat")
     FEATURE,
 
-    @SerialName("bugfix")
-    BUGFIX
+    @SerialName("fix")
+    BUGFIX,
+
+    @SerialName("refactor")
+    REFACTOR
 }

@@ -2,6 +2,7 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,7 +50,8 @@ fun ChangelogBottomSheet(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
+            verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
         ) {
             changelog.releases.forEach { release ->
                 item {
