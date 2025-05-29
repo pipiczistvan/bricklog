@@ -1,19 +1,22 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -23,11 +26,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.SetUI
-import hu.piware.bricklog.feature.set.domain.model.isFavourite
 import hu.piware.bricklog.feature.set.domain.model.setID
-import hu.piware.bricklog.feature.set.presentation.components.AnimatedBorderCard
+import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.Shapes
 
 @Composable
 fun SetCardRow(
@@ -38,10 +42,10 @@ fun SetCardRow(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(12.dp))
         }
         if (sets.isNotEmpty()) {
             items(sets) { set ->
@@ -92,48 +96,39 @@ fun SetCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedBorderCard(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        onCardClick = onClick,
-        borderWidth = 4.dp,
-        gradient = rainbowBrush,
-        animationDuration = 5000,
-        active = setUI.isFavourite
+    Card(
+        shape = Shapes.large,
+        modifier = modifier
+            .clip(Shapes.large)
+            .clickable(onClick = onClick)
+            .width(160.dp),
+        elevation = CardDefaults.outlinedCardElevation()
     ) {
         Box(
             modifier = Modifier
-                .width(150.dp)
-                .background(Color.White),
-            contentAlignment = Alignment.BottomStart
+                .clip(Shapes.large)
+                .size(160.dp)
+                .background(Color.White)
         ) {
             SetImage(
                 modifier = Modifier
-                    .size(
-                        width = 150.dp,
-                        height = 200.dp
-                    ),
+                    .fillMaxSize()
+                    .padding(Dimens.SmallPadding.size),
+                size = ImageSize.SMALL,
                 image = setUI.set.image,
-                contentScale = ContentScale.FillHeight
+                contentScale = ContentScale.Fit
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.55f))
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    text = setUI.set.name ?: "",
-                    minLines = 2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
-                )
-            }
         }
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            text = setUI.set.name ?: "",
+            minLines = 2,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.titleSmall
+        )
     }
 }
 
@@ -141,42 +136,29 @@ fun SetCard(
 private fun SetCardPlaceholder(
     modifier: Modifier = Modifier,
 ) {
-    AnimatedBorderCard(
-        shape = MaterialTheme.shapes.medium,
-        borderWidth = 4.dp,
-        active = false
+    Card(
+        shape = Shapes.large,
+        modifier = modifier
+            .clip(Shapes.large)
+            .width(160.dp),
+        elevation = CardDefaults.outlinedCardElevation()
     ) {
         Box(
-            modifier = modifier
-                .width(150.dp),
-            contentAlignment = Alignment.BottomStart
+            modifier = Modifier
+                .clip(Shapes.large)
+                .size(160.dp)
+                .background(Color.White)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(
-                        width = 150.dp,
-                        height = 200.dp
-                    )
-                    .background(Color.White)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.small)
-                    .background(Color.Black.copy(alpha = 0.55f))
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    text = "",
-                    minLines = 2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
-                )
-            }
         }
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            text = "",
+            minLines = 2,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.titleSmall
+        )
     }
 }

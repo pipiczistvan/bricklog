@@ -191,7 +191,7 @@ fun DashboardScreen(
                             top = Dimens.MediumPadding.size,
                             bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
                         ),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+                        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
                     ) {
                         FeaturedThemesCarousel(
                             modifier = Modifier

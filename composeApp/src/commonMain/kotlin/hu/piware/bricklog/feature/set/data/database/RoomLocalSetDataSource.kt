@@ -65,8 +65,8 @@ class RoomLocalSetDataSource(
     override fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>> {
         return Pager(
             PagingConfig(
-                pageSize = 20,
-                prefetchDistance = 20,
+                pageSize = 10,
+                prefetchDistance = 5,
                 enablePlaceholders = false
             )
         ) {

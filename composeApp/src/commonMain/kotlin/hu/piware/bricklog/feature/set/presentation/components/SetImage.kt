@@ -8,7 +8,10 @@ import androidx.compose.ui.layout.ContentScale
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.lego_brick_2x3
 import bricklog.composeapp.generated.resources.set_cover
+import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import hu.piware.bricklog.feature.core.presentation.navigation.BackHandler
 import hu.piware.bricklog.feature.set.domain.model.Image
 import kotlinx.coroutines.launch
@@ -31,7 +34,10 @@ fun SetImage(
     modifier: Modifier = Modifier,
 ) {
     val thumbnailPainter = rememberAsyncImagePainter(
-        model = image.thumbnailURL,
+        model = ImageRequest.Builder(LocalPlatformContext.current)
+            .data(image.thumbnailURL)
+            .crossfade(true)
+            .build(),
         error = painterResource(Res.drawable.lego_brick_2x3)
     )
 
@@ -39,7 +45,9 @@ fun SetImage(
         ImageSize.SMALL -> thumbnailPainter
         ImageSize.REGULAR -> {
             rememberAsyncImagePainter(
-                model = image.imageURL,
+                model = ImageRequest.Builder(LocalPlatformContext.current)
+                    .data(image.imageURL)
+                    .build(),
                 placeholder = thumbnailPainter,
                 error = thumbnailPainter
             )

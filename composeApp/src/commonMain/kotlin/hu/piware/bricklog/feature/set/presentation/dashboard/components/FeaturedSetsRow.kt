@@ -2,11 +2,9 @@ package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,29 +27,33 @@ fun FeaturedSetsRow(
     filterOverrides: SetFilter,
     sharedElementPrefix: String,
 ) {
-    SectionTitle(
-        modifier = Modifier.padding(start = Dimens.MediumPadding.size),
-        title = title,
-        onClick = {
-            onDashboardAction(
-                DashboardAction.OnSearchSets(
-                    SetListArguments(
-                        filterOverrides = filterOverrides,
-                        title = title
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+    ) {
+        SectionTitle(
+            modifier = Modifier.padding(start = Dimens.MediumPadding.size),
+            title = title,
+            onClick = {
+                onDashboardAction(
+                    DashboardAction.OnSearchSets(
+                        SetListArguments(
+                            filterOverrides = filterOverrides,
+                            title = title
+                        )
                     )
                 )
-            )
-        }
-    )
-    SetCardRow(
-        sets = sets,
-        onSetClick = {
-            onDashboardAction(
-                DashboardAction.OnSetClick(it)
-            )
-        },
-        sharedElementPrefix = sharedElementPrefix
-    )
+            }
+        )
+        SetCardRow(
+            sets = sets,
+            onSetClick = {
+                onDashboardAction(
+                    DashboardAction.OnSetClick(it)
+                )
+            },
+            sharedElementPrefix = sharedElementPrefix
+        )
+    }
 }
 
 @Composable
@@ -73,12 +75,7 @@ private fun SectionTitle(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
+                style = MaterialTheme.typography.headlineMedium
             )
         }
     }

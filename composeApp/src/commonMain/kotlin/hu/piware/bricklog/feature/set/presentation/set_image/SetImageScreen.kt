@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.go_back
-import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import org.jetbrains.compose.resources.stringResource
@@ -75,8 +74,6 @@ fun SetImageScreen(
         }
     ) {
         SetImagePager(
-            modifier = Modifier
-                .sharedElement("${state.sharedElementPrefix}/image/${state.setId}"),
             images = state.images
         )
     }

@@ -41,7 +41,7 @@ fun FeaturedThemesCarousel(
         modifier = modifier,
         state = carouselState,
         preferredItemWidth = 224.dp,
-        itemSpacing = 8.dp,
+        itemSpacing = 12.dp,
         flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(state = carouselState)
     ) { i ->
         val item = FEATURED_THEMES[i]
