@@ -15,7 +15,7 @@
     <string name="about_section_tools_framework">Framework</string>
     <string name="about_section_tools_framework_description">Kotlin Multiplatform</string>
     <string name="about_section_tools_framework_link">https://kotlinlang.org/docs/multiplatform.html</string>
-    <string name="about_section_tools_lego_api">Lego API</string>
+    <string name="about_section_tools_lego_api">Lego set data</string>
     <string name="about_section_tools_lego_api_description">https://brickset.com/</string>
     <string name="about_section_tools_lego_api_link">https://brickset.com/</string>
     <string name="about_title">About</string>
