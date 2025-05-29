@@ -100,16 +100,16 @@ fun SetFilterRow(
     if (showReleaseDateFilterSheet) {
         DateFilterBottomSheet(
             onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
-            selected = mergedFilter.launchDate,
-            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(launchDate = it)) }
+            selected = filterPreferences.launchDate,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) }
         )
     }
 
     if (showStatusFilterSheet) {
         StatusFilterBottomSheet(
             onShowBottomSheetChanged = { showStatusFilterSheet = it },
-            selected = mergedFilter.status,
-            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(status = it)) }
+            selected = filterPreferences.status,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(status = it)) }
         )
     }
 
@@ -117,8 +117,8 @@ fun SetFilterRow(
         ThemeFilterBottomSheet(
             onShowBottomSheetChanged = { showThemeFilterSheet = it },
             availableOptions = filterDomain.themes,
-            selected = mergedFilter.themes,
-            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(themes = it)) }
+            selected = filterPreferences.themes,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) }
         )
     }
 
@@ -126,8 +126,8 @@ fun SetFilterRow(
         PackagingTypeFilterBottomSheet(
             onShowBottomSheetChanged = { showPackagingTypeFilterSheet = it },
             availableOptions = filterDomain.packagingTypes,
-            selected = mergedFilter.packagingTypes,
-            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(packagingTypes = it)) }
+            selected = filterPreferences.packagingTypes,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) }
         )
     }
 
@@ -135,8 +135,8 @@ fun SetFilterRow(
         CollectionFilterBottomSheet(
             onShowBottomSheetChanged = { showCollectionFilterSheet = it },
             availableOptions = filterDomain.collections,
-            selected = mergedFilter.collectionIds,
-            onSelectionChange = { onFilterPreferencesChange(mergedFilter.copy(collectionIds = it)) }
+            selected = filterPreferences.collectionIds,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(collectionIds = it)) }
         )
     }
 }
