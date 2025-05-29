@@ -1,12 +1,62 @@
 {
   "releases": [
     {
+      "version": "1.1.0",
+      "build": 25051901,
+      "changes": [
+        {
+          "description": "Added large grid view option for set list screen",
+          "type": "feat"
+        },
+        {
+          "description": "Create, edit, delete set collections",
+          "type": "feat"
+        },
+        {
+          "description": "Display changelog on dashboard screen",
+          "type": "feat"
+        },
+        {
+          "description": "Redesign theme and packaging type selectors",
+          "type": "refactor"
+        },
+        {
+          "description": "Added expiration for additional images and instructions",
+          "type": "refactor"
+        },
+        {
+          "description": "Update dependencies",
+          "type": "refactor"
+        },
+        {
+          "description": "Added more featd themes",
+          "type": "refactor"
+        },
+        {
+          "description": "Arriving sets featd row",
+          "type": "feat"
+        },
+        {
+          "description": "Update sets periodically in the background on Android",
+          "type": "feat"
+        },
+        {
+          "description": "Improved set searching and filtering, display sets by appearance",
+          "type": "feat"
+        },
+        {
+          "description": "Missing bottom padding on SetDetailScreen layout",
+          "type": "fix"
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "build": 25041801,
       "changes": [
         {
           "description": "Initial version",
-          "type": "feature"
+          "type": "feat"
         }
       ]
     }
