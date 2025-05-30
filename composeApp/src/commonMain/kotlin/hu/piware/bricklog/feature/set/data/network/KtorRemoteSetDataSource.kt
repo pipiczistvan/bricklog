@@ -39,12 +39,14 @@ class KtorRemoteSetDataSource(
             }
             logger.i { "Downloading sets zip took $downloadTimeTaken" }
 
-            logger.i { "Uncompressing zip file" }
-            val zipBytes = (downloadResult as Result.Success).data
-            val (csvBytes, uncompressTimeTaken) = measureTimedValue { zipBytes.uncompress(method = GZIP) }
-            logger.i { "Uncompressing zip file took $uncompressTimeTaken" }
+            withContext(Dispatchers.Default) {
+                logger.i { "Uncompressing zip file" }
+                val zipBytes = (downloadResult as Result.Success).data
+                val (csvBytes, uncompressTimeTaken) = measureTimedValue { zipBytes.uncompress(method = GZIP) }
+                logger.i { "Uncompressing zip file took $uncompressTimeTaken" }
 
-            Result.Success(csvBytes)
+                Result.Success(csvBytes)
+            }
         } catch (e: Exception) {
             logger.e("Failed to download and parse sets", e)
             Result.Error(DataError.Remote.UNKNOWN)

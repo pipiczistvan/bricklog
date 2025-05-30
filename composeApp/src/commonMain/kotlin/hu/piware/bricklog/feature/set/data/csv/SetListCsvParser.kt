@@ -4,6 +4,7 @@ package hu.piware.bricklog.feature.set.data.csv
 
 import app.softwork.serialization.csv.CSVFormat
 import hu.piware.bricklog.feature.set.domain.model.Set
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -29,7 +30,7 @@ class SetListCsvParser {
 
         coroutineScope {
             for (chunk in csvChunks) {
-                launch {
+                launch(Dispatchers.Default) {
                     val csv = chunk.joinToString("\n")
                     val setRows = csvFormat.decodeFromString<List<SetRow>>(csv)
                     onChunkParsed(setRows.map { it.toDomainModel() })
