@@ -54,7 +54,7 @@ class RoomLocalSetDataSource(
             PagingConfig(
                 pageSize = 10,
                 prefetchDistance = 5,
-                enablePlaceholders = false
+                enablePlaceholders = true
             )
         ) {
             val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))

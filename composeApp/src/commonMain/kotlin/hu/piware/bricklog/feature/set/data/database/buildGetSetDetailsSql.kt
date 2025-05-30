@@ -12,7 +12,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.days
 
 private val instantConverter = InstantConverter()
-private val logger = Logger.withTag("buildGetSetSql")
+private val logger = Logger.withTag("buildGetSetDetailsSql")
 
 fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
     val now = Clock.System.now()
