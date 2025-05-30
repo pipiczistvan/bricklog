@@ -28,8 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
-import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.containerColor
 import hu.piware.bricklog.feature.set.domain.model.isFavourite
 import hu.piware.bricklog.feature.set.domain.model.setID
@@ -42,9 +42,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SetGridItem(
-    setUI: SetUI,
-    onClick: (SetUI) -> Unit,
-    onFavouriteClick: (SetUI) -> Unit,
+    setDetails: SetDetails,
+    onClick: (SetDetails) -> Unit,
+    onFavouriteClick: (SetDetails) -> Unit,
     imageSize: ImageSize = ImageSize.REGULAR,
     modifier: Modifier = Modifier,
 ) {
@@ -52,7 +52,7 @@ fun SetGridItem(
         modifier = modifier
             .clip(Shapes.large)
             .border(3.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), Shapes.large)
-            .clickable(onClick = { onClick(setUI) })
+            .clickable(onClick = { onClick(setDetails) })
     ) {
         Box(
             modifier = Modifier
@@ -72,7 +72,7 @@ fun SetGridItem(
                     contentAlignment = Alignment.Center
                 ) {
                     SetImage(
-                        image = setUI.set.image,
+                        image = setDetails.set.image,
                         modifier = Modifier
                             .aspectRatio(
                                 ratio = 1f,
@@ -85,13 +85,13 @@ fun SetGridItem(
                     verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
                 ) {
                     Text(
-                        text = setUI.set.theme ?: "",
+                        text = setDetails.set.theme ?: "",
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = setUI.set.name ?: "",
+                        text = setDetails.set.name ?: "",
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -101,15 +101,15 @@ fun SetGridItem(
                         horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
                     ) {
                         SetAttributeChip(
-                            text = "# ${setUI.setID}",
+                            text = "# ${setDetails.setID}",
                             size = ChipSize.SMALL
                         )
-                        if (setUI.status != SetStatus.UNKNOWN) {
+                        if (setDetails.status != SetStatus.UNKNOWN) {
                             SetAttributeChip(
-                                text = stringResource(setUI.status.statusRes),
+                                text = stringResource(setDetails.status.statusRes),
                                 size = ChipSize.SMALL,
-                                color = setUI.status.containerColor,
-                                textColor = setUI.status.textColor
+                                color = setDetails.status.containerColor,
+                                textColor = setDetails.status.textColor
                             )
                         }
                     }
@@ -123,10 +123,10 @@ fun SetGridItem(
                 contentAlignment = Alignment.TopEnd
             ) {
                 IconButton(
-                    onClick = { onFavouriteClick(setUI) }
+                    onClick = { onFavouriteClick(setDetails) }
                 ) {
                     Icon(
-                        imageVector = if (setUI.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
+                        imageVector = if (setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
                         contentDescription = null
                     )
                 }

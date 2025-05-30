@@ -41,8 +41,8 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.lego_brick_2x3
 import bricklog.composeapp.generated.resources.no_search_results
 import hu.piware.bricklog.App
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
-import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
@@ -60,7 +60,7 @@ fun SetListScreenRoot(
 ) {
     App.firstScreenLoaded = true
 
-    val sets = viewModel.setUiPagingData.collectAsLazyPagingItems()
+    val sets = viewModel.pagingData.collectAsLazyPagingItems()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     SetListScreen(
@@ -81,7 +81,7 @@ fun SetListScreenRoot(
 @Composable
 private fun SetListScreen(
     state: SetListState,
-    sets: LazyPagingItems<SetUI>,
+    sets: LazyPagingItems<SetDetails>,
     onAction: (SetListAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {

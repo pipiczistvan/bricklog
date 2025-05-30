@@ -6,53 +6,40 @@ import androidx.compose.ui.graphics.Color
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.set_status_active
 import bricklog.composeapp.generated.resources.set_status_arrives_soon
-import bricklog.composeapp.generated.resources.set_status_discontinued
-import bricklog.composeapp.generated.resources.set_status_discontinued_soon
 import bricklog.composeapp.generated.resources.set_status_future_release
+import bricklog.composeapp.generated.resources.set_status_retired
+import bricklog.composeapp.generated.resources.set_status_retired_soon
 import bricklog.composeapp.generated.resources.set_status_unknown
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.ui.theme.BricklogTheme
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
-import kotlin.time.Duration.Companion.days
 
-data class SetUI(
+data class SetDetails(
     val set: Set,
     val collections: List<Collection>,
     val status: SetStatus,
 )
 
-val SetUI.isFavourite: Boolean
+val SetDetails.isFavourite: Boolean
     get() = collections.any { it.id == COLLECTION_ID_FAVOURITE_SETS }
 
-val SetUI.setID: Int
+val SetDetails.setID: Int
     get() = set.setID
 
-val SetUI.EUPrice: Double?
+val SetDetails.EUPrice: Double?
     get() = set.DEPrice
 
-val SetUI.localLaunchDate: LocalDateTime?
+val SetDetails.localLaunchDate: LocalDateTime?
     get() = set.launchDate?.toLocalDateTime(TimeZone.currentSystemDefault())
 
-val SetUI.localExitDate: LocalDateTime?
+val SetDetails.localExitDate: LocalDateTime?
     get() = set.exitDate?.toLocalDateTime(TimeZone.currentSystemDefault())
 
-fun Set.calculateStatus(): SetStatus {
-    val now = Clock.System.now()
-
-    return when {
-        launchDate != null && now < launchDate && now + 60.days > launchDate -> SetStatus.ARRIVES_SOON
-        launchDate != null && now < launchDate -> SetStatus.FUTURE_RELEASE
-        launchDate != null && now >= launchDate && (exitDate == null || now < exitDate) -> SetStatus.ACTIVE
-        exitDate != null && now < exitDate && now + 60.days > exitDate -> SetStatus.DISCONTINUED_SOON
-        exitDate != null && now > exitDate -> SetStatus.DISCONTINUED
-        else -> SetStatus.UNKNOWN
-    }
-}
+const val FUTURE_DAYS_COUNT = 90
 
 enum class SetStatus(
     val statusRes: StringResource,
@@ -61,8 +48,8 @@ enum class SetStatus(
     FUTURE_RELEASE(Res.string.set_status_future_release),
     ARRIVES_SOON(Res.string.set_status_arrives_soon),
     ACTIVE(Res.string.set_status_active),
-    DISCONTINUED_SOON(Res.string.set_status_discontinued_soon),
-    DISCONTINUED(Res.string.set_status_discontinued),
+    RETIRED_SOON(Res.string.set_status_retired_soon),
+    RETIRED(Res.string.set_status_retired),
 }
 
 val SetStatus.containerColor: Color
@@ -73,8 +60,8 @@ val SetStatus.containerColor: Color
         SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.future.colorContainer
         SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.futureVariant.colorContainer
         SetStatus.ACTIVE -> BricklogTheme.colorScheme.active.colorContainer
-        SetStatus.DISCONTINUED_SOON -> BricklogTheme.colorScheme.discontinuedVariant.colorContainer
-        SetStatus.DISCONTINUED -> BricklogTheme.colorScheme.discontinued.colorContainer
+        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.retiredVariant.colorContainer
+        SetStatus.RETIRED -> BricklogTheme.colorScheme.retired.colorContainer
     }
 
 val SetStatus.textColor: Color
@@ -85,6 +72,6 @@ val SetStatus.textColor: Color
         SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.future.onColorContainer
         SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.futureVariant.onColorContainer
         SetStatus.ACTIVE -> BricklogTheme.colorScheme.active.onColorContainer
-        SetStatus.DISCONTINUED_SOON -> BricklogTheme.colorScheme.discontinuedVariant.onColorContainer
-        SetStatus.DISCONTINUED -> BricklogTheme.colorScheme.discontinued.onColorContainer
+        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.retiredVariant.onColorContainer
+        SetStatus.RETIRED -> BricklogTheme.colorScheme.retired.onColorContainer
     }

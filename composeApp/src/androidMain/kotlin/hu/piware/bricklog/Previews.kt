@@ -5,8 +5,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
-import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardScreen
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardState
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
@@ -43,7 +43,7 @@ private val sets = (1..100).map {
         lastUpdated = Instant.DISTANT_PAST,
     )
 
-    SetUI(
+    SetDetails(
         set = set,
         collections = defaultCollections,
         status = SetStatus.ACTIVE
@@ -68,7 +68,7 @@ private fun DashboardScreenPreview() {
 private fun SetListItemPreview() {
     BricklogTheme {
         SetListItem(
-            setUI = sets[0],
+            setDetails = sets[0],
             onClick = {},
             onFavouriteClick = {}
         )
@@ -81,7 +81,7 @@ private fun SetDetailsScreenPreview() {
     BricklogTheme {
         SetDetailScreen(
             state = SetDetailState(
-                setUI = sets[0]
+                setDetails = sets[0]
             ),
             onAction = {}
         )

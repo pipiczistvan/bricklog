@@ -8,7 +8,7 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.Set
-import hu.piware.bricklog.feature.set.domain.usecase.GetSets
+import hu.piware.bricklog.feature.set.domain.usecase.GetSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.SendNewSetNotification
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newSetsNotificationFilter
@@ -22,13 +22,13 @@ class UpdateSetsWorker(
 
     private val logger = Logger.withTag("UpdateSetsWorker")
 
-    private val getSets: GetSets by inject()
+    private val getSetDetails: GetSetDetails by inject()
     private val updateSets: UpdateSets by inject()
     private val sendNewSetNotification: SendNewSetNotification by inject()
 
     override suspend fun doWork(): Result {
         logger.i { "Retrieving last info complete set" }
-        val lastInfoCompleteSet = getSets(
+        val lastInfoCompleteSet = getSetDetails(
             newSetsNotificationFilter.copy(
                 limit = 1
             )
@@ -45,9 +45,9 @@ class UpdateSetsWorker(
             }
 
         logger.i { "Retrieving new info complete sets" }
-        val newSets = getSets(
+        val newSets = getSetDetails(
             newSetsNotificationFilter.copy(
-                appearanceDate = lastInfoCompleteSet.createAppearanceDateFilter()
+                appearanceDate = lastInfoCompleteSet?.set.createAppearanceDateFilter()
             )
         ).onError {
             logger.w { "Work failed at retrieving new info complete sets" }

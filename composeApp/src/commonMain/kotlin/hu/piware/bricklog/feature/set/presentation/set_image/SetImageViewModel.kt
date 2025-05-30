@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.usecase.GetAdditionalImages
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsById
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ import kotlin.reflect.typeOf
 
 class SetImageViewModel(
     savedStateHandle: SavedStateHandle,
-    private val watchSetUI: WatchSetUI,
+    private val watchSetDetailsById: WatchSetDetailsById,
     private val getAdditionalImages: GetAdditionalImages,
 ) : ViewModel() {
 
@@ -38,13 +38,13 @@ class SetImageViewModel(
 
     private fun loadSet(id: Int) {
         viewModelScope.launch {
-            val setUI = watchSetUI(id)
+            val setDetails = watchSetDetailsById(id)
                 .first()
 
             _uiState.update {
                 it.copy(
-                    setId = setUI.set.setID,
-                    images = listOf(setUI.set.image) + it.images
+                    setId = setDetails.set.setID,
+                    images = listOf(setDetails.set.image) + it.images
                 )
             }
         }

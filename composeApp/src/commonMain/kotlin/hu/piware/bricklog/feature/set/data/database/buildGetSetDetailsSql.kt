@@ -4,7 +4,6 @@ import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.data.database.InstantConverter
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
-import hu.piware.bricklog.feature.set.domain.model.FUTURE_DAYS_COUNT
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
@@ -15,7 +14,7 @@ import kotlin.time.Duration.Companion.days
 private val instantConverter = InstantConverter()
 private val logger = Logger.withTag("buildGetSetSql")
 
-fun buildGetSetSql(queryOptions: SetQueryOptions): String {
+fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
     val now = Clock.System.now()
 
     val querySelect = queryOptions.queries.joinToString(
@@ -28,10 +27,10 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     val infoCompleteDateSelect = buildInfoCompleteDateSelect(queryOptions.appearanceDate, now)
     val themeSelect = buildThemeSelect(queryOptions.themes)
     val packagingTypeSelect = buildPackagingTypeSelect(queryOptions.packagingTypes)
-    val statusSelect = buildStatusSelect(queryOptions.statuses, now)
+    val statusSelect = buildStatusSelect(queryOptions.statuses)
     val showIncomplete = buildShowIncompleteSelect(queryOptions.showIncomplete)
     val barcodeSelect = buildBarcodeSelect(queryOptions.barcode)
-    val favouriteSelect = buildCollectionIdSelect(queryOptions.collectionIds)
+    val collectionSelect = buildCollectionIdSelect(queryOptions.collectionIds)
     val orderBy = buildOrderBy(queryOptions.sortOption)
     val limit = when (queryOptions.limit) {
         null -> ""
@@ -39,7 +38,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
     }
 
     val sql = """
-            SELECT * FROM sets 
+            SELECT * FROM set_details_view 
             WHERE 
                 ($querySelect)
                 AND ($launchDateSelect)
@@ -49,7 +48,7 @@ fun buildGetSetSql(queryOptions: SetQueryOptions): String {
                 AND ($statusSelect)
                 AND ($showIncomplete)
                 AND ($barcodeSelect)
-                AND ($favouriteSelect)
+                AND ($collectionSelect)
             ORDER BY $orderBy
             $limit
             """.trimMargin()
@@ -100,28 +99,11 @@ private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String {
         "1"
 }
 
-private fun buildStatusSelect(statuses: Set<SetStatus>, now: Instant): String {
-    val nowMillis = instantConverter.fromInstant(now)
-    val futureMillis = instantConverter.fromInstant(now + FUTURE_DAYS_COUNT.days)
-
-    return if (statuses.isNotEmpty()) {
-        val statusesSelect = statuses.joinToString(separator = " OR ") {
-            val statusSelect = when (it) {
-                SetStatus.ARRIVES_SOON -> "launchDate IS NOT NULL AND $nowMillis < launchDate AND $futureMillis > launchDate"
-                SetStatus.FUTURE_RELEASE -> "launchDate IS NOT NULL AND $nowMillis < launchDate AND $futureMillis <= launchDate"
-                SetStatus.RETIRED_SOON -> "exitDate IS NOT NULL AND $nowMillis < exitDate AND $futureMillis > exitDate"
-                SetStatus.RETIRED -> "exitDate IS NOT NULL AND $nowMillis > exitDate AND $futureMillis <= exitDate"
-                SetStatus.ACTIVE -> "launchDate IS NOT NULL AND $nowMillis >= launchDate AND (exitDate IS NULL OR $nowMillis < exitDate)"
-                SetStatus.UNKNOWN -> "launchDate IS NULL AND exitDate IS NULL"
-            }
-
-            return@joinToString "($statusSelect)"
-        }
-
-        return "($statusesSelect)"
-    } else {
+private fun buildStatusSelect(statuses: Set<SetStatus>): String {
+    return if (statuses.isNotEmpty())
+        "status IN (${statuses.joinToString(separator = ", ") { "'$it'" }})"
+    else
         "1"
-    }
 }
 
 private fun buildShowIncompleteSelect(showIncomplete: Boolean): String {
@@ -143,7 +125,7 @@ private fun buildCollectionIdSelect(collectionIds: Set<CollectionId>): String {
         """EXISTS(
             SELECT * FROM set_collections 
             WHERE
-             setId = sets.id
+             setId = set_details_view.id
              AND collectionId IN (${collectionIds.joinToString(separator = ", ") { "'$it'" }})
              LIMIT 1
            )""".trimIndent()

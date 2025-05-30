@@ -11,10 +11,6 @@ import bricklog.composeapp.generated.resources.set_sort_launch_date_ascending
 import bricklog.composeapp.generated.resources.set_sort_launch_date_descending
 import bricklog.composeapp.generated.resources.set_sort_retiring_date_ascending
 import bricklog.composeapp.generated.resources.set_sort_retiring_date_descending
-import bricklog.composeapp.generated.resources.status_filter_active
-import bricklog.composeapp.generated.resources.status_filter_any_status
-import bricklog.composeapp.generated.resources.status_filter_expired
-import bricklog.composeapp.generated.resources.status_filter_future
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
@@ -27,7 +23,7 @@ data class SetFilter(
     val appearanceDate: DateFilter? = null,
     val themes: Set<String>? = null,
     val packagingTypes: Set<String>? = null,
-    val status: StatusFilterOption? = null,
+    val statuses: Set<SetStatus>? = null,
     val showIncomplete: Boolean? = null,
     val limit: Int? = null,
     val barcode: String? = null,
@@ -94,14 +90,4 @@ enum class DateFilterOption(
     CUSTOM(
         titleRes = Res.string.search_filter_date_custom_range
     )
-}
-
-@Serializable
-enum class StatusFilterOption(
-    val titleRes: StringResource,
-) {
-    ANY_STATUS(Res.string.status_filter_any_status),
-    ACTIVE(Res.string.status_filter_active),
-    EXPIRED(Res.string.status_filter_expired),
-    FUTURE(Res.string.status_filter_future),
 }

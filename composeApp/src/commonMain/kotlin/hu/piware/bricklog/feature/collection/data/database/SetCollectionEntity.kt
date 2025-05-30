@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.collection.data.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.data.database.SetEntity
 import hu.piware.bricklog.feature.set.domain.model.SetId
@@ -25,6 +26,9 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
             childColumns = ["collectionId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("collectionId")
     ]
 )
 data class SetCollectionEntity(

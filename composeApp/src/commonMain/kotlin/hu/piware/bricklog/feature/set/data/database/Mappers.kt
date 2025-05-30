@@ -1,8 +1,10 @@
 package hu.piware.bricklog.feature.set.data.database
 
+import hu.piware.bricklog.feature.collection.data.database.toDomainModel
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 
 fun Set.toEntity(): SetEntity {
@@ -74,6 +76,14 @@ fun SetEntity.toDomainModel(): Set {
         barcodeUPC = barcodeUPC,
         lastUpdated = lastUpdated,
         infoCompleteDate = infoCompleteDate
+    )
+}
+
+fun SetDetailsView.toDomainModel(): SetDetails {
+    return SetDetails(
+        set = legoSet.toDomainModel(),
+        collections = collections.map { it.toDomainModel() },
+        status = status
     )
 }
 

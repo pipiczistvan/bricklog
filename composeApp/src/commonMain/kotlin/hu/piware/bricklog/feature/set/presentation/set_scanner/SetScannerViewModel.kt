@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class SetScannerViewModel(
-    private val watchSetUIs: WatchSetUIs,
+    private val watchSetDetails: WatchSetDetails,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SetScannerState())
@@ -48,9 +48,9 @@ class SetScannerViewModel(
             .filter { it.isNotEmpty() }
             .distinctUntilChanged()
             .map { SetFilter(limit = 1, barcode = it) }
-            .flatMapLatest { watchSetUIs(it) }
+            .flatMapLatest { watchSetDetails(it) }
             .onEach { sets ->
-                _uiState.update { it.copy(setUI = sets.firstOrNull()) }
+                _uiState.update { it.copy(setDetails = sets.firstOrNull()) }
             }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)

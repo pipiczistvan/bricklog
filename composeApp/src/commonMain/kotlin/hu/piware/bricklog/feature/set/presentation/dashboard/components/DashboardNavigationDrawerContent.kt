@@ -45,7 +45,6 @@ import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_secti
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import kotlinx.coroutines.launch
@@ -176,7 +175,6 @@ private fun buildCollectionsSection(collections: List<Collection>): NavigationSe
                 action = DashboardAction.OnSearchSets(
                     SetListArguments(
                         filterOverrides = SetFilter(
-                            status = StatusFilterOption.ANY_STATUS,
                             collectionIds = setOf(collection.id)
                         ),
                         title = collection.name

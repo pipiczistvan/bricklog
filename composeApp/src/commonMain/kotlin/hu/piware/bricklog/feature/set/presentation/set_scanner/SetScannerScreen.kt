@@ -139,12 +139,12 @@ private fun SetScannerScreen(
                 .padding(it),
             contentAlignment = Alignment.BottomCenter
         ) {
-            if (state.setUI?.set?.name != null) {
+            if (state.setDetails?.set?.name != null) {
                 Button(
                     modifier = Modifier
                         .padding(16.dp),
                     onClick = {
-                        onAction(SetScannerAction.OnSetClick(state.setUI.setID))
+                        onAction(SetScannerAction.OnSetClick(state.setDetails.setID))
                     }
                 ) {
                     Icon(
@@ -152,7 +152,7 @@ private fun SetScannerScreen(
                         contentDescription = null
                     )
                     Text(
-                        text = state.setUI.set.name,
+                        text = state.setDetails.set.name,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

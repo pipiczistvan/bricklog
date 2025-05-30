@@ -7,18 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
-import androidx.paging.map
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionsBySets
 import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
-import hu.piware.bricklog.feature.set.domain.model.SetUI
-import hu.piware.bricklog.feature.set.domain.model.calculateStatus
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetsPaged
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
@@ -28,7 +24,6 @@ import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetListDisplayMod
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -41,8 +36,7 @@ import kotlin.reflect.typeOf
 
 class SetListViewModel(
     savedStateHandle: SavedStateHandle,
-    watchSetsPaged: WatchSetsPaged,
-    watchCollectionsBySets: WatchCollectionsBySets,
+    watchSetDetailsPaged: WatchSetDetailsPaged,
     private val toggleSetCollection: ToggleSetCollection,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
@@ -74,28 +68,15 @@ class SetListViewModel(
         .map { it.filterOverrides }
         .distinctUntilChanged()
 
-    private val _pagingData = _filterOverrides
+    val pagingData = _filterOverrides
         .flatMapLatest { filterOverrides ->
-            watchSetsPaged(
+            watchSetDetailsPaged(
                 filterOverrides,
                 _arguments.searchQuery
             )
         }
         .flowOn(Dispatchers.Default)
         .cachedIn(viewModelScope)
-
-    private val _collectionsBySets = watchCollectionsBySets()
-
-    val setUiPagingData =
-        combine(_pagingData, _collectionsBySets) { pagingData, collectionsBySets ->
-            pagingData.map { set ->
-                SetUI(
-                    set = set,
-                    collections = collectionsBySets[set.setID] ?: emptyList(),
-                    status = set.calculateStatus()
-                )
-            }
-        }
 
     fun onAction(action: SetListAction) {
         when (action) {

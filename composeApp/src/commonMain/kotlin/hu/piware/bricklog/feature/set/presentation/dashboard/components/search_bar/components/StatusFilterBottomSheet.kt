@@ -23,7 +23,7 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.status_filter_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
-import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
+import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -31,8 +31,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun StatusFilterBottomSheet(
     onShowBottomSheetChanged: (Boolean) -> Unit,
-    selected: StatusFilterOption,
-    onSelectionChange: (StatusFilterOption) -> Unit,
+    availableOptions: List<SetStatus>,
+    selected: Set<SetStatus>,
+    onSelectionChange: (Set<SetStatus>) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -61,16 +62,15 @@ fun StatusFilterBottomSheet(
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size)
         ) {
-            items(StatusFilterOption.entries.toTypedArray()) { option ->
+            items(availableOptions) { option ->
                 StatusFilterSheetOption(
                     option = option,
-                    selected = option == selected,
+                    selected = selected.contains(option),
                     onClick = {
-                        onSelectionChange(option)
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                onShowBottomSheetChanged(false)
-                            }
+                        if (selected.contains(option)) {
+                            onSelectionChange(selected - option)
+                        } else {
+                            onSelectionChange(selected + option)
                         }
                     }
                 )
@@ -81,7 +81,7 @@ fun StatusFilterBottomSheet(
 
 @Composable
 private fun StatusFilterSheetOption(
-    option: StatusFilterOption,
+    option: SetStatus,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -91,7 +91,7 @@ private fun StatusFilterSheetOption(
     ) {
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
-            text = stringResource(option.titleRes),
+            text = stringResource(option.statusRes),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,

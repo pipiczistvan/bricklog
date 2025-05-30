@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.collection_edit_create_title
 import bricklog.composeapp.generated.resources.collection_edit_modify_title
-import hu.piware.bricklog.feature.collection.domain.usecase.ValidateName
+import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionDeleteConfirmDialog
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionIconBottomSheet
@@ -167,7 +167,7 @@ fun CollectionEditScreen(
                     }
                 },
                 trailingIcon = {
-                    Text("${state.name.length}/${ValidateName.MAX_LENGTH}")
+                    Text("${state.name.length}/${ValidateCollectionName.MAX_LENGTH}")
                 }
             )
             if (state.nameError != null) {

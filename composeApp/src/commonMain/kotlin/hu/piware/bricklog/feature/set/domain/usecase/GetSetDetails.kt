@@ -2,7 +2,7 @@ package hu.piware.bricklog.feature.set.domain.usecase
 
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
-import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.annotation.Single
 
 @Single
-class GetSets(
+class GetSetDetails(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,
 ) {
     suspend operator fun invoke(
         filterOverrides: SetFilter? = null,
         query: String = "",
-    ): Result<List<Set>, DataError> {
+    ): Result<List<SetDetails>, DataError> {
         val parsedQueries = query.parseQueries()
         val filterPreferences = settingsRepository.setFilterPreferences.first()
 
-        return setRepository.getSets(
+        return setRepository.getSetDetails(
             buildSetQueryOptions(
                 filter = filterOverrides,
                 preferences = filterPreferences,

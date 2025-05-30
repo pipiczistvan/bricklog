@@ -17,8 +17,8 @@ data class ExtendedColorScheme(
     val future: ColorFamily,
     val futureVariant: ColorFamily,
     val active: ColorFamily,
-    val discontinued: ColorFamily,
-    val discontinuedVariant: ColorFamily,
+    val retired: ColorFamily,
+    val retiredVariant: ColorFamily,
 )
 
 private val lightScheme = lightColorScheme(
@@ -268,17 +268,17 @@ val extendedLight = ExtendedColorScheme(
         activeContainerLight,
         onActiveContainerLight,
     ),
-    discontinued = ColorFamily(
-        discontinuedLight,
-        onDiscontinuedLight,
-        discontinuedContainerLight,
-        onDiscontinuedContainerLight,
+    retired = ColorFamily(
+        retiredLight,
+        onRetiredLight,
+        retiredContainerLight,
+        onRetiredContainerLight,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantLight,
-        onDiscontinuedVariantLight,
-        discontinuedVariantContainerLight,
-        onDiscontinuedVariantContainerLight,
+    retiredVariant = ColorFamily(
+        retiredVariantLight,
+        onRetiredVariantLight,
+        retiredVariantContainerLight,
+        onRetiredVariantContainerLight,
     ),
 )
 
@@ -301,17 +301,17 @@ val extendedDark = ExtendedColorScheme(
         activeContainerDark,
         onActiveContainerDark,
     ),
-    discontinued = ColorFamily(
-        discontinuedDark,
-        onDiscontinuedDark,
-        discontinuedContainerDark,
-        onDiscontinuedContainerDark,
+    retired = ColorFamily(
+        retiredDark,
+        onRetiredDark,
+        retiredContainerDark,
+        onRetiredContainerDark,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantDark,
-        onDiscontinuedVariantDark,
-        discontinuedVariantContainerDark,
-        onDiscontinuedVariantContainerDark,
+    retiredVariant = ColorFamily(
+        retiredVariantDark,
+        onRetiredVariantDark,
+        retiredVariantContainerDark,
+        onRetiredVariantContainerDark,
     ),
 )
 
@@ -334,17 +334,17 @@ val extendedLightMediumContrast = ExtendedColorScheme(
         activeContainerLightMediumContrast,
         onActiveContainerLightMediumContrast,
     ),
-    discontinued = ColorFamily(
-        discontinuedLightMediumContrast,
-        onDiscontinuedLightMediumContrast,
-        discontinuedContainerLightMediumContrast,
-        onDiscontinuedContainerLightMediumContrast,
+    retired = ColorFamily(
+        retiredLightMediumContrast,
+        onRetiredLightMediumContrast,
+        retiredContainerLightMediumContrast,
+        onRetiredContainerLightMediumContrast,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantLightMediumContrast,
-        onDiscontinuedVariantLightMediumContrast,
-        discontinuedVariantContainerLightMediumContrast,
-        onDiscontinuedVariantContainerLightMediumContrast,
+    retiredVariant = ColorFamily(
+        retiredVariantLightMediumContrast,
+        onRetiredVariantLightMediumContrast,
+        retiredVariantContainerLightMediumContrast,
+        onRetiredVariantContainerLightMediumContrast,
     ),
 )
 
@@ -367,17 +367,17 @@ val extendedLightHighContrast = ExtendedColorScheme(
         activeContainerLightHighContrast,
         onActiveContainerLightHighContrast,
     ),
-    discontinued = ColorFamily(
-        discontinuedLightHighContrast,
-        onDiscontinuedLightHighContrast,
-        discontinuedContainerLightHighContrast,
-        onDiscontinuedContainerLightHighContrast,
+    retired = ColorFamily(
+        retiredLightHighContrast,
+        onRetiredLightHighContrast,
+        retiredContainerLightHighContrast,
+        onRetiredContainerLightHighContrast,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantLightHighContrast,
-        onDiscontinuedVariantLightHighContrast,
-        discontinuedVariantContainerLightHighContrast,
-        onDiscontinuedVariantContainerLightHighContrast,
+    retiredVariant = ColorFamily(
+        retiredVariantLightHighContrast,
+        onRetiredVariantLightHighContrast,
+        retiredVariantContainerLightHighContrast,
+        onRetiredVariantContainerLightHighContrast,
     ),
 )
 
@@ -400,17 +400,17 @@ val extendedDarkMediumContrast = ExtendedColorScheme(
         activeContainerDarkMediumContrast,
         onActiveContainerDarkMediumContrast,
     ),
-    discontinued = ColorFamily(
-        discontinuedDarkMediumContrast,
-        onDiscontinuedDarkMediumContrast,
-        discontinuedContainerDarkMediumContrast,
-        onDiscontinuedContainerDarkMediumContrast,
+    retired = ColorFamily(
+        retiredDarkMediumContrast,
+        onRetiredDarkMediumContrast,
+        retiredContainerDarkMediumContrast,
+        onRetiredContainerDarkMediumContrast,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantDarkMediumContrast,
-        onDiscontinuedVariantDarkMediumContrast,
-        discontinuedVariantContainerDarkMediumContrast,
-        onDiscontinuedVariantContainerDarkMediumContrast,
+    retiredVariant = ColorFamily(
+        retiredVariantDarkMediumContrast,
+        onRetiredVariantDarkMediumContrast,
+        retiredVariantContainerDarkMediumContrast,
+        onRetiredVariantContainerDarkMediumContrast,
     ),
 )
 
@@ -433,17 +433,17 @@ val extendedDarkHighContrast = ExtendedColorScheme(
         activeContainerDarkHighContrast,
         onActiveContainerDarkHighContrast,
     ),
-    discontinued = ColorFamily(
-        discontinuedDarkHighContrast,
-        onDiscontinuedDarkHighContrast,
-        discontinuedContainerDarkHighContrast,
-        onDiscontinuedContainerDarkHighContrast,
+    retired = ColorFamily(
+        retiredDarkHighContrast,
+        onRetiredDarkHighContrast,
+        retiredContainerDarkHighContrast,
+        onRetiredContainerDarkHighContrast,
     ),
-    discontinuedVariant = ColorFamily(
-        discontinuedVariantDarkHighContrast,
-        onDiscontinuedVariantDarkHighContrast,
-        discontinuedVariantContainerDarkHighContrast,
-        onDiscontinuedVariantContainerDarkHighContrast,
+    retiredVariant = ColorFamily(
+        retiredVariantDarkHighContrast,
+        onRetiredVariantDarkHighContrast,
+        retiredVariantContainerDarkHighContrast,
+        onRetiredVariantContainerDarkHighContrast,
     ),
 )
 

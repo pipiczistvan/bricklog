@@ -14,7 +14,7 @@ import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.usecase.GetInstructions
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUI
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsById
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -25,7 +25,7 @@ import kotlin.reflect.typeOf
 
 class SetDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val watchSetUI: WatchSetUI,
+    private val watchSetDetailsById: WatchSetDetailsById,
     private val getInstructions: GetInstructions,
     private val toggleSetCollection: ToggleSetCollection,
     private val watchCollections: WatchCollections,
@@ -73,9 +73,9 @@ class SetDetailViewModel(
     }
 
     private fun observeSet() {
-        watchSetUI(_arguments.setId)
-            .onEach { set ->
-                _uiState.update { it.copy(setUI = set) }
+        watchSetDetailsById(_arguments.setId)
+            .onEach { setDetails ->
+                _uiState.update { it.copy(setDetails = setDetails) }
             }.launchIn(viewModelScope)
     }
 

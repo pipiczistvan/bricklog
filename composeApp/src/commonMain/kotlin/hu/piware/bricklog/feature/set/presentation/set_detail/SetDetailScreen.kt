@@ -51,7 +51,7 @@ import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Instruction
-import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.isFavourite
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
@@ -102,7 +102,7 @@ fun SetDetailScreen(
     state: SetDetailState,
     onAction: (SetDetailAction) -> Unit,
 ) {
-    if (state.setUI == null) {
+    if (state.setDetails == null) {
         return
     }
 
@@ -130,7 +130,7 @@ fun SetDetailScreen(
                         onClick = {
                             onAction(
                                 SetDetailAction.OnToggleCollection(
-                                    setId = state.setUI.setID,
+                                    setId = state.setDetails.setID,
                                     collectionId = COLLECTION_ID_FAVOURITE_SETS
                                 )
                             )
@@ -140,7 +140,7 @@ fun SetDetailScreen(
                         )
                     ) {
                         Icon(
-                            imageVector = if (state.setUI.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
+                            imageVector = if (state.setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
                             contentDescription = stringResource(Res.string.go_back),
                             tint = Color.Black
                         )
@@ -153,11 +153,11 @@ fun SetDetailScreen(
     ) { padding ->
         BlurredImageBackground(
             modifier = Modifier.fillMaxSize(),
-            image = state.setUI.set.image
+            image = state.setDetails.set.image
         )
 
         Content(
-            setUI = state.setUI,
+            setDetails = state.setDetails,
             instructions = state.instructions,
             availableCollections = state.availableCollections,
             sharedElementPrefix = state.sharedElementPrefix,
@@ -169,7 +169,7 @@ fun SetDetailScreen(
 
 @Composable
 private fun Content(
-    setUI: SetUI,
+    setDetails: SetDetails,
     instructions: List<Instruction>?,
     availableCollections: List<Collection>,
     sharedElementPrefix: String,
@@ -190,21 +190,21 @@ private fun Content(
         Spacer(modifier = Modifier.height(50.dp))
 
         SetHeaderImage(
-            setUI = setUI,
+            setDetails = setDetails,
             sharedElementPrefix = sharedElementPrefix,
             onClick = {
-                onAction(SetDetailAction.OnImageClick(setUI.setID))
+                onAction(SetDetailAction.OnImageClick(setDetails.setID))
             }
         )
 
         Text(
-            text = setUI.set.name ?: "",
+            text = setDetails.set.name ?: "",
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
 
         SetDetails(
-            setUI = setUI,
+            setDetails = setDetails,
             instructions = instructions,
             availableCollections = availableCollections,
             onAction = onAction
@@ -214,7 +214,7 @@ private fun Content(
 
 @Composable
 private fun SetHeaderImage(
-    setUI: SetUI,
+    setDetails: SetDetails,
     sharedElementPrefix: String,
     onClick: () -> Unit,
 ) {
@@ -222,7 +222,7 @@ private fun SetHeaderImage(
         modifier = Modifier
             .height(250.dp)
             .aspectRatio(1f)
-            .sharedElement("${sharedElementPrefix}/image/${setUI.setID}"),
+            .sharedElement("${sharedElementPrefix}/image/${setDetails.setID}"),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 15.dp
@@ -231,7 +231,7 @@ private fun SetHeaderImage(
         val interactionSource = remember { MutableInteractionSource() }
 
         SetImage(
-            image = setUI.set.image,
+            image = setDetails.set.image,
             modifier = Modifier
                 .testTag("set_detail:image")
                 .fillMaxSize()
@@ -247,7 +247,7 @@ private fun SetHeaderImage(
 
 @Composable
 private fun SetDetails(
-    setUI: SetUI,
+    setDetails: SetDetails,
     instructions: List<Instruction>?,
     availableCollections: List<Collection>,
     onAction: (SetDetailAction) -> Unit,
@@ -261,9 +261,9 @@ private fun SetDetails(
         Column(
             modifier = Modifier.clip(Shapes.medium)
         ) {
-            SetDetailsTable(createFirstSetDetailTableColumns(setUI), swapColors = false)
-            SetDetailsTable(createSecondSetDetailTableColumns(setUI), swapColors = true)
-            SetDetailsTable(createThirdSetDetailTableColumns(setUI), swapColors = false)
+            SetDetailsTable(createFirstSetDetailTableColumns(setDetails), swapColors = false)
+            SetDetailsTable(createSecondSetDetailTableColumns(setDetails), swapColors = true)
+            SetDetailsTable(createThirdSetDetailTableColumns(setDetails), swapColors = false)
         }
 
         SetInstructionsTable(
@@ -273,14 +273,14 @@ private fun SetDetails(
 
         SetCollectionsTable(
             modifier = Modifier.clip(Shapes.medium),
-            setCollections = setUI.collections,
+            setCollections = setDetails.collections,
             availableCollections = availableCollections,
             onToggleCollection = {
-                onAction(SetDetailAction.OnToggleCollection(setUI.setID, it))
+                onAction(SetDetailAction.OnToggleCollection(setDetails.setID, it))
             }
         )
 
-        setUI.set.barcodeEAN?.let {
+        setDetails.set.barcodeEAN?.let {
             TitledSetDetail(
                 title = stringResource(Res.string.barcode_ean)
             ) {
@@ -290,12 +290,12 @@ private fun SetDetails(
                 )
             }
 
-            setUI.set.barcodeUPC?.let {
+            setDetails.set.barcodeUPC?.let {
                 HorizontalDivider()
             }
         }
 
-        setUI.set.barcodeUPC?.let {
+        setDetails.set.barcodeUPC?.let {
             TitledSetDetail(
                 title = stringResource(Res.string.barcode_upc)
             ) {

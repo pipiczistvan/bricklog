@@ -133,14 +133,10 @@
     <string name="set_sort_title">Sorting</string>
     <string name="set_status_active">active</string>
     <string name="set_status_arrives_soon">arrives soon</string>
-    <string name="set_status_discontinued">discontinued</string>
-    <string name="set_status_discontinued_soon">discontinued soon</string>
+    <string name="set_status_retired">retired</string>
+    <string name="set_status_retired_soon">retiring soon</string>
     <string name="set_status_future_release">future release</string>
     <string name="set_status_unknown">unknown</string>
-    <string name="status_filter_active">Active sets</string>
-    <string name="status_filter_any_status">Any status</string>
-    <string name="status_filter_expired">Expired sets</string>
-    <string name="status_filter_future">Future sets</string>
     <string name="status_filter_sheet_title">Status</string>
     <string name="theme_filter_sheet_title">Theme</string>
     <string name="theme_name_animal_crossing">Animal Crossing™</string>

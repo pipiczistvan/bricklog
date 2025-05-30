@@ -5,27 +5,19 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
 interface LocalSetDataSource {
-
-    fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>>
-
-    fun watchSet(id: Int): Flow<Set>
-
-    suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local>
-
+    fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
+    suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError.Local>
+    fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
+    fun watchSetDetailsById(id: Int): Flow<SetDetails>
     suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local>
-
-    fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>>
-
     suspend fun getSetCount(): Result<Int, DataError.Local>
-
     fun watchThemes(): Flow<List<String>>
-
     fun watchPackagingTypes(): Flow<List<String>>
-
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
 }

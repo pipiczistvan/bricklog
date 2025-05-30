@@ -3,35 +3,39 @@ package hu.piware.bricklog.feature.set.presentation.dashboard.utils
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
-import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
+import hu.piware.bricklog.feature.set.domain.model.SetStatus
 
 val latestSetsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
-    status = StatusFilterOption.ANY_STATUS,
+    statuses = emptySet(),
     launchDate = DateFilter.AnyTime,
+    collectionIds = emptySet(),
     showIncomplete = false
 )
 
 val arrivingSetsFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
-    status = StatusFilterOption.FUTURE,
+    statuses = setOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
     launchDate = DateFilter.AnyTime,
+    collectionIds = emptySet(),
     showIncomplete = false
 )
 
 val retiringSetsFilter = SetFilter(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
-    status = StatusFilterOption.ACTIVE,
+    statuses = setOf(SetStatus.RETIRED_SOON),
     launchDate = DateFilter.AnyTime,
+    collectionIds = emptySet(),
     showIncomplete = false
 )
 
 val newSetsNotificationFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
+    statuses = emptySet(),
     launchDate = DateFilter.AnyTime,
     appearanceDate = DateFilter.AnyTime,
     themes = emptySet(),
     packagingTypes = emptySet(),
-    status = StatusFilterOption.ANY_STATUS,
+    collectionIds = emptySet(),
     showIncomplete = false
 )

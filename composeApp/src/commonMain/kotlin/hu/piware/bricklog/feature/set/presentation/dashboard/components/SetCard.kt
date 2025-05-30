@@ -25,7 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.feature.core.presentation.sharedElement
-import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
@@ -35,7 +35,7 @@ import hu.piware.bricklog.ui.theme.Shapes
 
 @Composable
 fun SetCardRow(
-    sets: List<SetUI>,
+    sets: List<SetDetails>,
     onSetClick: (SetDetailArguments) -> Unit,
     sharedElementPrefix: String,
 ) {
@@ -52,7 +52,7 @@ fun SetCardRow(
                 SetCard(
                     modifier = Modifier
                         .sharedElement("$sharedElementPrefix/image/${set.setID}"),
-                    setUI = set,
+                    setDetails = set,
                     onClick = {
                         onSetClick(
                             SetDetailArguments(
@@ -92,7 +92,7 @@ private val rainbowBrush = Brush.linearGradient(
 
 @Composable
 fun SetCard(
-    setUI: SetUI,
+    setDetails: SetDetails,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -115,7 +115,7 @@ fun SetCard(
                     .fillMaxSize()
                     .padding(Dimens.SmallPadding.size),
                 size = ImageSize.SMALL,
-                image = setUI.set.image,
+                image = setDetails.set.image,
                 contentScale = ContentScale.Fit
             )
         }
@@ -123,7 +123,7 @@ fun SetCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            text = setUI.set.name ?: "",
+            text = setDetails.set.name ?: "",
             minLines = 2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,

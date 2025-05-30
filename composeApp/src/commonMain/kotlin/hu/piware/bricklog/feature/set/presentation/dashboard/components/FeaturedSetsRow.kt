@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.ui.theme.Dimens
@@ -23,7 +23,7 @@ import hu.piware.bricklog.ui.theme.Shapes
 fun FeaturedSetsRow(
     title: String,
     onDashboardAction: (DashboardAction) -> Unit,
-    sets: List<SetUI>,
+    sets: List<SetDetails>,
     filterOverrides: SetFilter,
     sharedElementPrefix: String,
 ) {

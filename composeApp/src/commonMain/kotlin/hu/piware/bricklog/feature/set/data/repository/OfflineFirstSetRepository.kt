@@ -10,6 +10,7 @@ import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,16 +27,20 @@ class OfflineFirstSetRepository(
 
     private val logger = Logger.withTag("OfflineFirstSetRepository")
 
-    override fun watchSets(queryOptions: SetQueryOptions): Flow<List<Set>> {
-        return localDataSource.watchSets(queryOptions)
+    override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
+        return localDataSource.watchSetDetails(queryOptions)
     }
 
-    override fun watchSet(id: Int): Flow<Set> {
-        return localDataSource.watchSet(id)
+    override suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError> {
+        return localDataSource.getSetDetails(queryOptions)
     }
 
-    override suspend fun getSets(queryOptions: SetQueryOptions): Result<List<Set>, DataError.Local> {
-        return localDataSource.getSets(queryOptions)
+    override fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>> {
+        return localDataSource.watchSetDetailsPaged(queryOptions)
+    }
+
+    override fun watchSetDetailsById(id: Int): Flow<SetDetails> {
+        return localDataSource.watchSetDetailsById(id)
     }
 
     override suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError> {
@@ -70,10 +75,6 @@ class OfflineFirstSetRepository(
         logger.i { "Storing sets took $storeTimeTaken" }
 
         return storeResult
-    }
-
-    override fun watchSetsPaged(queryOptions: SetQueryOptions): Flow<PagingData<Set>> {
-        return localDataSource.watchSetsPaged(queryOptions)
     }
 
     override suspend fun getSetCount(): Result<Int, DataError> {

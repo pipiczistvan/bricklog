@@ -29,7 +29,7 @@ import bricklog.composeapp.generated.resources.set_details_year
 import bricklog.composeapp.generated.resources.weight
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.EUPrice
-import hu.piware.bricklog.feature.set.domain.model.SetUI
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.localExitDate
 import hu.piware.bricklog.feature.set.domain.model.localLaunchDate
 import org.jetbrains.compose.resources.DrawableResource
@@ -53,76 +53,76 @@ sealed class TableColumn(
     ) : TableColumn(titleRes, data)
 }
 
-fun createFirstSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+fun createFirstSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_number,
-            data = setUI.set.number,
+            data = setDetails.set.number,
             icon = Icons.Default.Tag
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_year,
-            data = setUI.set.year?.toString(),
+            data = setDetails.set.year?.toString(),
             icon = Icons.Default.CalendarToday
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.set_details_pieces,
-            data = setUI.set.pieces?.toString(),
+            data = setDetails.set.pieces?.toString(),
             drawableRes = Res.drawable.lego_brick_1x1
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.set_details_minifigures,
-            data = setUI.set.minifigs?.toString(),
+            data = setDetails.set.minifigs?.toString(),
             drawableRes = Res.drawable.lego_figure_head
         )
     )
 }
 
-fun createSecondSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+fun createSecondSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.set_details_width,
-            data = setUI.set.width?.let { "${round(it * 10) / 10.0} cm" },
+            data = setDetails.set.width?.let { "${round(it * 10) / 10.0} cm" },
             drawableRes = Res.drawable.arrow_range
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_height,
-            data = setUI.set.height?.let { "${round(it * 10) / 10.0} cm" },
+            data = setDetails.set.height?.let { "${round(it * 10) / 10.0} cm" },
             icon = Icons.Default.Height
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_depth,
-            data = setUI.set.depth?.let { "${round(it * 10) / 10.0} cm" },
+            data = setDetails.set.depth?.let { "${round(it * 10) / 10.0} cm" },
             icon = Icons.Default.OpenInFull
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.set_details_weight,
-            data = setUI.set.weight?.let { "${round(it * 10) / 10.0} kg" },
+            data = setDetails.set.weight?.let { "${round(it * 10) / 10.0} kg" },
             drawableRes = Res.drawable.weight
         )
     )
 }
 
-fun createThirdSetDetailTableColumns(setUI: SetUI): List<TableColumn> {
+fun createThirdSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_launch_date,
-            data = setUI.localLaunchDate?.let { formatDate(it) },
+            data = setDetails.localLaunchDate?.let { formatDate(it) },
             icon = Icons.Default.EventAvailable
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_exit_date,
-            data = setUI.localExitDate?.let { formatDate(it) },
+            data = setDetails.localExitDate?.let { formatDate(it) },
             icon = Icons.Default.EventBusy
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_eu_price,
-            data = setUI.EUPrice?.let { "€ ${round(it * 100) / 100}" },
+            data = setDetails.EUPrice?.let { "€ ${round(it * 100) / 100}" },
             icon = Icons.Default.EuroSymbol
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_us_price,
-            data = setUI.set.USPrice?.let { "$ ${round(it * 100) / 100}" },
+            data = setDetails.set.USPrice?.let { "$ ${round(it * 100) / 100}" },
             icon = Icons.Default.AttachMoney
         )
     )

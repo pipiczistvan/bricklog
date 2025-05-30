@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.GetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.ValidateName
+import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class CollectionEditViewModel(
     savedStateHandle: SavedStateHandle,
-    private val validateName: ValidateName,
+    private val validateCollectionName: ValidateCollectionName,
     private val saveCollection: SaveCollection,
     private val getCollection: GetCollection,
     private val deleteCollection: DeleteCollection,
@@ -66,7 +66,7 @@ class CollectionEditViewModel(
     private fun submitData() {
         _uiState.update { it.copy(nameError = null) }
 
-        validateName(uiState.value.name)
+        validateCollectionName(uiState.value.name)
             .onError { error ->
                 _uiState.update { it.copy(nameError = error.error.toUiText()) }
                 return

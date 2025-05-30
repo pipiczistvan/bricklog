@@ -1,10 +1,7 @@
 package hu.piware.bricklog.feature.set.data.database
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.RawQuery
-import androidx.room.RoomRawQuery
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -14,18 +11,6 @@ interface SetDao {
 
     @Upsert
     suspend fun upsertAll(sets: List<SetEntity>)
-
-    @RawQuery(observedEntities = [SetEntity::class])
-    fun watchSets(query: RoomRawQuery): Flow<List<SetEntity>>
-
-    @Query("SELECT * FROM sets WHERE id = :id")
-    fun watchSet(id: Int): Flow<SetEntity?>
-
-    @RawQuery(observedEntities = [SetEntity::class])
-    suspend fun getSets(query: RoomRawQuery): List<SetEntity>
-
-    @RawQuery(observedEntities = [SetEntity::class])
-    fun pagingSource(query: RoomRawQuery): PagingSource<Int, SetEntity>
 
     @Query("SELECT COUNT(*) FROM sets")
     suspend fun getSetCount(): Int

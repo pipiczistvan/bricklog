@@ -19,17 +19,17 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
-import hu.piware.bricklog.feature.set.domain.model.SetUI
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 
 
 @Composable
 fun PagedSetList(
-    sets: LazyPagingItems<SetUI>,
-    onSetClick: (SetUI) -> Unit,
-    onFavouriteClick: (SetUI) -> Unit,
+    sets: LazyPagingItems<SetDetails>,
+    onSetClick: (SetDetails) -> Unit,
+    onFavouriteClick: (SetDetails) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(
         top = 12.dp,
@@ -56,7 +56,7 @@ fun PagedSetList(
                 ) { index ->
                     sets[index]?.let { set ->
                         SetListItem(
-                            setUI = set,
+                            setDetails = set,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .widthIn(max = 700.dp)
@@ -83,7 +83,7 @@ fun PagedSetList(
                 ) { index ->
                     sets[index]?.let { set ->
                         SetGridItem(
-                            setUI = set,
+                            setDetails = set,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
@@ -110,7 +110,7 @@ fun PagedSetList(
                 ) { index ->
                     sets[index]?.let { set ->
                         SetGridItem(
-                            setUI = set,
+                            setDetails = set,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),

@@ -9,6 +9,8 @@ import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
 import hu.piware.bricklog.feature.collection.data.database.SetCollectionDao
 import hu.piware.bricklog.feature.collection.data.database.SetCollectionEntity
 import hu.piware.bricklog.feature.set.data.database.SetDao
+import hu.piware.bricklog.feature.set.data.database.SetDetailsDao
+import hu.piware.bricklog.feature.set.data.database.SetDetailsView
 import hu.piware.bricklog.feature.set.data.database.SetEntity
 import hu.piware.bricklog.feature.set.data.database.SetImageDao
 import hu.piware.bricklog.feature.set.data.database.SetImageEntity
@@ -26,6 +28,9 @@ import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
         CollectionEntity::class,
         SetCollectionEntity::class
     ],
+    views = [
+        SetDetailsView::class
+    ],
     version = 1
 )
 @TypeConverters(
@@ -34,6 +39,7 @@ import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
 @ConstructedBy(BricklogDatabaseConstructor::class)
 abstract class BricklogDatabase : RoomDatabase() {
     abstract val setDao: SetDao
+    abstract val setDetailsDao: SetDetailsDao
     abstract val updateInfoDao: UpdateInfoDao
     abstract val setImagesDao: SetImageDao
     abstract val setInstructionsDao: SetInstructionDao

@@ -3,7 +3,7 @@
 package hu.piware.bricklog.feature.set.domain.usecase
 
 import androidx.paging.PagingData
-import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
@@ -17,14 +17,14 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
 
 @Single
-class WatchSetsPaged(
+class WatchSetDetailsPaged(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,
 ) {
     operator fun invoke(
         filterOverrides: SetFilter? = null,
         query: String = "",
-    ): Flow<PagingData<Set>> {
+    ): Flow<PagingData<SetDetails>> {
         val parsedQueries = query.parseQueries()
 
         return settingsRepository.setFilterPreferences
@@ -33,7 +33,7 @@ class WatchSetsPaged(
             }
             .distinctUntilChanged()
             .flatMapLatest { queryOptions ->
-                setRepository.watchSetsPaged(queryOptions)
+                setRepository.watchSetDetailsPaged(queryOptions)
             }
     }
 }

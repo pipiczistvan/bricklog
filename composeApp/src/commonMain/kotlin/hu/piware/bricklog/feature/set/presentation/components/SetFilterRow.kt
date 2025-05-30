@@ -26,7 +26,7 @@ import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
-import hu.piware.bricklog.feature.set.domain.model.StatusFilterOption
+import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.CollectionFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.DateFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.PackagingTypeFilterBottomSheet
@@ -62,8 +62,8 @@ fun SetFilterRow(
     ) {
         Spacer(Modifier.size(Dimens.SmallPadding.size))
         StatusChip(
-            enabled = filterOverrides?.status == null,
-            status = mergedFilter.status,
+            enabled = filterOverrides?.statuses == null,
+            selectedStatuses = mergedFilter.statuses,
             onClick = { showStatusFilterSheet = true }
         )
         ReleaseDateChip(
@@ -108,8 +108,9 @@ fun SetFilterRow(
     if (showStatusFilterSheet) {
         StatusFilterBottomSheet(
             onShowBottomSheetChanged = { showStatusFilterSheet = it },
-            selected = filterPreferences.status,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(status = it)) }
+            availableOptions = SetStatus.entries,
+            selected = filterPreferences.statuses,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(statuses = it)) }
         )
     }
 
@@ -211,16 +212,17 @@ private fun PackagingTypeChip(
 @Composable
 private fun StatusChip(
     enabled: Boolean,
-    status: StatusFilterOption,
+    selectedStatuses: Set<SetStatus>,
     onClick: () -> Unit,
 ) {
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:status_chip"),
-        title = when (status) {
-            StatusFilterOption.ANY_STATUS -> stringResource(Res.string.set_search_bar_chip_status)
-            else -> stringResource(status.titleRes)
+        title = when (selectedStatuses.size) {
+            0 -> stringResource(Res.string.set_search_bar_chip_status)
+            1 -> stringResource(selectedStatuses.first().statusRes)
+            else -> "${stringResource(selectedStatuses.first().statusRes)} + ${selectedStatuses.size - 1}"
         },
-        isDefaultSelected = status == StatusFilterOption.ANY_STATUS,
+        isDefaultSelected = selectedStatuses.isEmpty(),
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick
@@ -268,7 +270,7 @@ private fun SetFilterPreferences.mergeWithFilter(filter: SetFilter?): SetFilterP
         launchDate = filter?.launchDate ?: launchDate,
         themes = filter?.themes ?: themes,
         packagingTypes = filter?.packagingTypes ?: packagingTypes,
-        status = filter?.status ?: status,
+        statuses = filter?.statuses ?: statuses,
         showIncomplete = filter?.showIncomplete ?: showIncomplete,
         collectionIds = filter?.collectionIds ?: collectionIds
     )

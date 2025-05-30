@@ -6,7 +6,7 @@ import hu.piware.bricklog.feature.core.domain.UIError
 import org.koin.core.annotation.Single
 
 @Single
-class ValidateName {
+class ValidateCollectionName {
 
     operator fun invoke(name: String): EmptyResult<UIError> {
         if (name.isBlank()) {

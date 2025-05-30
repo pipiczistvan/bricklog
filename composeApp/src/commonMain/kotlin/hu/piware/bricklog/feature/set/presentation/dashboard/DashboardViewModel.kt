@@ -21,8 +21,8 @@ import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUIs
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
@@ -49,7 +49,7 @@ import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class DashboardViewModel(
-    private val watchSetUIs: WatchSetUIs,
+    private val watchSetDetails: WatchSetDetails,
     private val updateSets: UpdateSets,
     private val watchBricksetUpdateInfo: WatchBricksetUpdateInfo,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
@@ -144,7 +144,7 @@ class DashboardViewModel(
             .mapNotNull { it.searchQuery }
             .distinctUntilChanged()
             .flatMapLatest { query ->
-                watchSetUIs(
+                watchSetDetails(
                     filterOverrides = SetFilter(limit = 10),
                     query = query
                 )
@@ -163,21 +163,21 @@ class DashboardViewModel(
     }
 
     private fun observeLatestSets() {
-        watchSetUIs(filterOverrides = latestSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = latestSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeArrivingSets() {
-        watchSetUIs(filterOverrides = arrivingSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = arrivingSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
-        watchSetUIs(filterOverrides = retiringSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = retiringSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)

@@ -131,7 +131,7 @@ private fun Content(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            items(state.searchResults) { setUI ->
+            items(state.searchResults) { setDetails ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -139,7 +139,7 @@ private fun Content(
                             onAction(
                                 SetSearchBarAction.OnSetClick(
                                     SetDetailArguments(
-                                        setId = setUI.setID,
+                                        setId = setDetails.setID,
                                         sharedElementPrefix = "search_bar"
                                     )
                                 )
@@ -152,7 +152,7 @@ private fun Content(
                                 horizontal = Dimens.MediumPadding.size,
                                 vertical = Dimens.SmallPadding.size
                             ),
-                        text = setUI.set.name ?: "",
+                        text = setDetails.set.name ?: "",
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

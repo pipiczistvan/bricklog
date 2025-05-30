@@ -20,7 +20,7 @@ interface CollectionDao {
     fun watchCollectionsWithSetIds(): Flow<List<CollectionWithSetId>>
 
     @Query(
-        "SELECT * FROM collections " +
+        "SELECT collections.* FROM collections " +
                 "LEFT JOIN set_collections ON collections.id = set_collections.collectionId " +
                 "WHERE set_collections.setId = :setId"
     )
