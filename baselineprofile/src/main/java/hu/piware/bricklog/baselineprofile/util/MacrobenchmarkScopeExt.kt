@@ -6,15 +6,18 @@ import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 
 fun MacrobenchmarkScope.waitUntilScreenLoads(screenName: String, timeout: Long = 500) {
+    println("Waiting for screen: $screenName")
     device.wait(Until.hasObject(By.res(screenName)), timeout)
 }
 
 fun MacrobenchmarkScope.waitUntilObject(resourceName: String, timeout: Long = 5_000): UiObject2 {
+    println("Waiting for object: $resourceName")
     device.wait(Until.hasObject(By.res(resourceName)), timeout)
     return device.findObject(By.res(resourceName))
 }
 
 fun MacrobenchmarkScope.waitUntilGone(resourceName: String, timeout: Long = 5_000) {
+    println("Waiting for gone: $resourceName")
     device.wait(Until.gone(By.res(resourceName)), timeout)
 }
 

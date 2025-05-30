@@ -91,7 +91,7 @@ Download a `google-services.json` from Firebase and place in `composeApp` folder
 Generate baseline profile using BaselineProfileGenerator on a rooted emulator.
 Run benchmarks on real device.
 
-1. Use mock remote implementations
+1. Use mock remote implementations and turn off startup permission requests
 2. Select benchmarkRelease build variant
 3. Execute ./gradlew :composeApp:generateReleaseBaselineProfile
 4. Test with benchmarks

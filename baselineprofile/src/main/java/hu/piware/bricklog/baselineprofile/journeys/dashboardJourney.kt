@@ -6,7 +6,7 @@ import hu.piware.bricklog.baselineprofile.util.waitUntilObject
 import hu.piware.bricklog.baselineprofile.util.waitUntilScreenLoads
 
 fun MacrobenchmarkScope.dashboardJourney() {
-    waitUntilScreenLoads("dashboard_screen", 30_000)
+    waitUntilScreenLoads("dashboard_screen")
 
     val body = waitUntilObject("dashboard:body")
     body.setGestureMargin(device.displayWidth / 5)
