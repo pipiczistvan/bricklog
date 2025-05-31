@@ -40,6 +40,7 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import org.jetbrains.compose.resources.stringResource
 
@@ -82,7 +83,8 @@ fun SetListItem(
                             .aspectRatio(
                                 ratio = 1f,
                                 matchHeightConstraintsFirst = true
-                            ),
+                            )
+                            .padding(Dimens.SmallPadding.size),
                         size = ImageSize.SMALL
                     )
                 }

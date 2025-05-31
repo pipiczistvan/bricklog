@@ -119,7 +119,7 @@ fun AboutScreen(
         ) {
             AppProfile(
                 modifier = Modifier
-                    .padding(vertical = 24.dp)
+                    .padding(24.dp)
             )
             ActionsTable(
                 onAction = onAction,

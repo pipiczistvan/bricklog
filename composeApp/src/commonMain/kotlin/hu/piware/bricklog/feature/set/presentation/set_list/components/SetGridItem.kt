@@ -77,7 +77,8 @@ fun SetGridItem(
                             .aspectRatio(
                                 ratio = 1f,
                                 matchHeightConstraintsFirst = true
-                            ),
+                            )
+                            .padding(Dimens.SmallPadding.size),
                         size = imageSize
                     )
                 }
@@ -127,7 +128,8 @@ fun SetGridItem(
                 ) {
                     Icon(
                         imageVector = if (setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.Black
                     )
                 }
             }

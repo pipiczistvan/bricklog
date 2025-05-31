@@ -24,7 +24,6 @@ import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 
-
 @Composable
 fun PagedSetList(
     sets: LazyPagingItems<SetDetails>,

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -48,6 +49,7 @@ import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.components.PagedSetList
 import hu.piware.bricklog.feature.set.presentation.set_list.components.SetSortBottomSheet
+import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -203,7 +205,12 @@ private fun EmptySetList(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             contentDescription = null
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(Res.string.no_search_results))
+        Spacer(modifier = Modifier.height(Dimens.MediumPadding.size))
+        Text(
+            modifier = Modifier
+                .padding(Dimens.MediumPadding.size),
+            text = stringResource(Res.string.no_search_results),
+            textAlign = TextAlign.Center
+        )
     }
 }
