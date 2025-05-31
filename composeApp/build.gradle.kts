@@ -1,5 +1,4 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.google.devtools.ksp.KspExperimental
@@ -188,18 +187,15 @@ buildkonfig {
     val bricksetApiKey: String = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
 
     defaultConfigs {
+        buildConfigField(STRING, "FLAVOR", "PROD")
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
-        buildConfigField(BOOLEAN, "DEV_MODE", "false")
-        buildConfigField(BOOLEAN, "MOCK", "false")
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
     }
     defaultConfigs("mock") {
-        buildConfigField(BOOLEAN, "DEV_MODE", "true")
-        buildConfigField(BOOLEAN, "MOCK", "true")
+        buildConfigField(STRING, "FLAVOR", "MOCK")
     }
     defaultConfigs("dev") {
-        buildConfigField(BOOLEAN, "DEV_MODE", "true")
-        buildConfigField(BOOLEAN, "MOCK", "false")
+        buildConfigField(STRING, "FLAVOR", "DEV")
     }
 
     tasks.build.dependsOn("generateBuildKonfig")

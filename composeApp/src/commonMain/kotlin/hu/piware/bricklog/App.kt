@@ -38,6 +38,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newSetsNotifi
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
+import hu.piware.bricklog.ui.drawFlavorRibbon
 import hu.piware.bricklog.ui.navigation.RootRoute
 import hu.piware.bricklog.ui.navigation.ScaleTransitionDirection
 import hu.piware.bricklog.ui.navigation.rootGraph
@@ -82,7 +83,8 @@ fun App(
             observeNotificationEvents(navController)
 
             Scaffold(
-                modifier = modifier,
+                modifier = modifier
+                    .drawFlavorRibbon(),
                 snackbarHost = {
                     SnackbarHost(
                         hostState = snackbarHostState

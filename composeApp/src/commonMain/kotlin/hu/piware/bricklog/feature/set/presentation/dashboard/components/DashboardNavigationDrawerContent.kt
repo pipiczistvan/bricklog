@@ -42,11 +42,12 @@ import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_collections
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_developer
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_settings
-import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.util.BuildConfig
+import hu.piware.bricklog.util.isDebugFlavor
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -157,7 +158,7 @@ private fun buildNavigationSections(collections: List<Collection>): List<Navigat
         buildCollectionsSection(collections),
         buildSettingsSection(),
     ).let {
-        if (BuildKonfig.DEV_MODE) it + buildDeveloperSection() else it
+        if (BuildConfig.isDebugFlavor) it + buildDeveloperSection() else it
     }
 }
 
