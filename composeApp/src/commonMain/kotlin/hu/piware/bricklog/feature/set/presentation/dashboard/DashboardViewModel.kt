@@ -90,7 +90,7 @@ class DashboardViewModel(
     fun onAction(action: DashboardAction) {
         when (action) {
             is DashboardAction.OnRefreshSets -> refreshSets()
-            is DashboardAction.OnResetSets -> resetSetsClick()
+            is DashboardAction.OnResetSets -> resetSetsClick(action.date)
             is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
                 updateChangelogReadVersion()
             }
@@ -234,9 +234,9 @@ class DashboardViewModel(
         }
     }
 
-    private fun resetSetsClick() {
+    private fun resetSetsClick(date: Instant) {
         viewModelScope.launch {
-            resetSets(Instant.parse("2025-05-12T00:00:00Z"))
+            resetSets(date)
                 .showSnackbarOnError()
         }
     }

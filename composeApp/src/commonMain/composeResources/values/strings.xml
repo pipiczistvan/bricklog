@@ -42,7 +42,7 @@
     <string name="dashboard_navigation_drawer_item_about">About</string>
     <string name="dashboard_navigation_drawer_item_appearance">Appearance</string>
     <string name="dashboard_navigation_drawer_item_notification_settings">Notification Settings</string>
-    <string name="dashboard_navigation_drawer_item_reset_sets">Reset Sets</string>
+    <string name="dashboard_navigation_drawer_item_reset_sets">Reset set data to %1$s</string>
     <string name="dashboard_navigation_drawer_section_collections">Collections</string>
     <string name="dashboard_navigation_drawer_section_developer">Developer Tools</string>
     <string name="dashboard_navigation_drawer_section_settings">Settings</string>

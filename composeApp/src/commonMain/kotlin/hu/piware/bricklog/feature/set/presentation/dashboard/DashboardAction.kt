@@ -3,6 +3,7 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import kotlinx.datetime.Instant
 
 sealed interface DashboardAction {
     data class OnSetClick(val arguments: SetDetailArguments) : DashboardAction
@@ -12,6 +13,6 @@ sealed interface DashboardAction {
     data object OnAppearanceClick : DashboardAction
     data class OnCollectionEditClick(val id: CollectionId) : DashboardAction
     data object OnRefreshSets : DashboardAction
-    data object OnResetSets : DashboardAction
+    data class OnResetSets(val date: Instant) : DashboardAction
     data object OnUpdateChangelogReadVersion : DashboardAction
 }
