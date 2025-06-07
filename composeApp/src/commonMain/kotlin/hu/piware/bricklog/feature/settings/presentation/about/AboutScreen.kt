@@ -30,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -277,8 +276,7 @@ private fun AppProfile(
         Image(
             modifier = Modifier.width(100.dp),
             painter = painterResource(Res.drawable.app_logo),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            contentDescription = null
         )
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Column {

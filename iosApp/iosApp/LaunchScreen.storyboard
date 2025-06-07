@@ -22,7 +22,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.34901960784313724" green="0.33333333333333331" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.67450980392156867" green="0.61176470588235299" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="7iI-SQ-tLy" secondAttribute="bottom" constant="291" id="O2h-dJ-SeP"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="7iI-SQ-tLy" secondAttribute="trailing" constant="97" id="P1q-Cy-inB"/>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AdaptiveLogo" width="240" height="240"/>
+        <image name="AdaptiveLogo" width="960" height="960"/>
     </resources>
 </document>

@@ -12,7 +12,7 @@ class BricklogApplication : Application() {
         super.onCreate()
         NotifierManager.initialize(
             configuration = NotificationPlatformConfiguration.Android(
-                notificationIconResId = R.drawable.app_logo,
+                notificationIconResId = R.drawable.notification_icon,
                 showPushNotification = true,
             )
         )
