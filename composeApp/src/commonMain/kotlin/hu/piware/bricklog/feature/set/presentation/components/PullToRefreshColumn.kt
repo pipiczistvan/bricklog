@@ -1,19 +1,16 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package hu.piware.bricklog.feature.set.presentation.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -25,17 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.last_updated
 import bricklog.composeapp.generated.resources.pull_to_refresh_complete_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_pull_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_refreshing_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_release_label
-import hu.piware.bricklog.feature.core.presentation.util.formatDateTime
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 
 private const val maxHeight = 100
 
@@ -46,7 +38,7 @@ fun PullToRefreshColumn(
     lastUpdated: Instant?,
     modifier: Modifier = Modifier,
     state: PullToRefreshState = rememberPullToRefreshState(),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val indicatorState by remember(isRefreshing, state.distanceFraction) {
         mutableStateOf(
@@ -67,13 +59,19 @@ fun PullToRefreshColumn(
                 onRefresh = onRefresh
             ),
     ) {
-        PullToRefreshIndicator(
-            indicatorState = indicatorState,
-            pullToRefreshProgress = state.distanceFraction,
-            lastUpdated = lastUpdated,
+        Box(
+            modifier = modifier
+                .height((state.distanceFraction * maxHeight).dp)
         )
         content()
     }
+
+
+    PullToRefreshIndicator(
+        indicatorState = indicatorState,
+        pullToRefreshProgress = state.distanceFraction,
+        lastUpdated = lastUpdated,
+    )
 }
 
 @Composable
@@ -81,36 +79,23 @@ private fun PullToRefreshIndicator(
     modifier: Modifier = Modifier,
     indicatorState: RefreshIndicatorState,
     pullToRefreshProgress: Float,
-    lastUpdated: Instant?
+    lastUpdated: Instant?,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height((pullToRefreshProgress * maxHeight).dp)
-            .padding(15.dp),
-        contentAlignment = Alignment.BottomStart,
+        contentAlignment = Alignment.TopCenter,
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(maxHeight.dp)
+                .offset(y = (-maxHeight + pullToRefreshProgress * maxHeight).dp),
+            contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = stringResource(indicatorState.messageRes),
-                style = MaterialTheme.typography.labelMedium
-            )
             if (indicatorState == RefreshIndicatorState.Refreshing) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    strokeWidth = 2.dp,
-                )
-            } else if (lastUpdated != null) {
-                Text(
-                    text = stringResource(
-                        Res.string.last_updated,
-                        formatDateTime(lastUpdated.toLocalDateTime(TimeZone.currentSystemDefault()))
-                    ),
-                    style = MaterialTheme.typography.labelSmall
+                ContainedLoadingIndicator()
+            } else {
+                ContainedLoadingIndicator(
+                    progress = { pullToRefreshProgress / 2f }
                 )
             }
         }

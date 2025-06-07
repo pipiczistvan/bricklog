@@ -70,12 +70,12 @@ fun FeaturedThemesCarousel(
                             0f,
                             1f,
                             max(
-                                size.width - (carouselItemInfo.maxSize) +
-                                        carouselItemInfo.size,
+                                size.width - (carouselItemDrawInfo.maxSize) +
+                                        carouselItemDrawInfo.size,
                                 0f
                             ) / size.width
                         )
-                        translationX = carouselItemInfo.maskRect.left + 8.dp.toPx()
+                        translationX = carouselItemDrawInfo.maskRect.left + 8.dp.toPx()
 
                     },
                 text = stringResource(item.contentDescriptionResId),

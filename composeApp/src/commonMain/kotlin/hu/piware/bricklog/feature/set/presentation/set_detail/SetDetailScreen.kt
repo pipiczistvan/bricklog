@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package hu.piware.bricklog.feature.set.presentation.set_detail
 
@@ -22,9 +22,10 @@ import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -112,11 +113,12 @@ fun SetDetailScreen(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(
+                    FilledIconButton(
                         onClick = { onAction(SetDetailAction.OnBackClick) },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
                             containerColor = Color.White
-                        )
+                        ),
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -126,7 +128,7 @@ fun SetDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(
+                    FilledIconButton(
                         onClick = {
                             onAction(
                                 SetDetailAction.OnToggleCollection(
@@ -137,7 +139,8 @@ fun SetDetailScreen(
                         },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
                             containerColor = Color.White
-                        )
+                        ),
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = if (state.setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,

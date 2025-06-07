@@ -22,7 +22,7 @@ app-release = "25051901"
 app-version = "1.1.0"
 buildkonfig = "0.17.1"                          # https://github.com/yshrsmz/BuildKonfig
 coil3 = "3.1.0"                                 # https://github.com/coil-kt/coil
-compose-multiplatform = "1.8.1"                 # https://github.com/JetBrains/compose-multiplatform
+compose-multiplatform = "1.9.0-alpha02"         # https://github.com/JetBrains/compose-multiplatform
 crashlytics = "3.0.3"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 firebase-bom = "33.13.0"                        # https://firebase.google.com/support/release-notes/android
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
