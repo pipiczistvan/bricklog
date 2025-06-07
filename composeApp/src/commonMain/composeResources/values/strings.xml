@@ -74,7 +74,7 @@
     <string name="last_updated">Last update: %1$s</string>
     <string name="license_title">License</string>
     <string name="no_search_results">Oops, there aren't any sets for your search query.</string>
-    <string name="notification_settings_general">Allow notifications</string>
+    <string name="notification_settings_general">General notifications</string>
     <string name="notification_settings_new_sets">When new items added to the database</string>
     <string name="notification_settings_permission_description">To start receiving notifications, please turn on Show Notifications in your device settings.</string>
     <string name="notification_settings_permission_open_settings">Open Device Settings</string>

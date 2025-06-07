@@ -4,8 +4,8 @@ import co.touchlab.kermit.Logger
 import com.mmk.kmpnotifier.notification.NotifierManager
 import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
-import hu.piware.bricklog.feature.settings.domain.util.newSetsEnabled
 import kotlinx.coroutines.flow.firstOrNull
 import org.koin.core.annotation.Single
 
@@ -18,8 +18,10 @@ class SendNewSetNotification(
     suspend operator fun invoke(newSets: List<SetDetails>) {
         logger.i { "Reading notification preferences" }
         val notificationPreferences = settingsRepository.notificationPreferences.firstOrNull()
+            ?: NotificationPreferences()
+
         logger.i { "Read notification preferences" }
-        if (newSets.isNotEmpty() && notificationPreferences.newSetsEnabled()) {
+        if (newSets.isNotEmpty() && notificationPreferences.newSets) {
             logger.i { "Sending notifications" }
             NotifierManager.getLocalNotifier().notify {
                 title = "New items"

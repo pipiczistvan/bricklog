@@ -21,12 +21,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,6 +40,8 @@ import bricklog.composeapp.generated.resources.notification_settings_permission_
 import bricklog.composeapp.generated.resources.notification_settings_permission_title
 import bricklog.composeapp.generated.resources.notification_settings_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
+import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
+import hu.piware.bricklog.feature.settings.domain.util.generalState
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -100,52 +104,56 @@ private fun NotificationsScreen(
                 )
             }
 
-            NotificationPreferenceRow(
-                title = stringResource(Res.string.notification_settings_general),
+            GeneralNotificationPreferences(
+                preferences = state.notificationPreferences,
                 enabled = state.notificationPermissionGranted,
-                checked = state.notificationPreferences.general,
-                onCheckedChange = {
-                    onAction(
-                        NotificationsAction.OnNotificationPreferenceChange(
-                            state.notificationPreferences.copy(general = it)
-                        )
-                    )
-                }
-            )
-
-            NotificationPreferenceRow(
-                title = stringResource(Res.string.notification_settings_new_sets),
-                enabled = state.notificationPreferences.general && state.notificationPermissionGranted,
-                checked = state.notificationPreferences.newSets,
-                onCheckedChange = {
-                    onAction(
-                        NotificationsAction.OnNotificationPreferenceChange(
-                            state.notificationPreferences.copy(newSets = it)
-                        )
-                    )
-                }
+                onChange = { onAction(NotificationsAction.OnNotificationPreferenceChange(it)) }
             )
         }
     }
 }
 
 @Composable
-private fun NotificationPreferenceRow(
-    title: String,
+private fun GeneralNotificationPreferences(
+    preferences: NotificationPreferences,
     enabled: Boolean,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    onChange: (NotificationPreferences) -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            enabled = enabled,
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-        Text(text = title)
+    Column {
+        val generalState = preferences.generalState()
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TriStateCheckbox(
+                enabled = enabled,
+                state = generalState,
+                onClick = {
+                    when (generalState) {
+                        ToggleableState.On -> onChange(NotificationPreferences.allDisabled())
+                        ToggleableState.Off -> onChange(NotificationPreferences.allEnabled())
+                        ToggleableState.Indeterminate -> onChange(NotificationPreferences.allEnabled())
+                    }
+                }
+            )
+            Text(text = stringResource(Res.string.notification_settings_general))
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(start = Dimens.LargePadding.size)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    enabled = enabled,
+                    checked = preferences.newSets,
+                    onCheckedChange = { onChange(preferences.copy(newSets = it)) }
+                )
+                Text(text = stringResource(Res.string.notification_settings_new_sets))
+            }
+        }
     }
 }
 
