@@ -26,6 +26,7 @@ import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestReleasesFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
@@ -69,6 +70,7 @@ class DashboardViewModel(
         .asStateFlowIn(viewModelScope) {
             observeUpdateInfo()
             observeLatestSets()
+            observeLatestReleases()
             observeArrivingSets()
             observeRetiringSets()
             observeSetFilterDomain()
@@ -162,6 +164,13 @@ class DashboardViewModel(
     private fun observeLatestSets() {
         watchSetDetails(filterOverrides = latestSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
+            .flowOn(Dispatchers.Default)
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeLatestReleases() {
+        watchSetDetails(filterOverrides = latestReleasesFilter.copy(limit = 12))
+            .onEach { sets -> _uiState.update { it.copy(latestReleases = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }

@@ -47,6 +47,7 @@
     <string name="dashboard_navigation_drawer_section_developer">Developer Tools</string>
     <string name="dashboard_navigation_drawer_section_settings">Settings</string>
     <string name="dashboard_section_arriving_sets">Arriving Sets</string>
+    <string name="dashboard_section_latest_releases">Latest Releases</string>
     <string name="dashboard_section_latest_sets">Latest Sets</string>
     <string name="dashboard_section_new_sets">New Items</string>
     <string name="dashboard_section_retiring_sets">Retiring Sets</string>

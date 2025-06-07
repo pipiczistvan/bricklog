@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.dashboard_section_arriving_sets
+import bricklog.composeapp.generated.resources.dashboard_section_latest_releases
 import bricklog.composeapp.generated.resources.dashboard_section_latest_sets
 import bricklog.composeapp.generated.resources.dashboard_section_retiring_sets
 import bricklog.composeapp.generated.resources.dashboard_theme_carousel_title
@@ -43,6 +44,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestReleasesFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
@@ -226,6 +228,14 @@ fun DashboardScreen(
                             sets = state.latestSets,
                             filterOverrides = latestSetsFilter,
                             sharedElementPrefix = "latest_sets"
+                        )
+
+                        FeaturedSetsRow(
+                            title = stringResource(Res.string.dashboard_section_latest_releases),
+                            onDashboardAction = onAction,
+                            sets = state.latestReleases,
+                            filterOverrides = latestReleasesFilter,
+                            sharedElementPrefix = "latest_releases"
                         )
 
                         FeaturedSetsRow(

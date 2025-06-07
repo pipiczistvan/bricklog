@@ -13,6 +13,14 @@ val latestSetsFilter = SetFilter(
     showIncomplete = false
 )
 
+val latestReleasesFilter = SetFilter(
+    sortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
+    statuses = setOf(SetStatus.ACTIVE),
+    launchDate = DateFilter.AnyTime,
+    collectionIds = emptySet(),
+    showIncomplete = false
+)
+
 val arrivingSetsFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
     statuses = setOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),

@@ -7,6 +7,7 @@ import kotlinx.datetime.Instant
 
 data class DashboardState(
     val latestSets: List<SetDetails> = emptyList(),
+    val latestReleases: List<SetDetails> = emptyList(),
     val arrivingSets: List<SetDetails> = emptyList(),
     val retiringSets: List<SetDetails> = emptyList(),
     val collections: List<Collection> = emptyList(),
