@@ -36,7 +36,7 @@ actual class SyncSetsPeriodicBackgroundTaskScheduler : KoinComponent {
     actual fun schedule() {
         val request = BGAppRefreshTaskRequest(identifier = TASK_SYNC_SETS_IDENTIFIER)
         request.earliestBeginDate =
-            NSDate.dateWithTimeIntervalSinceNow((TASK_SYNC_SETS_REFRESH_INTERVAL_MS * 1000).toDouble())
+            NSDate.dateWithTimeIntervalSinceNow(TASK_SYNC_SETS_REFRESH_INTERVAL_MS / 1000.0)
 
         try {
             BGTaskScheduler.sharedScheduler.submitTaskRequest(
