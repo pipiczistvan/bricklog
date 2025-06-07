@@ -57,6 +57,7 @@
     <string name="date_range_picker_button_dismiss">Cancel</string>
     <string name="date_range_picker_title">Select date range</string>
     <string name="error_disk_full">Oops, it seems like your disk is full.</string>
+    <string name="error_busy">The requested operation cannot be completed at this time.</string>
     <string name="error_field_blank">This field cannot be blank.</string>
     <string name="error_field_too_long">Too long text.</string>
     <string name="error_field_too_short">Too short text.</string>

@@ -28,8 +28,6 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
-import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
-import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +51,6 @@ class DashboardViewModel(
     private val updateSets: UpdateSets,
     private val watchBricksetUpdateInfo: WatchBricksetUpdateInfo,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
-    private val saveNotificationPreferences: SaveNotificationPreferences,
     @Provided private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val resetSets: ResetSets,
@@ -216,12 +213,6 @@ class DashboardViewModel(
                     permissionsController.isPermissionGranted(Permission.REMOTE_NOTIFICATION)
                 if (!permissionGranted) {
                     permissionsController.providePermission(Permission.REMOTE_NOTIFICATION)
-                    saveNotificationPreferences(
-                        NotificationPreferences(
-                            general = true,
-                            newSets = true
-                        )
-                    )
                 }
                 logger.i { "Notification permission granted." }
             } catch (e: DeniedAlwaysException) {

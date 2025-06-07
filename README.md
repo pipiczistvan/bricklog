@@ -102,7 +102,14 @@ Run benchmarks on real device.
 - On iOS JDK 17 is necessary to build. It can be specified manually
   in [gradle.properties](gradle.properties) via `org.gradle.java.home`.
 
-Afterwards, build the project and you're ready to use it.
+  Afterwards, build the project and you're ready to use it.
+
+- On iOS the background task can be triggered manually by pausing program execution and type the
+  following command:
+
+  `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"hu.piware.bricklog.sync_sets"]`
+
+  After resuming the task should trigger.
 
 # Technical details
 

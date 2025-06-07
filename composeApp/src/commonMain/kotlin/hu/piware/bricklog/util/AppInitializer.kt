@@ -9,12 +9,14 @@ import hu.piware.bricklog.di.initKoin
 import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
+import hu.piware.bricklog.feature.set.domain.background_task.SyncSetsPeriodicBackgroundTaskScheduler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
 
-object AppInitializer {
+object AppInitializer : KoinComponent {
 
     private val logger = Logger.withTag("AppInitializer")
 
@@ -35,6 +37,13 @@ object AppInitializer {
                 }
             }
         })
+
+        scheduleSyncSetsBackgroundTask()
+    }
+
+    private fun scheduleSyncSetsBackgroundTask() {
+        val scheduler = getKoin().get<SyncSetsPeriodicBackgroundTaskScheduler>()
+        scheduler.schedule()
     }
 }
 

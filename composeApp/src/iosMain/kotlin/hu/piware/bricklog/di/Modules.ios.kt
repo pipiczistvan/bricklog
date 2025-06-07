@@ -5,6 +5,7 @@ import dev.icerock.moko.permissions.ios.PermissionsControllerProtocol
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.presentation.LocaleManager
+import hu.piware.bricklog.feature.set.domain.background_task.SyncSetsPeriodicBackgroundTaskScheduler
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -15,4 +16,5 @@ actual val platformModule = module {
     single { DatastoreFactory() }
     single { PermissionsController() }.bind<PermissionsControllerProtocol>()
     single { LocaleManager() }
+    single { SyncSetsPeriodicBackgroundTaskScheduler() }
 }

@@ -18,6 +18,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             )
         )
         
+        AppInitializer.shared.initialize()
+        
         return true;
     }
     
