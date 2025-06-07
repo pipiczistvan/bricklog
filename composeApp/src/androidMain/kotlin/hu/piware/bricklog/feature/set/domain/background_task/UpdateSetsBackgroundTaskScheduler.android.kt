@@ -9,6 +9,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.usecase.SyncSets
 import org.koin.core.component.KoinComponent
@@ -39,7 +40,7 @@ actual class SyncSetsPeriodicBackgroundTaskScheduler(
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             uniqueWorkName = TASK_SYNC_SETS_IDENTIFIER,
-            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP,
+            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
             request = workRequest
         )
     }
@@ -56,7 +57,10 @@ actual class SyncSetsPeriodicBackgroundTaskScheduler(
         override suspend fun doWork(): Result {
             syncSets()
                 .onError {
-                    return Result.failure()
+                    if (it.error != DataError.Local.BUSY) {
+                        logger.w { "Error while syncing sets" }
+                        return Result.failure()
+                    }
                 }
 
             return Result.success()
