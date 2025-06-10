@@ -4,9 +4,12 @@ import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
+import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
+import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
 
@@ -20,13 +23,37 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
                 id = 1,
                 fileUploads = listOf(
                     FileUploadResult(
-                        id = "1",
+                        serviceId = "1",
                         url = "",
                         fileId = "",
                         priority = 1
                     )
                 ),
                 lastUpdated = Clock.System.now()
+            )
+        )
+    }
+
+    override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError> {
+        logger.w("Using mock implementation")
+
+        return Result.Success(
+            BatchExportInfo(
+                batches = listOf(
+                    ExportBatch(
+                        validFrom = Instant.DISTANT_PAST,
+                        validTo = Clock.System.now(),
+                        rowCount = 0,
+                        fileUploads = listOf(
+                            FileUploadResult(
+                                serviceId = "mockService",
+                                url = "",
+                                fileId = "",
+                                priority = 1
+                            )
+                        )
+                    )
+                )
             )
         )
     }

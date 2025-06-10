@@ -19,7 +19,6 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
-import hu.piware.bricklog.feature.set.domain.usecase.WatchBricksetUpdateInfo
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
@@ -50,7 +49,6 @@ import org.koin.core.annotation.Provided
 class DashboardViewModel(
     private val watchSetDetails: WatchSetDetails,
     private val updateSets: UpdateSets,
-    private val watchBricksetUpdateInfo: WatchBricksetUpdateInfo,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     @Provided private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
@@ -68,7 +66,6 @@ class DashboardViewModel(
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
-            observeUpdateInfo()
             observeLatestSets()
             observeLatestReleases()
             observeArrivingSets()
@@ -150,14 +147,6 @@ class DashboardViewModel(
             }
             .onEach { sets -> _searchBarState.update { it.copy(searchResults = sets) } }
             .flowOn(Dispatchers.Default)
-            .launchIn(viewModelScope)
-    }
-
-    private fun observeUpdateInfo() {
-        watchBricksetUpdateInfo()
-            .onEach { updateInfo ->
-                _uiState.update { it.copy(lastUpdated = updateInfo?.lastUpdated) }
-            }
             .launchIn(viewModelScope)
     }
 

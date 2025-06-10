@@ -105,4 +105,13 @@ class RoomLocalSetDataSource(
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
+
+    override suspend fun getLastUpdatedSet(): Result<Set?, DataError> {
+        return try {
+            val set = setDao.getLastUpdatedSet()?.toDomainModel()
+            Result.Success(set)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
 }

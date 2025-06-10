@@ -20,4 +20,5 @@ interface LocalSetDataSource {
     fun watchThemes(): Flow<List<String>>
     fun watchPackagingTypes(): Flow<List<String>>
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
+    suspend fun getLastUpdatedSet(): Result<Set?, DataError>
 }

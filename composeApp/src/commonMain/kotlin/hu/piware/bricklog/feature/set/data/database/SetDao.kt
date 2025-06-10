@@ -23,4 +23,7 @@ interface SetDao {
 
     @Query("DELETE FROM sets WHERE lastUpdated > :date")
     suspend fun deleteSetsUpdatedAfter(date: Instant)
+
+    @Query("SELECT * FROM sets ORDER BY lastUpdated DESC LIMIT 1")
+    suspend fun getLastUpdatedSet(): SetEntity?
 }

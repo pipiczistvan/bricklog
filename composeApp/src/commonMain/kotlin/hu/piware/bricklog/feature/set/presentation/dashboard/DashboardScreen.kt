@@ -183,7 +183,6 @@ fun DashboardScreen(
                 PullToRefreshColumn(
                     isRefreshing = state.areSetsRefreshing,
                     onRefresh = { onAction(DashboardAction.OnRefreshSets) },
-                    lastUpdated = state.lastUpdated
                 ) {
                     ContentColumn(
                         modifier = Modifier

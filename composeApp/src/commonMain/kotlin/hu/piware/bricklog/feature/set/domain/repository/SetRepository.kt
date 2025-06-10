@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
+import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import kotlinx.coroutines.flow.Flow
@@ -20,4 +21,5 @@ interface SetRepository {
     fun watchThemes(): Flow<List<String>>
     fun watchPackagingTypes(): Flow<List<String>>
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
+    suspend fun getLastUpdatedSet(): Result<Set?, DataError>
 }

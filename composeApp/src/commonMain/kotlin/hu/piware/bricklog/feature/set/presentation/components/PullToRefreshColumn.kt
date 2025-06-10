@@ -26,7 +26,6 @@ import bricklog.composeapp.generated.resources.pull_to_refresh_complete_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_pull_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_refreshing_label
 import bricklog.composeapp.generated.resources.pull_to_refresh_release_label
-import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.StringResource
 
 private const val maxHeight = 100
@@ -35,7 +34,6 @@ private const val maxHeight = 100
 fun PullToRefreshColumn(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    lastUpdated: Instant?,
     modifier: Modifier = Modifier,
     state: PullToRefreshState = rememberPullToRefreshState(),
     content: @Composable ColumnScope.() -> Unit,
@@ -70,7 +68,6 @@ fun PullToRefreshColumn(
     PullToRefreshIndicator(
         indicatorState = indicatorState,
         pullToRefreshProgress = state.distanceFraction,
-        lastUpdated = lastUpdated,
     )
 }
 
@@ -79,7 +76,6 @@ private fun PullToRefreshIndicator(
     modifier: Modifier = Modifier,
     indicatorState: RefreshIndicatorState,
     pullToRefreshProgress: Float,
-    lastUpdated: Instant?,
 ) {
     Box(
         contentAlignment = Alignment.TopCenter,

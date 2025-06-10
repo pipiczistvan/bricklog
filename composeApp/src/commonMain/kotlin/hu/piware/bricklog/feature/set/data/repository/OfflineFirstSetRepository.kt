@@ -93,6 +93,10 @@ class OfflineFirstSetRepository(
         return localDataSource.deleteSetsUpdatedAfter(date)
     }
 
+    override suspend fun getLastUpdatedSet(): Result<Set?, DataError> {
+        return localDataSource.getLastUpdatedSet()
+    }
+
     private suspend fun downloadSets(fileUploads: List<FileUploadResult>): Result<ByteArray, DataError.Remote> {
         val orderedFileUploads = fileUploads.sortedBy { it.priority }
 

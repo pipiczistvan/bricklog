@@ -1,6 +1,8 @@
 package hu.piware.bricklog.feature.set.data.firebase
 
 import dev.gitlive.firebase.firestore.toMilliseconds
+import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
+import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import kotlinx.datetime.Instant
@@ -15,9 +17,24 @@ fun ExportInfoDocument.toDomainModel(): ExportInfo {
 
 fun FileUploadResultDocument.toDomainModel(): FileUploadResult {
     return FileUploadResult(
-        id = id!!,
+        serviceId = serviceId!!,
         url = url!!,
         fileId = fileId!!,
         priority = priority!!
+    )
+}
+
+fun BatchExportInfoDocument.toDomainModel(): BatchExportInfo {
+    return BatchExportInfo(
+        batches = batches.map { it.toDomainModel() }
+    )
+}
+
+fun ExportBatchDocument.toDomainModel(): ExportBatch {
+    return ExportBatch(
+        validFrom = Instant.fromEpochMilliseconds(validFrom!!.toMilliseconds().toLong()),
+        validTo = Instant.fromEpochMilliseconds(validTo!!.toMilliseconds().toLong()),
+        rowCount = rowCount,
+        fileUploads = fileUploads.map { it.toDomainModel() },
     )
 }
