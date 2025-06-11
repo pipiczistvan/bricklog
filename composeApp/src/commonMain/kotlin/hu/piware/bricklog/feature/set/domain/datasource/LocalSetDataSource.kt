@@ -7,6 +7,7 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
+import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
@@ -18,6 +19,7 @@ interface LocalSetDataSource {
     suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local>
     suspend fun getSetCount(): Result<Int, DataError.Local>
     fun watchThemes(): Flow<List<String>>
+    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
     fun watchPackagingTypes(): Flow<List<String>>
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
     suspend fun getLastUpdatedSet(): Result<Set?, DataError>

@@ -12,6 +12,7 @@ import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
+import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -83,6 +84,10 @@ class OfflineFirstSetRepository(
 
     override fun watchThemes(): Flow<List<String>> {
         return localDataSource.watchThemes()
+    }
+
+    override fun watchThemeGroups(): Flow<List<SetThemeGroup>> {
+        return localDataSource.watchThemeGroups()
     }
 
     override fun watchPackagingTypes(): Flow<List<String>> {

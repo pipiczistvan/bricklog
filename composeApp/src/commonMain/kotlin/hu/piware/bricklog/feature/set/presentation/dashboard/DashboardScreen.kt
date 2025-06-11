@@ -4,6 +4,7 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,6 +68,7 @@ fun DashboardScreenRoot(
     onAppearanceClick: () -> Unit,
     onCollectionEditClick: (CollectionId) -> Unit,
     onScanClick: () -> Unit,
+    onThemeListClick: () -> Unit,
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
 ) {
@@ -108,6 +112,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnAboutClick -> onAboutClick()
                 is DashboardAction.OnAppearanceClick -> onAppearanceClick()
                 is DashboardAction.OnCollectionEditClick -> onCollectionEditClick(action.id)
+                is DashboardAction.OnThemeListClick -> onThemeListClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -191,8 +196,7 @@ fun DashboardScreen(
                         contentPadding = PaddingValues(
                             top = Dimens.MediumPadding.size,
                             bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                        )
                     ) {
                         FeaturedThemesCarousel(
                             modifier = Modifier
@@ -221,36 +225,21 @@ fun DashboardScreen(
                             }
                         )
 
-                        FeaturedSetsRow(
-                            title = stringResource(Res.string.dashboard_section_latest_sets),
-                            onDashboardAction = onAction,
-                            sets = state.latestSets,
-                            filterOverrides = latestSetsFilter,
-                            sharedElementPrefix = "latest_sets"
-                        )
+                        TextButton(
+                            modifier = Modifier
+                                .padding(
+                                    top = Dimens.SmallPadding.size,
+                                    end = Dimens.SmallPadding.size
+                                )
+                                .align(Alignment.End),
+                            onClick = { onAction(DashboardAction.OnThemeListClick) }
+                        ) {
+                            Text("Show all themes")
+                        }
 
-                        FeaturedSetsRow(
-                            title = stringResource(Res.string.dashboard_section_latest_releases),
-                            onDashboardAction = onAction,
-                            sets = state.latestReleases,
-                            filterOverrides = latestReleasesFilter,
-                            sharedElementPrefix = "latest_releases"
-                        )
-
-                        FeaturedSetsRow(
-                            title = stringResource(Res.string.dashboard_section_arriving_sets),
-                            onDashboardAction = onAction,
-                            sets = state.arrivingSets,
-                            filterOverrides = arrivingSetsFilter,
-                            sharedElementPrefix = "arriving_sets"
-                        )
-
-                        FeaturedSetsRow(
-                            title = stringResource(Res.string.dashboard_section_retiring_sets),
-                            onDashboardAction = onAction,
-                            sets = state.retiringSets,
-                            filterOverrides = retiringSetsFilter,
-                            sharedElementPrefix = "retiring_sets"
+                        FeaturedSets(
+                            state = state,
+                            onAction = onAction
                         )
                     }
                 }
@@ -266,6 +255,48 @@ fun DashboardScreen(
                     onAction(DashboardAction.OnUpdateChangelogReadVersion)
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun FeaturedSets(
+    state: DashboardState,
+    onAction: (DashboardAction) -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+    ) {
+        FeaturedSetsRow(
+            title = stringResource(Res.string.dashboard_section_latest_sets),
+            onDashboardAction = onAction,
+            sets = state.latestSets,
+            filterOverrides = latestSetsFilter,
+            sharedElementPrefix = "latest_sets"
+        )
+
+        FeaturedSetsRow(
+            title = stringResource(Res.string.dashboard_section_latest_releases),
+            onDashboardAction = onAction,
+            sets = state.latestReleases,
+            filterOverrides = latestReleasesFilter,
+            sharedElementPrefix = "latest_releases"
+        )
+
+        FeaturedSetsRow(
+            title = stringResource(Res.string.dashboard_section_arriving_sets),
+            onDashboardAction = onAction,
+            sets = state.arrivingSets,
+            filterOverrides = arrivingSetsFilter,
+            sharedElementPrefix = "arriving_sets"
+        )
+
+        FeaturedSetsRow(
+            title = stringResource(Res.string.dashboard_section_retiring_sets),
+            onDashboardAction = onAction,
+            sets = state.retiringSets,
+            filterOverrides = retiringSetsFilter,
+            sharedElementPrefix = "retiring_sets"
         )
     }
 }

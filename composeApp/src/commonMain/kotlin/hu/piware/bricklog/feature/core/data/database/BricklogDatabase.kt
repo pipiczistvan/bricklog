@@ -16,6 +16,8 @@ import hu.piware.bricklog.feature.set.data.database.SetImageDao
 import hu.piware.bricklog.feature.set.data.database.SetImageEntity
 import hu.piware.bricklog.feature.set.data.database.SetInstructionDao
 import hu.piware.bricklog.feature.set.data.database.SetInstructionEntity
+import hu.piware.bricklog.feature.set.data.database.ThemeGroupDao
+import hu.piware.bricklog.feature.set.data.database.ThemeGroupView
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoDao
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
 
@@ -29,9 +31,11 @@ import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
         SetCollectionEntity::class
     ],
     views = [
-        SetDetailsView::class
+        SetDetailsView::class,
+        ThemeGroupView::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(
     InstantConverter::class
@@ -45,6 +49,7 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val setInstructionsDao: SetInstructionDao
     abstract val collectionDao: CollectionDao
     abstract val setCollectionDao: SetCollectionDao
+    abstract val themeGroupDao: ThemeGroupDao
 
     companion object {
         const val DB_NAME = "bricklog.db"

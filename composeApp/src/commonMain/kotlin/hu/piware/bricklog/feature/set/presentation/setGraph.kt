@@ -16,6 +16,7 @@ import hu.piware.bricklog.feature.set.presentation.set_image.SetImageScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerScreenRoot
+import hu.piware.bricklog.feature.set.presentation.theme_list.ThemeListScreenRoot
 import hu.piware.bricklog.feature.settings.presentation.SettingsRoute
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
@@ -38,6 +39,9 @@ sealed interface SetRoute {
 
     @Serializable
     data object SetScannerScreen : SetRoute
+
+    @Serializable
+    data object ThemeListScreen : SetRoute
 }
 
 fun NavGraphBuilder.setGraph(navController: NavHostController) {
@@ -83,6 +87,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     },
                     onScanClick = {
                         navController.navigate(SetRoute.SetScannerScreen) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onThemeListClick = {
+                        navController.navigate(SetRoute.ThemeListScreen) {
                             launchSingleTop = true
                         }
                     },
@@ -143,6 +152,16 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        composable<SetRoute.ThemeListScreen> {
+            ThemeListScreenRoot(
+                onBackClick = navController::navigateUp,
+                onSearchSets = { arguments ->
+                    navController.navigate(SetRoute.SetListScreen(arguments)) {
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }

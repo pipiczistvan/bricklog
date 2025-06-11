@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
+import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
@@ -19,6 +20,7 @@ interface SetRepository {
     suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError>
     suspend fun getSetCount(): Result<Int, DataError>
     fun watchThemes(): Flow<List<String>>
+    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
     fun watchPackagingTypes(): Flow<List<String>>
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
     suspend fun getLastUpdatedSet(): Result<Set?, DataError>

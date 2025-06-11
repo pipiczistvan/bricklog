@@ -15,6 +15,8 @@ import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
+import hu.piware.bricklog.feature.set.domain.model.SetTheme
+import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -28,6 +30,7 @@ class RoomLocalSetDataSource(
 
     private val setDao = database.setDao
     private val setDetailsDao = database.setDetailsDao
+    private val themeGroupDao = database.themeGroupDao
 
     override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
         val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
@@ -91,6 +94,19 @@ class RoomLocalSetDataSource(
 
     override fun watchThemes(): Flow<List<String>> {
         return setDao.watchThemes()
+    }
+
+    override fun watchThemeGroups(): Flow<List<SetThemeGroup>> {
+        return themeGroupDao.watchThemeGroups()
+            .map { rows ->
+                rows.groupBy { it.themeGroup }
+                    .map { (group, items) ->
+                        SetThemeGroup(
+                            name = group,
+                            themes = items.map { SetTheme(it.theme, it.setCount) }
+                        )
+                    }
+            }
     }
 
     override fun watchPackagingTypes(): Flow<List<String>> {
