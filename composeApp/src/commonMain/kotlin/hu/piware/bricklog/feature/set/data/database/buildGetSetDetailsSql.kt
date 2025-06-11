@@ -86,24 +86,15 @@ private fun buildDateFilterSelect(dateField: String, dateFilter: DateFilter, now
 }
 
 private fun buildThemeSelect(themes: Set<String>): String {
-    return if (themes.isNotEmpty())
-        "theme IN (${themes.joinToString(separator = ", ") { "'$it'" }})"
-    else
-        "1"
+    return buildStringCollectionSelect("theme", themes)
 }
 
 private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String {
-    return if (packagingTypes.isNotEmpty())
-        "packagingType IN (${packagingTypes.joinToString(separator = ", ") { "'$it'" }})"
-    else
-        "1"
+    return buildStringCollectionSelect("packagingType", packagingTypes)
 }
 
 private fun buildStatusSelect(statuses: Set<SetStatus>): String {
-    return if (statuses.isNotEmpty())
-        "status IN (${statuses.joinToString(separator = ", ") { "'$it'" }})"
-    else
-        "1"
+    return buildStringCollectionSelect("status", statuses.map { it.name })
 }
 
 private fun buildShowIncompleteSelect(showIncomplete: Boolean): String {
@@ -142,3 +133,15 @@ private fun buildOrderBy(sortOption: SetSortOption): String {
         SetSortOption.APPEARANCE_DATE_DESCENDING -> "infoCompleteDate DESC"
     }
 }
+
+private fun buildStringCollectionSelect(
+    columnName: String,
+    collection: Collection<String>,
+): String {
+    return if (collection.isNotEmpty())
+        "$columnName IN (${collection.joinToString(separator = ", ") { "'${it.sqlEscape()}'" }})"
+    else
+        "1"
+}
+
+private fun String.sqlEscape() = replace("'", "''")
