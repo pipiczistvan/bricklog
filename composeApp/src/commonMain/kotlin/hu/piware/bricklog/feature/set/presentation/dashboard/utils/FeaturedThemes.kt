@@ -242,17 +242,17 @@ val FEATURED_THEMES = listOf(
     minecraft,
     ninjago,
     superMario,
-    animalCrossing,
+    //animalCrossing,
     art,
     botanicals,
     brickheadz,
     dc,
     dreamzzz,
-    duplo,
+    //duplo,
     fortnite,
-    friends,
+    //friends,
     jurassicWorld,
     marvel,
-    speedChampions,
-    wednesday
+    //speedChampions,
+    //wednesday
 )
