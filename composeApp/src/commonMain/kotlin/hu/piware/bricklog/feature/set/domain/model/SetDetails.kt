@@ -30,6 +30,9 @@ val SetDetails.isFavourite: Boolean
 val SetDetails.setID: Int
     get() = set.setID
 
+val SetDetails.setNumberWithVariant: String
+    get() = "${set.number}${set.numberVariant?.let { "-$it" } ?: ""}"
+
 val SetDetails.EUPrice: Double?
     get() = set.DEPrice
 

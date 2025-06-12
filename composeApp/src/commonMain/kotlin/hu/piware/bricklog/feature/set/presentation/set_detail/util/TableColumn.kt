@@ -32,6 +32,7 @@ import hu.piware.bricklog.feature.set.domain.model.EUPrice
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.localExitDate
 import hu.piware.bricklog.feature.set.domain.model.localLaunchDate
+import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.round
@@ -57,7 +58,7 @@ fun createFirstSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> 
     return listOf(
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.set_details_number,
-            data = setDetails.set.number,
+            data = setDetails.setNumberWithVariant,
             icon = Icons.Default.Tag
         ),
         TableColumn.ImageVectorTableColumn(

@@ -32,7 +32,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.domain.model.containerColor
 import hu.piware.bricklog.feature.set.domain.model.isFavourite
-import hu.piware.bricklog.feature.set.domain.model.setID
+import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
@@ -102,7 +102,7 @@ fun SetGridItem(
                         horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
                     ) {
                         SetAttributeChip(
-                            text = "# ${setDetails.setID}",
+                            text = "# ${setDetails.setNumberWithVariant}",
                             size = ChipSize.SMALL
                         )
                         if (setDetails.status != SetStatus.UNKNOWN) {
