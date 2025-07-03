@@ -11,14 +11,10 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
 import io.ktor.client.engine.HttpClientEngine
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
-import org.koin.core.annotation.Named
 import org.koin.core.annotation.Provided
 import org.koin.core.annotation.Single
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import org.koin.core.module.Module as KoinModule
-
-expect val platformModule: KoinModule
 
 // Only necessary when injecting SavedStateHandle
 val viewModelModule = module {
@@ -30,6 +26,7 @@ val viewModelModule = module {
 
 @Module(
     includes = [
+        PlatformModule::class,
         DataModule::class,
         UseCaseModule::class,
         ViewModelModule::class,
@@ -38,16 +35,19 @@ val viewModelModule = module {
 class AppModule
 
 @Module
+expect class PlatformModule()
+
+@Module
 @ComponentScan("hu.piware.bricklog.feature.**.data.**")
 class DataModule {
 
     @Single
-    @Named(HttpClientFactory.DOWNLOAD)
+    @DownloadHttpClient
     fun downloadClient(@Provided engine: HttpClientEngine) =
         HttpClientFactory.createDownloadClient(engine)
 
     @Single
-    @Named(HttpClientFactory.BRICKSET)
+    @BricksetHttpClient
     fun bricksetClient(@Provided engine: HttpClientEngine) =
         HttpClientFactory.createBricksetClient(engine)
 

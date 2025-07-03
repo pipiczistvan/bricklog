@@ -15,9 +15,6 @@ import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
 
-    const val DOWNLOAD = "DOWNLOAD"
-    const val BRICKSET = "BRICKSET"
-
     fun createDownloadClient(engine: HttpClientEngine): HttpClient {
         return HttpClient(engine) {
             install(ContentNegotiation) {

@@ -12,7 +12,6 @@ fun initKoin(config: KoinAppDeclaration?) {
     startKoin {
         config?.invoke(this)
         modules(
-            platformModule,
             viewModelModule,
             AppModule().module
         )
