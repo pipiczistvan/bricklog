@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
+import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
@@ -56,5 +57,9 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
                 )
             )
         )
+    }
+
+    override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
+        return Result.Success(emptyList())
     }
 }

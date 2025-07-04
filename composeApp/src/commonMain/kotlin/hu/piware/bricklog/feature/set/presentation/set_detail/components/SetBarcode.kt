@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.ui.theme.Shapes
-import qrgenerator.barcodepainter.BarcodeFormat
-import qrgenerator.barcodepainter.rememberBarcodePainter
+import io.github.alexzhirkevich.qrose.oned.BarcodeType
+import io.github.alexzhirkevich.qrose.oned.rememberBarcodePainter
 
 @Composable
 fun SetBarcode(
     barcode: String,
-    format: BarcodeFormat,
+    format: BarcodeType,
 ) {
     Column(
         modifier = Modifier
@@ -35,8 +35,8 @@ fun SetBarcode(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         val barCodePainter = rememberBarcodePainter(
-            content = barcode,
-            format = format,
+            data = barcode,
+            type = format,
             brush = SolidColor(Color.Black)
         )
         Image(

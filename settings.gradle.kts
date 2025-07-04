@@ -31,5 +31,6 @@ dependencyResolutionManagement {
 include(
     ":composeApp",
     ":thirdparty:androidx:paging:compose",
+    ":thirdparty:barcode-scanner",
     ":baselineprofile"
 )

@@ -79,6 +79,8 @@ kotlin {
             implementation(libs.sqlite.bundled)
 
             implementation(projects.thirdparty.androidx.paging.compose)
+            implementation(projects.thirdparty.barcodeScanner)
+            implementation(libs.qrose)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
@@ -96,8 +98,6 @@ kotlin {
 
             implementation(libs.kermit)
 
-            implementation(libs.qr.kit)
-
             implementation(libs.zoomable)
 
             implementation(libs.uri.kmp)
@@ -106,7 +106,6 @@ kotlin {
 
             api(libs.moko.permissions)
             implementation(libs.moko.permissions.notifications)
-            //implementation(libs.moko.permissions.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

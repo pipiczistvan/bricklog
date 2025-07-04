@@ -67,9 +67,9 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.util.createThirdSe
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import io.github.alexzhirkevich.qrose.oned.BarcodeType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import qrgenerator.barcodepainter.BarcodeFormat
 
 @Composable
 fun SetDetailScreenRoot(
@@ -289,7 +289,7 @@ private fun SetDetails(
             ) {
                 SetBarcode(
                     barcode = it,
-                    format = BarcodeFormat.EAN13
+                    format = BarcodeType.EAN13
                 )
             }
 
@@ -304,7 +304,7 @@ private fun SetDetails(
             ) {
                 SetBarcode(
                     barcode = it,
-                    format = BarcodeFormat.UPCA
+                    format = BarcodeType.UPCA
                 )
             }
         }
