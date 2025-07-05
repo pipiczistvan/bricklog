@@ -1,6 +1,52 @@
 {
   "releases": [
     {
+      "version": "1.2.0",
+      "build": 25070501,
+      "changes": [
+        {
+          "description": "Improve set details performance",
+          "type": "refactor"
+        },
+        {
+          "description": "Fix loading indicator freeze when parsing sets",
+          "type": "fix"
+        },
+        {
+          "description": "Fix layout issues on small screens",
+          "type": "fix"
+        },
+        {
+          "description": "Change app logo and splash screen",
+          "type": "refactor"
+        },
+        {
+          "description": "Support background refresh on iOS",
+          "type": "feat"
+        },
+        {
+          "description": "Refactor notification settings",
+          "type": "refactor"
+        },
+        {
+          "description": "Add material expressive design",
+          "type": "feat"
+        },
+        {
+          "description": "Improved set updating using data batches",
+          "type": "refactor"
+        },
+        {
+          "description": "Implemented theme list screen",
+          "type": "feat"
+        },
+        {
+          "description": "Implemented CMF scanner with detection overlay",
+          "type": "feat"
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "build": 25051901,
       "changes": [
