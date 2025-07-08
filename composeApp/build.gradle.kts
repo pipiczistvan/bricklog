@@ -128,6 +128,10 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = libs.versions.app.release.get().toInt()
         versionName = libs.versions.app.version.get()
+        setProperty(
+            "archivesBaseName",
+            "bricklog-$versionName-$versionCode-${project.findProperty("buildkonfig.flavor") ?: "prod"}"
+        )
     }
     packaging {
         resources {
@@ -155,10 +159,11 @@ android {
     buildTypes {
         debug {
             signingConfig = signingConfigs["debug"]
-            versionNameSuffix = "-dev"
+            versionNameSuffix = "-debug"
         }
         release {
             signingConfig = signingConfigs.findByName("release") ?: signingConfigs["debug"]
+            versionNameSuffix = "-release"
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
