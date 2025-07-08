@@ -24,6 +24,7 @@ Supports light mode, dark mode.
 <a href="https://play.google.com/store/apps/details?id=hu.piware.bricklog">
     <img src="readme/get_it_on_google_play.svg" width="200">
 </a>
+(work in progress)
 
 </div>
 
@@ -46,7 +47,8 @@ Supports light mode, dark mode.
 - **Set details:** View various details about each set.
 - **Set images:** Check out the set images in full screen with zoom support.
 - **Fast search:** Search sets by name or filters, and specify the order.
-- **Scan barcode:** Scan a set barcode and access its details instantly.
+- **Scan barcode and CMF codes:** Scan a set barcode or collectible minifigure box code and access
+  its details instantly.
 - **Set instructions:** Download set instructions directly from the app.
 
 # Development
