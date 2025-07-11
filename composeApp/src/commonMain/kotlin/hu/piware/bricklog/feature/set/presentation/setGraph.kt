@@ -18,6 +18,7 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerScreenRoot
 import hu.piware.bricklog.feature.set.presentation.theme_list.ThemeListScreenRoot
 import hu.piware.bricklog.feature.settings.presentation.SettingsRoute
+import hu.piware.bricklog.feature.user.presentation.AuthenticationRoute
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -92,6 +93,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     },
                     onThemeListClick = {
                         navController.navigate(SetRoute.ThemeListScreen) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onLoginClick = {
+                        navController.navigate(AuthenticationRoute.LoginScreen) {
                             launchSingleTop = true
                         }
                     },

@@ -1,6 +1,7 @@
 package hu.piware.bricklog.di
 
 import dev.icerock.moko.permissions.ios.PermissionsController
+import dev.icerock.moko.permissions.ios.PermissionsControllerProtocol
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.presentation.LocaleManager
@@ -22,7 +23,7 @@ actual class PlatformModule {
     fun datastoreFactory() = DatastoreFactory()
 
     @Single
-    fun permissionsController() = PermissionsController()
+    fun permissionsController(): PermissionsControllerProtocol = PermissionsController()
 
     @Single
     fun localeManager() = LocaleManager()

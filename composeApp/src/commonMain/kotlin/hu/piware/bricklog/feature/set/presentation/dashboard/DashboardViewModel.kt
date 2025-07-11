@@ -4,6 +4,9 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.delete_user_data_success
+import bricklog.composeapp.generated.resources.logout_success
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
@@ -15,6 +18,7 @@ import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
+import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
@@ -30,6 +34,9 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFil
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
+import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
+import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
+import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,6 +64,9 @@ class DashboardViewModel(
     private val watchNewChangelog: WatchNewChangelog,
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
     private val watchCollections: WatchCollections,
+    private val watchCurrentUser: WatchCurrentUser,
+    private val logOutUser: LogOutUser,
+    private val deleteUserData: DeleteUserData,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -73,6 +83,7 @@ class DashboardViewModel(
             observeSetFilterDomain()
             observeNewChangelog()
             observeCollections()
+            observeCurrentUser()
             askNotificationPermission()
         }
 
@@ -89,6 +100,22 @@ class DashboardViewModel(
             is DashboardAction.OnResetSets -> resetSetsClick(action.date)
             is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
                 updateChangelogReadVersion()
+            }
+
+            DashboardAction.OnLogoutClick -> _uiState.update { it.copy(showLogoutConfirm = true) }
+            DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
+            DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
+                logOutUser()
+                    .showSnackbarOnSuccess(Res.string.logout_success)
+                    .showSnackbarOnError()
+            }
+
+            DashboardAction.OnDeleteUserClick -> _uiState.update { it.copy(showDeleteUserConfirm = true) }
+            DashboardAction.OnDeleteUserDismiss -> _uiState.update { it.copy(showDeleteUserConfirm = false) }
+            DashboardAction.OnDeleteUserConfirm -> viewModelScope.launch {
+                deleteUserData()
+                    .showSnackbarOnSuccess(Res.string.delete_user_data_success)
+                    .showSnackbarOnError()
             }
 
             else -> Unit
@@ -193,6 +220,12 @@ class DashboardViewModel(
     private fun observeCollections() {
         watchCollections()
             .onEach { collections -> _uiState.update { it.copy(collections = collections) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCurrentUser() {
+        watchCurrentUser()
+            .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
             .launchIn(viewModelScope)
     }
 

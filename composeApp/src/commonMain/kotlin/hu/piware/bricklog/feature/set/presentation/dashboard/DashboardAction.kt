@@ -13,6 +13,13 @@ sealed interface DashboardAction {
     data object OnAppearanceClick : DashboardAction
     data class OnCollectionEditClick(val id: CollectionId) : DashboardAction
     data object OnThemeListClick : DashboardAction
+    data object OnLoginClick : DashboardAction
+    data object OnLogoutClick : DashboardAction
+    data object OnLogoutConfirm : DashboardAction
+    data object OnLogoutDismiss : DashboardAction
+    data object OnDeleteUserClick : DashboardAction
+    data object OnDeleteUserDismiss : DashboardAction
+    data object OnDeleteUserConfirm : DashboardAction
     data object OnRefreshSets : DashboardAction
     data class OnResetSets(val date: Instant) : DashboardAction
     data object OnUpdateChangelogReadVersion : DashboardAction

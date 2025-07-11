@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -26,9 +28,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.dashboard_greetings
 import bricklog.composeapp.generated.resources.dashboard_section_arriving_sets
 import bricklog.composeapp.generated.resources.dashboard_section_latest_releases
 import bricklog.composeapp.generated.resources.dashboard_section_latest_sets
@@ -41,8 +45,10 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.LogoutConfirmationBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBar
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
@@ -52,10 +58,14 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFil
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -69,6 +79,7 @@ fun DashboardScreenRoot(
     onCollectionEditClick: (CollectionId) -> Unit,
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
+    onLoginClick: () -> Unit,
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
 ) {
@@ -113,6 +124,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnAppearanceClick -> onAppearanceClick()
                 is DashboardAction.OnCollectionEditClick -> onCollectionEditClick(action.id)
                 is DashboardAction.OnThemeListClick -> onThemeListClick()
+                is DashboardAction.OnLoginClick -> onLoginClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -131,7 +143,7 @@ fun DashboardScreenRoot(
 }
 
 @Composable
-fun DashboardScreen(
+private fun DashboardScreen(
     state: DashboardState,
     onAction: (DashboardAction) -> Unit,
     searchBarState: SetSearchBarState,
@@ -147,6 +159,7 @@ fun DashboardScreen(
             DashboardNavigationDrawerContent(
                 state = drawerState,
                 collections = state.collections,
+                currentUser = state.currentUser,
                 onAction = onAction
             )
         },
@@ -198,6 +211,13 @@ fun DashboardScreen(
                             bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
                         )
                     ) {
+                        if (state.currentUser != null) {
+                            Greetings(
+                                modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
+                                user = state.currentUser
+                            )
+                        }
+
                         FeaturedThemesCarousel(
                             modifier = Modifier
                                 .testTag("dashboard:featured_themes")
@@ -257,6 +277,46 @@ fun DashboardScreen(
             }
         )
     }
+
+    if (state.showLogoutConfirm) {
+        LogoutConfirmationBottomSheet(
+            onDismiss = { onAction(DashboardAction.OnLogoutDismiss) },
+            onConfirm = { onAction(DashboardAction.OnLogoutConfirm) }
+        )
+    }
+
+    if (state.showDeleteUserConfirm) {
+        DeleteUserConfirmationBottomSheet(
+            onDismiss = { onAction(DashboardAction.OnDeleteUserDismiss) },
+            onConfirm = { onAction(DashboardAction.OnDeleteUserConfirm) }
+        )
+    }
+}
+
+@Composable
+private fun Greetings(
+    user: User,
+    modifier: Modifier = Modifier,
+) {
+    val firstName = user.displayName?.split(" ")?.firstOrNull()
+
+    Row(
+        modifier = modifier.padding(Dimens.MediumPadding.size)
+    ) {
+        Text(
+            text = stringResource(Res.string.dashboard_greetings),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold
+        )
+        if (firstName != null) {
+            Text(
+                text = " $firstName",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 }
 
 @Composable
@@ -297,6 +357,21 @@ private fun FeaturedSets(
             sets = state.retiringSets,
             filterOverrides = retiringSetsFilter,
             sharedElementPrefix = "retiring_sets"
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DashboardScreenPreview() {
+    BricklogTheme {
+        DashboardScreen(
+            state = DashboardState(
+                currentUser = PreviewData.user
+            ),
+            onAction = {},
+            searchBarState = SetSearchBarState(),
+            onSearchBarAction = {}
         )
     }
 }

@@ -2,11 +2,19 @@ import SwiftUI
 import FirebaseCore
 import FirebaseMessaging
 import ComposeApp
+import GoogleSignIn
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
+
+        // Google Sign-In setup
+        guard let clientID = FirebaseApp.app()?.options.clientID else {
+            return false
+        }
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
         
         //By default showPushNotification value is true.
         //When set showPushNotification to false foreground push  notification will not be shown.

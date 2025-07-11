@@ -21,3 +21,4 @@ AppSecrets.plist
 GoogleService-Info.plist
 google-services.json
 app-release.jks
+Secrets.xcconfig

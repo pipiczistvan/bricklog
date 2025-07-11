@@ -78,6 +78,11 @@ include `BRICKSET_API_KEY=<API_KEY>` in [local.properties](local.properties)
 
 ### Firebase setup
 
+Create a Web OAuth Client in Google Cloud Platform and include
+`GOOGLE_AUTH_WEB_CLIENT_ID=<CLIENT_ID>`
+in [local.properties](local.properties)
+Also create android and iOS clients.
+
 #### Android
 
 Download a `google-services.json` from Firebase and place in `composeApp` folder
@@ -87,6 +92,8 @@ Download a `google-services.json` from Firebase and place in `composeApp` folder
 1. Build the project in Android Studio to generate necessary files.
 2. Open the iosApp.xcworkspace file in Xcode
 3. Download a `GoogleService-Info.plist` and place in `iosApp/iosApp`
+4. Include `GOOGLE_AUTH_IOS_CLIENT_ID_REVERSED=<CLIENT_ID>` in
+   `iosApp/Configuration/Secrets.xcconfig`
 
 ## Baseline Profile (android)
 
@@ -112,6 +119,12 @@ Run benchmarks on real device.
   `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"hu.piware.bricklog.sync_sets"]`
 
   After resuming the task should trigger.
+
+- On iOS sometimes XCode does not recognise files which are not version controlled. You may need to
+  add to the project manually.
+
+- If Google Sign-In does not work on iOS check if Secrets.xcconfig is set correctly on project
+  configuration tab.
 
 # Technical details
 

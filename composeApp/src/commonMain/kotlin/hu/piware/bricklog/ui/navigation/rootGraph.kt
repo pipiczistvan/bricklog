@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.onboarding.presentation.OnboardingRoute
 import hu.piware.bricklog.feature.onboarding.presentation.onboardingGraph
 import hu.piware.bricklog.feature.set.presentation.setGraph
 import hu.piware.bricklog.feature.settings.presentation.settingsGraph
+import hu.piware.bricklog.feature.user.presentation.authenticationGraph
 import kotlinx.serialization.Serializable
 
 sealed interface RootRoute {
@@ -24,5 +25,6 @@ fun NavGraphBuilder.rootGraph(navController: NavHostController) {
         setGraph(navController)
         collectionGraph(navController)
         settingsGraph(navController)
+        authenticationGraph(navController)
     }
 }
