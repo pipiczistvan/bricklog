@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hu.piware.bricklog.LocalNavAnimatedVisibilityScope
+import hu.piware.bricklog.feature.authentication.presentation.AuthenticationRoute
 import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardScreenRoot
@@ -92,6 +93,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     },
                     onThemeListClick = {
                         navController.navigate(SetRoute.ThemeListScreen) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onLoginClick = {
+                        navController.navigate(AuthenticationRoute.LoginScreen) {
                             launchSingleTop = true
                         }
                     },

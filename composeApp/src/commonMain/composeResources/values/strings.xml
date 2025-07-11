@@ -41,6 +41,7 @@
     <string name="collection_icon_sheet_title">Collection icon</string>
     <string name="dashboard_navigation_drawer_item_about">About</string>
     <string name="dashboard_navigation_drawer_item_appearance">Appearance</string>
+    <string name="dashboard_navigation_drawer_item_login">Log In</string>
     <string name="dashboard_navigation_drawer_item_notification_settings">Notification Settings</string>
     <string name="dashboard_navigation_drawer_item_reset_sets">Reset set data to %1$s</string>
     <string name="dashboard_navigation_drawer_section_collections">Collections</string>
@@ -73,6 +74,8 @@
     <string name="language_system_label">System</string>
     <string name="last_updated">Last update: %1$s</string>
     <string name="license_title">License</string>
+    <string name="login_button_register">Sign up</string>
+    <string name="login_title">Log In</string>
     <string name="no_search_results">Oops, there aren't any sets for your search query.</string>
     <string name="notification_settings_general">General notifications</string>
     <string name="notification_settings_new_sets">When new items added to the database</string>
@@ -85,6 +88,7 @@
     <string name="pull_to_refresh_pull_label">Pull down…</string>
     <string name="pull_to_refresh_refreshing_label">Refreshing…</string>
     <string name="pull_to_refresh_release_label">Release to refresh!</string>
+    <string name="register_title">Register</string>
     <string name="reset_filter_confirm_dialog_button_cancel">Cancel</string>
     <string name="reset_filter_confirm_dialog_button_confirm">Confirm</string>
     <string name="reset_filter_confirm_dialog_text">Are you sure you want to reset the filter?</string>

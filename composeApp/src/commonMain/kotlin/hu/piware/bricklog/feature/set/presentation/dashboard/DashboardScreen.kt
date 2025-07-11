@@ -69,6 +69,7 @@ fun DashboardScreenRoot(
     onCollectionEditClick: (CollectionId) -> Unit,
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
+    onLoginClick: () -> Unit,
     selectedThemes: Set<String>?,
     selectedPackagingTypes: Set<String>?,
 ) {
@@ -113,6 +114,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnAppearanceClick -> onAppearanceClick()
                 is DashboardAction.OnCollectionEditClick -> onCollectionEditClick(action.id)
                 is DashboardAction.OnThemeListClick -> onThemeListClick()
+                is DashboardAction.OnLoginClick -> onLoginClick()
                 else -> Unit
             }
             viewModel.onAction(action)

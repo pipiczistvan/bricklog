@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_about
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_appearance
+import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_login
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_notification_settings
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_reset_sets
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_collections
@@ -172,6 +174,12 @@ private fun SettingsSection(
     NavigationSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_settings)
     ) {
+        NavigationSectionButton(
+            state = state,
+            title = stringResource(Res.string.dashboard_navigation_drawer_item_login),
+            onClick = { onAction(DashboardAction.OnLoginClick) },
+            icon = Icons.Outlined.PersonOutline,
+        )
         NavigationSectionButton(
             state = state,
             title = stringResource(Res.string.dashboard_navigation_drawer_item_notification_settings),
