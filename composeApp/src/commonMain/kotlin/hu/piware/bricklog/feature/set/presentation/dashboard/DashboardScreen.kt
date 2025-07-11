@@ -43,6 +43,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.Changelo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.LogoutConfirmationBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBar
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
@@ -149,6 +150,7 @@ fun DashboardScreen(
             DashboardNavigationDrawerContent(
                 state = drawerState,
                 collections = state.collections,
+                currentUser = state.currentUser,
                 onAction = onAction
             )
         },
@@ -257,6 +259,13 @@ fun DashboardScreen(
                     onAction(DashboardAction.OnUpdateChangelogReadVersion)
                 }
             }
+        )
+    }
+
+    if (state.showLogoutConfirm) {
+        LogoutConfirmationBottomSheet(
+            onDismiss = { onAction(DashboardAction.OnLogoutDismiss) },
+            onLogoutClick = { onAction(DashboardAction.OnLogoutConfirm) }
         )
     }
 }

@@ -106,6 +106,10 @@ kotlin {
 
             api(libs.moko.permissions)
             implementation(libs.moko.permissions.notifications)
+
+            implementation(libs.kmpauth.google)
+            implementation(libs.kmpauth.firebase)
+            implementation(libs.kmpauth.uihelper)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -189,10 +193,13 @@ buildkonfig {
     packageName = "hu.piware.bricklog"
 
     val bricksetApiKey: String = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
+    val googleAuthWebClientId: String =
+        properties["GOOGLE_AUTH_WEB_CLIENT_ID"]?.toString() ?: "<GOOGLE_AUTH_WEB_CLIENT_ID>"
 
     defaultConfigs {
         buildConfigField(STRING, "FLAVOR", "PROD")
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
+        buildConfigField(STRING, "GOOGLE_AUTH_WEB_CLIENT_ID", googleAuthWebClientId)
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
     }
     defaultConfigs("mock") {

@@ -11,6 +11,8 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
+import hu.piware.bricklog.feature.authentication.domain.usecase.Logout
+import hu.piware.bricklog.feature.authentication.domain.usecase.WatchCurrentUser
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
@@ -57,6 +59,8 @@ class DashboardViewModel(
     private val watchNewChangelog: WatchNewChangelog,
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
     private val watchCollections: WatchCollections,
+    private val watchCurrentUser: WatchCurrentUser,
+    private val logout: Logout,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -73,6 +77,7 @@ class DashboardViewModel(
             observeSetFilterDomain()
             observeNewChangelog()
             observeCollections()
+            observeCurrentUser()
             askNotificationPermission()
         }
 
@@ -89,6 +94,12 @@ class DashboardViewModel(
             is DashboardAction.OnResetSets -> resetSetsClick(action.date)
             is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
                 updateChangelogReadVersion()
+            }
+
+            DashboardAction.OnLogoutClick -> _uiState.update { it.copy(showLogoutConfirm = true) }
+            DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
+            DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
+                logout().showSnackbarOnError()
             }
 
             else -> Unit
@@ -193,6 +204,12 @@ class DashboardViewModel(
     private fun observeCollections() {
         watchCollections()
             .onEach { collections -> _uiState.update { it.copy(collections = collections) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCurrentUser() {
+        watchCurrentUser()
+            .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
             .launchIn(viewModelScope)
     }
 

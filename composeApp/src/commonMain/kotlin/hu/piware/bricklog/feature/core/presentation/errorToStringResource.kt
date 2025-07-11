@@ -6,16 +6,28 @@ import bricklog.composeapp.generated.resources.error_disk_full
 import bricklog.composeapp.generated.resources.error_field_blank
 import bricklog.composeapp.generated.resources.error_field_too_long
 import bricklog.composeapp.generated.resources.error_field_too_short
+import bricklog.composeapp.generated.resources.error_invalid_credentials
 import bricklog.composeapp.generated.resources.error_no_internet
 import bricklog.composeapp.generated.resources.error_request_timeout
 import bricklog.composeapp.generated.resources.error_serialization
 import bricklog.composeapp.generated.resources.error_too_many_requests
 import bricklog.composeapp.generated.resources.error_unknown
+import bricklog.composeapp.generated.resources.error_user_collision
+import hu.piware.bricklog.feature.core.domain.AuthenticationError
 import hu.piware.bricklog.feature.core.domain.DataError
+import hu.piware.bricklog.feature.core.domain.Error
 import hu.piware.bricklog.feature.core.domain.UIError
 
-fun DataError.toUiText(): UiText {
-    val stringRes = when (this) {
+fun Error.toUiText(): UiText {
+    return when (this) {
+        is DataError -> toUiText(this)
+        is UIError -> toUiText(this)
+        is AuthenticationError -> toUiText(this)
+    }
+}
+
+private fun toUiText(error: DataError): UiText {
+    val stringRes = when (error) {
         DataError.Local.DISK_FULL -> Res.string.error_disk_full
         DataError.Local.BUSY -> Res.string.error_busy
         DataError.Local.UNKNOWN -> Res.string.error_unknown
@@ -30,11 +42,26 @@ fun DataError.toUiText(): UiText {
     return UiText.StringResourceId(stringRes)
 }
 
-fun UIError.toUiText(): UiText {
-    val stringRes = when (this) {
+private fun toUiText(error: UIError): UiText {
+    val stringRes = when (error) {
         UIError.ValidationError.FIELD_BLANK -> Res.string.error_field_blank
         UIError.ValidationError.FIELD_TOO_LONG -> Res.string.error_field_too_long
         UIError.ValidationError.FIELD_TOO_SHORT -> Res.string.error_field_too_short
+    }
+
+    return UiText.StringResourceId(stringRes)
+}
+
+private fun toUiText(error: AuthenticationError): UiText {
+    val stringRes = when (error) {
+        AuthenticationError.Login.INVALID_CREDENTIALS,
+        AuthenticationError.Register.INVALID_CREDENTIALS,
+            -> Res.string.error_invalid_credentials
+
+        AuthenticationError.Register.USER_COLLISION -> Res.string.error_user_collision
+        AuthenticationError.Login.UNKNOWN,
+        AuthenticationError.Register.UNKNOWN,
+            -> Res.string.error_unknown
     }
 
     return UiText.StringResourceId(stringRes)

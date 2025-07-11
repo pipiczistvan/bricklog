@@ -3,8 +3,11 @@
 package hu.piware.bricklog.util
 
 import co.touchlab.kermit.Logger
+import com.mmk.kmpauth.google.GoogleAuthCredentials
+import com.mmk.kmpauth.google.GoogleAuthProvider
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.PayloadData
+import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.di.initKoin
 import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.core.NotificationController
@@ -21,6 +24,8 @@ object AppInitializer : KoinComponent {
     private val logger = Logger.withTag("AppInitializer")
 
     fun initialize(config: KoinAppDeclaration? = null) {
+        GoogleAuthProvider.create(credentials = GoogleAuthCredentials(serverId = BuildKonfig.GOOGLE_AUTH_WEB_CLIENT_ID))
+
         initKoin(config)
 
         NotifierManager.addListener(object : NotifierManager.Listener {

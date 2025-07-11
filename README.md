@@ -78,6 +78,11 @@ include `BRICKSET_API_KEY=<API_KEY>` in [local.properties](local.properties)
 
 ### Firebase setup
 
+Create a Web OAuth Client in Google Cloud Platform and include
+`GOOGLE_AUTH_WEB_CLIENT_ID=<CLIENT_ID>`
+in [local.properties](local.properties)
+Also create android and iOS clients.
+
 #### Android
 
 Download a `google-services.json` from Firebase and place in `composeApp` folder

@@ -19,7 +19,8 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -50,12 +51,14 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_about
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_appearance
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_login
+import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_logout
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_notification_settings
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_reset_sets
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_collections
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_developer
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_settings
 import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
+import hu.piware.bricklog.feature.authentication.domain.model.User
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
@@ -75,6 +78,7 @@ import kotlin.time.Duration.Companion.days
 fun DashboardNavigationDrawerContent(
     state: DrawerState,
     collections: List<Collection>,
+    currentUser: User?,
     onAction: (DashboardAction) -> Unit,
 ) {
     ModalDrawerSheet {
@@ -82,32 +86,26 @@ fun DashboardNavigationDrawerContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         CollectionsSection(
-            state = state,
-            collections = collections,
-            onAction = onAction
+            state = state, collections = collections, onAction = onAction
         )
 
         HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
         )
 
         SettingsSection(
             state = state,
+            currentUser = currentUser,
             onAction = onAction
         )
 
         if (BuildConfig.isDebugFlavor) {
             HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
             )
 
             DeveloperSection(
-                state = state,
-                onAction = onAction
+                state = state, onAction = onAction
             )
         }
 
@@ -125,43 +123,31 @@ private fun CollectionsSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_collections),
         trailingIcon = {
             IconButton(
-                onClick = { onAction(DashboardAction.OnCollectionEditClick(0)) }
-            ) {
+                onClick = { onAction(DashboardAction.OnCollectionEditClick(0)) }) {
                 Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null
+                    imageVector = Icons.Outlined.Add, contentDescription = null
                 )
             }
-        }
-    ) {
+        }) {
         collections.map {
-            NavigationSectionButton(
-                state = state,
-                title = it.name,
-                onClick = {
-                    onAction(
-                        DashboardAction.OnSearchSets(
-                            SetListArguments(
-                                filterOverrides = SetFilter(
-                                    collectionIds = setOf(it.id)
-                                ),
-                                title = it.name
-                            )
+            NavigationSectionButton(state = state, title = it.name, onClick = {
+                onAction(
+                    DashboardAction.OnSearchSets(
+                        SetListArguments(
+                            filterOverrides = SetFilter(
+                                collectionIds = setOf(it.id)
+                            ), title = it.name
                         )
                     )
-                },
-                icon = it.icon.outlinedIcon,
-                trailingIcon = {
-                    IconButton(
-                        onClick = { onAction(DashboardAction.OnCollectionEditClick(it.id)) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = null
-                        )
-                    }
+                )
+            }, icon = it.icon.outlinedIcon, trailingIcon = {
+                IconButton(
+                    onClick = { onAction(DashboardAction.OnCollectionEditClick(it.id)) }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit, contentDescription = null
+                    )
                 }
-            )
+            })
         }
     }
 }
@@ -169,16 +155,21 @@ private fun CollectionsSection(
 @Composable
 private fun SettingsSection(
     state: DrawerState,
+    currentUser: User?,
     onAction: (DashboardAction) -> Unit,
 ) {
     NavigationSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_settings)
     ) {
+        val isLoggedIn = currentUser != null
         NavigationSectionButton(
             state = state,
-            title = stringResource(Res.string.dashboard_navigation_drawer_item_login),
-            onClick = { onAction(DashboardAction.OnLoginClick) },
-            icon = Icons.Outlined.PersonOutline,
+            title = if (isLoggedIn)
+                stringResource(Res.string.dashboard_navigation_drawer_item_logout)
+            else
+                stringResource(Res.string.dashboard_navigation_drawer_item_login),
+            onClick = { onAction(if (isLoggedIn) DashboardAction.OnLogoutClick else DashboardAction.OnLoginClick) },
+            icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
         )
         NavigationSectionButton(
             state = state,
@@ -219,49 +210,36 @@ private fun DeveloperSection(
         var showDatePicker by remember { mutableStateOf(false) }
 
         NavigationSectionButton(
-            state = state,
-            title = stringResource(
+            state = state, title = stringResource(
                 Res.string.dashboard_navigation_drawer_item_reset_sets,
-                if (selectedDate != null)
-                    formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
+                if (selectedDate != null) formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
                 else "?"
-            ),
-            onClick = {
+            ), onClick = {
                 if (selectedDate != null) {
                     onAction(DashboardAction.OnResetSets(selectedDate!!))
                 }
-            },
-            icon = Icons.Outlined.Restore,
-            trailingIcon = {
+            }, icon = Icons.Outlined.Restore, trailingIcon = {
                 IconButton(
-                    onClick = { showDatePicker = true }
-                ) {
+                    onClick = { showDatePicker = true }) {
                     Icon(
-                        imageVector = Icons.Outlined.CalendarMonth,
-                        contentDescription = null
+                        imageVector = Icons.Outlined.CalendarMonth, contentDescription = null
                     )
                 }
-            }
-        )
+            })
 
         if (showDatePicker) {
-            DatePickerDialog(
-                onDismissRequest = {
+            DatePickerDialog(onDismissRequest = {
 
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showDatePicker = false
-                        }
-                    ) {
-                        Text(stringResource(Res.string.date_range_picker_button_confirm))
-                    }
+            }, confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                    }) {
+                    Text(stringResource(Res.string.date_range_picker_button_confirm))
                 }
-            ) {
+            }) {
                 DatePicker(
-                    state = datePickerState,
-                    showModeToggle = false
+                    state = datePickerState, showModeToggle = false
                 )
             }
         }
@@ -276,8 +254,7 @@ private fun NavigationSection(
 ) {
     Column {
         NavigationSectionHeader(
-            title = title,
-            action = trailingIcon
+            title = title, action = trailingIcon
         )
         content()
     }
@@ -289,8 +266,7 @@ private fun NavigationSectionHeader(
     action: @Composable () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -325,8 +301,7 @@ private fun NavigationSectionButton(
         },
         icon = {
             Icon(
-                imageVector = icon,
-                contentDescription = title
+                imageVector = icon, contentDescription = title
             )
         },
         badge = trailingIcon

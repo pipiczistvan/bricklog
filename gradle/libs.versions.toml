@@ -29,6 +29,7 @@ firebase-bom = "33.13.0"                        # https://firebase.google.com/su
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
 google-services = "4.4.2"                       # https://developers.google.com/android/guides/google-services-plugin
 kermit = "2.0.5"                                # https://github.com/touchlab/Kermit
+kmpauth = "2.3.1"                               # https://github.com/mirzemehdi/KMPAuth
 kmpnotifier = "1.5.1"                           # https://github.com/mirzemehdi/KMPNotifier
 koin-annotations = "2.0.0"                      # https://github.com/InsertKoinIO/koin-annotations
 koin-bom = "4.0.4"                              # https://github.com/InsertKoinIO/koin
@@ -116,6 +117,10 @@ camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.r
 camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 camera-mlkit-vision = { group = "androidx.camera", name = "camera-mlkit-vision", version.ref = "camerax" }
 mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkit-barcode-scanning" }
+
+kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauth" }
+kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
+kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
