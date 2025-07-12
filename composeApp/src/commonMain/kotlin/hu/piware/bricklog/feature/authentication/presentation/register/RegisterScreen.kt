@@ -3,14 +3,11 @@
 package hu.piware.bricklog.feature.authentication.presentation.register
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,25 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.register_button_login
-import bricklog.composeapp.generated.resources.register_email_password_button
-import bricklog.composeapp.generated.resources.register_password_supporting_text
 import bricklog.composeapp.generated.resources.register_title
 import hu.piware.bricklog.feature.authentication.domain.model.AuthenticationMethod
-import hu.piware.bricklog.feature.authentication.presentation.components.EmailField
-import hu.piware.bricklog.feature.authentication.presentation.components.PasswordField
-import hu.piware.bricklog.feature.authentication.presentation.util.isValidEmail
-import hu.piware.bricklog.feature.authentication.presentation.util.isValidPassword
+import hu.piware.bricklog.feature.authentication.presentation.components.EmailPasswordForm
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
@@ -117,7 +104,13 @@ private fun RegisterScreen(
                 verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
             ) {
                 EmailPasswordForm(
-                    onAction = onAction
+                    onSubmit = { email, password ->
+                        onAction(
+                            RegisterAction.OnAuthenticate(
+                                AuthenticationMethod.EmailPassword(email, password)
+                            )
+                        )
+                    }
                 )
             }
         }
@@ -132,60 +125,5 @@ private fun RegisterScreenPreview() {
             state = RegisterState(),
             onAction = {}
         )
-    }
-}
-
-@Composable
-private fun EmailPasswordForm(
-    onAction: (RegisterAction) -> Unit,
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
-    ) {
-        // Email field
-        var email by remember { mutableStateOf("") }
-        var isEmailValid by remember { mutableStateOf(true) }
-
-        EmailField(
-            value = email,
-            onValueChange = { email = it },
-            onValidate = { isEmailValid = it }
-        )
-
-        // Password field
-        var password by remember { mutableStateOf("") }
-        var isPasswordValid by remember { mutableStateOf(true) }
-
-        PasswordField(
-            value = password,
-            supportText = stringResource(Res.string.register_password_supporting_text),
-            passwordValidation = true,
-            onValueChange = { password = it },
-            onValidate = { isPasswordValid = it }
-        )
-
-        // Submit button
-        val focusManager = LocalFocusManager.current
-        val isFormValid by derivedStateOf { isEmailValid && isPasswordValid }
-
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                focusManager.clearFocus()
-                if (isValidEmail(email) && isValidPassword(password)) {
-                    onAction(
-                        RegisterAction.OnAuthenticate(
-                            AuthenticationMethod.EmailPassword(
-                                email,
-                                password
-                            )
-                        )
-                    )
-                }
-            },
-            enabled = isFormValid
-        ) {
-            Text(text = stringResource(Res.string.register_email_password_button))
-        }
     }
 }

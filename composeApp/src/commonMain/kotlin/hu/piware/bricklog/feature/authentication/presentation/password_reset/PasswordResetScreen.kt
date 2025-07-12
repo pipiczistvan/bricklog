@@ -95,35 +95,43 @@ private fun PasswordResetScreen(
                 verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
             ) {
                 Text(text = stringResource(Res.string.password_reset_instructions))
-
-                // Email field
-                var email by remember { mutableStateOf("") }
-                var isEmailValid by remember { mutableStateOf(true) }
-
-                EmailField(
-                    value = email,
-                    onValueChange = { email = it },
-                    onValidate = { isEmailValid = it }
+                PasswordResetForm(
+                    onSubmit = { onAction(PasswordResetAction.OnResetClick(it)) }
                 )
-
-                // Submit button
-                val focusManager = LocalFocusManager.current
-                val isFormValid by derivedStateOf { isEmailValid }
-
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        focusManager.clearFocus()
-                        if (isFormValid) {
-                            onAction(PasswordResetAction.OnResetClick(email))
-                        }
-                    },
-                    enabled = isFormValid
-                ) {
-                    Text(text = stringResource(Res.string.password_reset_submit_button))
-                }
             }
         }
+    }
+}
+
+@Composable
+private fun PasswordResetForm(
+    onSubmit: (email: String) -> Unit,
+) {
+    // Email field
+    var email by remember { mutableStateOf("") }
+    var isEmailValid by remember { mutableStateOf(true) }
+
+    EmailField(
+        value = email,
+        onValueChange = { email = it },
+        onValidate = { isEmailValid = it }
+    )
+
+    // Submit button
+    val focusManager = LocalFocusManager.current
+    val isFormValid by derivedStateOf { isEmailValid }
+
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            focusManager.clearFocus()
+            if (isFormValid) {
+                onSubmit(email)
+            }
+        },
+        enabled = isFormValid
+    ) {
+        Text(text = stringResource(Res.string.password_reset_submit_button))
     }
 }
 
