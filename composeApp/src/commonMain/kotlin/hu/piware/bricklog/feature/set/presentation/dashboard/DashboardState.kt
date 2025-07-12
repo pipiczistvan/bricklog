@@ -1,9 +1,9 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
-import hu.piware.bricklog.feature.authentication.domain.model.User
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
+import hu.piware.bricklog.feature.user.domain.model.User
 
 data class DashboardState(
     val latestSets: List<SetDetails> = emptyList(),

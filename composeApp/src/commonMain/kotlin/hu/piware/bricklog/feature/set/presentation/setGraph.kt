@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hu.piware.bricklog.LocalNavAnimatedVisibilityScope
-import hu.piware.bricklog.feature.authentication.presentation.AuthenticationRoute
 import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardScreenRoot
@@ -19,6 +18,7 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerScreenRoot
 import hu.piware.bricklog.feature.set.presentation.theme_list.ThemeListScreenRoot
 import hu.piware.bricklog.feature.settings.presentation.SettingsRoute
+import hu.piware.bricklog.feature.user.presentation.AuthenticationRoute
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 

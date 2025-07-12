@@ -11,8 +11,6 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
-import hu.piware.bricklog.feature.authentication.domain.usecase.Logout
-import hu.piware.bricklog.feature.authentication.domain.usecase.WatchCurrentUser
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
@@ -32,6 +30,8 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFil
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
+import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
+import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +60,7 @@ class DashboardViewModel(
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
     private val watchCollections: WatchCollections,
     private val watchCurrentUser: WatchCurrentUser,
-    private val logout: Logout,
+    private val logOutUser: LogOutUser,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -99,7 +99,7 @@ class DashboardViewModel(
             DashboardAction.OnLogoutClick -> _uiState.update { it.copy(showLogoutConfirm = true) }
             DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
             DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
-                logout().showSnackbarOnError()
+                logOutUser().showSnackbarOnError()
             }
 
             else -> Unit

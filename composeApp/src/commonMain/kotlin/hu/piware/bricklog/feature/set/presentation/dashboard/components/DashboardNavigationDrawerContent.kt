@@ -58,12 +58,12 @@ import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_secti
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_developer
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_settings
 import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
-import hu.piware.bricklog.feature.authentication.domain.model.User
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.util.BuildConfig
 import hu.piware.bricklog.util.isDebugFlavor
 import kotlinx.coroutines.launch

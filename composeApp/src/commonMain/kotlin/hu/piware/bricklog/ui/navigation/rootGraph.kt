@@ -3,12 +3,12 @@ package hu.piware.bricklog.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
-import hu.piware.bricklog.feature.authentication.presentation.authenticationGraph
 import hu.piware.bricklog.feature.collection.collectionGraph
 import hu.piware.bricklog.feature.onboarding.presentation.OnboardingRoute
 import hu.piware.bricklog.feature.onboarding.presentation.onboardingGraph
 import hu.piware.bricklog.feature.set.presentation.setGraph
 import hu.piware.bricklog.feature.settings.presentation.settingsGraph
+import hu.piware.bricklog.feature.user.presentation.authenticationGraph
 import kotlinx.serialization.Serializable
 
 sealed interface RootRoute {
