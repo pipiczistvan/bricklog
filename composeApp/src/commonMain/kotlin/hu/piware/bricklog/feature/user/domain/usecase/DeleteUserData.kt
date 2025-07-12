@@ -6,10 +6,10 @@ import hu.piware.bricklog.feature.user.domain.repository.UserRepository
 import org.koin.core.annotation.Single
 
 @Single
-class LogOutUser(
+class DeleteUserData(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(): EmptyResult<UserError> {
-        return userRepository.logout()
+        return userRepository.deleteUser()
     }
 }

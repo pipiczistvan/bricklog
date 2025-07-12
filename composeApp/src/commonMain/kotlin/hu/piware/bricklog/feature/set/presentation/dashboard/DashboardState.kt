@@ -13,6 +13,7 @@ data class DashboardState(
     val collections: List<Collection> = emptyList(),
     val currentUser: User? = null,
     val showLogoutConfirm: Boolean = false,
+    val showDeleteUserConfirm: Boolean = false,
     val areSetsRefreshing: Boolean = false,
     val changelog: Changelog? = null,
 )

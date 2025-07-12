@@ -30,6 +30,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFil
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
+import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +62,7 @@ class DashboardViewModel(
     private val watchCollections: WatchCollections,
     private val watchCurrentUser: WatchCurrentUser,
     private val logOutUser: LogOutUser,
+    private val deleteUserData: DeleteUserData,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -100,6 +102,12 @@ class DashboardViewModel(
             DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
             DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
                 logOutUser().showSnackbarOnError()
+            }
+
+            DashboardAction.OnDeleteUserClick -> _uiState.update { it.copy(showDeleteUserConfirm = true) }
+            DashboardAction.OnDeleteUserDismiss -> _uiState.update { it.copy(showDeleteUserConfirm = false) }
+            DashboardAction.OnDeleteUserConfirm -> viewModelScope.launch {
+                deleteUserData().showSnackbarOnError()
             }
 
             else -> Unit

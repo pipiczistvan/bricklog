@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
@@ -130,24 +131,30 @@ private fun CollectionsSection(
             }
         }) {
         collections.map {
-            NavigationSectionButton(state = state, title = it.name, onClick = {
-                onAction(
-                    DashboardAction.OnSearchSets(
-                        SetListArguments(
-                            filterOverrides = SetFilter(
-                                collectionIds = setOf(it.id)
-                            ), title = it.name
+            NavigationSectionButton(
+                state = state,
+                title = it.name,
+                onClick = {
+                    onAction(
+                        DashboardAction.OnSearchSets(
+                            SetListArguments(
+                                filterOverrides = SetFilter(
+                                    collectionIds = setOf(it.id)
+                                ), title = it.name
+                            )
                         )
                     )
-                )
-            }, icon = it.icon.outlinedIcon, trailingIcon = {
-                IconButton(
-                    onClick = { onAction(DashboardAction.OnCollectionEditClick(it.id)) }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit, contentDescription = null
-                    )
-                }
-            })
+                },
+                icon = it.icon.outlinedIcon,
+                trailingIcon = {
+                    IconButton(
+                        onClick = { onAction(DashboardAction.OnCollectionEditClick(it.id)) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = null
+                        )
+                    }
+                })
         }
     }
 }
@@ -170,6 +177,16 @@ private fun SettingsSection(
                 stringResource(Res.string.dashboard_navigation_drawer_item_login),
             onClick = { onAction(if (isLoggedIn) DashboardAction.OnLogoutClick else DashboardAction.OnLoginClick) },
             icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
+            trailingIcon = {
+                if (isLoggedIn) {
+                    IconButton(onClick = { onAction(DashboardAction.OnDeleteUserClick) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteOutline,
+                            contentDescription = null
+                        )
+                    }
+                } else Unit
+            }
         )
         NavigationSectionButton(
             state = state,

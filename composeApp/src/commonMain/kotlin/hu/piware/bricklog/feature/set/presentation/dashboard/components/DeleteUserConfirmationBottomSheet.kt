@@ -18,27 +18,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_no
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_title
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_yes
+import bricklog.composeapp.generated.resources.delete_user_data_confirm_no
+import bricklog.composeapp.generated.resources.delete_user_data_confirm_title
+import bricklog.composeapp.generated.resources.delete_user_data_confirm_yes
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun LogoutConfirmationBottomSheet(
+fun DeleteUserConfirmationBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
 
     ModalBottomSheet(
-        modifier = Modifier.testTag("dashboard:logout_confirmation_bottom_sheet"),
+        modifier = Modifier.testTag("dashboard:delete_user_confirmation_bottom_sheet"),
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.logout_confirm_bottom_sheet_title)
+            title = stringResource(Res.string.delete_user_data_confirm_title)
         )
 
         Column(
@@ -52,7 +52,7 @@ fun LogoutConfirmationBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onDismiss
             ) {
-                Text(text = stringResource(Res.string.logout_confirm_bottom_sheet_no))
+                Text(text = stringResource(Res.string.delete_user_data_confirm_no))
             }
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -64,7 +64,7 @@ fun LogoutConfirmationBottomSheet(
                     containerColor = MaterialTheme.colorScheme.error
                 )
             ) {
-                Text(text = stringResource(Res.string.logout_confirm_bottom_sheet_yes))
+                Text(text = stringResource(Res.string.delete_user_data_confirm_yes))
             }
         }
     }

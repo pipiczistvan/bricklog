@@ -1,9 +1,8 @@
 package hu.piware.bricklog.feature.user.data.repository
 
-import hu.piware.bricklog.feature.core.domain.AuthenticationError
-import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.core.domain.asEmptyDataResult
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserDataSource
@@ -36,23 +35,29 @@ class RemoteUserRepository(
 
     override val currentUser = authenticatedUser.asStateFlow()
 
-    override suspend fun login(method: AuthenticationMethod): Result<User?, AuthenticationError.Login> {
+    override suspend fun login(method: AuthenticationMethod): Result<User?, UserError.Login> {
         return remoteDataSource.login(method)
             .onSuccess { user -> authenticatedUser.update { user } }
     }
 
-    override suspend fun register(method: AuthenticationMethod): Result<User?, AuthenticationError.Register> {
+    override suspend fun register(method: AuthenticationMethod): Result<User?, UserError.Register> {
         return remoteDataSource.register(method)
             .onSuccess { user -> authenticatedUser.update { user } }
     }
 
-    override suspend fun logout(): EmptyResult<DataError.Remote> {
+    override suspend fun logout(): EmptyResult<UserError.General> {
         return remoteDataSource.logout()
             .onSuccess { user -> authenticatedUser.update { user } }
             .asEmptyDataResult()
     }
 
-    override suspend fun passwordReset(email: String): EmptyResult<AuthenticationError.Login> {
+    override suspend fun passwordReset(email: String): EmptyResult<UserError.General> {
         return remoteDataSource.passwordReset(email)
+    }
+
+    override suspend fun deleteUser(): EmptyResult<UserError.General> {
+        return remoteDataSource.deleteUser()
+            .onSuccess { user -> authenticatedUser.update { user } }
+            .asEmptyDataResult()
     }
 }

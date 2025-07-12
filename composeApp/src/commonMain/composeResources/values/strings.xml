@@ -79,6 +79,7 @@
     <string name="error_unknown">Oops, something went wrong.</string>
     <string name="error_invalid_credentials">Invalid credentials!</string>
     <string name="error_user_collision">The email address is already in use by another account!</string>
+    <string name="error_reauthentication_required">Please reauthenticate before continuing.</string>
     <string name="go_back">Go back</string>
     <string name="language_english_label">English</string>
     <string name="language_hungarian_label">Hungarian</string>
@@ -92,6 +93,9 @@
     <string name="logout_confirm_bottom_sheet_no">No</string>
     <string name="logout_confirm_bottom_sheet_title">Are you sure, you want to log out?</string>
     <string name="logout_confirm_bottom_sheet_yes">Yes</string>
+    <string name="delete_user_data_confirm_no">No</string>
+    <string name="delete_user_data_confirm_title">Do you really want to delete your user and your data?</string>
+    <string name="delete_user_data_confirm_yes">Yes</string>
     <string name="no_search_results">Oops, there aren't any sets for your search query.</string>
     <string name="notification_settings_general">General notifications</string>
     <string name="notification_settings_new_sets">When new items added to the database</string>

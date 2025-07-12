@@ -1,9 +1,8 @@
 package hu.piware.bricklog.mock
 
-import hu.piware.bricklog.feature.core.domain.AuthenticationError
-import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserDataSource
 import hu.piware.bricklog.feature.user.domain.model.AuthenticationMethod
 import hu.piware.bricklog.feature.user.domain.model.User
@@ -17,25 +16,29 @@ class MockRemoteUserDataSource : RemoteUserDataSource {
         return currentUser
     }
 
-    override suspend fun login(method: AuthenticationMethod): Result<User?, AuthenticationError.Login> {
+    override suspend fun login(method: AuthenticationMethod): Result<User?, UserError.Login> {
         delay(1000)
         currentUser = MOCK_USER
         return Result.Success(currentUser)
     }
 
-    override suspend fun register(method: AuthenticationMethod): Result<User?, AuthenticationError.Register> {
+    override suspend fun register(method: AuthenticationMethod): Result<User?, UserError.Register> {
         delay(1000)
         currentUser = MOCK_USER
         return Result.Success(currentUser)
     }
 
-    override suspend fun logout(): Result<User?, DataError.Remote> {
+    override suspend fun logout(): Result<User?, UserError.General> {
         currentUser = null
         return Result.Success(currentUser)
     }
 
-    override suspend fun passwordReset(email: String): EmptyResult<AuthenticationError.Login> {
+    override suspend fun passwordReset(email: String): EmptyResult<UserError.General> {
         return Result.Success(Unit)
+    }
+
+    override suspend fun deleteUser(): Result<User?, UserError.General> {
+        return logout()
     }
 
     companion object Companion {
