@@ -4,6 +4,9 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.delete_user_data_success
+import bricklog.composeapp.generated.resources.logout_success
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
@@ -15,6 +18,7 @@ import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
+import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
@@ -101,13 +105,17 @@ class DashboardViewModel(
             DashboardAction.OnLogoutClick -> _uiState.update { it.copy(showLogoutConfirm = true) }
             DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
             DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
-                logOutUser().showSnackbarOnError()
+                logOutUser()
+                    .showSnackbarOnSuccess(Res.string.logout_success)
+                    .showSnackbarOnError()
             }
 
             DashboardAction.OnDeleteUserClick -> _uiState.update { it.copy(showDeleteUserConfirm = true) }
             DashboardAction.OnDeleteUserDismiss -> _uiState.update { it.copy(showDeleteUserConfirm = false) }
             DashboardAction.OnDeleteUserConfirm -> viewModelScope.launch {
-                deleteUserData().showSnackbarOnError()
+                deleteUserData()
+                    .showSnackbarOnSuccess(Res.string.delete_user_data_success)
+                    .showSnackbarOnError()
             }
 
             else -> Unit

@@ -2,8 +2,11 @@ package hu.piware.bricklog.feature.user.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.login_success
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
+import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
 import hu.piware.bricklog.feature.user.domain.model.AuthenticationMethod
 import hu.piware.bricklog.feature.user.domain.usecase.LogInUser
 import kotlinx.coroutines.channels.Channel
@@ -36,6 +39,7 @@ class LoginViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             logInUser(method)
+                .showSnackbarOnSuccess(Res.string.login_success)
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(LoginEvent.UserLoggedIn)

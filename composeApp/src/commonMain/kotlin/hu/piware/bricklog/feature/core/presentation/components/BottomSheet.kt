@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
@@ -26,8 +28,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BottomSheetHeader(
@@ -116,6 +120,47 @@ fun BottomSheetOption(
 }
 
 @Composable
+fun BottomSheetButton(
+    title: String,
+    icon: ImageVector,
+    color: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = .2f),
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .clip(Shapes.large)
+            .background(
+                color = color,
+                shape = Shapes.large
+            )
+            .clickable { onClick() }
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.MediumPadding.size)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.width(Dimens.SmallPadding.size))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
 private fun PlaceHolderIconButton() {
     IconButton(
         onClick = { },
@@ -125,6 +170,31 @@ private fun PlaceHolderIconButton() {
         Icon(
             imageVector = Icons.Outlined.Close,
             contentDescription = null
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun BottomSheetOptionPreview() {
+    BricklogTheme {
+        BottomSheetOption(
+            selected = false,
+            onClick = { },
+        ) {
+            Text("OK")
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun BottomSheetButtonPreview() {
+    BricklogTheme {
+        BottomSheetButton(
+            title = "OK",
+            icon = Icons.Outlined.Close,
+            onClick = { }
         )
     }
 }
