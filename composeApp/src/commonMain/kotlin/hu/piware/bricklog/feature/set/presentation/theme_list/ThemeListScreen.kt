@@ -47,8 +47,10 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetTheme
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -205,6 +207,17 @@ private fun ThemeRow(
         Text(
             text = "${theme.name} (${theme.setCount})",
             style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ThemeListScreenPreview() {
+    BricklogTheme {
+        ThemeListScreen(
+            state = ThemeListState(),
+            onAction = {}
         )
     }
 }

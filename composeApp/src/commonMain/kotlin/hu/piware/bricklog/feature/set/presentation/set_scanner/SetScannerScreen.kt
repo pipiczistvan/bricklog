@@ -31,6 +31,8 @@ import hu.piware.barcode_scanner.BarcodeScannerWithPermission
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_scanner.components.SetDetectionBox
+import hu.piware.bricklog.ui.theme.BricklogTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -134,5 +136,16 @@ private fun SetScannerScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SetScannerScreenPreview() {
+    BricklogTheme {
+        SetScannerScreen(
+            state = SetScannerState(),
+            onAction = {}
+        )
     }
 }

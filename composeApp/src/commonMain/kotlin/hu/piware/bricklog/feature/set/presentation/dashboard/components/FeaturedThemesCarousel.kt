@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import hu.piware.bricklog.feature.set.presentation.dashboard.domain.FeaturedTheme
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FEATURED_THEMES
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.max
 
 @Composable
@@ -84,5 +86,15 @@ fun FeaturedThemesCarousel(
                 color = Color.White
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun FeaturedThemesCarouselPreview() {
+    BricklogTheme {
+        FeaturedThemesCarousel(
+            onItemClick = {}
+        )
     }
 }

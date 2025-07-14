@@ -20,8 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ChipSize {
     SMALL, REGULAR
@@ -94,5 +96,33 @@ fun SetAttributeChip(
             },
             color = textColor
         )
+    }
+}
+
+@Preview
+@Composable
+private fun SetChipPreview() {
+    BricklogTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            SetChip {
+                Text("OK")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SetAttributeChipPreview() {
+    BricklogTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            SetAttributeChip(
+                text = "OK"
+            )
+        }
     }
 }

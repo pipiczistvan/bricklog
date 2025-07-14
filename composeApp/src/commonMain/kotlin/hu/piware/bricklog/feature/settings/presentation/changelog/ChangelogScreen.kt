@@ -24,8 +24,11 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.changelog_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.presentation.changelog.components.ReleaseItem
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -47,10 +50,10 @@ fun ChangelogScreenRoot(
 }
 
 @Composable
-fun ChangelogScreen(
+private fun ChangelogScreen(
     state: ChangelogState,
     onAction: (ChangelogAction) -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
@@ -91,5 +94,18 @@ fun ChangelogScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChangelogScreenPreview() {
+    BricklogTheme {
+        ChangelogScreen(
+            state = ChangelogState(
+                changelog = PreviewData.changelog
+            ),
+            onAction = {}
+        )
     }
 }

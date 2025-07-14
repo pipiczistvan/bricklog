@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun InfoCard(
@@ -45,6 +47,22 @@ fun InfoCard(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun InfoCardPreview() {
+    BricklogTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            InfoCard(
+                title = "Title",
+                description = "Description",
+                onClick = {}
             )
         }
     }

@@ -24,7 +24,9 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.go_back
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -47,7 +49,7 @@ fun SetImageScreenRoot(
 }
 
 @Composable
-fun SetImageScreen(
+private fun SetImageScreen(
     modifier: Modifier = Modifier,
     state: SetImageState,
     onAction: (SetImageAction) -> Unit,
@@ -96,6 +98,19 @@ private fun SetImagePager(
                 .fillMaxSize(),
             image = images[it],
             zoomable = true
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SetImageScreenPreview() {
+    BricklogTheme {
+        SetImageScreen(
+            state = SetImageState(
+                setId = 1
+            ),
+            onAction = {}
         )
     }
 }

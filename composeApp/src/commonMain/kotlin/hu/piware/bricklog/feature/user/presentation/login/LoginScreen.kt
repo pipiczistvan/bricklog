@@ -92,7 +92,7 @@ fun LoginScreenRoot(
 }
 
 @Composable
-fun LoginScreen(
+private fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit,
     googleSignInButton: @Composable (onAction: (LoginAction) -> Unit) -> Unit = {},

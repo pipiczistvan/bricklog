@@ -1,6 +1,8 @@
 package hu.piware.bricklog.feature.settings.presentation.changelog.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -19,8 +21,11 @@ import bricklog.composeapp.generated.resources.changelog_build_version
 import hu.piware.bricklog.feature.settings.domain.model.Change
 import hu.piware.bricklog.feature.settings.domain.model.ChangeType
 import hu.piware.bricklog.feature.settings.domain.model.Release
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ReleaseItem(
@@ -64,5 +69,19 @@ private fun ChangeRow(
             contentDescription = null
         )
         Text(text = change.description)
+    }
+}
+
+@Preview
+@Composable
+private fun ReleaseItemPreview() {
+    BricklogTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            ReleaseItem(
+                release = PreviewData.releases[0]
+            )
+        }
     }
 }

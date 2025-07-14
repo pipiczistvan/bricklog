@@ -28,6 +28,7 @@ import bricklog.composeapp.generated.resources.ic_barcode_scanner
 import bricklog.composeapp.generated.resources.search_hint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SearchBarInputField(
@@ -119,6 +120,23 @@ fun SearchBarInputField(
                     }
                 }
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchBarInputFieldPreview() {
+    MaterialTheme {
+        SearchBarInputField(
+            expanded = true,
+            onExpandedChange = {},
+            onDrawerClick = {},
+            onScanClick = {},
+            onClearClick = {},
+            onSearch = {},
+            query = "",
+            onQueryChange = {}
         )
     }
 }

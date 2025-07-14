@@ -41,6 +41,7 @@ import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetSearchBar(
@@ -162,5 +163,16 @@ private fun Content(
                 Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SetSearchBarPreview() {
+    MaterialTheme {
+        SetSearchBar(
+            state = SetSearchBarState(),
+            onAction = {}
+        )
     }
 }

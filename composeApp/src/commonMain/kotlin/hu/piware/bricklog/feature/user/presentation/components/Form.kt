@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.user.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -233,8 +235,12 @@ fun PasswordField(
 @Composable
 private fun EmailPasswordFormPreview() {
     BricklogTheme {
-        EmailPasswordForm(
-            onSubmit = { _, _ -> }
-        )
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            EmailPasswordForm(
+                onSubmit = { _, _ -> }
+            )
+        }
     }
 }

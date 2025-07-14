@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ fun LogoutConfirmationBottomSheet(
         sheetState = sheetState
     ) {
         LogoutConfirmationContent(
+            sheetState = sheetState,
             onDismiss = onDismiss,
             onConfirm = onConfirm
         )
@@ -52,6 +54,7 @@ fun LogoutConfirmationBottomSheet(
 
 @Composable
 private fun LogoutConfirmationContent(
+    sheetState: SheetState,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,7 +63,9 @@ private fun LogoutConfirmationContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.logout_confirm_bottom_sheet_title)
+            title = stringResource(Res.string.logout_confirm_bottom_sheet_title),
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         Column(
@@ -97,6 +102,7 @@ private fun LogoutConfirmationContentPreview() {
     BricklogTheme {
         LogoutConfirmationContent(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
             onConfirm = {}
         )

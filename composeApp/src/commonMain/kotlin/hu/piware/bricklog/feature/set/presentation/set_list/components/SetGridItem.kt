@@ -36,9 +36,12 @@ import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetGridItem(
@@ -117,7 +120,6 @@ fun SetGridItem(
                 }
             }
 
-
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -134,5 +136,17 @@ fun SetGridItem(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SetGridItemPreview() {
+    BricklogTheme {
+        SetGridItem(
+            setDetails = PreviewData.sets[0],
+            onClick = {},
+            onFavouriteClick = {}
+        )
     }
 }

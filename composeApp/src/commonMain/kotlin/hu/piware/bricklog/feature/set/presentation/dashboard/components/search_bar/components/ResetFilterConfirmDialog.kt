@@ -12,7 +12,9 @@ import bricklog.composeapp.generated.resources.reset_filter_confirm_dialog_butto
 import bricklog.composeapp.generated.resources.reset_filter_confirm_dialog_button_confirm
 import bricklog.composeapp.generated.resources.reset_filter_confirm_dialog_text
 import bricklog.composeapp.generated.resources.reset_filter_confirm_dialog_title
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ResetFilterConfirmDialog(
@@ -48,4 +50,15 @@ fun ResetFilterConfirmDialog(
             }
         }
     )
+}
+
+@Preview
+@Composable
+fun ResetFilterConfirmDialogPreview() {
+    BricklogTheme {
+        ResetFilterConfirmDialog(
+            onConfirmation = {},
+            onDismiss = {},
+        )
+    }
 }

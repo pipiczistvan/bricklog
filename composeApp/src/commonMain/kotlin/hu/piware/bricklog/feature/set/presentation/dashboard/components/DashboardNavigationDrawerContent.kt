@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -76,6 +77,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.days
 
 @Composable
@@ -330,4 +332,17 @@ private fun NavigationSectionButton(
         },
         badge = trailingIcon
     )
+}
+
+@Preview
+@Composable
+private fun DashboardNavigationDrawerContent() {
+    MaterialTheme {
+        DashboardNavigationDrawerContent(
+            state = DrawerState(DrawerValue.Open),
+            collections = emptyList(),
+            currentUser = null,
+            onAction = {}
+        )
+    }
 }

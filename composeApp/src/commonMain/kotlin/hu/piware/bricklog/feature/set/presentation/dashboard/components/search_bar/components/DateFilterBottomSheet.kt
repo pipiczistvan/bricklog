@@ -2,6 +2,8 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -28,18 +31,20 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.date_filter_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
-import hu.piware.bricklog.feature.core.presentation.components.DateRangePickerModal
+import hu.piware.bricklog.feature.core.presentation.components.DateRangePickerModalDialog
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.DateFilterOption
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DateFilterBottomSheet(
-    onShowBottomSheetChanged: (Boolean) -> Unit,
     selected: DateFilter,
     onSelectionChange: (DateFilter) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -47,20 +52,66 @@ fun DateFilterBottomSheet(
 
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:date_filter_bottom_sheet"),
-        onDismissRequest = {
-            onShowBottomSheetChanged(false)
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState
+    ) {
+        DateFilterSheetContent(
+            selected = selected,
+            onSelectionChange = onSelectionChange,
+            onCustomDateSelected = {
+                customDateRangePickerVisible = true
+            },
+            sheetState = sheetState,
+            onDismiss = onDismiss
+        )
+    }
+
+    if (customDateRangePickerVisible) {
+        val customDateRangeFilter = when (selected) {
+            is DateFilter.Custom -> selected
+            else -> null
+        }
+        val dateRangePickerState = rememberDateRangePickerState(
+            customDateRangeFilter?.startDate,
+            customDateRangeFilter?.endDate
+        )
+
+        DateRangePickerModalDialog(
+            state = dateRangePickerState,
+            onDateRangeSelected = {
+                onSelectionChange(DateFilter.Custom(it.first, it.second))
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onDismiss()
+                    }
+                }
+                customDateRangePickerVisible = false
+            },
+            onDismiss = {
+                customDateRangePickerVisible = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun DateFilterSheetContent(
+    selected: DateFilter,
+    onSelectionChange: (DateFilter) -> Unit,
+    onCustomDateSelected: () -> Unit,
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = modifier
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.date_filter_sheet_title),
-            onCloseClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-            }
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         LazyColumn(
@@ -75,9 +126,7 @@ fun DateFilterBottomSheet(
                     selected = option == selected.option,
                     onClick = {
                         when (option) {
-                            DateFilterOption.CUSTOM -> {
-                                customDateRangePickerVisible = true
-                            }
+                            DateFilterOption.CUSTOM -> onCustomDateSelected()
 
                             else -> {
                                 val filter = when (option) {
@@ -90,7 +139,7 @@ fun DateFilterBottomSheet(
                                 onSelectionChange(filter)
                                 scope.launch { sheetState.hide() }.invokeOnCompletion {
                                     if (!sheetState.isVisible) {
-                                        onShowBottomSheetChanged(false)
+                                        onDismiss()
                                     }
                                 }
                             }
@@ -99,33 +148,6 @@ fun DateFilterBottomSheet(
                 )
             }
         }
-    }
-
-    if (customDateRangePickerVisible) {
-        val customDateRangeFilter = when (selected) {
-            is DateFilter.Custom -> selected
-            else -> null
-        }
-        val dateRangePickerState = rememberDateRangePickerState(
-            customDateRangeFilter?.startDate,
-            customDateRangeFilter?.endDate
-        )
-
-        DateRangePickerModal(
-            state = dateRangePickerState,
-            onDateRangeSelected = {
-                onSelectionChange(DateFilter.Custom(it.first, it.second))
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-                customDateRangePickerVisible = false
-            },
-            onDismiss = {
-                customDateRangePickerVisible = false
-            }
-        )
     }
 }
 
@@ -146,6 +168,21 @@ private fun DateFilterSheetOption(
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DateFilterSheetContentPreview() {
+    BricklogTheme {
+        DateFilterSheetContent(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            selected = DateFilter.AnyTime,
+            onSelectionChange = {},
+            onCustomDateSelected = {},
+            sheetState = rememberModalBottomSheetState(),
+            onDismiss = {}
         )
     }
 }

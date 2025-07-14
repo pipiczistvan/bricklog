@@ -22,7 +22,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.license_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -44,10 +46,10 @@ fun LicenseScreenRoot(
 }
 
 @Composable
-fun LicenseScreen(
+private fun LicenseScreen(
     state: LicenseState,
     onAction: (LicenseAction) -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
@@ -80,5 +82,18 @@ fun LicenseScreen(
                 Text(state.license)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun LicenseScreenPreview() {
+    BricklogTheme {
+        LicenseScreen(
+            state = LicenseState(
+                license = "LICENSE"
+            ),
+            onAction = {}
+        )
     }
 }

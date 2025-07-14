@@ -1,11 +1,14 @@
 package hu.piware.bricklog.feature.set.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +39,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetFilterRow(
@@ -99,45 +103,45 @@ fun SetFilterRow(
 
     if (showReleaseDateFilterSheet) {
         DateFilterBottomSheet(
-            onShowBottomSheetChanged = { showReleaseDateFilterSheet = it },
             selected = filterPreferences.launchDate,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) }
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) },
+            onDismiss = { showReleaseDateFilterSheet = false }
         )
     }
 
     if (showStatusFilterSheet) {
         StatusFilterBottomSheet(
-            onShowBottomSheetChanged = { showStatusFilterSheet = it },
             availableOptions = SetStatus.entries,
             selected = filterPreferences.statuses,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(statuses = it)) }
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(statuses = it)) },
+            onDismiss = { showStatusFilterSheet = false }
         )
     }
 
     if (showThemeFilterSheet) {
         ThemeFilterBottomSheet(
-            onShowBottomSheetChanged = { showThemeFilterSheet = it },
             availableOptions = filterDomain.themes,
             selected = filterPreferences.themes,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) }
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) },
+            onDismiss = { showThemeFilterSheet = false }
         )
     }
 
     if (showPackagingTypeFilterSheet) {
         PackagingTypeFilterBottomSheet(
-            onShowBottomSheetChanged = { showPackagingTypeFilterSheet = it },
             availableOptions = filterDomain.packagingTypes,
             selected = filterPreferences.packagingTypes,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) }
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) },
+            onDismiss = { showPackagingTypeFilterSheet = false }
         )
     }
 
     if (showCollectionFilterSheet) {
         CollectionFilterBottomSheet(
-            onShowBottomSheetChanged = { showCollectionFilterSheet = it },
             availableOptions = filterDomain.collections,
             selected = filterPreferences.collectionIds,
-            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(collectionIds = it)) }
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(collectionIds = it)) },
+            onDismiss = { showCollectionFilterSheet = false }
         )
     }
 }
@@ -274,4 +278,21 @@ private fun SetFilterPreferences.mergeWithFilter(filter: SetFilter?): SetFilterP
         showIncomplete = filter?.showIncomplete ?: showIncomplete,
         collectionIds = filter?.collectionIds ?: collectionIds
     )
+}
+
+@Preview
+@Composable
+private fun SetFilterRowPreview() {
+    MaterialTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            SetFilterRow(
+                filterPreferences = SetFilterPreferences(),
+                filterOverrides = null,
+                onFilterPreferencesChange = {},
+                filterDomain = SetFilterDomain(),
+            )
+        }
+    }
 }

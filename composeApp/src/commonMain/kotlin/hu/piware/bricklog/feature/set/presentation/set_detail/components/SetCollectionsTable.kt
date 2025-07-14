@@ -4,6 +4,7 @@ package hu.piware.bricklog.feature.set.presentation.set_detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +32,10 @@ import bricklog.composeapp.generated.resources.set_details_collections_not_found
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetCollectionsTable(
@@ -105,10 +109,26 @@ fun SetCollectionsTable(
 
     if (showCollectionSheet) {
         SetCollectionBottomSheet(
-            onShowBottomSheetChanged = { showCollectionSheet = it },
             availableOptions = availableCollections,
             selected = setCollections.map { it.id }.toSet(),
-            onToggleCollection = onToggleCollection
+            onToggleCollection = onToggleCollection,
+            onDismiss = { showCollectionSheet = false }
         )
+    }
+}
+
+@Preview
+@Composable
+private fun SetCollectionsTablePreview() {
+    BricklogTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            SetCollectionsTable(
+                setCollections = PreviewData.collections,
+                availableCollections = PreviewData.collections,
+                onToggleCollection = {}
+            )
+        }
     }
 }

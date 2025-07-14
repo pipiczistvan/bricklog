@@ -42,8 +42,10 @@ import bricklog.composeapp.generated.resources.notification_settings_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.util.generalState
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -182,5 +184,16 @@ private fun NotificationSettingsCard(
                 Text(stringResource(Res.string.notification_settings_permission_open_settings))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun NotificationsScreenPreview() {
+    BricklogTheme {
+        NotificationsScreen(
+            state = NotificationsState(),
+            onAction = {}
+        )
     }
 }

@@ -40,9 +40,12 @@ import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetListItem(
@@ -145,5 +148,17 @@ fun SetListItem(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SetListItemPreview() {
+    BricklogTheme {
+        SetListItem(
+            setDetails = PreviewData.sets[0],
+            onClick = {},
+            onFavouriteClick = {}
+        )
     }
 }

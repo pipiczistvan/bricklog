@@ -30,8 +30,11 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetCardRow(
@@ -159,6 +162,17 @@ private fun SetCardPlaceholder(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleSmall
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SetCardPreview() {
+    BricklogTheme {
+        SetCard(
+            setDetails = PreviewData.sets[0],
+            onClick = {}
         )
     }
 }

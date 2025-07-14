@@ -9,6 +9,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
@@ -20,9 +21,10 @@ import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
 import bricklog.composeapp.generated.resources.date_range_picker_button_dismiss
 import bricklog.composeapp.generated.resources.date_range_picker_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun DateRangePickerModal(
+fun DateRangePickerModalDialog(
     state: DateRangePickerState = rememberDateRangePickerState(),
     onDateRangeSelected: (Pair<Long, Long>) -> Unit,
     onDismiss: () -> Unit,
@@ -61,6 +63,17 @@ fun DateRangePickerModal(
                 .fillMaxWidth()
                 .height(500.dp)
                 .padding(16.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DateRangePickerModalDialogPreview() {
+    MaterialTheme {
+        DateRangePickerModalDialog(
+            onDateRangeSelected = {},
+            onDismiss = {}
         )
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.data_fetch_button_retry
 import hu.piware.bricklog.App
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -75,5 +77,16 @@ private fun DataFetchScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DataFetchScreenPreview() {
+    MaterialTheme {
+        DataFetchScreen(
+            state = DataFetchState.Loading,
+            onAction = {}
+        )
     }
 }

@@ -47,6 +47,7 @@ import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationT
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetInstructionsTable(
@@ -159,6 +160,20 @@ fun SetInstructionsTable(
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SetInstructionsTablePreview() {
+    MaterialTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            SetInstructionsTable(
+                instructions = null
+            )
         }
     }
 }

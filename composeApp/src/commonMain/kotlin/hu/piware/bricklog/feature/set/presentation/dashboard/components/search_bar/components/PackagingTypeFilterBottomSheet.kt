@@ -2,7 +2,9 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,13 +17,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,41 +35,69 @@ import bricklog.composeapp.generated.resources.packaging_type_filter_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun PackagingTypeFilterBottomSheet(
-    onShowBottomSheetChanged: (Boolean) -> Unit,
     availableOptions: List<String>,
     selected: Set<String>,
     onSelectionChange: (Set<String>) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
     var showResetFilterDialog by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:packaging_type_filter_bottom_sheet"),
-        onDismissRequest = {
-            onShowBottomSheetChanged(false)
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState
+    ) {
+        PackagingTypeFilterSheetContent(
+            availableOptions = availableOptions,
+            selected = selected,
+            onSelectionChange = onSelectionChange,
+            sheetState = sheetState,
+            onReset = { showResetFilterDialog = true },
+            onDismiss = onDismiss
+        )
+    }
+
+    if (showResetFilterDialog) {
+        ResetFilterConfirmDialog(
+            onConfirmation = {
+                onSelectionChange(SetFilterPreferences().packagingTypes)
+                showResetFilterDialog = false
+            },
+            onDismiss = {
+                showResetFilterDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun PackagingTypeFilterSheetContent(
+    availableOptions: List<String>,
+    selected: Set<String>,
+    onSelectionChange: (Set<String>) -> Unit,
+    sheetState: SheetState,
+    onReset: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.packaging_type_filter_sheet_title),
-            onCloseClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-            },
+            sheetState = sheetState,
+            onDismiss = onDismiss,
             primaryActionIcon = Icons.Default.Replay,
-            onPrimaryActionClick = {
-                showResetFilterDialog = true
-            }
+            onPrimaryActionClick = onReset
         )
 
         LazyColumn(
@@ -90,18 +120,6 @@ fun PackagingTypeFilterBottomSheet(
                 )
             }
         }
-    }
-
-    if (showResetFilterDialog) {
-        ResetFilterConfirmDialog(
-            onConfirmation = {
-                onSelectionChange(SetFilterPreferences().packagingTypes)
-                showResetFilterDialog = false
-            },
-            onDismiss = {
-                showResetFilterDialog = false
-            }
-        )
     }
 }
 
@@ -134,5 +152,21 @@ private fun PackagingTypeFilterSheetOption(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PackagingTypeFilterSheetContentPreview() {
+    BricklogTheme {
+        PackagingTypeFilterSheetContent(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            availableOptions = PreviewData.packagingTypes,
+            selected = setOf(PreviewData.packagingTypes[0]),
+            onSelectionChange = {},
+            sheetState = rememberModalBottomSheetState(),
+            onReset = {},
+            onDismiss = {}
+        )
     }
 }

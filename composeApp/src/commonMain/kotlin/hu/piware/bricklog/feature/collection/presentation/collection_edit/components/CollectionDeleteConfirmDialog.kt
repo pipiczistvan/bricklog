@@ -1,7 +1,7 @@
 package hu.piware.bricklog.feature.collection.presentation.collection_edit.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -12,7 +12,9 @@ import bricklog.composeapp.generated.resources.collection_delete_confirm_dialog_
 import bricklog.composeapp.generated.resources.collection_delete_confirm_dialog_button_confirm
 import bricklog.composeapp.generated.resources.collection_delete_confirm_dialog_text
 import bricklog.composeapp.generated.resources.collection_delete_confirm_dialog_title
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CollectionDeleteConfirmDialog(
@@ -22,7 +24,7 @@ fun CollectionDeleteConfirmDialog(
     AlertDialog(
         icon = {
             Icon(
-                imageVector = Icons.Default.Replay,
+                imageVector = Icons.Outlined.DeleteOutline,
                 contentDescription = null
             )
         },
@@ -48,4 +50,15 @@ fun CollectionDeleteConfirmDialog(
             }
         }
     )
+}
+
+@Preview
+@Composable
+private fun CollectionDeleteConfirmDialogPreview() {
+    BricklogTheme {
+        CollectionDeleteConfirmDialog(
+            onConfirmation = {},
+            onDismiss = {}
+        )
+    }
 }

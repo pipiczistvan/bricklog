@@ -2,48 +2,63 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import hu.piware.bricklog.feature.settings.presentation.changelog.components.ReleaseItem
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
-import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChangelogBottomSheet(
     changelog: Changelog,
-    onShowBottomSheetChanged: (Boolean) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
-        onDismissRequest = {
-            onShowBottomSheetChanged(false)
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState
+    ) {
+        ChangelogSheetContent(
+            changelog = changelog,
+            sheetState = sheetState,
+            onDismiss = onDismiss
+        )
+    }
+}
+
+@Composable
+private fun ChangelogSheetContent(
+    changelog: Changelog,
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
     ) {
         BottomSheetHeader(
             title = "Changelog",
-            onCloseClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-            }
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         LazyColumn(
@@ -59,5 +74,18 @@ fun ChangelogBottomSheet(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChangelogSheetContentPreview() {
+    BricklogTheme {
+        ChangelogSheetContent(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            changelog = PreviewData.changelog,
+            sheetState = rememberModalBottomSheetState(),
+            onDismiss = {}
+        )
     }
 }

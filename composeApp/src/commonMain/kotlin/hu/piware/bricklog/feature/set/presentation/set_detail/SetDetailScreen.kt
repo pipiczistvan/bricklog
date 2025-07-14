@@ -65,10 +65,13 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.util.createFirstSe
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createSecondSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createThirdSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import io.github.alexzhirkevich.qrose.oned.BarcodeType
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -98,7 +101,7 @@ fun SetDetailScreenRoot(
 }
 
 @Composable
-fun SetDetailScreen(
+private fun SetDetailScreen(
     modifier: Modifier = Modifier,
     state: SetDetailState,
     onAction: (SetDetailAction) -> Unit,
@@ -325,5 +328,18 @@ private fun TitledSetDetail(title: String, content: @Composable () -> Unit) {
         )
 
         content()
+    }
+}
+
+@Preview
+@Composable
+private fun SetDetailScreenPreview() {
+    BricklogTheme {
+        SetDetailScreen(
+            state = SetDetailState(
+                setDetails = PreviewData.sets[0]
+            ),
+            onAction = {}
+        )
     }
 }

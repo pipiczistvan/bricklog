@@ -17,12 +17,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
+import kotlinx.coroutines.flow.flowOf
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun PagedSetList(
@@ -120,5 +128,27 @@ fun PagedSetList(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PagedSetListPreview() {
+    BricklogTheme {
+        PagedSetList(
+            sets = flowOf(
+                PagingData.from(
+                    PreviewData.sets,
+                    sourceLoadStates =
+                        LoadStates(
+                            refresh = LoadState.NotLoading(false),
+                            append = LoadState.NotLoading(false),
+                            prepend = LoadState.NotLoading(false),
+                        )
+                )
+            ).collectAsLazyPagingItems(),
+            onSetClick = {},
+            onFavouriteClick = {}
+        )
     }
 }

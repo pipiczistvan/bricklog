@@ -36,6 +36,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import bricklog.composeapp.generated.resources.Res
@@ -49,9 +52,13 @@ import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.components.PagedSetList
 import hu.piware.bricklog.feature.set.presentation.set_list.components.SetSortBottomSheet
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -179,14 +186,15 @@ private fun SetListScreen(
         }
     }
 
-    SetSortBottomSheet(
-        showBottomSheet = showSortingBottomSheet,
-        onShowBottomSheetChanged = { showSortingBottomSheet = it },
-        selectedOption = state.filterPreferences.sortOption,
-        onOptionClick = {
-            onAction(SetListAction.OnFilterChange(state.filterPreferences.copy(sortOption = it)))
-        }
-    )
+    if (showSortingBottomSheet) {
+        SetSortBottomSheet(
+            selectedOption = state.filterPreferences.sortOption,
+            onOptionClick = {
+                onAction(SetListAction.OnFilterChange(state.filterPreferences.copy(sortOption = it)))
+            },
+            onDismiss = { showSortingBottomSheet = false }
+        )
+    }
 }
 
 @Composable
@@ -211,6 +219,28 @@ private fun EmptySetList(
                 .padding(Dimens.MediumPadding.size),
             text = stringResource(Res.string.no_search_results),
             textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SetListScreenPreview() {
+    BricklogTheme {
+        SetListScreen(
+            state = SetListState(),
+            sets = flowOf(
+                PagingData.from(
+                    PreviewData.sets,
+                    sourceLoadStates =
+                        LoadStates(
+                            refresh = LoadState.NotLoading(false),
+                            append = LoadState.NotLoading(false),
+                            prepend = LoadState.NotLoading(false),
+                        )
+                )
+            ).collectAsLazyPagingItems(),
+            onAction = {}
         )
     }
 }

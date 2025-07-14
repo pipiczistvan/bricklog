@@ -270,11 +270,7 @@ private fun DashboardScreen(
     if (state.changelog != null && state.changelog.releases.isNotEmpty()) {
         ChangelogBottomSheet(
             changelog = state.changelog,
-            onShowBottomSheetChanged = { show ->
-                if (!show) {
-                    onAction(DashboardAction.OnUpdateChangelogReadVersion)
-                }
-            }
+            onDismiss = { onAction(DashboardAction.OnUpdateChangelogReadVersion) },
         )
     }
 

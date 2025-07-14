@@ -2,6 +2,7 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,6 +45,7 @@ fun DeleteUserConfirmationBottomSheet(
         sheetState = sheetState
     ) {
         DeleteUserConfirmationContent(
+            sheetState = sheetState,
             onDismiss = onDismiss,
             onConfirm = onConfirm
         )
@@ -51,6 +54,7 @@ fun DeleteUserConfirmationBottomSheet(
 
 @Composable
 private fun DeleteUserConfirmationContent(
+    sheetState: SheetState,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
@@ -59,7 +63,9 @@ private fun DeleteUserConfirmationContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.delete_user_data_confirm_title)
+            title = stringResource(Res.string.delete_user_data_confirm_title),
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         Column(
@@ -95,6 +101,8 @@ private fun DeleteUserConfirmationContent(
 private fun DeleteUserConfirmationContentPreview() {
     BricklogTheme {
         DeleteUserConfirmationContent(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
             onConfirm = {}
         )

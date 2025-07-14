@@ -30,8 +30,10 @@ import bricklog.composeapp.generated.resources.appearance_section_theme
 import bricklog.composeapp.generated.resources.appearance_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -55,7 +57,7 @@ fun AppearanceScreenRoot(
 }
 
 @Composable
-fun AppearanceScreen(
+private fun AppearanceScreen(
     state: AppearanceState,
     onAction: (AppearanceAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -116,5 +118,16 @@ fun AppearanceScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AppearanceScreenPreview() {
+    BricklogTheme {
+        AppearanceScreen(
+            state = AppearanceState(),
+            onAction = {}
+        )
     }
 }

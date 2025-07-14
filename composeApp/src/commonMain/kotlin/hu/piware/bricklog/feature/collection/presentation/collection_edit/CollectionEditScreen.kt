@@ -41,8 +41,10 @@ import hu.piware.bricklog.feature.collection.presentation.collection_edit.compon
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionIconBottomSheet
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -71,7 +73,7 @@ fun CollectionEditScreenRoot(
 }
 
 @Composable
-fun CollectionEditScreen(
+private fun CollectionEditScreen(
     state: CollectionEditState,
     onAction: (CollectionEditAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -179,14 +181,17 @@ fun CollectionEditScreen(
         }
     }
 
-    CollectionIconBottomSheet(
-        showBottomSheet = showIconBottomSheet,
-        onShowBottomSheetChanged = { showIconBottomSheet = it },
-        selectedIcon = state.icon,
-        onIconClick = {
-            onAction(CollectionEditAction.OnIconChanged(it))
-        }
-    )
+    if (showIconBottomSheet) {
+        CollectionIconBottomSheet(
+            selectedIcon = state.icon,
+            onSelectedIconChange = { icon ->
+                onAction(CollectionEditAction.OnIconChanged(icon))
+            },
+            onDismiss = {
+                showIconBottomSheet = false
+            }
+        )
+    }
 
     if (showDeleteConfirmDialog) {
         CollectionDeleteConfirmDialog(
@@ -197,6 +202,17 @@ fun CollectionEditScreen(
             onDismiss = {
                 showDeleteConfirmDialog = false
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CollectionEditScreenPreview() {
+    BricklogTheme {
+        CollectionEditScreen(
+            state = CollectionEditState(),
+            onAction = {}
         )
     }
 }

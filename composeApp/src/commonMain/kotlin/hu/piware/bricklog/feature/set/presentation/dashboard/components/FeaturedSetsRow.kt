@@ -1,7 +1,9 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -16,8 +18,10 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FeaturedSetsRow(
@@ -76,6 +80,24 @@ private fun SectionTitle(
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineMedium
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun FeaturedSetsRowPreview() {
+    MaterialTheme {
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            FeaturedSetsRow(
+                title = "Featured Sets",
+                onDashboardAction = {},
+                sets = PreviewData.sets,
+                filterOverrides = SetFilter(),
+                sharedElementPrefix = "featured_set_"
             )
         }
     }

@@ -58,6 +58,7 @@ import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationT
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.presentation.about.components.InfoCard
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import hu.piware.bricklog.util.BuildConfig
@@ -66,6 +67,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AboutScreenRoot(
@@ -86,7 +88,7 @@ fun AboutScreenRoot(
 }
 
 @Composable
-fun AboutScreen(
+private fun AboutScreen(
     onAction: (AboutAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -295,5 +297,15 @@ private fun AppProfile(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AboutScreenPreview() {
+    BricklogTheme {
+        AboutScreen(
+            onAction = {}
+        )
     }
 }

@@ -2,6 +2,8 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,10 +13,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -25,35 +27,49 @@ import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.ui.theme.Dimens
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun StatusFilterBottomSheet(
-    onShowBottomSheetChanged: (Boolean) -> Unit,
     availableOptions: List<SetStatus>,
     selected: Set<SetStatus>,
     onSelectionChange: (Set<SetStatus>) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
-        onDismissRequest = {
-            onShowBottomSheetChanged(false)
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState
+    ) {
+        StatusFilterSheetContent(
+            availableOptions = availableOptions,
+            selected = selected,
+            onSelectionChange = onSelectionChange,
+            sheetState = sheetState,
+            onDismiss = onDismiss
+        )
+    }
+}
+
+@Composable
+private fun StatusFilterSheetContent(
+    availableOptions: List<SetStatus>,
+    selected: Set<SetStatus>,
+    onSelectionChange: (Set<SetStatus>) -> Unit,
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.status_filter_sheet_title),
-            onCloseClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-            }
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         LazyColumn(
@@ -98,4 +114,17 @@ private fun StatusFilterSheetOption(
             overflow = TextOverflow.Ellipsis
         )
     }
+}
+
+@Preview
+@Composable
+private fun StatusFilterSheetContentPreview() {
+    StatusFilterSheetContent(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        availableOptions = SetStatus.entries,
+        selected = emptySet(),
+        onSelectionChange = {},
+        sheetState = rememberModalBottomSheetState(),
+        onDismiss = {}
+    )
 }

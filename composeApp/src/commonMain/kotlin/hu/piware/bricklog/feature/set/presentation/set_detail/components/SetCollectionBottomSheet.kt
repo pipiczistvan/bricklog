@@ -2,7 +2,9 @@
 
 package hu.piware.bricklog.feature.set.presentation.set_detail.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,10 +16,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -29,36 +31,52 @@ import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
+import hu.piware.bricklog.mock.PreviewData
+import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetCollectionBottomSheet(
-    onShowBottomSheetChanged: (Boolean) -> Unit,
     availableOptions: List<Collection>,
     selected: Set<CollectionId>,
     onToggleCollection: (CollectionId) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
         modifier = Modifier.testTag("set_details:set_collection_bottom_sheet"),
-        onDismissRequest = {
-            onShowBottomSheetChanged(false)
-        },
+        onDismissRequest = onDismiss,
         sheetState = sheetState
+    ) {
+        SetCollectionSheetContent(
+            availableOptions = availableOptions,
+            selected = selected,
+            onToggleCollection = onToggleCollection,
+            sheetState = sheetState,
+            onDismiss = onDismiss
+        )
+    }
+}
+
+@Composable
+private fun SetCollectionSheetContent(
+    availableOptions: List<Collection>,
+    selected: Set<CollectionId>,
+    onToggleCollection: (CollectionId) -> Unit,
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.set_details_collections_sheet_title),
-            onCloseClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onShowBottomSheetChanged(false)
-                    }
-                }
-            }
+            sheetState = sheetState,
+            onDismiss = onDismiss
         )
 
         LazyColumn(
@@ -118,5 +136,20 @@ private fun SetCollectionSheetOption(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SetCollectionSheetContentPreview() {
+    BricklogTheme {
+        SetCollectionSheetContent(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            availableOptions = PreviewData.collections,
+            selected = emptySet(),
+            onToggleCollection = {},
+            sheetState = rememberModalBottomSheetState(),
+            onDismiss = {}
+        )
     }
 }

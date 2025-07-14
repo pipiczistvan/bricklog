@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package hu.piware.bricklog.feature.core.presentation.components
 
 import androidx.compose.animation.animateColorAsState
@@ -15,12 +17,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,16 +36,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BottomSheetHeader(
     title: String,
-    onCloseClick: () -> Unit = { },
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
     primaryActionIcon: ImageVector? = null,
     onPrimaryActionClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+    
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -48,7 +57,13 @@ fun BottomSheetHeader(
             .fillMaxWidth()
             .padding(horizontal = Dimens.SmallPadding.size)
     ) {
-        IconButton(onClick = onCloseClick) {
+        IconButton(onClick = {
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if (!sheetState.isVisible) {
+                    onDismiss()
+                }
+            }
+        }) {
             Icon(
                 imageVector = Icons.Outlined.Close,
                 contentDescription = null,
@@ -178,11 +193,15 @@ private fun PlaceHolderIconButton() {
 @Composable
 private fun BottomSheetOptionPreview() {
     BricklogTheme {
-        BottomSheetOption(
-            selected = false,
-            onClick = { },
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {
-            Text("OK")
+            BottomSheetOption(
+                selected = false,
+                onClick = { },
+            ) {
+                Text("OK")
+            }
         }
     }
 }
@@ -191,10 +210,14 @@ private fun BottomSheetOptionPreview() {
 @Composable
 private fun BottomSheetButtonPreview() {
     BricklogTheme {
-        BottomSheetButton(
-            title = "OK",
-            icon = Icons.Outlined.Close,
-            onClick = { }
-        )
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            BottomSheetButton(
+                title = "OK",
+                icon = Icons.Outlined.Close,
+                onClick = { }
+            )
+        }
     }
 }
