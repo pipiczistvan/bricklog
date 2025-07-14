@@ -1,49 +1,49 @@
 [versions]
-agp = "8.9.1"                                   # https://developer.android.com/build/releases/gradle-plugin
-android-compileSdk = "35"
+agp = "8.11.1"                                   # https://developer.android.com/build/releases/gradle-plugin
+android-compileSdk = "36"
 android-minSdk = "26"
-android-targetSdk = "35"
+android-targetSdk = "36"
 androidx-activityCompose = "1.10.1"             # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-baselineprofile = "1.3.4"              # https://developer.android.com/jetpack/androidx/releases/benchmark
 androidx-benchmarkMacroJunit4 = "1.3.4"         # https://developer.android.com/jetpack/androidx/releases/benchmark
 androidx-core-splashscreen = "1.0.1"            # https://developer.android.com/jetpack/androidx/releases/core
-androidx-datastore = "1.1.4"                    # https://developer.android.com/jetpack/androidx/releases/datastore
+androidx-datastore = "1.1.7"                    # https://developer.android.com/jetpack/androidx/releases/datastore
 androidx-espressoCore = "3.6.1"                 # https://developer.android.com/jetpack/androidx/releases/test
 androidx-junit = "1.2.1"                        # https://developer.android.com/jetpack/androidx/releases/test
-androidx-lifecycle = "2.8.4"                    # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle
-androidx-navigation-compose = "2.9.0-beta02"    # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+androidx-lifecycle = "2.9.1"                    # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle
+androidx-navigation-compose = "2.9.0-beta03"    # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 androidx-paging = "3.3.6"                       # https://developer.android.com/jetpack/androidx/releases/paging
 androidx-profileinstaller = "1.4.1"             # https://developer.android.com/jetpack/androidx/releases/profileinstaller
-androidx-room = "2.7.1"                         # https://developer.android.com/jetpack/androidx/releases/room
-androidx-sqlite = "2.5.1"                       # https://developer.android.com/jetpack/androidx/releases/sqlite
+androidx-room = "2.7.2"                         # https://developer.android.com/jetpack/androidx/releases/room
+androidx-sqlite = "2.5.2"                       # https://developer.android.com/jetpack/androidx/releases/sqlite
 androidx-uiautomator = "2.3.0"                  # https://developer.android.com/jetpack/androidx/releases/test-uiautomator
-androidx-work = "2.10.1"                        # https://developer.android.com/jetpack/androidx/releases/work
+androidx-work = "2.10.2"                        # https://developer.android.com/jetpack/androidx/releases/work
 app-release = "25070501"
 app-version = "1.2.0"
 buildkonfig = "0.17.1"                          # https://github.com/yshrsmz/BuildKonfig
-camerax = "1.4.1"                               # https://developer.android.com/jetpack/androidx/releases/camera
+camerax = "1.4.2"                               # https://developer.android.com/jetpack/androidx/releases/camera
 coil3 = "3.2.0"                                 # https://github.com/coil-kt/coil
-compose-multiplatform = "1.9.0-alpha02"         # https://github.com/JetBrains/compose-multiplatform
-crashlytics = "3.0.3"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
-firebase-bom = "33.13.0"                        # https://firebase.google.com/support/release-notes/android
+compose-multiplatform = "1.9.0-alpha03"         # https://github.com/JetBrains/compose-multiplatform
+crashlytics = "3.0.4"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
+firebase-bom = "33.16.0"                        # https://firebase.google.com/support/release-notes/android
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
-google-services = "4.4.2"                       # https://developers.google.com/android/guides/google-services-plugin
-kermit = "2.0.5"                                # https://github.com/touchlab/Kermit
+google-services = "4.4.3"                       # https://developers.google.com/android/guides/google-services-plugin
+kermit = "2.0.6"                                # https://github.com/touchlab/Kermit
 kmpauth = "2.3.1"                               # https://github.com/mirzemehdi/KMPAuth
 kmpnotifier = "1.5.1"                           # https://github.com/mirzemehdi/KMPNotifier
-koin-annotations = "2.0.0"                      # https://github.com/InsertKoinIO/koin-annotations
-koin-bom = "4.0.4"                              # https://github.com/InsertKoinIO/koin
-korlibsIo = "6.0.1"                             # https://github.com/korlibs/korlibs-io
-kotlin = "2.1.20"                               # https://kotlinlang.org/docs/releases.html
+koin-annotations = "2.1.0"                      # https://github.com/InsertKoinIO/koin-annotations
+koin-bom = "4.1.0"                              # https://github.com/InsertKoinIO/koin
+korlibsIo = "6.0.2"                             # https://github.com/korlibs/korlibs-io
+kotlin = "2.2.0"                                # https://kotlinlang.org/docs/releases.html
 kotlinx-datetime = "0.6.2"                      # https://github.com/Kotlin/kotlinx-datetime
-kotlinxSerializationCsv = "0.0.20"              # https://github.com/hfhbd/kotlinx-serialization-csv
-ksp = "2.1.20-2.0.1"                            # https://github.com/google/ksp
-ktor = "3.1.3"                                  # https://github.com/ktorio/ktor
+kotlinxSerializationCsv = "0.0.22"              # https://github.com/hfhbd/kotlinx-serialization-csv
+ksp = "2.2.0-2.0.2"                             # https://github.com/google/ksp
+ktor = "3.2.1"                                  # https://github.com/ktorio/ktor
 mlkit-barcode-scanning = "17.3.0"               # https://developers.google.com/ml-kit/vision/barcode-scanning/android
 moko = "0.19.1"                                 # https://github.com/icerockdev/moko-permissions
 qrose = "1.0.1"                                 # https://github.com/alexzhirkevich/qrose
-uri-kmp = "0.0.19"                              # https://github.com/eygraber/uri-kmp
-zoomable = "2.7.0"                              # https://github.com/usuiat/Zoomable
+uri-kmp = "0.0.20"                              # https://github.com/eygraber/uri-kmp
+zoomable = "2.8.1"                              # https://github.com/usuiat/Zoomable
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }

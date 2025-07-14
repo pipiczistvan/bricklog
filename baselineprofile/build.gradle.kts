@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ManagedVirtualDevice
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.test)
@@ -6,22 +7,26 @@ plugins {
     alias(libs.plugins.baselineprofile)
 }
 
+kotlin {
+    target {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
+}
+
 android {
     namespace = "hu.piware.bricklog.baselineprofile"
-    compileSdk = 34
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
     defaultConfig {
-        minSdk = 28
-        targetSdk = 34
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,7 +38,7 @@ android {
     // This code creates the gradle managed device used to generate baseline profiles.
     // To use GMD please invoke generation through the command line:
     // ./gradlew :composeApp:generateBaselineProfile
-    testOptions.managedDevices.devices {
+    testOptions.managedDevices.allDevices {
         create<ManagedVirtualDevice>("pixel6Api34") {
             device = "Pixel 6"
             apiLevel = 34

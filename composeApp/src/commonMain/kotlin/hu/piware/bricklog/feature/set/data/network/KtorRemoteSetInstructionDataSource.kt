@@ -20,7 +20,7 @@ private const val BASE_URL = "https://brickset.com/api/v3.asmx/getInstructions"
 
 @Single
 class KtorRemoteSetInstructionDataSource(
-    @BricksetHttpClient private val httpClient: HttpClient,
+    @param:BricksetHttpClient private val httpClient: HttpClient,
 ) : RemoteSetInstructionDataSource {
 
     override suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Remote> {

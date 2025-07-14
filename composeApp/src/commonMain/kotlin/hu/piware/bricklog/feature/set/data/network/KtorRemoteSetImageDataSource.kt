@@ -20,7 +20,7 @@ private const val BASE_URL = "https://brickset.com/api/v3.asmx/getAdditionalImag
 
 @Single
 class KtorRemoteSetImageDataSource(
-    @BricksetHttpClient private val httpClient: HttpClient,
+    @param:BricksetHttpClient private val httpClient: HttpClient,
 ) : RemoteSetImageDataSource {
 
     override suspend fun getAdditionalImages(setId: Int): Result<List<Image>, DataError.Remote> {

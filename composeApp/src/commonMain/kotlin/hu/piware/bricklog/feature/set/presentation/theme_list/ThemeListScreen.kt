@@ -66,7 +66,6 @@ fun ThemeListScreenRoot(
             when (action) {
                 is ThemeListAction.OnBackClick -> onBackClick()
                 is ThemeListAction.OnSearchSets -> onSearchSets(action.arguments)
-                else -> Unit
             }
             viewModel.onAction(action)
         }

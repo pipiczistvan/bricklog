@@ -18,7 +18,7 @@ import kotlin.time.measureTimedValue
 
 @Single
 class KtorRemoteSetDataSource(
-    @DownloadHttpClient private val httpClient: HttpClient,
+    @param:DownloadHttpClient private val httpClient: HttpClient,
 ) : RemoteSetDataSource {
     private val logger = Logger.withTag("KtorRemoteSetDataSource")
 
