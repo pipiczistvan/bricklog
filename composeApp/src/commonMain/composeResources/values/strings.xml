@@ -30,6 +30,8 @@
     <string name="feature_set_dashboard_navigation_drawer_btn_logout">Log Out</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_notification_settings">Notification Settings</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_reset_sets">Reset set data to %1$s</string>
+    <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Set data update date</string>
+    <string name="feature_set_dashboard_navigation_drawer_label_set_update_never">never</string>
     <string name="feature_set_dashboard_navigation_drawer_title_collections">Collections</string>
     <string name="feature_set_dashboard_navigation_drawer_title_developer_tools">Developer Tools</string>
     <string name="feature_set_dashboard_navigation_drawer_title_settings">Settings</string>

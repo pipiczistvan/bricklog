@@ -26,6 +26,7 @@ import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerState
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
@@ -69,6 +70,7 @@ class DashboardViewModel(
     private val watchCurrentUser: WatchCurrentUser,
     private val logOutUser: LogOutUser,
     private val deleteUserData: DeleteUserData,
+    private val watchSetUpdateInfo: WatchSetUpdateInfo,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -99,6 +101,7 @@ class DashboardViewModel(
     val navigationDrawerState = _navigationDrawerState
         .asStateFlowIn(viewModelScope) {
             observeCollections()
+            observeSetUpdateInfo()
         }
 
     fun onAction(action: DashboardAction) {
@@ -255,6 +258,12 @@ class DashboardViewModel(
     private fun observeCollections() {
         watchCollections()
             .onEach { collections -> _navigationDrawerState.update { it.copy(collections = collections) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeSetUpdateInfo() {
+        watchSetUpdateInfo()
+            .onEach { info -> _navigationDrawerState.update { it.copy(setUpdateInfo = info) } }
             .launchIn(viewModelScope)
     }
 

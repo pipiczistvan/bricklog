@@ -6,14 +6,19 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
+import hu.piware.bricklog.feature.set.domain.model.DataType
+import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
+import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
+import kotlinx.datetime.Clock
 import org.koin.core.annotation.Single
 
 @Single
 class UpdateSets(
     private val dataServiceRepository: DataServiceRepository,
     private val setRepository: SetRepository,
+    private val updateInfoRepository: UpdateInfoRepository,
 ) {
     private val logger = Logger.withTag("UpdateSets")
 
@@ -37,6 +42,14 @@ class UpdateSets(
             setRepository.updateSets(batch.fileUploads)
                 .onError { return it }
         }
+
+        logger.i { "Storing update info date" }
+        updateInfoRepository.storeUpdateInfo(
+            UpdateInfo(
+                dataType = DataType.SET_DATA,
+                lastUpdated = Clock.System.now()
+            )
+        ).onError { return it }
 
         logger.i { "Updating sets finished" }
         return Result.Success(Unit)

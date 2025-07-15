@@ -59,13 +59,17 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_reset_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_never
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_collections
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
+import hu.piware.bricklog.feature.core.presentation.util.formatDateTime
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.util.BuildConfig
@@ -117,6 +121,18 @@ fun DashboardNavigationDrawerSheet(
                 drawerState = drawerState, onAction = onAction
             )
         }
+
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
+        )
+
+        SetUpdateInfoSection(
+            updateInfo = state.setUpdateInfo
+        )
 
         Spacer(modifier = Modifier.navigationBarsPadding())
     }
@@ -337,6 +353,25 @@ private fun NavigationSectionButton(
         },
         badge = trailingIcon
     )
+}
+
+@Composable
+private fun SetUpdateInfoSection(
+    updateInfo: UpdateInfo?,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_info))
+        if (updateInfo != null) {
+            Text(formatDateTime(updateInfo.lastUpdated.toLocalDateTime(TimeZone.currentSystemDefault())))
+        } else {
+            Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_never))
+        }
+    }
 }
 
 @Preview
