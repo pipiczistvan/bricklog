@@ -55,6 +55,7 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation-compose" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose-multiplatform" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-csv = { module = "app.softwork:kotlinx-serialization-csv", version.ref = "kotlinxSerializationCsv" }
 

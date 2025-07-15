@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.datastore)
             implementation(libs.androidx.datastore.preferences)
+            implementation(libs.compose.ui.backhandler)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.csv)
 

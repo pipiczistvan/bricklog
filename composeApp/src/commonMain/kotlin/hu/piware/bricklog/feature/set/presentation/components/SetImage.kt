@@ -1,9 +1,13 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package hu.piware.bricklog.feature.set.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.layout.ContentScale
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.lego_brick_2x3
@@ -12,7 +16,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import hu.piware.bricklog.feature.core.presentation.navigation.BackHandler
 import hu.piware.bricklog.feature.set.domain.model.Image
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.ScrollGesturePropagation

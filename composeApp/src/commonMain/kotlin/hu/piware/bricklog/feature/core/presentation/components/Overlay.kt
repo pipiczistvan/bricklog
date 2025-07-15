@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalComposeUiApi::class)
 
 package hu.piware.bricklog.feature.core.presentation.components
 
@@ -12,13 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_login
-import hu.piware.bricklog.feature.core.presentation.navigation.BackHandler
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

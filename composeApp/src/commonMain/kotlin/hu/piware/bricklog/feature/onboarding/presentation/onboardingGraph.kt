@@ -1,10 +1,13 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package hu.piware.bricklog.feature.onboarding.presentation
 
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import hu.piware.bricklog.feature.core.presentation.navigation.BackHandler
 import hu.piware.bricklog.feature.onboarding.presentation.data_fetch.DataFetchScreenRoot
 import hu.piware.bricklog.feature.onboarding.presentation.dispatcher.DispatcherScreenRoot
 import hu.piware.bricklog.feature.set.presentation.SetRoute
