@@ -5,8 +5,8 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.delete_user_data_success
-import bricklog.composeapp.generated.resources.logout_success
+import bricklog.composeapp.generated.resources.feature_user_delete_user_data_message_success
+import bricklog.composeapp.generated.resources.feature_user_logout_message_success
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
@@ -153,7 +153,7 @@ class DashboardViewModel(
 
             DashboardNavigationDrawerAction.OnLogoutConfirm -> viewModelScope.launch {
                 logOutUser()
-                    .showSnackbarOnSuccess(Res.string.logout_success)
+                    .showSnackbarOnSuccess(Res.string.feature_user_logout_message_success)
                     .showSnackbarOnError()
             }
 
@@ -172,7 +172,7 @@ class DashboardViewModel(
 
             DashboardNavigationDrawerAction.OnDeleteUserConfirm -> viewModelScope.launch {
                 deleteUserData()
-                    .showSnackbarOnSuccess(Res.string.delete_user_data_success)
+                    .showSnackbarOnSuccess(Res.string.feature_user_delete_user_data_message_success)
                     .showSnackbarOnError()
             }
 

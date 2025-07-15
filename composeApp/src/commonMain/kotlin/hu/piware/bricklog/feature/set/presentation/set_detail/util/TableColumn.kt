@@ -12,20 +12,20 @@ import androidx.compose.material.icons.filled.Tag
 import androidx.compose.ui.graphics.vector.ImageVector
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.arrow_range
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_depth
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_exit_date
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_height
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_launch_date
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_minifigures
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_number
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_pieces
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_price_eu
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_price_us
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_weight
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_width
+import bricklog.composeapp.generated.resources.feature_set_detail_table_label_year
 import bricklog.composeapp.generated.resources.lego_brick_1x1
 import bricklog.composeapp.generated.resources.lego_figure_head
-import bricklog.composeapp.generated.resources.set_details_depth
-import bricklog.composeapp.generated.resources.set_details_eu_price
-import bricklog.composeapp.generated.resources.set_details_exit_date
-import bricklog.composeapp.generated.resources.set_details_height
-import bricklog.composeapp.generated.resources.set_details_launch_date
-import bricklog.composeapp.generated.resources.set_details_minifigures
-import bricklog.composeapp.generated.resources.set_details_number
-import bricklog.composeapp.generated.resources.set_details_pieces
-import bricklog.composeapp.generated.resources.set_details_us_price
-import bricklog.composeapp.generated.resources.set_details_weight
-import bricklog.composeapp.generated.resources.set_details_width
-import bricklog.composeapp.generated.resources.set_details_year
 import bricklog.composeapp.generated.resources.weight
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.EUPrice
@@ -57,22 +57,22 @@ sealed class TableColumn(
 fun createFirstSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_number,
+            titleRes = Res.string.feature_set_detail_table_label_number,
             data = setDetails.setNumberWithVariant,
             icon = Icons.Default.Tag
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_year,
+            titleRes = Res.string.feature_set_detail_table_label_year,
             data = setDetails.set.year?.toString(),
             icon = Icons.Default.CalendarToday
         ),
         TableColumn.DrawableTableColumn(
-            titleRes = Res.string.set_details_pieces,
+            titleRes = Res.string.feature_set_detail_table_label_pieces,
             data = setDetails.set.pieces?.toString(),
             drawableRes = Res.drawable.lego_brick_1x1
         ),
         TableColumn.DrawableTableColumn(
-            titleRes = Res.string.set_details_minifigures,
+            titleRes = Res.string.feature_set_detail_table_label_minifigures,
             data = setDetails.set.minifigs?.toString(),
             drawableRes = Res.drawable.lego_figure_head
         )
@@ -82,22 +82,22 @@ fun createFirstSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> 
 fun createSecondSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.DrawableTableColumn(
-            titleRes = Res.string.set_details_width,
+            titleRes = Res.string.feature_set_detail_table_label_width,
             data = setDetails.set.width?.let { "${round(it * 10) / 10.0} cm" },
             drawableRes = Res.drawable.arrow_range
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_height,
+            titleRes = Res.string.feature_set_detail_table_label_height,
             data = setDetails.set.height?.let { "${round(it * 10) / 10.0} cm" },
             icon = Icons.Default.Height
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_depth,
+            titleRes = Res.string.feature_set_detail_table_label_depth,
             data = setDetails.set.depth?.let { "${round(it * 10) / 10.0} cm" },
             icon = Icons.Default.OpenInFull
         ),
         TableColumn.DrawableTableColumn(
-            titleRes = Res.string.set_details_weight,
+            titleRes = Res.string.feature_set_detail_table_label_weight,
             data = setDetails.set.weight?.let { "${round(it * 10) / 10.0} kg" },
             drawableRes = Res.drawable.weight
         )
@@ -107,22 +107,22 @@ fun createSecondSetDetailTableColumns(setDetails: SetDetails): List<TableColumn>
 fun createThirdSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> {
     return listOf(
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_launch_date,
+            titleRes = Res.string.feature_set_detail_table_label_launch_date,
             data = setDetails.localLaunchDate?.let { formatDate(it) },
             icon = Icons.Default.EventAvailable
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_exit_date,
+            titleRes = Res.string.feature_set_detail_table_label_exit_date,
             data = setDetails.localExitDate?.let { formatDate(it) },
             icon = Icons.Default.EventBusy
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_eu_price,
+            titleRes = Res.string.feature_set_detail_table_label_price_eu,
             data = setDetails.EUPrice?.let { "€ ${round(it * 100) / 100}" },
             icon = Icons.Default.EuroSymbol
         ),
         TableColumn.ImageVectorTableColumn(
-            titleRes = Res.string.set_details_us_price,
+            titleRes = Res.string.feature_set_detail_table_label_price_us,
             data = setDetails.set.USPrice?.let { "$ ${round(it * 100) / 100}" },
             icon = Icons.Default.AttachMoney
         )

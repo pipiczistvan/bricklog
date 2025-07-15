@@ -44,9 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.barcode_ean
-import bricklog.composeapp.generated.resources.barcode_upc
-import bricklog.composeapp.generated.resources.go_back
+import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_ean
+import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_upc
+import bricklog.composeapp.generated.resources.navigation_go_back
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
@@ -125,7 +125,7 @@ private fun SetDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.go_back),
+                            contentDescription = stringResource(Res.string.navigation_go_back),
                             tint = Color.Black
                         )
                     }
@@ -147,7 +147,7 @@ private fun SetDetailScreen(
                     ) {
                         Icon(
                             imageVector = if (state.setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
-                            contentDescription = stringResource(Res.string.go_back),
+                            contentDescription = stringResource(Res.string.navigation_go_back),
                             tint = Color.Black
                         )
                     }
@@ -288,7 +288,7 @@ private fun SetDetails(
 
         setDetails.set.barcodeEAN?.let {
             TitledSetDetail(
-                title = stringResource(Res.string.barcode_ean)
+                title = stringResource(Res.string.feature_set_detail_label_barcode_ean)
             ) {
                 SetBarcode(
                     barcode = it,
@@ -303,7 +303,7 @@ private fun SetDetails(
 
         setDetails.set.barcodeUPC?.let {
             TitledSetDetail(
-                title = stringResource(Res.string.barcode_upc)
+                title = stringResource(Res.string.feature_set_detail_label_barcode_upc)
             ) {
                 SetBarcode(
                     barcode = it,

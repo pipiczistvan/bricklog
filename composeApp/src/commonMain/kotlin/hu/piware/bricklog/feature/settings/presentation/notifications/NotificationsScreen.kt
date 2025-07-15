@@ -33,12 +33,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.notification_settings_general
-import bricklog.composeapp.generated.resources.notification_settings_new_sets
-import bricklog.composeapp.generated.resources.notification_settings_permission_description
-import bricklog.composeapp.generated.resources.notification_settings_permission_open_settings
-import bricklog.composeapp.generated.resources.notification_settings_permission_title
-import bricklog.composeapp.generated.resources.notification_settings_title
+import bricklog.composeapp.generated.resources.feature_settings_notifications_btn_settings
+import bricklog.composeapp.generated.resources.feature_settings_notifications_label_permission
+import bricklog.composeapp.generated.resources.feature_settings_notifications_title
+import bricklog.composeapp.generated.resources.feature_settings_notifications_title_general
+import bricklog.composeapp.generated.resources.feature_settings_notifications_title_new_items
+import bricklog.composeapp.generated.resources.feature_settings_notifications_title_permission
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.util.generalState
@@ -78,7 +78,7 @@ private fun NotificationsScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(Res.string.notification_settings_title)) },
+                title = { Text(text = stringResource(Res.string.feature_settings_notifications_title)) },
                 navigationIcon = {
                     IconButton(onClick = { onAction(NotificationsAction.OnBackClick) }) {
                         Icon(
@@ -138,7 +138,7 @@ private fun GeneralNotificationPreferences(
                     }
                 }
             )
-            Text(text = stringResource(Res.string.notification_settings_general))
+            Text(text = stringResource(Res.string.feature_settings_notifications_title_general))
         }
 
         Column(
@@ -153,7 +153,7 @@ private fun GeneralNotificationPreferences(
                     checked = preferences.newSets,
                     onCheckedChange = { onChange(preferences.copy(newSets = it)) }
                 )
-                Text(text = stringResource(Res.string.notification_settings_new_sets))
+                Text(text = stringResource(Res.string.feature_settings_notifications_title_new_items))
             }
         }
     }
@@ -170,18 +170,18 @@ private fun NotificationSettingsCard(
                 .padding(8.dp)
         ) {
             Text(
-                text = stringResource(Res.string.notification_settings_permission_title),
+                text = stringResource(Res.string.feature_settings_notifications_title_permission),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(Res.string.notification_settings_permission_description)
+                text = stringResource(Res.string.feature_settings_notifications_label_permission)
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onButtonClick
             ) {
-                Text(stringResource(Res.string.notification_settings_permission_open_settings))
+                Text(stringResource(Res.string.feature_settings_notifications_btn_settings))
             }
         }
     }

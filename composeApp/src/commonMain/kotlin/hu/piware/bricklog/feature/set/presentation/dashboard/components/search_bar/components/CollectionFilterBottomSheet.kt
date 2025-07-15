@@ -31,7 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.collection_filter_sheet_title
+import bricklog.composeapp.generated.resources.feature_set_search_collection_filter_sheet_title
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
@@ -95,7 +95,7 @@ private fun CollectionFilterSheetContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.collection_filter_sheet_title),
+            title = stringResource(Res.string.feature_set_search_collection_filter_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss,
             primaryActionIcon = Icons.Default.Replay,

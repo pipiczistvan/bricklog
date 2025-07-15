@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_search_field_hint
 import bricklog.composeapp.generated.resources.ic_barcode_scanner
-import bricklog.composeapp.generated.resources.search_hint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -67,7 +67,7 @@ fun SearchBarInputField(
             },
             expanded = expanded,
             onExpandedChange = onExpandedChange,
-            placeholder = { Text(text = stringResource(Res.string.search_hint)) },
+            placeholder = { Text(text = stringResource(Res.string.feature_set_search_field_hint)) },
             leadingIcon = {
                 if (!expanded) {
                     IconButton(

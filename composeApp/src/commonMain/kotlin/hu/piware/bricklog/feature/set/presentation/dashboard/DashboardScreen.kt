@@ -32,12 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.dashboard_greetings
-import bricklog.composeapp.generated.resources.dashboard_section_arriving_sets
-import bricklog.composeapp.generated.resources.dashboard_section_latest_releases
-import bricklog.composeapp.generated.resources.dashboard_section_latest_sets
-import bricklog.composeapp.generated.resources.dashboard_section_retiring_sets
-import bricklog.composeapp.generated.resources.dashboard_theme_carousel_title
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_arriving_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_greetings
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_releases
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_retiring_sets
+import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
@@ -243,7 +243,7 @@ private fun DashboardScreen(
                                     val themeName = getString(item.contentDescriptionResId)
                                     val title =
                                         getString(
-                                            Res.string.dashboard_theme_carousel_title,
+                                            Res.string.feature_set_detail_title_by_theme,
                                             themeName
                                         )
 
@@ -316,7 +316,7 @@ private fun Greetings(
         modifier = modifier.padding(Dimens.MediumPadding.size)
     ) {
         Text(
-            text = stringResource(Res.string.dashboard_greetings),
+            text = stringResource(Res.string.feature_set_dashboard_title_greetings),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
@@ -340,7 +340,7 @@ private fun FeaturedSets(
         verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
     ) {
         FeaturedSetsRow(
-            title = stringResource(Res.string.dashboard_section_latest_sets),
+            title = stringResource(Res.string.feature_set_dashboard_title_latest_sets),
             onDashboardAction = onAction,
             sets = state.latestSets,
             filterOverrides = latestSetsFilter,
@@ -348,7 +348,7 @@ private fun FeaturedSets(
         )
 
         FeaturedSetsRow(
-            title = stringResource(Res.string.dashboard_section_latest_releases),
+            title = stringResource(Res.string.feature_set_dashboard_title_latest_releases),
             onDashboardAction = onAction,
             sets = state.latestReleases,
             filterOverrides = latestReleasesFilter,
@@ -356,7 +356,7 @@ private fun FeaturedSets(
         )
 
         FeaturedSetsRow(
-            title = stringResource(Res.string.dashboard_section_arriving_sets),
+            title = stringResource(Res.string.feature_set_dashboard_title_arriving_sets),
             onDashboardAction = onAction,
             sets = state.arrivingSets,
             filterOverrides = arrivingSetsFilter,
@@ -364,7 +364,7 @@ private fun FeaturedSets(
         )
 
         FeaturedSetsRow(
-            title = stringResource(Res.string.dashboard_section_retiring_sets),
+            title = stringResource(Res.string.feature_set_dashboard_title_retiring_sets),
             onDashboardAction = onAction,
             sets = state.retiringSets,
             filterOverrides = retiringSetsFilter,

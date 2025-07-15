@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.changelog_title
+import bricklog.composeapp.generated.resources.feature_set_dashboard_changelog_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.presentation.changelog.components.ReleaseItem
 import hu.piware.bricklog.mock.PreviewData
@@ -60,7 +60,7 @@ private fun ChangelogScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(Res.string.changelog_title))
+                    Text(stringResource(Res.string.feature_set_dashboard_changelog_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(ChangelogAction.OnBackClick) }) {

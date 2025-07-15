@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.license_title
+import bricklog.composeapp.generated.resources.feature_settings_license_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
@@ -56,7 +56,7 @@ private fun LicenseScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(Res.string.license_title))
+                    Text(stringResource(Res.string.feature_settings_license_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(LicenseAction.OnBackClick) }) {

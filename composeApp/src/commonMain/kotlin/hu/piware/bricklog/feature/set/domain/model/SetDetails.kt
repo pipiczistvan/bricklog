@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_status_active
-import bricklog.composeapp.generated.resources.set_status_arrives_soon
-import bricklog.composeapp.generated.resources.set_status_future_release
-import bricklog.composeapp.generated.resources.set_status_retired
-import bricklog.composeapp.generated.resources.set_status_retired_soon
-import bricklog.composeapp.generated.resources.set_status_unknown
+import bricklog.composeapp.generated.resources.feature_set_search_status_active
+import bricklog.composeapp.generated.resources.feature_set_search_status_arrives_soon
+import bricklog.composeapp.generated.resources.feature_set_search_status_future_release
+import bricklog.composeapp.generated.resources.feature_set_search_status_retired
+import bricklog.composeapp.generated.resources.feature_set_search_status_retired_soon
+import bricklog.composeapp.generated.resources.feature_set_search_status_unknown
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -47,12 +47,12 @@ const val FUTURE_DAYS_COUNT = 90
 enum class SetStatus(
     val statusRes: StringResource,
 ) {
-    UNKNOWN(Res.string.set_status_unknown),
-    FUTURE_RELEASE(Res.string.set_status_future_release),
-    ARRIVES_SOON(Res.string.set_status_arrives_soon),
-    ACTIVE(Res.string.set_status_active),
-    RETIRED_SOON(Res.string.set_status_retired_soon),
-    RETIRED(Res.string.set_status_retired),
+    UNKNOWN(Res.string.feature_set_search_status_unknown),
+    FUTURE_RELEASE(Res.string.feature_set_search_status_future_release),
+    ARRIVES_SOON(Res.string.feature_set_search_status_arrives_soon),
+    ACTIVE(Res.string.feature_set_search_status_active),
+    RETIRED_SOON(Res.string.feature_set_search_status_retired_soon),
+    RETIRED(Res.string.feature_set_search_status_retired),
 }
 
 val SetStatus.containerColor: Color

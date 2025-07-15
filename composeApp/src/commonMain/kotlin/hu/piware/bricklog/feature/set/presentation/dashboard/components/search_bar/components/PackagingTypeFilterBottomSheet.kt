@@ -31,7 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.packaging_type_filter_sheet_title
+import bricklog.composeapp.generated.resources.feature_set_search_packaging_type_filter_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
@@ -93,7 +93,7 @@ private fun PackagingTypeFilterSheetContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.packaging_type_filter_sheet_title),
+            title = stringResource(Res.string.feature_set_search_packaging_type_filter_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss,
             primaryActionIcon = Icons.Default.Replay,

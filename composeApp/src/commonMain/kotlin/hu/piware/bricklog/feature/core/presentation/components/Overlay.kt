@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_login
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_login
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -33,7 +33,7 @@ fun AuthenticationOverlay(
         content = content,
     ) {
         Button(onClick = onLoginClick) {
-            Text(text = stringResource(Res.string.dashboard_navigation_drawer_item_login))
+            Text(text = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login))
         }
     }
 }

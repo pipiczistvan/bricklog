@@ -21,10 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_description
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_no
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_title
-import bricklog.composeapp.generated.resources.logout_confirm_bottom_sheet_yes
+import bricklog.composeapp.generated.resources.feature_user_logout_confirm_bottom_sheet_btn_cancel
+import bricklog.composeapp.generated.resources.feature_user_logout_confirm_bottom_sheet_btn_confirm
+import bricklog.composeapp.generated.resources.feature_user_logout_confirm_bottom_sheet_label
+import bricklog.composeapp.generated.resources.feature_user_logout_confirm_bottom_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetButton
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -63,7 +63,7 @@ private fun LogoutConfirmationContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.logout_confirm_bottom_sheet_title),
+            title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss
         )
@@ -75,11 +75,11 @@ private fun LogoutConfirmationContent(
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size)
         ) {
-            Text(text = stringResource(Res.string.logout_confirm_bottom_sheet_description))
+            Text(text = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_label))
 
             BottomSheetButton(
                 onClick = onDismiss,
-                title = stringResource(Res.string.logout_confirm_bottom_sheet_no),
+                title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_btn_cancel),
                 icon = Icons.Outlined.Close
             )
 
@@ -88,7 +88,7 @@ private fun LogoutConfirmationContent(
                     onConfirm()
                     onDismiss()
                 },
-                title = stringResource(Res.string.logout_confirm_bottom_sheet_yes),
+                title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_btn_confirm),
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 color = MaterialTheme.colorScheme.error.copy(0.6f)
             )

@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.authentication_google_button
-import bricklog.composeapp.generated.resources.authentication_separator_title
-import bricklog.composeapp.generated.resources.login_button_register
-import bricklog.composeapp.generated.resources.login_title
+import bricklog.composeapp.generated.resources.feature_user_login_btn_google_sign_in
+import bricklog.composeapp.generated.resources.feature_user_login_btn_register
+import bricklog.composeapp.generated.resources.feature_user_login_label_or
+import bricklog.composeapp.generated.resources.feature_user_login_title
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
@@ -83,7 +83,7 @@ fun LoginScreenRoot(
             ) {
                 GoogleSignInButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.authentication_google_button),
+                    text = stringResource(Res.string.feature_user_login_btn_google_sign_in),
                     onClick = ::onClick
                 )
             }
@@ -105,7 +105,7 @@ private fun LoginScreen(
             modifier = modifier,
             topBar = {
                 TopAppBar(
-                    title = { Text(text = stringResource(Res.string.login_title)) },
+                    title = { Text(text = stringResource(Res.string.feature_user_login_title)) },
                     navigationIcon = {
                         IconButton(onClick = { onAction(LoginAction.OnBackClick) }) {
                             Icon(
@@ -116,7 +116,7 @@ private fun LoginScreen(
                     },
                     actions = {
                         TextButton(onClick = { onAction(LoginAction.OnRegisterClick) }) {
-                            Text(text = stringResource(Res.string.login_button_register))
+                            Text(text = stringResource(Res.string.feature_user_login_btn_register))
                         }
                     }
                 )
@@ -161,7 +161,7 @@ private fun LoginOptionSeparator() {
         )
         Text(
             modifier = Modifier.padding(horizontal = Dimens.MediumPadding.size),
-            text = stringResource(Res.string.authentication_separator_title)
+            text = stringResource(Res.string.feature_user_login_label_or)
         )
         HorizontalDivider(
             modifier = Modifier.weight(1f)
@@ -179,7 +179,7 @@ private fun LoginScreenPreview() {
             googleSignInButton = {
                 GoogleSignInButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.authentication_google_button),
+                    text = stringResource(Res.string.feature_user_login_btn_google_sign_in),
                     onClick = {}
                 )
             }

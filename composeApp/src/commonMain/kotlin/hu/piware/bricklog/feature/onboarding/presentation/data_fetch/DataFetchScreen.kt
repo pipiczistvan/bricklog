@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.data_fetch_button_retry
+import bricklog.composeapp.generated.resources.feature_set_onboarding_data_fetch_btn_retry
 import hu.piware.bricklog.App
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -73,7 +73,7 @@ private fun DataFetchScreen(
                 Button(
                     onClick = { onAction(DataFetchAction.OnRetryClick) }
                 ) {
-                    Text(stringResource(Res.string.data_fetch_button_retry))
+                    Text(stringResource(Res.string.feature_set_onboarding_data_fetch_btn_retry))
                 }
             }
         }

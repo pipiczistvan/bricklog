@@ -11,7 +11,6 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.layout.ContentScale
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.lego_brick_2x3
-import bricklog.composeapp.generated.resources.set_cover
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -22,7 +21,6 @@ import net.engawapg.lib.zoomable.ScrollGesturePropagation
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 enum class ImageSize {
     SMALL, REGULAR
@@ -75,7 +73,7 @@ fun SetImage(
                 ) else it
             },
         painter = painter,
-        contentDescription = stringResource(Res.string.set_cover),
+        contentDescription = null,
         contentScale = contentScale
     )
 }

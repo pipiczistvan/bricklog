@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.pull_to_refresh_complete_label
-import bricklog.composeapp.generated.resources.pull_to_refresh_pull_label
-import bricklog.composeapp.generated.resources.pull_to_refresh_refreshing_label
-import bricklog.composeapp.generated.resources.pull_to_refresh_release_label
+import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_refresh_label_complete
+import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_refresh_label_loading
+import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_refresh_label_pull
+import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_refresh_label_release
 import org.jetbrains.compose.resources.StringResource
 
 private const val maxHeight = 100
@@ -99,8 +99,8 @@ private fun PullToRefreshIndicator(
 }
 
 private enum class RefreshIndicatorState(val messageRes: StringResource) {
-    Default(Res.string.pull_to_refresh_complete_label),
-    PullingDown(Res.string.pull_to_refresh_pull_label),
-    ReachedThreshold(Res.string.pull_to_refresh_release_label),
-    Refreshing(Res.string.pull_to_refresh_refreshing_label)
+    Default(Res.string.feature_set_dashboard_pull_to_refresh_label_complete),
+    PullingDown(Res.string.feature_set_dashboard_pull_to_refresh_label_pull),
+    ReachedThreshold(Res.string.feature_set_dashboard_pull_to_refresh_label_release),
+    Refreshing(Res.string.feature_set_dashboard_pull_to_refresh_label_loading)
 }

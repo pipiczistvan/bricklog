@@ -42,8 +42,8 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_list_empty
 import bricklog.composeapp.generated.resources.lego_brick_2x3
-import bricklog.composeapp.generated.resources.no_search_results
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
@@ -217,7 +217,7 @@ private fun EmptySetList(
         Text(
             modifier = Modifier
                 .padding(Dimens.MediumPadding.size),
-            text = stringResource(Res.string.no_search_results),
+            text = stringResource(Res.string.feature_set_list_empty),
             textAlign = TextAlign.Center
         )
     }

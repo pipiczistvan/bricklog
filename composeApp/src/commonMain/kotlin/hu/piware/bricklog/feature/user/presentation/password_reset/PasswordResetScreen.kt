@@ -27,9 +27,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.password_reset_instructions
-import bricklog.composeapp.generated.resources.password_reset_submit_button
-import bricklog.composeapp.generated.resources.password_reset_title
+import bricklog.composeapp.generated.resources.feature_user_password_reset_btn_submit
+import bricklog.composeapp.generated.resources.feature_user_password_reset_label_instructions
+import bricklog.composeapp.generated.resources.feature_user_password_reset_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
@@ -80,7 +80,7 @@ private fun PasswordResetScreen(
             modifier = modifier,
             topBar = {
                 TopAppBar(
-                    title = { Text(text = stringResource(Res.string.password_reset_title)) },
+                    title = { Text(text = stringResource(Res.string.feature_user_password_reset_title)) },
                     navigationIcon = {
                         IconButton(onClick = { onAction(PasswordResetAction.OnBackClick) }) {
                             Icon(
@@ -102,7 +102,7 @@ private fun PasswordResetScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
             ) {
-                Text(text = stringResource(Res.string.password_reset_instructions))
+                Text(text = stringResource(Res.string.feature_user_password_reset_label_instructions))
                 PasswordResetForm(
                     onSubmit = { onAction(PasswordResetAction.OnResetClick(it)) }
                 )
@@ -139,7 +139,7 @@ private fun PasswordResetForm(
         },
         enabled = isFormValid
     ) {
-        Text(text = stringResource(Res.string.password_reset_submit_button))
+        Text(text = stringResource(Res.string.feature_user_password_reset_btn_submit))
     }
 }
 

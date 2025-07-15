@@ -21,10 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.delete_user_data_confirm_description
-import bricklog.composeapp.generated.resources.delete_user_data_confirm_no
-import bricklog.composeapp.generated.resources.delete_user_data_confirm_title
-import bricklog.composeapp.generated.resources.delete_user_data_confirm_yes
+import bricklog.composeapp.generated.resources.feature_user_delete_user_data_confirm_btn_cancel
+import bricklog.composeapp.generated.resources.feature_user_delete_user_data_confirm_btn_confirm
+import bricklog.composeapp.generated.resources.feature_user_delete_user_data_confirm_label
+import bricklog.composeapp.generated.resources.feature_user_delete_user_data_confirm_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetButton
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -63,7 +63,7 @@ private fun DeleteUserConfirmationContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.delete_user_data_confirm_title),
+            title = stringResource(Res.string.feature_user_delete_user_data_confirm_title),
             sheetState = sheetState,
             onDismiss = onDismiss
         )
@@ -75,11 +75,11 @@ private fun DeleteUserConfirmationContent(
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size)
         ) {
-            Text(text = stringResource(Res.string.delete_user_data_confirm_description))
+            Text(text = stringResource(Res.string.feature_user_delete_user_data_confirm_label))
 
             BottomSheetButton(
                 onClick = onDismiss,
-                title = stringResource(Res.string.delete_user_data_confirm_no),
+                title = stringResource(Res.string.feature_user_delete_user_data_confirm_btn_cancel),
                 icon = Icons.Outlined.Close
             )
 
@@ -88,7 +88,7 @@ private fun DeleteUserConfirmationContent(
                     onConfirm()
                     onDismiss()
                 },
-                title = stringResource(Res.string.delete_user_data_confirm_yes),
+                title = stringResource(Res.string.feature_user_delete_user_data_confirm_btn_confirm),
                 icon = Icons.Outlined.DeleteOutline,
                 color = MaterialTheme.colorScheme.error.copy(0.6f)
             )

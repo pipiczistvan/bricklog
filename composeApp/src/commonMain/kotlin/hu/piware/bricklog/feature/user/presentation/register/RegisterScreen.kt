@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.register_button_login
-import bricklog.composeapp.generated.resources.register_title
+import bricklog.composeapp.generated.resources.feature_user_register_btn_login
+import bricklog.composeapp.generated.resources.feature_user_register_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
@@ -76,7 +76,7 @@ private fun RegisterScreen(
             modifier = modifier,
             topBar = {
                 TopAppBar(
-                    title = { Text(text = stringResource(Res.string.register_title)) },
+                    title = { Text(text = stringResource(Res.string.feature_user_register_title)) },
                     navigationIcon = {
                         IconButton(onClick = { onAction(RegisterAction.OnBackClick) }) {
                             Icon(
@@ -87,7 +87,7 @@ private fun RegisterScreen(
                     },
                     actions = {
                         TextButton(onClick = { onAction(RegisterAction.OnLoginClick) }) {
-                            Text(text = stringResource(Res.string.register_button_login))
+                            Text(text = stringResource(Res.string.feature_user_register_btn_login))
                         }
                     }
                 )

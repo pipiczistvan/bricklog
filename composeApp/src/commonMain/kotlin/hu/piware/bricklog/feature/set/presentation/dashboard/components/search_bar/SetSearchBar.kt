@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_search_bar_button_show_all
-import bricklog.composeapp.generated.resources.set_search_bar_search_results
+import bricklog.composeapp.generated.resources.feature_set_search_btn_show_all
+import bricklog.composeapp.generated.resources.feature_set_search_title_results
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarInputField
@@ -106,7 +106,7 @@ private fun Content(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(Res.string.set_search_bar_search_results),
+                text = stringResource(Res.string.feature_set_search_title_results),
                 style = MaterialTheme.typography.titleLarge
             )
             TextButton(
@@ -117,7 +117,7 @@ private fun Content(
                         onAction(
                             SetSearchBarAction.OnShowAllClick(
                                 SetListArguments(
-                                    title = getString(Res.string.set_search_bar_search_results),
+                                    title = getString(Res.string.feature_set_search_title_results),
                                     searchQuery = state.typedQuery
                                 )
                             )
@@ -125,7 +125,7 @@ private fun Content(
                     }
                 }
             ) {
-                Text(stringResource(Res.string.set_search_bar_button_show_all))
+                Text(stringResource(Res.string.feature_set_search_btn_show_all))
             }
         }
         LazyColumn(

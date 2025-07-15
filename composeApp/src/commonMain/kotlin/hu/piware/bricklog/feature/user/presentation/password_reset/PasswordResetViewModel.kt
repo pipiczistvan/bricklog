@@ -3,7 +3,7 @@ package hu.piware.bricklog.feature.user.presentation.password_reset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.password_reset_success
+import bricklog.composeapp.generated.resources.feature_user_password_reset_message_success
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
@@ -41,7 +41,7 @@ class PasswordResetViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             resetPassword(email)
-                .showSnackbarOnSuccess(Res.string.password_reset_success)
+                .showSnackbarOnSuccess(Res.string.feature_user_password_reset_message_success)
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(PasswordResetEvent.EmailSent)

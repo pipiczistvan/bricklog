@@ -33,8 +33,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.collection_edit_create_title
-import bricklog.composeapp.generated.resources.collection_edit_modify_title
+import bricklog.composeapp.generated.resources.feature_collection_edit_title_create
+import bricklog.composeapp.generated.resources.feature_collection_edit_title_modify
 import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionDeleteConfirmDialog
@@ -89,9 +89,9 @@ private fun CollectionEditScreen(
                 title = {
                     Text(
                         if (state.collectionId == 0)
-                            stringResource(Res.string.collection_edit_create_title)
+                            stringResource(Res.string.feature_collection_edit_title_create)
                         else
-                            stringResource(Res.string.collection_edit_modify_title)
+                            stringResource(Res.string.feature_collection_edit_title_modify)
                     )
                 },
                 navigationIcon = {

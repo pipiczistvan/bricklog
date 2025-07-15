@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.go_back
+import bricklog.composeapp.generated.resources.navigation_go_back
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -65,7 +65,7 @@ private fun SetImageScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = stringResource(Res.string.go_back)
+                            contentDescription = stringResource(Res.string.navigation_go_back)
                         )
                     }
                 },

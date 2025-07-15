@@ -38,11 +38,11 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_details_instructions
-import bricklog.composeapp.generated.resources.set_details_instructions_info
-import bricklog.composeapp.generated.resources.set_details_instructions_info_dialog_ok
-import bricklog.composeapp.generated.resources.set_details_instructions_info_dialog_text
-import bricklog.composeapp.generated.resources.set_details_instructions_not_found
+import bricklog.composeapp.generated.resources.feature_set_detail_instructions_btn_info
+import bricklog.composeapp.generated.resources.feature_set_detail_instructions_empty
+import bricklog.composeapp.generated.resources.feature_set_detail_instructions_info_dialog_btn_cancel
+import bricklog.composeapp.generated.resources.feature_set_detail_instructions_info_dialog_label
+import bricklog.composeapp.generated.resources.feature_set_detail_instructions_title
 import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationType
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
 import hu.piware.bricklog.feature.set.domain.model.Instruction
@@ -70,7 +70,7 @@ fun SetInstructionsTable(
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .weight(1f),
-                text = stringResource(Res.string.set_details_instructions),
+                text = stringResource(Res.string.feature_set_detail_instructions_title),
                 fontWeight = FontWeight.Bold
             )
             IconButton(
@@ -80,7 +80,7 @@ fun SetInstructionsTable(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = stringResource(Res.string.set_details_instructions_info)
+                    contentDescription = stringResource(Res.string.feature_set_detail_instructions_btn_info)
                 )
             }
         }
@@ -123,7 +123,7 @@ fun SetInstructionsTable(
                     Text(
                         modifier = Modifier
                             .padding(8.dp),
-                        text = stringResource(Res.string.set_details_instructions_not_found)
+                        text = stringResource(Res.string.feature_set_detail_instructions_empty)
                     )
                 }
             }
@@ -145,7 +145,7 @@ fun SetInstructionsTable(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = stringResource(Res.string.set_details_instructions_info_dialog_text)
+                        text = stringResource(Res.string.feature_set_detail_instructions_info_dialog_label)
                     )
                     Spacer(
                         modifier = Modifier.height(24.dp)
@@ -156,7 +156,7 @@ fun SetInstructionsTable(
                             showInfoDialog = false
                         }
                     ) {
-                        Text(stringResource(Res.string.set_details_instructions_info_dialog_ok))
+                        Text(stringResource(Res.string.feature_set_detail_instructions_info_dialog_btn_cancel))
                     }
                 }
             }

@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.dashboard_section_new_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_sets
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
@@ -156,7 +156,7 @@ private fun observeNotificationEvents(
                     navController.navigate(
                         SetRoute.SetListScreen(
                             arguments = SetListArguments(
-                                title = getString(Res.string.dashboard_section_new_sets),
+                                title = getString(Res.string.feature_set_dashboard_title_new_sets),
                                 filterOverrides = newSetsNotificationFilter.copy(
                                     appearanceDate = DateFilter.Custom(
                                         startDate = event.startDate

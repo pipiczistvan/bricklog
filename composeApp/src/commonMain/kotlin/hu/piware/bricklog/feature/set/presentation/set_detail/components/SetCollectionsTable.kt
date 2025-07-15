@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_details_collections
-import bricklog.composeapp.generated.resources.set_details_collections_not_found
+import bricklog.composeapp.generated.resources.feature_set_detail_collections_empty
+import bricklog.composeapp.generated.resources.feature_set_detail_collections_title
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
@@ -60,7 +60,7 @@ fun SetCollectionsTable(
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .weight(1f),
-                text = stringResource(Res.string.set_details_collections),
+                text = stringResource(Res.string.feature_set_detail_collections_title),
                 fontWeight = FontWeight.Bold
             )
             IconButton(
@@ -101,7 +101,7 @@ fun SetCollectionsTable(
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
-                    text = stringResource(Res.string.set_details_collections_not_found)
+                    text = stringResource(Res.string.feature_set_detail_collections_empty)
                 )
             }
         }

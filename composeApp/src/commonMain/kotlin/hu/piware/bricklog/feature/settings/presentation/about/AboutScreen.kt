@@ -35,24 +35,24 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.about_action_source_changelog
-import bricklog.composeapp.generated.resources.about_action_source_code
-import bricklog.composeapp.generated.resources.about_action_source_code_link
-import bricklog.composeapp.generated.resources.about_action_source_license
-import bricklog.composeapp.generated.resources.about_made_in
-import bricklog.composeapp.generated.resources.about_section_developer_description
-import bricklog.composeapp.generated.resources.about_section_developer_title
-import bricklog.composeapp.generated.resources.about_section_profile_app_name
-import bricklog.composeapp.generated.resources.about_section_profile_build_version
-import bricklog.composeapp.generated.resources.about_section_tools
-import bricklog.composeapp.generated.resources.about_section_tools_framework
-import bricklog.composeapp.generated.resources.about_section_tools_framework_description
-import bricklog.composeapp.generated.resources.about_section_tools_framework_link
-import bricklog.composeapp.generated.resources.about_section_tools_lego_api
-import bricklog.composeapp.generated.resources.about_section_tools_lego_api_description
-import bricklog.composeapp.generated.resources.about_section_tools_lego_api_link
-import bricklog.composeapp.generated.resources.about_title
 import bricklog.composeapp.generated.resources.app_logo
+import bricklog.composeapp.generated.resources.app_name
+import bricklog.composeapp.generated.resources.feature_settings_about_btn_changelog
+import bricklog.composeapp.generated.resources.feature_settings_about_btn_license
+import bricklog.composeapp.generated.resources.feature_settings_about_btn_source_code
+import bricklog.composeapp.generated.resources.feature_settings_about_label_brickset
+import bricklog.composeapp.generated.resources.feature_settings_about_label_build_version
+import bricklog.composeapp.generated.resources.feature_settings_about_label_developer
+import bricklog.composeapp.generated.resources.feature_settings_about_label_kmp
+import bricklog.composeapp.generated.resources.feature_settings_about_label_made_in
+import bricklog.composeapp.generated.resources.feature_settings_about_link_brickset
+import bricklog.composeapp.generated.resources.feature_settings_about_link_kmp
+import bricklog.composeapp.generated.resources.feature_settings_about_link_source_code
+import bricklog.composeapp.generated.resources.feature_settings_about_title
+import bricklog.composeapp.generated.resources.feature_settings_about_title_developed_by
+import bricklog.composeapp.generated.resources.feature_settings_about_title_framework
+import bricklog.composeapp.generated.resources.feature_settings_about_title_lego_api
+import bricklog.composeapp.generated.resources.feature_settings_about_title_tools
 import bricklog.composeapp.generated.resources.github_logo
 import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationType
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
@@ -96,7 +96,7 @@ private fun AboutScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(Res.string.about_title)) },
+                title = { Text(text = stringResource(Res.string.feature_settings_about_title)) },
                 navigationIcon = {
                     IconButton(onClick = { onAction(AboutAction.OnBackClick) }) {
                         Icon(
@@ -151,7 +151,7 @@ private fun ToolsSection(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = stringResource(Res.string.about_section_tools),
+            text = stringResource(Res.string.feature_settings_about_title_tools),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -163,21 +163,21 @@ private fun ToolsSection(
             ) {
                 InfoCard(
                     modifier = Modifier.weight(1f),
-                    title = stringResource(Res.string.about_section_tools_lego_api),
-                    description = stringResource(Res.string.about_section_tools_lego_api_description),
+                    title = stringResource(Res.string.feature_settings_about_title_lego_api),
+                    description = stringResource(Res.string.feature_settings_about_label_brickset),
                     onClick = {
                         scope.launch {
-                            uriHandler.openUri(getString(Res.string.about_section_tools_lego_api_link))
+                            uriHandler.openUri(getString(Res.string.feature_settings_about_link_brickset))
                         }
                     }
                 )
                 InfoCard(
                     modifier = Modifier.weight(1f),
-                    title = stringResource(Res.string.about_section_tools_framework),
-                    description = stringResource(Res.string.about_section_tools_framework_description),
+                    title = stringResource(Res.string.feature_settings_about_title_framework),
+                    description = stringResource(Res.string.feature_settings_about_label_kmp),
                     onClick = {
                         scope.launch {
-                            uriHandler.openUri(getString(Res.string.about_section_tools_framework_link))
+                            uriHandler.openUri(getString(Res.string.feature_settings_about_link_kmp))
                         }
                     }
                 )
@@ -196,12 +196,12 @@ private fun DevelopmentTeamSection(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         InfoCard(
-            title = stringResource(Res.string.about_section_developer_title),
-            description = stringResource(Res.string.about_section_developer_description),
+            title = stringResource(Res.string.feature_settings_about_title_developed_by),
+            description = stringResource(Res.string.feature_settings_about_label_developer),
             onClick = {}
         )
         Text(
-            text = stringResource(Res.string.about_made_in),
+            text = stringResource(Res.string.feature_settings_about_label_made_in),
             style = MaterialTheme.typography.bodyMedium,
         )
     }
@@ -221,10 +221,10 @@ private fun ActionsTable(
             .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
     ) {
         ActionRow(
-            title = stringResource(Res.string.about_action_source_code),
+            title = stringResource(Res.string.feature_settings_about_btn_source_code),
             onClick = {
                 scope.launch {
-                    uriHandler.openUri(getString(Res.string.about_action_source_code_link))
+                    uriHandler.openUri(getString(Res.string.feature_settings_about_link_source_code))
                 }
             },
             startIcon = {
@@ -238,7 +238,7 @@ private fun ActionsTable(
         )
         HorizontalDivider()
         ActionRow(
-            title = stringResource(Res.string.about_action_source_changelog),
+            title = stringResource(Res.string.feature_settings_about_btn_changelog),
             onClick = {
                 onAction(AboutAction.OnChangelogClick)
             },
@@ -252,7 +252,7 @@ private fun ActionsTable(
         )
         HorizontalDivider()
         ActionRow(
-            title = stringResource(Res.string.about_action_source_license),
+            title = stringResource(Res.string.feature_settings_about_btn_license),
             onClick = {
                 onAction(AboutAction.OnLicenseClick)
             },
@@ -283,13 +283,13 @@ private fun AppProfile(
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Column {
             Text(
-                text = stringResource(Res.string.about_section_profile_app_name),
+                text = stringResource(Res.string.app_name),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = stringResource(
-                    Res.string.about_section_profile_build_version,
+                    Res.string.feature_settings_about_label_build_version,
                     BuildConfig.VERSION_NAME,
                     BuildConfig.RELEASE_VERSION,
                     BuildConfig.VERSION_CODE

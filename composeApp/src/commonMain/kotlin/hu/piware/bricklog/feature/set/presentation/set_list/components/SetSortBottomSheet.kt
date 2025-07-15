@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_sort_title
+import bricklog.composeapp.generated.resources.feature_set_search_sort_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
@@ -64,7 +64,7 @@ private fun SetSortSheetContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.set_sort_title),
+            title = stringResource(Res.string.feature_set_search_sort_title),
             sheetState = sheetState,
             onDismiss = onDismiss
         )

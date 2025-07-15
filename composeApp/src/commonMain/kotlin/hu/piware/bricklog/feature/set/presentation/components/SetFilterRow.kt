@@ -17,12 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.set_search_bar_chip_collections
-import bricklog.composeapp.generated.resources.set_search_bar_chip_packaging_types
-import bricklog.composeapp.generated.resources.set_search_bar_chip_release_date
-import bricklog.composeapp.generated.resources.set_search_bar_chip_show_incomplete
-import bricklog.composeapp.generated.resources.set_search_bar_chip_status
-import bricklog.composeapp.generated.resources.set_search_bar_chip_themes
+import bricklog.composeapp.generated.resources.feature_set_search_chip_collections
+import bricklog.composeapp.generated.resources.feature_set_search_chip_packaging_types
+import bricklog.composeapp.generated.resources.feature_set_search_chip_release_date
+import bricklog.composeapp.generated.resources.feature_set_search_chip_show_incomplete
+import bricklog.composeapp.generated.resources.feature_set_search_chip_status
+import bricklog.composeapp.generated.resources.feature_set_search_chip_themes
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.toLocalDateTime
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
@@ -155,7 +155,7 @@ private fun ReleaseDateChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:release_date_chip"),
         title = when (dateFilter) {
-            is DateFilter.AnyTime -> stringResource(Res.string.set_search_bar_chip_release_date)
+            is DateFilter.AnyTime -> stringResource(Res.string.feature_set_search_chip_release_date)
             is DateFilter.Custom -> dateFilter.format()
 
             is DateFilter.OneWeek, DateFilter.OneMonth, DateFilter.OneYear -> stringResource(
@@ -182,7 +182,7 @@ private fun ThemeChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:theme_chip"),
         title = when (selectedThemes.size) {
-            0 -> stringResource(Res.string.set_search_bar_chip_themes)
+            0 -> stringResource(Res.string.feature_set_search_chip_themes)
             1 -> selectedThemes.first()
             else -> "${selectedThemes.first()} + ${selectedThemes.size - 1}"
         },
@@ -202,7 +202,7 @@ private fun PackagingTypeChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:packaging_type_chip"),
         title = when (selectedPackagingTypes.size) {
-            0 -> stringResource(Res.string.set_search_bar_chip_packaging_types)
+            0 -> stringResource(Res.string.feature_set_search_chip_packaging_types)
             1 -> selectedPackagingTypes.first()
             else -> "${selectedPackagingTypes.first()} + ${selectedPackagingTypes.size - 1}"
         },
@@ -222,7 +222,7 @@ private fun StatusChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:status_chip"),
         title = when (selectedStatuses.size) {
-            0 -> stringResource(Res.string.set_search_bar_chip_status)
+            0 -> stringResource(Res.string.feature_set_search_chip_status)
             1 -> stringResource(selectedStatuses.first().statusRes)
             else -> "${stringResource(selectedStatuses.first().statusRes)} + ${selectedStatuses.size - 1}"
         },
@@ -242,7 +242,7 @@ private fun CollectionChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:collection_chip"),
         title = when (selectedCollections.size) {
-            0 -> stringResource(Res.string.set_search_bar_chip_collections)
+            0 -> stringResource(Res.string.feature_set_search_chip_collections)
             1 -> selectedCollections.first().name
             else -> "${selectedCollections.first().name} + ${selectedCollections.size - 1}"
         },
@@ -261,7 +261,7 @@ private fun ShowIncompleteChip(
 ) {
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:show_incomplete_chip"),
-        title = stringResource(Res.string.set_search_bar_chip_show_incomplete),
+        title = stringResource(Res.string.feature_set_search_chip_show_incomplete),
         isDefaultSelected = !show,
         enabled = enabled,
         onClick = { onClick(!show) }

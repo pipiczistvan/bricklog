@@ -34,14 +34,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.authentication_email_placeholder
-import bricklog.composeapp.generated.resources.authentication_email_supporting_text
-import bricklog.composeapp.generated.resources.authentication_email_title
-import bricklog.composeapp.generated.resources.authentication_password_placeholder
-import bricklog.composeapp.generated.resources.authentication_password_supporting_text
-import bricklog.composeapp.generated.resources.authentication_password_title
-import bricklog.composeapp.generated.resources.login_email_password_button
-import bricklog.composeapp.generated.resources.login_forgot_password
+import bricklog.composeapp.generated.resources.feature_user_form_field_email_hint
+import bricklog.composeapp.generated.resources.feature_user_form_field_email_invalid
+import bricklog.composeapp.generated.resources.feature_user_form_field_email_title
+import bricklog.composeapp.generated.resources.feature_user_form_field_password_hint
+import bricklog.composeapp.generated.resources.feature_user_form_field_password_invalid
+import bricklog.composeapp.generated.resources.feature_user_form_field_password_title
+import bricklog.composeapp.generated.resources.feature_user_login_form_btn_submit
+import bricklog.composeapp.generated.resources.feature_user_login_label_forgot_password
 import hu.piware.bricklog.feature.user.presentation.util.isValidEmail
 import hu.piware.bricklog.feature.user.presentation.util.isValidPassword
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -77,7 +77,7 @@ fun EmailPasswordForm(
         Column {
             PasswordField(
                 value = password,
-                supportText = stringResource(Res.string.authentication_password_supporting_text),
+                supportText = stringResource(Res.string.feature_user_form_field_password_invalid),
                 onValueChange = { password = it },
                 validate = validatePassword,
                 onValidate = { isPasswordValid = it }
@@ -89,7 +89,7 @@ fun EmailPasswordForm(
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     TextButton(onClick = onPasswordResetClick) {
-                        Text(text = stringResource(Res.string.login_forgot_password))
+                        Text(text = stringResource(Res.string.feature_user_login_label_forgot_password))
                     }
                 }
             }
@@ -109,7 +109,7 @@ fun EmailPasswordForm(
             },
             enabled = isFormValid
         ) {
-            Text(text = stringResource(Res.string.login_email_password_button))
+            Text(text = stringResource(Res.string.feature_user_login_form_btn_submit))
         }
     }
 }
@@ -144,8 +144,8 @@ fun EmailField(
             },
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(text = stringResource(Res.string.authentication_email_placeholder)) },
-        label = { Text(text = stringResource(Res.string.authentication_email_title)) },
+        placeholder = { Text(text = stringResource(Res.string.feature_user_form_field_email_hint)) },
+        label = { Text(text = stringResource(Res.string.feature_user_form_field_email_title)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
@@ -158,7 +158,7 @@ fun EmailField(
         ),
         supportingText = {
             if (!isValid) {
-                Text(text = stringResource(Res.string.authentication_email_supporting_text))
+                Text(text = stringResource(Res.string.feature_user_form_field_email_invalid))
             }
         },
         isError = !isValid
@@ -197,8 +197,8 @@ fun PasswordField(
             },
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(text = stringResource(Res.string.authentication_password_placeholder)) },
-        label = { Text(text = stringResource(Res.string.authentication_password_title)) },
+        placeholder = { Text(text = stringResource(Res.string.feature_user_form_field_password_hint)) },
+        label = { Text(text = stringResource(Res.string.feature_user_form_field_password_title)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,

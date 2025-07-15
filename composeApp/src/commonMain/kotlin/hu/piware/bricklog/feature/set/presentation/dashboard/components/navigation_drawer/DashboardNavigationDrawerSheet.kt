@@ -53,16 +53,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_about
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_appearance
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_login
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_logout
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_notification_settings
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_item_reset_sets
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_collections
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_developer
-import bricklog.composeapp.generated.resources.dashboard_navigation_drawer_section_settings
-import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_about
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_appearance
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_login
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_reset_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_collections
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
@@ -129,7 +129,7 @@ private fun CollectionsSection(
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
-        title = stringResource(Res.string.dashboard_navigation_drawer_section_collections),
+        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_collections),
         trailingIcon = {
             IconButton(
                 onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(0)) }) {
@@ -180,15 +180,15 @@ private fun SettingsSection(
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
-        title = stringResource(Res.string.dashboard_navigation_drawer_section_settings)
+        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_settings)
     ) {
         val isLoggedIn = currentUser != null
         NavigationSectionButton(
             state = drawerState,
             title = if (isLoggedIn)
-                stringResource(Res.string.dashboard_navigation_drawer_item_logout)
+                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_logout)
             else
-                stringResource(Res.string.dashboard_navigation_drawer_item_login),
+                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login),
             onClick = { onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick) },
             icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
             trailingIcon = {
@@ -204,19 +204,19 @@ private fun SettingsSection(
         )
         NavigationSectionButton(
             state = drawerState,
-            title = stringResource(Res.string.dashboard_navigation_drawer_item_notification_settings),
+            title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_notification_settings),
             onClick = { onAction(DashboardNavigationDrawerAction.OnNotificationSettingsClick) },
             icon = Icons.Outlined.Notifications,
         )
         NavigationSectionButton(
             state = drawerState,
-            title = stringResource(Res.string.dashboard_navigation_drawer_item_appearance),
+            title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_appearance),
             onClick = { onAction(DashboardNavigationDrawerAction.OnAppearanceClick) },
             icon = Icons.Outlined.Palette,
         )
         NavigationSectionButton(
             state = drawerState,
-            title = stringResource(Res.string.dashboard_navigation_drawer_item_about),
+            title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_about),
             onClick = { onAction(DashboardNavigationDrawerAction.OnAboutClick) },
             icon = Icons.Outlined.Info,
         )
@@ -229,7 +229,7 @@ private fun DeveloperSection(
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
-        title = stringResource(Res.string.dashboard_navigation_drawer_section_developer)
+        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_developer_tools)
     ) {
         val yesterday = remember { Clock.System.now() - 1.days }
         val datePickerState = rememberDatePickerState(
@@ -242,7 +242,7 @@ private fun DeveloperSection(
 
         NavigationSectionButton(
             state = drawerState, title = stringResource(
-                Res.string.dashboard_navigation_drawer_item_reset_sets,
+                Res.string.feature_set_dashboard_navigation_drawer_btn_reset_sets,
                 if (selectedDate != null) formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
                 else "?"
             ), onClick = {
@@ -266,7 +266,7 @@ private fun DeveloperSection(
                     onClick = {
                         showDatePicker = false
                     }) {
-                    Text(stringResource(Res.string.date_range_picker_button_confirm))
+                    Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_confirm))
                 }
             }) {
                 DatePicker(

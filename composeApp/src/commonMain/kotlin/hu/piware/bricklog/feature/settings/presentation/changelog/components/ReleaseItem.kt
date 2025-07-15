@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.changelog_build_version
+import bricklog.composeapp.generated.resources.feature_set_dashboard_changelog_title_build_version
 import hu.piware.bricklog.feature.settings.domain.model.Change
 import hu.piware.bricklog.feature.settings.domain.model.ChangeType
 import hu.piware.bricklog.feature.settings.domain.model.Release
@@ -36,7 +36,7 @@ fun ReleaseItem(
     ) {
         Text(
             text = stringResource(
-                Res.string.changelog_build_version,
+                Res.string.feature_set_dashboard_changelog_title_build_version,
                 release.version,
                 release.build
             ),

@@ -1,16 +1,16 @@
 package hu.piware.bricklog.feature.set.domain.model
 
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.search_filter_date_any_time
-import bricklog.composeapp.generated.resources.search_filter_date_custom_range
-import bricklog.composeapp.generated.resources.search_filter_date_one_month
-import bricklog.composeapp.generated.resources.search_filter_date_one_week
-import bricklog.composeapp.generated.resources.search_filter_date_one_year
-import bricklog.composeapp.generated.resources.set_sort_appear_date_descending
-import bricklog.composeapp.generated.resources.set_sort_launch_date_ascending
-import bricklog.composeapp.generated.resources.set_sort_launch_date_descending
-import bricklog.composeapp.generated.resources.set_sort_retiring_date_ascending
-import bricklog.composeapp.generated.resources.set_sort_retiring_date_descending
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_any_time
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_custom_range
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_month
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_week
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_year
+import bricklog.composeapp.generated.resources.feature_set_search_sort_appear_date_descending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_ascending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_descending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_ascending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_descending
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
@@ -35,19 +35,19 @@ enum class SetSortOption(
     val titleRes: StringResource,
 ) {
     LAUNCH_DATE_ASCENDING(
-        titleRes = Res.string.set_sort_launch_date_ascending
+        titleRes = Res.string.feature_set_search_sort_launch_date_ascending
     ),
     LAUNCH_DATE_DESCENDING(
-        titleRes = Res.string.set_sort_launch_date_descending
+        titleRes = Res.string.feature_set_search_sort_launch_date_descending
     ),
     RETIRING_DATE_ASCENDING(
-        titleRes = Res.string.set_sort_retiring_date_ascending
+        titleRes = Res.string.feature_set_search_sort_retiring_date_ascending
     ),
     RETIRING_DATE_DESCENDING(
-        titleRes = Res.string.set_sort_retiring_date_descending
+        titleRes = Res.string.feature_set_search_sort_retiring_date_descending
     ),
     APPEARANCE_DATE_DESCENDING(
-        titleRes = Res.string.set_sort_appear_date_descending
+        titleRes = Res.string.feature_set_search_sort_appear_date_descending
     ),
 }
 
@@ -76,18 +76,18 @@ enum class DateFilterOption(
     val titleRes: StringResource,
 ) {
     ANY_TIME(
-        titleRes = Res.string.search_filter_date_any_time
+        titleRes = Res.string.feature_set_search_date_filter_btn_any_time
     ),
     ONE_WEEK(
-        titleRes = Res.string.search_filter_date_one_week
+        titleRes = Res.string.feature_set_search_date_filter_btn_one_week
     ),
     ONE_MONTH(
-        titleRes = Res.string.search_filter_date_one_month
+        titleRes = Res.string.feature_set_search_date_filter_btn_one_month
     ),
     ONE_YEAR(
-        titleRes = Res.string.search_filter_date_one_year
+        titleRes = Res.string.feature_set_search_date_filter_btn_one_year
     ),
     CUSTOM(
-        titleRes = Res.string.search_filter_date_custom_range
+        titleRes = Res.string.feature_set_search_date_filter_btn_custom_range
     )
 }

@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.collection_icon_sheet_title
+import bricklog.composeapp.generated.resources.feature_collection_edit_icon_sheet_title
 import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetOption
@@ -62,7 +62,7 @@ private fun CollectionIconSheetContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = stringResource(Res.string.collection_icon_sheet_title),
+            title = stringResource(Res.string.feature_collection_edit_icon_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss
         )

@@ -17,9 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
-import bricklog.composeapp.generated.resources.date_range_picker_button_dismiss
-import bricklog.composeapp.generated.resources.date_range_picker_title
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_date_range
+import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_dismiss
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -44,19 +44,19 @@ fun DateRangePickerModalDialog(
                 },
                 enabled = state.selectedStartDateMillis != null && state.selectedEndDateMillis != null
             ) {
-                Text(stringResource(Res.string.date_range_picker_button_confirm))
+                Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(Res.string.date_range_picker_button_dismiss))
+                Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_dismiss))
             }
         }
     ) {
         DateRangePicker(
             state = state,
             title = {
-                Text(stringResource(Res.string.date_range_picker_title))
+                Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_date_range))
             },
             showModeToggle = false,
             modifier = Modifier

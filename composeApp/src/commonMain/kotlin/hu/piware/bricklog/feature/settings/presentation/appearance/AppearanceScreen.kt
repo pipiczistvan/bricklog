@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.appearance_section_theme
-import bricklog.composeapp.generated.resources.appearance_title
+import bricklog.composeapp.generated.resources.feature_settings_appearance_title
+import bricklog.composeapp.generated.resources.feature_settings_appearance_title_theme
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -67,7 +67,7 @@ private fun AppearanceScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(Res.string.appearance_title))
+                    Text(stringResource(Res.string.feature_settings_appearance_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(AppearanceAction.OnBackClick) }) {
@@ -93,7 +93,7 @@ private fun AppearanceScreen(
                 verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
             ) {
                 Text(
-                    text = stringResource(Res.string.appearance_section_theme),
+                    text = stringResource(Res.string.feature_settings_appearance_title_theme),
                     style = MaterialTheme.typography.titleMedium
                 )
 
