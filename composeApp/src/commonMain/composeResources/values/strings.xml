@@ -30,7 +30,7 @@
     <string name="feature_set_dashboard_navigation_drawer_btn_logout">Log Out</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_notification_settings">Notification Settings</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_reset_sets">Reset set data to %1$s</string>
-    <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Set data update date</string>
+    <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Last refresh timestamp</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_never">never</string>
     <string name="feature_set_dashboard_navigation_drawer_title_collections">Collections</string>
     <string name="feature_set_dashboard_navigation_drawer_title_developer_tools">Developer Tools</string>
@@ -138,7 +138,7 @@
     <string name="feature_settings_about_btn_license">License</string>
     <string name="feature_settings_about_btn_source_code">Check out the source code!</string>
     <string name="feature_settings_about_label_brickset">https://brickset.com/</string>
-    <string name="feature_settings_about_label_build_version">%1$s-%2$s (build %3$s)</string>
+    <string name="feature_settings_about_label_build_version">%1$s-%2$s\n(build %3$s)</string>
     <string name="feature_settings_about_label_developer">piware</string>
     <string name="feature_settings_about_label_kmp">Kotlin Multiplatform</string>
     <string name="feature_settings_about_label_made_in">Composed in Hungary 🇭🇺</string>

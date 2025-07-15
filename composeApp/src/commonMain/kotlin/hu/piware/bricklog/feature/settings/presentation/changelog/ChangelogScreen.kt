@@ -12,10 +12,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -27,6 +29,7 @@ import hu.piware.bricklog.feature.settings.presentation.changelog.components.Rel
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,23 +76,27 @@ private fun ChangelogScreen(
             )
         }
     ) { padding ->
-        if (state.changelog != null) {
-            ContentColumn(
-                modifier = Modifier
-                    .padding(horizontal = Dimens.MediumPadding.size)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(
-                    top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
-                ),
-                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
-            ) {
-                state.changelog.releases.forEach { release ->
-                    ReleaseItem(
-                        release = release
-                    )
-                    if (release != state.changelog.releases.last()) {
-                        HorizontalDivider()
+        CompositionLocalProvider {
+            ProvideTextStyle(value = OverpassMonoTypography().bodyMedium) {
+                if (state.changelog != null) {
+                    ContentColumn(
+                        modifier = Modifier
+                            .padding(horizontal = Dimens.MediumPadding.size)
+                            .fillMaxSize(),
+                        contentPadding = PaddingValues(
+                            top = padding.calculateTopPadding(),
+                            bottom = padding.calculateBottomPadding()
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                    ) {
+                        state.changelog.releases.forEach { release ->
+                            ReleaseItem(
+                                release = release
+                            )
+                            if (release != state.changelog.releases.last()) {
+                                HorizontalDivider()
+                            }
+                        }
                     }
                 }
             }

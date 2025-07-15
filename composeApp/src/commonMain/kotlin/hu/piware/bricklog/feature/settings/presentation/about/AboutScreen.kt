@@ -60,6 +60,7 @@ import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.settings.presentation.about.components.InfoCard
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import hu.piware.bricklog.ui.theme.Shapes
 import hu.piware.bricklog.util.BuildConfig
 import hu.piware.bricklog.util.RELEASE_VERSION
@@ -294,7 +295,7 @@ private fun AppProfile(
                     BuildConfig.RELEASE_VERSION,
                     BuildConfig.VERSION_CODE
                 ),
-                style = MaterialTheme.typography.bodyMedium
+                style = OverpassMonoTypography().bodySmall
             )
         }
     }

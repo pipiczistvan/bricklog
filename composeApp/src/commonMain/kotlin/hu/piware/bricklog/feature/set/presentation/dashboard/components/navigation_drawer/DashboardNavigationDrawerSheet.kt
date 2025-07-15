@@ -38,10 +38,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +74,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import hu.piware.bricklog.util.BuildConfig
 import hu.piware.bricklog.util.isDebugFlavor
 import kotlinx.coroutines.launch
@@ -359,17 +362,21 @@ private fun NavigationSectionButton(
 private fun SetUpdateInfoSection(
     updateInfo: UpdateInfo?,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_info))
-        if (updateInfo != null) {
-            Text(formatDateTime(updateInfo.lastUpdated.toLocalDateTime(TimeZone.currentSystemDefault())))
-        } else {
-            Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_never))
+    CompositionLocalProvider {
+        ProvideTextStyle(value = OverpassMonoTypography().bodySmall) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_info))
+                if (updateInfo != null) {
+                    Text(formatDateTime(updateInfo.lastUpdated.toLocalDateTime(TimeZone.currentSystemDefault())))
+                } else {
+                    Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_never))
+                }
+            }
         }
     }
 }

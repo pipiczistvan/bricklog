@@ -11,9 +11,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -25,6 +27,7 @@ import hu.piware.bricklog.feature.settings.presentation.changelog.components.Rel
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -55,25 +58,29 @@ private fun ChangelogSheetContent(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-    ) {
-        BottomSheetHeader(
-            title = stringResource(Res.string.feature_set_dashboard_changelog_bottom_sheet_title),
-            sheetState = sheetState,
-            onDismiss = onDismiss
-        )
+    CompositionLocalProvider {
+        ProvideTextStyle(value = OverpassMonoTypography().bodyMedium) {
+            Column(
+                modifier = modifier
+            ) {
+                BottomSheetHeader(
+                    title = stringResource(Res.string.feature_set_dashboard_changelog_bottom_sheet_title),
+                    sheetState = sheetState,
+                    onDismiss = onDismiss
+                )
 
-        LazyColumn(
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size),
-            verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
-        ) {
-            changelog.releases.forEach { release ->
-                item {
-                    ReleaseItem(release = release)
+                LazyColumn(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimens.MediumPadding.size),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                ) {
+                    changelog.releases.forEach { release ->
+                        item {
+                            ReleaseItem(release = release)
+                        }
+                    }
                 }
             }
         }

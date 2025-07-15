@@ -485,7 +485,7 @@ fun BricklogTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             motionScheme = MotionScheme.expressive(),
-            typography = Typography,
+            typography = OverpassTypography(),
             content = content
         )
     }
