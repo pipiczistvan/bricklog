@@ -17,12 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_changelog_bottom_sheet_title
 import hu.piware.bricklog.feature.core.presentation.components.BottomSheetHeader
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import hu.piware.bricklog.feature.settings.presentation.changelog.components.ReleaseItem
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -56,7 +59,7 @@ private fun ChangelogSheetContent(
         modifier = modifier
     ) {
         BottomSheetHeader(
-            title = "Changelog",
+            title = stringResource(Res.string.feature_set_dashboard_changelog_bottom_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss
         )

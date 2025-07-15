@@ -21,6 +21,7 @@
     <string name="feature_collection_edit_icon_sheet_title">Collection icon</string>
     <string name="feature_collection_edit_title_create">Create collection</string>
     <string name="feature_collection_edit_title_modify">Edit collection</string>
+    <string name="feature_set_dashboard_changelog_bottom_sheet_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title_build_version">%1$s (build %2$s)</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_about">About</string>
