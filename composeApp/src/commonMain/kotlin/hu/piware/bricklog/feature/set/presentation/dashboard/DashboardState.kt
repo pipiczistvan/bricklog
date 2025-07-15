@@ -1,6 +1,5 @@
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
-import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import hu.piware.bricklog.feature.user.domain.model.User
@@ -10,7 +9,6 @@ data class DashboardState(
     val latestReleases: List<SetDetails> = emptyList(),
     val arrivingSets: List<SetDetails> = emptyList(),
     val retiringSets: List<SetDetails> = emptyList(),
-    val collections: List<Collection> = emptyList(),
     val currentUser: User? = null,
     val showLogoutConfirm: Boolean = false,
     val showDeleteUserConfirm: Boolean = false,

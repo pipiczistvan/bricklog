@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package hu.piware.bricklog.feature.set.presentation.dashboard.components
+package hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -66,7 +66,6 @@ import bricklog.composeapp.generated.resources.date_range_picker_button_confirm
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.util.BuildConfig
@@ -81,14 +80,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.days
 
 @Composable
-fun DashboardNavigationDrawerContent(
-    state: DrawerState,
-    collections: List<Collection>,
-    currentUser: User?,
-    onAction: (DashboardAction) -> Unit,
+fun DashboardNavigationDrawerSheet(
+    drawerState: DrawerState,
+    state: DashboardNavigationDrawerState,
+    onAction: (DashboardNavigationDrawerAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ModalDrawerSheet(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
     ) {
@@ -96,7 +95,7 @@ fun DashboardNavigationDrawerContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         CollectionsSection(
-            state = state, collections = collections, onAction = onAction
+            drawerState = drawerState, collections = state.collections, onAction = onAction
         )
 
         HorizontalDivider(
@@ -104,8 +103,8 @@ fun DashboardNavigationDrawerContent(
         )
 
         SettingsSection(
-            state = state,
-            currentUser = currentUser,
+            drawerState = drawerState,
+            currentUser = state.currentUser,
             onAction = onAction
         )
 
@@ -115,7 +114,7 @@ fun DashboardNavigationDrawerContent(
             )
 
             DeveloperSection(
-                state = state, onAction = onAction
+                drawerState = drawerState, onAction = onAction
             )
         }
 
@@ -125,15 +124,15 @@ fun DashboardNavigationDrawerContent(
 
 @Composable
 private fun CollectionsSection(
-    state: DrawerState,
+    drawerState: DrawerState,
     collections: List<Collection>,
-    onAction: (DashboardAction) -> Unit,
+    onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_collections),
         trailingIcon = {
             IconButton(
-                onClick = { onAction(DashboardAction.OnCollectionEditClick(0)) }) {
+                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(0)) }) {
                 Icon(
                     imageVector = Icons.Outlined.Add, contentDescription = null
                 )
@@ -141,11 +140,11 @@ private fun CollectionsSection(
         }) {
         collections.map {
             NavigationSectionButton(
-                state = state,
+                state = drawerState,
                 title = it.name,
                 onClick = {
                     onAction(
-                        DashboardAction.OnSearchSets(
+                        DashboardNavigationDrawerAction.OnSearchSets(
                             SetListArguments(
                                 filterOverrides = SetFilter(
                                     collectionIds = setOf(it.id)
@@ -157,7 +156,13 @@ private fun CollectionsSection(
                 icon = it.icon.outlinedIcon,
                 trailingIcon = {
                     IconButton(
-                        onClick = { onAction(DashboardAction.OnCollectionEditClick(it.id)) }) {
+                        onClick = {
+                            onAction(
+                                DashboardNavigationDrawerAction.OnCollectionEditClick(
+                                    it.id
+                                )
+                            )
+                        }) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = null
@@ -170,25 +175,25 @@ private fun CollectionsSection(
 
 @Composable
 private fun SettingsSection(
-    state: DrawerState,
+    drawerState: DrawerState,
     currentUser: User?,
-    onAction: (DashboardAction) -> Unit,
+    onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_settings)
     ) {
         val isLoggedIn = currentUser != null
         NavigationSectionButton(
-            state = state,
+            state = drawerState,
             title = if (isLoggedIn)
                 stringResource(Res.string.dashboard_navigation_drawer_item_logout)
             else
                 stringResource(Res.string.dashboard_navigation_drawer_item_login),
-            onClick = { onAction(if (isLoggedIn) DashboardAction.OnLogoutClick else DashboardAction.OnLoginClick) },
+            onClick = { onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick) },
             icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
             trailingIcon = {
                 if (isLoggedIn) {
-                    IconButton(onClick = { onAction(DashboardAction.OnDeleteUserClick) }) {
+                    IconButton(onClick = { onAction(DashboardNavigationDrawerAction.OnDeleteUserClick) }) {
                         Icon(
                             imageVector = Icons.Outlined.DeleteOutline,
                             contentDescription = null
@@ -198,21 +203,21 @@ private fun SettingsSection(
             }
         )
         NavigationSectionButton(
-            state = state,
+            state = drawerState,
             title = stringResource(Res.string.dashboard_navigation_drawer_item_notification_settings),
-            onClick = { onAction(DashboardAction.OnNotificationSettingsClick) },
+            onClick = { onAction(DashboardNavigationDrawerAction.OnNotificationSettingsClick) },
             icon = Icons.Outlined.Notifications,
         )
         NavigationSectionButton(
-            state = state,
+            state = drawerState,
             title = stringResource(Res.string.dashboard_navigation_drawer_item_appearance),
-            onClick = { onAction(DashboardAction.OnAppearanceClick) },
+            onClick = { onAction(DashboardNavigationDrawerAction.OnAppearanceClick) },
             icon = Icons.Outlined.Palette,
         )
         NavigationSectionButton(
-            state = state,
+            state = drawerState,
             title = stringResource(Res.string.dashboard_navigation_drawer_item_about),
-            onClick = { onAction(DashboardAction.OnAboutClick) },
+            onClick = { onAction(DashboardNavigationDrawerAction.OnAboutClick) },
             icon = Icons.Outlined.Info,
         )
     }
@@ -220,8 +225,8 @@ private fun SettingsSection(
 
 @Composable
 private fun DeveloperSection(
-    state: DrawerState,
-    onAction: (DashboardAction) -> Unit,
+    drawerState: DrawerState,
+    onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
         title = stringResource(Res.string.dashboard_navigation_drawer_section_developer)
@@ -236,13 +241,13 @@ private fun DeveloperSection(
         var showDatePicker by remember { mutableStateOf(false) }
 
         NavigationSectionButton(
-            state = state, title = stringResource(
+            state = drawerState, title = stringResource(
                 Res.string.dashboard_navigation_drawer_item_reset_sets,
                 if (selectedDate != null) formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
                 else "?"
             ), onClick = {
                 if (selectedDate != null) {
-                    onAction(DashboardAction.OnResetSets(selectedDate!!))
+                    onAction(DashboardNavigationDrawerAction.OnResetSets(selectedDate!!))
                 }
             }, icon = Icons.Outlined.Restore, trailingIcon = {
                 IconButton(
@@ -336,12 +341,11 @@ private fun NavigationSectionButton(
 
 @Preview
 @Composable
-private fun DashboardNavigationDrawerContent() {
+private fun DashboardNavigationDrawerSheetPreview() {
     MaterialTheme {
-        DashboardNavigationDrawerContent(
-            state = DrawerState(DrawerValue.Open),
-            collections = emptyList(),
-            currentUser = null,
+        DashboardNavigationDrawerSheet(
+            drawerState = DrawerState(DrawerValue.Open),
+            state = DashboardNavigationDrawerState(),
             onAction = {}
         )
     }

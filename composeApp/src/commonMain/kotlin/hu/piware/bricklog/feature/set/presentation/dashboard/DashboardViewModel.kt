@@ -26,6 +26,8 @@ import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerAction
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerState
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
@@ -73,6 +75,7 @@ class DashboardViewModel(
 
     private val _uiState = MutableStateFlow(DashboardState())
     private val _searchBarState = MutableStateFlow(SetSearchBarState())
+    private val _navigationDrawerState = MutableStateFlow(DashboardNavigationDrawerState())
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
@@ -82,7 +85,6 @@ class DashboardViewModel(
             observeRetiringSets()
             observeSetFilterDomain()
             observeNewChangelog()
-            observeCollections()
             observeCurrentUser()
             askNotificationPermission()
         }
@@ -94,28 +96,16 @@ class DashboardViewModel(
             observeSets()
         }
 
+    val navigationDrawerState = _navigationDrawerState
+        .asStateFlowIn(viewModelScope) {
+            observeCollections()
+        }
+
     fun onAction(action: DashboardAction) {
         when (action) {
             is DashboardAction.OnRefreshSets -> refreshSets()
-            is DashboardAction.OnResetSets -> resetSetsClick(action.date)
             is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
                 updateChangelogReadVersion()
-            }
-
-            DashboardAction.OnLogoutClick -> _uiState.update { it.copy(showLogoutConfirm = true) }
-            DashboardAction.OnLogoutDismiss -> _uiState.update { it.copy(showLogoutConfirm = false) }
-            DashboardAction.OnLogoutConfirm -> viewModelScope.launch {
-                logOutUser()
-                    .showSnackbarOnSuccess(Res.string.logout_success)
-                    .showSnackbarOnError()
-            }
-
-            DashboardAction.OnDeleteUserClick -> _uiState.update { it.copy(showDeleteUserConfirm = true) }
-            DashboardAction.OnDeleteUserDismiss -> _uiState.update { it.copy(showDeleteUserConfirm = false) }
-            DashboardAction.OnDeleteUserConfirm -> viewModelScope.launch {
-                deleteUserData()
-                    .showSnackbarOnSuccess(Res.string.delete_user_data_success)
-                    .showSnackbarOnError()
             }
 
             else -> Unit
@@ -139,6 +129,51 @@ class DashboardViewModel(
                         searchQuery = ""
                     )
                 }
+            }
+
+            else -> Unit
+        }
+    }
+
+    fun onAction(action: DashboardNavigationDrawerAction) {
+        when (action) {
+            is DashboardNavigationDrawerAction.OnResetSets -> resetSetsClick(action.date)
+
+            DashboardNavigationDrawerAction.OnLogoutClick -> _uiState.update {
+                it.copy(
+                    showLogoutConfirm = true
+                )
+            }
+
+            DashboardNavigationDrawerAction.OnLogoutDismiss -> _uiState.update {
+                it.copy(
+                    showLogoutConfirm = false
+                )
+            }
+
+            DashboardNavigationDrawerAction.OnLogoutConfirm -> viewModelScope.launch {
+                logOutUser()
+                    .showSnackbarOnSuccess(Res.string.logout_success)
+                    .showSnackbarOnError()
+            }
+
+
+            DashboardNavigationDrawerAction.OnDeleteUserClick -> _uiState.update {
+                it.copy(
+                    showDeleteUserConfirm = true
+                )
+            }
+
+            DashboardNavigationDrawerAction.OnDeleteUserDismiss -> _uiState.update {
+                it.copy(
+                    showDeleteUserConfirm = false
+                )
+            }
+
+            DashboardNavigationDrawerAction.OnDeleteUserConfirm -> viewModelScope.launch {
+                deleteUserData()
+                    .showSnackbarOnSuccess(Res.string.delete_user_data_success)
+                    .showSnackbarOnError()
             }
 
             else -> Unit
@@ -219,13 +254,14 @@ class DashboardViewModel(
 
     private fun observeCollections() {
         watchCollections()
-            .onEach { collections -> _uiState.update { it.copy(collections = collections) } }
+            .onEach { collections -> _navigationDrawerState.update { it.copy(collections = collections) } }
             .launchIn(viewModelScope)
     }
 
     private fun observeCurrentUser() {
         watchCurrentUser()
             .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
+            .onEach { user -> _navigationDrawerState.update { it.copy(currentUser = user) } }
             .launchIn(viewModelScope)
     }
 

@@ -44,11 +44,13 @@ import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
-import hu.piware.bricklog.feature.set.presentation.dashboard.components.DashboardNavigationDrawerContent
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.LogoutConfirmationBottomSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerAction
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerState
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBar
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
@@ -87,6 +89,7 @@ fun DashboardScreenRoot(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
+    val navigationDrawerState by viewModel.navigationDrawerState.collectAsStateWithLifecycle()
 
     LaunchedEffect(selectedThemes) {
         if (selectedThemes != null) {
@@ -119,12 +122,7 @@ fun DashboardScreenRoot(
             when (action) {
                 is DashboardAction.OnSetClick -> onSetClick(action.arguments)
                 is DashboardAction.OnSearchSets -> onSearchSets(action.arguments)
-                is DashboardAction.OnNotificationSettingsClick -> onNotificationSettingsClick()
-                is DashboardAction.OnAboutClick -> onAboutClick()
-                is DashboardAction.OnAppearanceClick -> onAppearanceClick()
-                is DashboardAction.OnCollectionEditClick -> onCollectionEditClick(action.id)
                 is DashboardAction.OnThemeListClick -> onThemeListClick()
-                is DashboardAction.OnLoginClick -> onLoginClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -138,6 +136,23 @@ fun DashboardScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
+        },
+        navigationDrawerState = navigationDrawerState,
+        onNavigationDrawerAction = { action ->
+            when (action) {
+                is DashboardNavigationDrawerAction.OnSearchSets -> onSearchSets(action.arguments)
+                is DashboardNavigationDrawerAction.OnNotificationSettingsClick -> onNotificationSettingsClick()
+                is DashboardNavigationDrawerAction.OnAboutClick -> onAboutClick()
+                is DashboardNavigationDrawerAction.OnAppearanceClick -> onAppearanceClick()
+                is DashboardNavigationDrawerAction.OnCollectionEditClick -> onCollectionEditClick(
+                    action.id
+                )
+
+                is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
+
+                else -> Unit
+            }
+            viewModel.onAction(action)
         }
     )
 }
@@ -148,6 +163,8 @@ private fun DashboardScreen(
     onAction: (DashboardAction) -> Unit,
     searchBarState: SetSearchBarState,
     onSearchBarAction: (SetSearchBarAction) -> Unit,
+    navigationDrawerState: DashboardNavigationDrawerState,
+    onNavigationDrawerAction: (DashboardNavigationDrawerAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -156,11 +173,10 @@ private fun DashboardScreen(
     ModalNavigationDrawer(
         modifier = modifier,
         drawerContent = {
-            DashboardNavigationDrawerContent(
-                state = drawerState,
-                collections = state.collections,
-                currentUser = state.currentUser,
-                onAction = onAction
+            DashboardNavigationDrawerSheet(
+                drawerState = drawerState,
+                state = navigationDrawerState,
+                onAction = onNavigationDrawerAction
             )
         },
         drawerState = drawerState
@@ -276,15 +292,15 @@ private fun DashboardScreen(
 
     if (state.showLogoutConfirm) {
         LogoutConfirmationBottomSheet(
-            onDismiss = { onAction(DashboardAction.OnLogoutDismiss) },
-            onConfirm = { onAction(DashboardAction.OnLogoutConfirm) }
+            onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutDismiss) },
+            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutConfirm) }
         )
     }
 
     if (state.showDeleteUserConfirm) {
         DeleteUserConfirmationBottomSheet(
-            onDismiss = { onAction(DashboardAction.OnDeleteUserDismiss) },
-            onConfirm = { onAction(DashboardAction.OnDeleteUserConfirm) }
+            onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserDismiss) },
+            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserConfirm) }
         )
     }
 }
@@ -367,7 +383,9 @@ private fun DashboardScreenPreview() {
             ),
             onAction = {},
             searchBarState = SetSearchBarState(),
-            onSearchBarAction = {}
+            onSearchBarAction = {},
+            navigationDrawerState = DashboardNavigationDrawerState(),
+            onNavigationDrawerAction = {}
         )
     }
 }
