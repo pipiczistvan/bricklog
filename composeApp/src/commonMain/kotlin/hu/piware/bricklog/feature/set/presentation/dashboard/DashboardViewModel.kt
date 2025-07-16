@@ -15,10 +15,12 @@ import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
+import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
+import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeDefaultCollections
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
@@ -68,9 +70,10 @@ class DashboardViewModel(
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
     private val watchCollections: WatchCollections,
     private val watchCurrentUser: WatchCurrentUser,
-    private val logOutUser: LogOutUser,
+    @Provided private val logOutUser: LogOutUser,
     private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
+    private val initializeDefaultCollections: InitializeDefaultCollections,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -158,6 +161,10 @@ class DashboardViewModel(
                 logOutUser()
                     .showSnackbarOnSuccess(Res.string.feature_user_logout_message_success)
                     .showSnackbarOnError()
+                    .onSuccess {
+                        initializeDefaultCollections()
+                            .showSnackbarOnError()
+                    }
             }
 
 

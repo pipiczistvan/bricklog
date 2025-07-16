@@ -12,4 +12,10 @@ interface SetCollectionDao {
 
     @Upsert
     suspend fun upsertSetCollection(setCollection: SetCollectionEntity)
+
+    @Delete
+    suspend fun deleteSetCollections(setCollections: List<SetCollectionEntity>)
+
+    @Upsert
+    suspend fun upsertSetCollections(setCollections: List<SetCollectionEntity>)
 }

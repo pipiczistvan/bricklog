@@ -1,17 +1,17 @@
 package hu.piware.bricklog.feature.user.domain.usecase
 
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.SyncedRepository
 import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.user.domain.model.AuthenticationMethod
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.repository.UserRepository
 import hu.piware.bricklog.feature.user.presentation.util.isValidEmail
 import hu.piware.bricklog.feature.user.presentation.util.isValidPassword
-import org.koin.core.annotation.Single
 
-@Single
 class RegisterUser(
     private val userRepository: UserRepository,
+    private val syncedRepositories: List<SyncedRepository>,
 ) {
     suspend operator fun invoke(method: AuthenticationMethod): Result<User?, UserError> {
         when (method) {
@@ -24,6 +24,9 @@ class RegisterUser(
             is AuthenticationMethod.GoogleSignIn -> {
                 return Result.Error(UserError.Register.UNKNOWN)
             }
+        }
+        syncedRepositories.forEach {
+            it.clearLocal()
         }
 
         return userRepository.register(method)

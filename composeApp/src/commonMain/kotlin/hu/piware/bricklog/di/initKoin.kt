@@ -13,6 +13,7 @@ fun initKoin(config: KoinAppDeclaration?) {
         config?.invoke(this)
         modules(
             viewModelModule,
+            useCaseModule,
             AppModule().module
         )
         if (BuildConfig.flavor == Flavor.MOCK) {

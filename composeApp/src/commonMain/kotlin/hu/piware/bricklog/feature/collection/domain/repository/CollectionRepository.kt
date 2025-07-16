@@ -22,4 +22,5 @@ interface CollectionRepository {
 
     suspend fun getCollection(id: CollectionId): Result<Collection, DataError>
     suspend fun deleteCollection(id: CollectionId): EmptyResult<DataError>
+    fun watchCollection(id: CollectionId): Flow<Collection>
 }

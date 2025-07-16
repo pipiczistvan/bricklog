@@ -5,7 +5,7 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import kotlinx.datetime.Instant
 
 sealed interface DashboardNavigationDrawerAction {
-    data class OnCollectionEditClick(val id: CollectionId) : DashboardNavigationDrawerAction
+    data class OnCollectionEditClick(val id: CollectionId?) : DashboardNavigationDrawerAction
     data class OnSearchSets(val arguments: SetListArguments) : DashboardNavigationDrawerAction
     data class OnResetSets(val date: Instant) : DashboardNavigationDrawerAction
     data object OnLoginClick : DashboardNavigationDrawerAction

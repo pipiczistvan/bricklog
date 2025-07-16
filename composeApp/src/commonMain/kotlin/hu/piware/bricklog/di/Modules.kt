@@ -8,6 +8,9 @@ import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
+import hu.piware.bricklog.feature.user.domain.usecase.LogInUser
+import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
+import hu.piware.bricklog.feature.user.domain.usecase.RegisterUser
 import io.ktor.client.engine.HttpClientEngine
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -24,10 +27,18 @@ val viewModelModule = module {
     viewModelOf(::CollectionEditViewModel)
 }
 
+// Only necessary when injecting list of dependencies
+val useCaseModule = module {
+    single { LogOutUser(get(), getAll()) }
+    single { LogInUser(get(), getAll()) }
+    single { RegisterUser(get(), getAll()) }
+}
+
 @Module(
     includes = [
         PlatformModule::class,
         DataModule::class,
+        ManagerModule::class,
         UseCaseModule::class,
         ViewModelModule::class,
     ]
@@ -58,6 +69,10 @@ class DataModule {
     @Single
     fun preferencesDatastore(@Provided factory: DatastoreFactory) = factory.create()
 }
+
+@Module
+@ComponentScan("hu.piware.bricklog.feature.**.domain.manager")
+class ManagerModule
 
 @Module
 @ComponentScan("hu.piware.bricklog.feature.**.domain.usecase")

@@ -15,7 +15,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class RoomLocalCollectionDataSource(
-    private val database: BricklogDatabase,
+    database: BricklogDatabase,
 ) : LocalCollectionDataSource {
 
     private val collectionDao = database.collectionDao
@@ -40,6 +40,16 @@ class RoomLocalCollectionDataSource(
     override fun watchCollectionsBySet(setId: SetId): Flow<List<Collection>> {
         return collectionDao.watchCollectionsBySet(setId)
             .map { entity -> entity.map { it.toDomainModel() } }
+    }
+
+    override suspend fun getSetCollections(): Result<Map<SetId, List<Collection>>, DataError.Local> {
+        return collectionDao.getCollectionsWithSetIds()
+            .groupBy { it.setId }
+            .mapValues { collectionWithSetId ->
+                collectionWithSetId.value
+                    .map { it.collection.toDomainModel() }
+            }
+            .let { Result.Success(it) }
     }
 
     override suspend fun deleteCollectionById(id: CollectionId): EmptyResult<DataError.Local> {
@@ -81,6 +91,27 @@ class RoomLocalCollectionDataSource(
         }
     }
 
+    override suspend fun addSetToCollections(
+        setId: SetId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Local> {
+        return try {
+            setCollectionDao.upsertSetCollections(
+                collectionIds.map { collectionId ->
+                    SetCollectionEntity(
+                        setId = setId,
+                        collectionId = collectionId
+                    )
+                }
+            )
+            Result.Success(Unit)
+        } catch (e: SQLiteException) {
+            Result.Error(DataError.Local.DISK_FULL)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
     override suspend fun removeSetFromCollection(
         setId: SetId,
         collectionId: CollectionId,
@@ -98,10 +129,38 @@ class RoomLocalCollectionDataSource(
         }
     }
 
+    override suspend fun removeSetFromCollections(
+        setId: SetId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Local> {
+        return try {
+            setCollectionDao.deleteSetCollections(
+                collectionIds.map { collectionId ->
+                    SetCollectionEntity(
+                        setId = setId,
+                        collectionId = collectionId
+                    )
+                }
+            )
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
     override suspend fun getCollection(id: CollectionId): Result<Collection, DataError.Local> {
         return try {
             val collection = collectionDao.getCollectionById(id).toDomainModel()
             Result.Success(collection)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun getCollections(): Result<List<Collection>, DataError.Local> {
+        return try {
+            val collections = collectionDao.getCollections().map { it.toDomainModel() }
+            Result.Success(collections)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }
@@ -114,5 +173,36 @@ class RoomLocalCollectionDataSource(
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }
+    }
+
+    override suspend fun deleteCollections(ids: List<CollectionId>): EmptyResult<DataError.Local> {
+        return try {
+            collectionDao.deleteCollectionsById(ids)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteAllCollections(): EmptyResult<DataError.Local> {
+        return try {
+            collectionDao.deleteAllCollections()
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun upsertCollections(collections: List<Collection>): EmptyResult<DataError.Local> {
+        return try {
+            collectionDao.upsertCollections(collections.map { it.toEntity() })
+            Result.Success(Unit)
+        } catch (e: SQLiteException) {
+            Result.Error(DataError.Local.DISK_FULL)
+        }
+    }
+
+    override fun watchCollection(id: CollectionId): Flow<Collection> {
+        return collectionDao.watchCollection(id).map { it.toDomainModel() }
     }
 }

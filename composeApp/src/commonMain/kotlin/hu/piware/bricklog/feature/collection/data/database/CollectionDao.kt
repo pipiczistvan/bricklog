@@ -20,6 +20,12 @@ interface CollectionDao {
     fun watchCollectionsWithSetIds(): Flow<List<CollectionWithSetId>>
 
     @Query(
+        "SELECT collections.*, set_collections.setId FROM collections " +
+                "LEFT JOIN set_collections ON collections.id = set_collections.collectionId"
+    )
+    suspend fun getCollectionsWithSetIds(): List<CollectionWithSetId>
+
+    @Query(
         "SELECT collections.* FROM collections " +
                 "LEFT JOIN set_collections ON collections.id = set_collections.collectionId " +
                 "WHERE set_collections.setId = :setId"
@@ -29,9 +35,24 @@ interface CollectionDao {
     @Query("DELETE FROM collections WHERE id = :id")
     suspend fun deleteCollectionById(id: CollectionId)
 
+    @Query("DELETE FROM collections WHERE id IN (:ids)")
+    suspend fun deleteCollectionsById(ids: List<CollectionId>)
+
+    @Query("DELETE FROM collections")
+    suspend fun deleteAllCollections()
+
     @Upsert
     suspend fun upsertCollection(collection: CollectionEntity)
 
+    @Upsert
+    suspend fun upsertCollections(collections: List<CollectionEntity>)
+
     @Query("SELECT * FROM collections WHERE id = :id")
     suspend fun getCollectionById(id: CollectionId): CollectionEntity
+
+    @Query("SELECT * FROM collections")
+    suspend fun getCollections(): List<CollectionEntity>
+
+    @Query("SELECT * FROM collections WHERE id = :id")
+    fun watchCollection(id: CollectionId): Flow<CollectionEntity>
 }

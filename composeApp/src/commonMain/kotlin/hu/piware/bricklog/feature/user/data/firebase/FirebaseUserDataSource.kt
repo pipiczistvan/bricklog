@@ -19,7 +19,7 @@ import org.koin.core.annotation.Single
 @Single
 class FirebaseUserDataSource : RemoteUserDataSource {
 
-    private val logger = Logger.withTag("FirebaseAuthenticationDataSource")
+    private val logger = Logger.withTag("FirebaseUserDataSource")
     private val auth = Firebase.auth
 
     override suspend fun getCurrentUser(): User? {

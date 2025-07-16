@@ -5,7 +5,7 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.UiText
 
 data class CollectionEditState(
-    val collectionId: CollectionId = 0,
+    val collectionId: CollectionId? = null,
     val name: String = "",
     val nameError: UiText? = null,
     val icon: CollectionIcon = CollectionIcon.STAR,

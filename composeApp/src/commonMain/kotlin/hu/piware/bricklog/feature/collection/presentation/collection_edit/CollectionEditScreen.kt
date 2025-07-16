@@ -88,7 +88,7 @@ private fun CollectionEditScreen(
             TopAppBar(
                 title = {
                     Text(
-                        if (state.collectionId == 0)
+                        if (state.collectionId == null)
                             stringResource(Res.string.feature_collection_edit_title_create)
                         else
                             stringResource(Res.string.feature_collection_edit_title_modify)
@@ -103,7 +103,7 @@ private fun CollectionEditScreen(
                     }
                 },
                 actions = {
-                    if (state.collectionId != 0 && defaultCollections.none { it.id == state.collectionId }) {
+                    if (state.collectionId != null && defaultCollections.none { it.id == state.collectionId }) {
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,

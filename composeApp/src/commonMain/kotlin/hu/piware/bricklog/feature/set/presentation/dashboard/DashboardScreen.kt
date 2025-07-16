@@ -78,7 +78,7 @@ fun DashboardScreenRoot(
     onNotificationSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     onAppearanceClick: () -> Unit,
-    onCollectionEditClick: (CollectionId) -> Unit,
+    onCollectionEditClick: (CollectionId?) -> Unit,
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
     onLoginClick: () -> Unit,

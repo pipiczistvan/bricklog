@@ -29,6 +29,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_s
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
+import hu.piware.bricklog.feature.core.domain.SyncedRepository
 import hu.piware.bricklog.feature.core.presentation.LocalizedApp
 import hu.piware.bricklog.feature.core.presentation.SnackbarController
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
@@ -49,6 +50,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 
 val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
@@ -65,12 +67,17 @@ private val logger = Logger.withTag("App")
 fun App(
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+
     var themeOption by remember { mutableStateOf(ThemeOption.SYSTEM) }
 
-    val watchThemeOption: WatchThemeOption = koinInject()
-    watchThemeOption()
+    koinInject<WatchThemeOption>()()
         .onEach { themeOption = it }
         .collectAsStateWithLifecycle(ThemeOption.SYSTEM)
+
+    getKoin().getAll<SyncedRepository>().forEach {
+        it.startSync(scope)
+    }
 
     BricklogTheme(
         themeOption = themeOption

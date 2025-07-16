@@ -11,9 +11,9 @@ import hu.piware.bricklog.feature.set.domain.model.Collectible
 import org.koin.core.annotation.Single
 
 @Single
-class FirestoreDataServiceDataSource : RemoteDataServiceDataSource {
+class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
 
-    private val logger = Logger.withTag("FirestoreDataServiceDataSource")
+    private val logger = Logger.withTag("FirebaseDataServiceDataSource")
 
     private val firestore = Firebase.firestore
 

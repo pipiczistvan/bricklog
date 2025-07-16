@@ -13,7 +13,7 @@ class DeleteCollection(
     private val collectionRepository: CollectionRepository,
 ) {
     suspend operator fun invoke(id: CollectionId): EmptyResult<DataError> {
-        if (id == 0 || defaultCollections.any { it.id == id }) {
+        if (id == "" || defaultCollections.any { it.id == id }) {
             return Result.Error(DataError.Local.UNKNOWN)
         }
 

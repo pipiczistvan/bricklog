@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
 import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
@@ -43,6 +45,7 @@ class SetListViewModel(
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val watchSetFilterDomain: WatchSetFilterDomain,
+    private val watchCollection: WatchCollection,
 ) : ViewModel() {
 
     private val _arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
@@ -62,6 +65,10 @@ class SetListViewModel(
             observeSetListDisplayMode()
             observeFilterPreferences()
             observeFilterDomain()
+
+            if (_arguments.filterOverrides?.collectionIds?.count() == 1) {
+                observeCollection(_arguments.filterOverrides.collectionIds.first())
+            }
         }
 
     private val _filterOverrides = _uiState
@@ -121,6 +128,12 @@ class SetListViewModel(
     private fun observeFilterDomain() {
         watchSetFilterDomain()
             .onEach { domain -> _uiState.update { it.copy(filterDomain = domain) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCollection(id: CollectionId) {
+        watchCollection(id)
+            .onEach { collection -> _uiState.update { it.copy(title = collection.name) } }
             .launchIn(viewModelScope)
     }
 }

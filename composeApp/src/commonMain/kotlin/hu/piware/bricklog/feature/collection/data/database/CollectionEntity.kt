@@ -9,7 +9,7 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionId
     tableName = "collections"
 )
 data class CollectionEntity(
-    @PrimaryKey(autoGenerate = true) val id: CollectionId = 0,
+    @PrimaryKey val id: CollectionId,
     val name: String,
     val icon: CollectionIcon,
 )

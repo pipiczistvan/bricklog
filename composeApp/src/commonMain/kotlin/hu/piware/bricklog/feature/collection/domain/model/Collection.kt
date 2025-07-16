@@ -19,10 +19,10 @@ import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.ui.graphics.vector.ImageVector
 
-typealias CollectionId = Int
+typealias CollectionId = String
 
 data class Collection(
-    val id: CollectionId = 0,
+    val id: CollectionId = "",
     val name: String,
     val icon: CollectionIcon,
 )
@@ -40,3 +40,6 @@ enum class CollectionIcon(
     SELL(Icons.Filled.Sell, Icons.Outlined.Sell),
     BOOKMARK(Icons.Filled.Bookmark, Icons.Outlined.BookmarkBorder),
 }
+
+val Collection.isNew: Boolean
+    get() = id == ""

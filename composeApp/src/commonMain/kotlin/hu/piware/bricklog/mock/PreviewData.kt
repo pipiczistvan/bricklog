@@ -75,7 +75,7 @@ object PreviewData {
 
     val collections = (1..10).map {
         Collection(
-            id = it,
+            id = "$it",
             name = "Collection $it",
             icon = CollectionIcon.entries[it % CollectionIcon.entries.size]
         )

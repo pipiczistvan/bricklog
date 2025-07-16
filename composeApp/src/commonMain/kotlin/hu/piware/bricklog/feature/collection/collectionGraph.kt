@@ -13,12 +13,12 @@ sealed interface CollectionRoute {
     data object Graph : CollectionRoute
 
     @Serializable
-    data class CollectionEditScreen(val collectionId: CollectionId = 0) : CollectionRoute
+    data class CollectionEditScreen(val collectionId: CollectionId?) : CollectionRoute
 }
 
 fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
     navigation<CollectionRoute.Graph>(
-        startDestination = CollectionRoute.CollectionEditScreen(0)
+        startDestination = CollectionRoute.CollectionEditScreen(null)
     ) {
         composable<CollectionRoute.CollectionEditScreen> {
             CollectionEditScreenRoot(

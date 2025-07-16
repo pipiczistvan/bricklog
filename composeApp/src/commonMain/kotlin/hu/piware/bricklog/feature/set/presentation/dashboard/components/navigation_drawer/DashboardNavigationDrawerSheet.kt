@@ -151,7 +151,7 @@ private fun CollectionsSection(
         title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_collections),
         trailingIcon = {
             IconButton(
-                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(0)) }) {
+                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(null)) }) {
                 Icon(
                     imageVector = Icons.Outlined.Add, contentDescription = null
                 )

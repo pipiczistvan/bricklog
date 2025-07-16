@@ -40,7 +40,7 @@ class CollectionEditViewModel(
     private val _eventChannel = Channel<CollectionEditEvent>()
 
     val uiState = _uiState.asStateFlowIn(viewModelScope) {
-        if (collectionId != 0) {
+        if (collectionId != null) {
             loadCollection(collectionId)
         }
     }
@@ -75,7 +75,7 @@ class CollectionEditViewModel(
         viewModelScope.launch {
             saveCollection(
                 Collection(
-                    id = uiState.value.collectionId,
+                    id = uiState.value.collectionId ?: "",
                     name = uiState.value.name,
                     icon = uiState.value.icon
                 )
@@ -107,7 +107,7 @@ class CollectionEditViewModel(
 
     private fun deleteCollection() {
         viewModelScope.launch {
-            deleteCollection(uiState.value.collectionId)
+            deleteCollection(uiState.value.collectionId ?: "")
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(CollectionEditEvent.Back)
