@@ -37,7 +37,7 @@ val retiringSetsFilter = SetFilter(
     showIncomplete = false
 )
 
-val newSetsNotificationFilter = SetFilter(
+val newItemsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     statuses = emptySet(),
     launchDate = DateFilter.AnyTime,

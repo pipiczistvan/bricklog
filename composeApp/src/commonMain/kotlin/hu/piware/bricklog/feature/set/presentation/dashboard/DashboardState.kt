@@ -9,6 +9,7 @@ data class DashboardState(
     val latestReleases: List<SetDetails> = emptyList(),
     val arrivingSets: List<SetDetails> = emptyList(),
     val retiringSets: List<SetDetails> = emptyList(),
+    val newItems: List<SetDetails> = emptyList(),
     val currentUser: User? = null,
     val showLogoutConfirm: Boolean = false,
     val showDeleteUserConfirm: Boolean = false,

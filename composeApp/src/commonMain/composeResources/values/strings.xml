@@ -43,7 +43,7 @@
     <string name="feature_set_dashboard_title_greetings">Hello</string>
     <string name="feature_set_dashboard_title_latest_releases">Latest Releases</string>
     <string name="feature_set_dashboard_title_latest_sets">Latest Sets</string>
-    <string name="feature_set_dashboard_title_new_sets">New Items</string>
+    <string name="feature_set_dashboard_title_new_items">New Items</string>
     <string name="feature_set_dashboard_title_retiring_sets">Retiring Sets</string>
     <string name="feature_set_detail_collections_empty">Not in any collections</string>
     <string name="feature_set_detail_collections_sheet_title">Collections</string>

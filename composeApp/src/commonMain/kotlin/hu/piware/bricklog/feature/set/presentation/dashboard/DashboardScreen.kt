@@ -36,6 +36,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_title_arriv
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_greetings
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_releases
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_items
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_retiring_sets
 import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
@@ -58,6 +59,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestReleasesFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
@@ -376,6 +378,14 @@ private fun FeaturedSets(
             sets = state.retiringSets,
             filterOverrides = retiringSetsFilter,
             sharedElementPrefix = "retiring_sets"
+        )
+
+        FeaturedSetsRow(
+            title = stringResource(Res.string.feature_set_dashboard_title_new_items),
+            onDashboardAction = onAction,
+            sets = state.newItems,
+            filterOverrides = newItemsFilter,
+            sharedElementPrefix = "new_items"
         )
     }
 }

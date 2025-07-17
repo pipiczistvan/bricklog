@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_items
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
@@ -35,7 +35,7 @@ import hu.piware.bricklog.feature.core.presentation.SnackbarController
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.presentation.SetRoute
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newSetsNotificationFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
@@ -163,8 +163,8 @@ private fun observeNotificationEvents(
                     navController.navigate(
                         SetRoute.SetListScreen(
                             arguments = SetListArguments(
-                                title = getString(Res.string.feature_set_dashboard_title_new_sets),
-                                filterOverrides = newSetsNotificationFilter.copy(
+                                title = getString(Res.string.feature_set_dashboard_title_new_items),
+                                filterOverrides = newItemsFilter.copy(
                                     appearanceDate = DateFilter.Custom(
                                         startDate = event.startDate
                                     ),

@@ -40,6 +40,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestReleasesFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
@@ -94,6 +95,7 @@ class DashboardViewModel(
             observeLatestReleases()
             observeArrivingSets()
             observeRetiringSets()
+            observeNewItems()
             observeSetFilterDomain()
             observeNewChangelog()
             observeCurrentUser()
@@ -272,6 +274,13 @@ class DashboardViewModel(
     private fun observeRetiringSets() {
         watchSetDetails(filterOverrides = retiringSetsFilter.copy(limit = 12))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
+            .flowOn(Dispatchers.Default)
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeNewItems() {
+        watchSetDetails(filterOverrides = newItemsFilter.copy(limit = 12))
+            .onEach { sets -> _uiState.update { it.copy(newItems = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
