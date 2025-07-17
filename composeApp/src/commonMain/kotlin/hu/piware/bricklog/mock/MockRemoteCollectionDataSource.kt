@@ -33,6 +33,12 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         return Result.Success(Unit)
     }
 
+    override suspend fun deleteAllCollections(userId: String): EmptyResult<DataError.Remote> {
+        collections.update { emptyList() }
+        setCollections.update { emptyMap() }
+        return Result.Success(Unit)
+    }
+
     override suspend fun upsertCollection(
         userId: String,
         collection: Collection,

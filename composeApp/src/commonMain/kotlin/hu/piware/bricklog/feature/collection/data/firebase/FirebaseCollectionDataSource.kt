@@ -78,6 +78,17 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
+    override suspend fun deleteAllCollections(userId: String): EmptyResult<DataError.Remote> {
+        return try {
+            firestore.collection("user-data/$userId").document.delete()
+            logger.d { "Collections deleted successfully" }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while deleting collections" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
     override suspend fun upsertCollection(
         userId: String,
         collection: Collection,
@@ -85,7 +96,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         return try {
             if (collection.isNew) {
                 firestore.collection("user-data/$userId/collections").add(collection.toDocument())
-                logger.i { "Collection created successfully" }
+                logger.d { "Collection created successfully" }
             } else {
                 firestore.collection("user-data/$userId/collections")
                     .document(collection.id)
@@ -93,7 +104,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                         data = collection.toDocument(),
                         merge = true
                     )
-                logger.i { "Collection updated successfully" }
+                logger.d { "Collection updated successfully" }
             }
             Result.Success(Unit)
         } catch (e: Exception) {

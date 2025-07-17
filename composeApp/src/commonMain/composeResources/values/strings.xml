@@ -16,7 +16,7 @@
     <string name="error_user_collision">The email address is already in use by another account!</string>
     <string name="feature_collection_delete_confirm_dialog_btn_cancel">Cancel</string>
     <string name="feature_collection_delete_confirm_dialog_btn_confirm">Confirm</string>
-    <string name="feature_collection_delete_confirm_dialog_label">Are you sure you want to delete the collection?</string>
+    <string name="feature_collection_delete_confirm_dialog_label">Are you sure you want to delete the collection?\nThe items assigned to this collection will be unassigned as well.</string>
     <string name="feature_collection_delete_confirm_dialog_title">Delete collection</string>
     <string name="feature_collection_edit_icon_sheet_title">Collection icon</string>
     <string name="feature_collection_edit_title_create">Create collection</string>
@@ -167,7 +167,7 @@
     <string name="feature_settings_notifications_title_permission">Allow Push Notifications</string>
     <string name="feature_user_delete_user_data_confirm_btn_cancel">No</string>
     <string name="feature_user_delete_user_data_confirm_btn_confirm">Yes</string>
-    <string name="feature_user_delete_user_data_confirm_label">Do you really want to delete your user and your data?</string>
+    <string name="feature_user_delete_user_data_confirm_label">Do you really want to delete your user and your data? It cannot be undone!</string>
     <string name="feature_user_delete_user_data_confirm_title">Delete user data</string>
     <string name="feature_user_delete_user_data_message_success">Deleted user data!</string>
     <string name="feature_user_form_field_email_hint">Enter your email address...</string>
@@ -179,13 +179,14 @@
     <string name="feature_user_login_btn_google_sign_in">Continue with Google</string>
     <string name="feature_user_login_btn_register">Sign up</string>
     <string name="feature_user_login_form_btn_submit">Log In</string>
+    <string name="feature_user_login_label_disclosure">Please note after login your local data will be overridden by the remote data.</string>
     <string name="feature_user_login_label_forgot_password">Forgot password?</string>
     <string name="feature_user_login_label_or">Or</string>
     <string name="feature_user_login_message_success">Successfully logged in!</string>
     <string name="feature_user_login_title">Log In</string>
     <string name="feature_user_logout_confirm_bottom_sheet_btn_cancel">No</string>
     <string name="feature_user_logout_confirm_bottom_sheet_btn_confirm">Yes</string>
-    <string name="feature_user_logout_confirm_bottom_sheet_label">Are you sure, you want to log out?</string>
+    <string name="feature_user_logout_confirm_bottom_sheet_label">Are you sure, you want to log out?\nYour local data will be deleted.</string>
     <string name="feature_user_logout_confirm_bottom_sheet_title">Logout</string>
     <string name="feature_user_logout_message_success">Successfully logged out!</string>
     <string name="feature_user_password_reset_btn_submit">Send</string>
@@ -193,6 +194,7 @@
     <string name="feature_user_password_reset_message_success">Password reset email sent!</string>
     <string name="feature_user_password_reset_title">Forgot password</string>
     <string name="feature_user_register_btn_login">Log In</string>
+    <string name="feature_user_register_label_disclosure">Please note after registration your local data will be overridden by the remote data.</string>
     <string name="feature_user_register_form_btn_submit">Sign up</string>
     <string name="feature_user_register_form_field_password_invalid">Password should contain both letters and numbers, with minimum length of 8 characters.</string>
     <string name="feature_user_register_title">Register</string>

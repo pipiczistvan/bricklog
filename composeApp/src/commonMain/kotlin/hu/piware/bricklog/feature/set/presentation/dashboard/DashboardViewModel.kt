@@ -71,7 +71,7 @@ class DashboardViewModel(
     private val watchCollections: WatchCollections,
     private val watchCurrentUser: WatchCurrentUser,
     @Provided private val logOutUser: LogOutUser,
-    private val deleteUserData: DeleteUserData,
+    @Provided private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
     private val initializeDefaultCollections: InitializeDefaultCollections,
 ) : ViewModel() {
@@ -184,6 +184,10 @@ class DashboardViewModel(
                 deleteUserData()
                     .showSnackbarOnSuccess(Res.string.feature_user_delete_user_data_message_success)
                     .showSnackbarOnError()
+                    .onSuccess {
+                        initializeDefaultCollections()
+                            .showSnackbarOnError()
+                    }
             }
 
             else -> Unit

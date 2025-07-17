@@ -44,7 +44,7 @@ import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
-import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationBottomSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationDialog
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.LogoutConfirmationBottomSheet
@@ -298,7 +298,7 @@ private fun DashboardScreen(
     }
 
     if (state.showDeleteUserConfirm) {
-        DeleteUserConfirmationBottomSheet(
+        DeleteUserConfirmationDialog(
             onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserDismiss) },
             onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserConfirm) }
         )

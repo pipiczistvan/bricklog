@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_user_login_btn_google_sign_in
 import bricklog.composeapp.generated.resources.feature_user_login_btn_register
+import bricklog.composeapp.generated.resources.feature_user_login_label_disclosure
 import bricklog.composeapp.generated.resources.feature_user_login_label_or
 import bricklog.composeapp.generated.resources.feature_user_login_title
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
@@ -132,6 +133,8 @@ private fun LoginScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
             ) {
+                Text(stringResource(Res.string.feature_user_login_label_disclosure))
+
                 EmailPasswordForm(
                     onSubmit = { email, password ->
                         onAction(

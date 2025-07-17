@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
+import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogInUser
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.RegisterUser
@@ -32,6 +33,7 @@ val useCaseModule = module {
     single { LogOutUser(get(), getAll()) }
     single { LogInUser(get(), getAll()) }
     single { RegisterUser(get(), getAll()) }
+    single { DeleteUserData(get(), getAll()) }
 }
 
 @Module(

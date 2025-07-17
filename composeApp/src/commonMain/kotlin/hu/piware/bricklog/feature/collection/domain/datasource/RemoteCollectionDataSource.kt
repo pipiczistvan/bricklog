@@ -15,6 +15,8 @@ interface RemoteCollectionDataSource {
 
     suspend fun deleteCollection(userId: String, id: CollectionId): EmptyResult<DataError.Remote>
 
+    suspend fun deleteAllCollections(userId: String): EmptyResult<DataError.Remote>
+
     suspend fun upsertCollection(
         userId: String,
         collection: Collection,
