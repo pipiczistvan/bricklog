@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.update
 class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
 
     private var collections = MutableStateFlow(listOf<Collection>())
-    private var setCollections = MutableStateFlow(mapOf<SetId, List<Collection>>())
+    private var setCollections = MutableStateFlow(mapOf<SetId, List<CollectionId>>())
 
     override fun watchCollections(userId: String): Flow<List<Collection>> {
         return collections.asStateFlow()
     }
 
-    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<Collection>>> {
+    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>> {
         return setCollections.asStateFlow()
     }
 
@@ -58,10 +58,10 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
             val currentCollections = currentMap[setId] ?: emptyList()
 
             // Check if the collection is already present
-            val updatedCollections = if (currentCollections.any { it.id == collectionId }) {
+            val updatedCollections = if (currentCollections.any { it == collectionId }) {
                 currentCollections // No change
             } else {
-                currentCollections + collection
+                currentCollections + collection.id
             }
 
             currentMap + (setId to updatedCollections)
@@ -85,10 +85,10 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
             val currentCollections = currentMap[setId] ?: emptyList()
 
             // Check if the collection is already present
-            val updatedCollections = if (currentCollections.none { it.id == collectionId }) {
+            val updatedCollections = if (currentCollections.none { it == collectionId }) {
                 currentCollections // No change
             } else {
-                currentCollections - collection
+                currentCollections - collection.id
             }
 
             currentMap + (setId to updatedCollections)

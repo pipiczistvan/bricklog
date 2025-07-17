@@ -40,17 +40,17 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<Collection>>> {
+    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>> {
         return flow {
             try {
-                firestore.collection("user-data/$userId/collections").snapshots.collect { snapshot ->
-                    val collections = snapshot.documents.flatMap { document ->
+                firestore.collection("user-data/$userId/set-collections").snapshots.collect { snapshot ->
+                    val setCollections = snapshot.documents.flatMap { document ->
                         val setIds = document.get<List<SetId>?>("setIds")
                         setIds?.map { setId ->
-                            setId to document.data<CollectionDocument>().toDomainModel(document.id)
+                            setId to document.id
                         } ?: emptyList()
                     }.groupBy({ it.first }, { it.second })
-                    emit(collections)
+                    emit(setCollections)
                 }
             } catch (e: FirebaseFirestoreException) {
                 logger.e(e) { "An error occurred while fetching collections" }
@@ -64,7 +64,13 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         id: CollectionId,
     ): EmptyResult<DataError.Remote> {
         return try {
-            firestore.collection("user-data/$userId/collections").document(id).delete()
+            with(firestore) {
+                batch().apply {
+                    delete(collection("user-data/$userId/set-collections").document(id))
+                    delete(collection("user-data/$userId/collections").document(id))
+                    commit()
+                }
+            }
             Result.Success(Unit)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting collection" }
@@ -102,7 +108,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
         return try {
-            firestore.collection("user-data/$userId/collections")
+            firestore.collection("user-data/$userId/set-collections")
                 .document(collectionId)
                 .set(
                     data = mapOf(
@@ -123,7 +129,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
         return try {
-            firestore.collection("user-data/$userId/collections")
+            firestore.collection("user-data/$userId/set-collections")
                 .document(collectionId)
                 .set(
                     data = mapOf(

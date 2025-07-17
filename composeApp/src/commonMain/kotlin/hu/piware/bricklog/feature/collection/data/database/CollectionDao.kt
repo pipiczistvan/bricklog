@@ -15,19 +15,19 @@ interface CollectionDao {
 
     @Query(
         "SELECT collections.*, set_collections.setId FROM collections " +
-                "LEFT JOIN set_collections ON collections.id = set_collections.collectionId"
+                "JOIN set_collections ON collections.id = set_collections.collectionId"
     )
     fun watchCollectionsWithSetIds(): Flow<List<CollectionWithSetId>>
 
     @Query(
         "SELECT collections.*, set_collections.setId FROM collections " +
-                "LEFT JOIN set_collections ON collections.id = set_collections.collectionId"
+                "JOIN set_collections ON collections.id = set_collections.collectionId"
     )
     suspend fun getCollectionsWithSetIds(): List<CollectionWithSetId>
 
     @Query(
         "SELECT collections.* FROM collections " +
-                "LEFT JOIN set_collections ON collections.id = set_collections.collectionId " +
+                "JOIN set_collections ON collections.id = set_collections.collectionId " +
                 "WHERE set_collections.setId = :setId"
     )
     fun watchCollectionsBySet(setId: SetId): Flow<List<CollectionEntity>>

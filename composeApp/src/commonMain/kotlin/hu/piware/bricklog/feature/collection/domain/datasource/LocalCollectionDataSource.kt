@@ -35,6 +35,9 @@ interface LocalCollectionDataSource {
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Local>
 
+    suspend fun deleteSetCollections(setCollections: Map<SetId, List<CollectionId>>): EmptyResult<DataError.Local>
+    suspend fun upsertSetCollections(setCollections: Map<SetId, List<CollectionId>>): EmptyResult<DataError.Local>
+
     suspend fun getCollection(id: CollectionId): Result<Collection, DataError.Local>
     suspend fun getCollections(): Result<List<Collection>, DataError.Local>
     suspend fun deleteCollection(id: CollectionId): EmptyResult<DataError.Local>

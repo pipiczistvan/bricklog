@@ -11,7 +11,7 @@ interface RemoteCollectionDataSource {
 
     fun watchCollections(userId: String): Flow<List<Collection>>
 
-    fun watchSetCollections(userId: String): Flow<Map<SetId, List<Collection>>>
+    fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>>
 
     suspend fun deleteCollection(userId: String, id: CollectionId): EmptyResult<DataError.Remote>
 

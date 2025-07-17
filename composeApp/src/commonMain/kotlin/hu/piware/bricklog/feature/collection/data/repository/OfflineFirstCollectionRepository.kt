@@ -2,6 +2,7 @@
 
 package hu.piware.bricklog.feature.collection.data.repository
 
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.collection.domain.datasource.LocalCollectionDataSource
 import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionDataSource
 import hu.piware.bricklog.feature.collection.domain.model.Collection
@@ -31,6 +32,8 @@ class OfflineFirstCollectionRepository(
     private val sessionManager: SessionManager,
 ) : CollectionRepository, SyncedRepository {
 
+    private val logger = Logger.withTag("OfflineFirstCollectionRepository")
+
     override fun startSync(scope: CoroutineScope) {
         sessionManager.currentUser
             .filterNotNull()
@@ -38,15 +41,25 @@ class OfflineFirstCollectionRepository(
                 remoteDataSource.watchCollections(user.uid)
             }
             .onEach { remoteCollections ->
+                logger.d { "Syncing ${remoteCollections.size} collections" }
                 val localCollections = localDataSource.getCollections().data()
                 val collectionsToDelete = localCollections.filter { localCollection ->
                     remoteCollections.none { remoteCollection ->
                         remoteCollection.id == localCollection.id
                     }
                 }.map { it.id }
+                val collectionsToUpsert = remoteCollections.filter { remoteCollection ->
+                    localCollections.none { localCollection ->
+                        localCollection == remoteCollection
+                    }
+                }
 
-                localDataSource.deleteCollections(collectionsToDelete)
-                localDataSource.upsertCollections(remoteCollections)
+                if (collectionsToDelete.isNotEmpty()) {
+                    localDataSource.deleteCollections(collectionsToDelete)
+                }
+                if (collectionsToUpsert.isNotEmpty()) {
+                    localDataSource.upsertCollections(collectionsToUpsert)
+                }
             }
             .launchIn(scope)
 
@@ -56,22 +69,34 @@ class OfflineFirstCollectionRepository(
                 remoteDataSource.watchSetCollections(user.uid)
             }
             .onEach { remoteSetCollections ->
+                logger.d { "Syncing ${remoteSetCollections.size} set collections" }
                 val localSetCollections = localDataSource.getSetCollections().data()
                 val setCollectionsToDelete = localSetCollections
                     .map { setCollection ->
                         setCollection.key to setCollection.value.filter { localCollection ->
                             remoteSetCollections[setCollection.key]?.none { remoteCollection ->
-                                remoteCollection.id == localCollection.id
+                                remoteCollection == localCollection.id
+                            } ?: true
+                        }.map { it.id }
+                    }
+                    .toMap()
+                    .filter { it.value.isNotEmpty() }
+                val setCollectionsToUpsert = remoteSetCollections
+                    .map { remoteSetCollection ->
+                        remoteSetCollection.key to remoteSetCollection.value.filter { remoteCollection ->
+                            localSetCollections[remoteSetCollection.key]?.none { localCollection ->
+                                localCollection.id == remoteCollection
                             } ?: true
                         }
                     }
+                    .toMap()
+                    .filter { it.value.isNotEmpty() }
 
-                setCollectionsToDelete.forEach { (setId, collections) ->
-                    localDataSource.removeSetFromCollections(setId, collections.map { it.id })
+                if (setCollectionsToDelete.isNotEmpty()) {
+                    localDataSource.deleteSetCollections(setCollectionsToDelete)
                 }
-
-                remoteSetCollections.forEach { (setId, collections) ->
-                    localDataSource.addSetToCollections(setId, collections.map { it.id })
+                if (setCollectionsToUpsert.isNotEmpty()) {
+                    localDataSource.upsertSetCollections(setCollectionsToUpsert)
                 }
             }
             .launchIn(scope)
