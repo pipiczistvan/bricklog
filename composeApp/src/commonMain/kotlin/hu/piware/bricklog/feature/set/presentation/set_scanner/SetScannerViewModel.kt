@@ -54,10 +54,10 @@ class SetScannerViewModel(
     private fun observeScannedCode() {
         _detections
             .onEach { detections ->
-                _uiState.update {
+                _uiState.update { it ->
                     it.copy(
-                        detections = detections.map { detection ->
-                            val set = _setBarcodeCache.getOrPutNullable(detection.data) {
+                        detections = detections.mapNotNull { detection ->
+                            _setBarcodeCache.getOrPutNullable(detection.data) {
                                 logger.i { "barcode not found in cache: ${detection.data}" }
                                 findSetByScannedCode(detection.data)
                             }.also { set ->
@@ -66,13 +66,13 @@ class SetScannerViewModel(
                                 } else {
                                     logger.i { "Set found for barcode: ${detection.data}" }
                                 }
+                            }?.let { set ->
+                                SetBarcodeDetection(
+                                    set = set,
+                                    barcode = detection.data,
+                                    bounds = detection.bounds
+                                )
                             }
-
-                            SetBarcodeDetection(
-                                set = set,
-                                barcode = detection.data,
-                                bounds = detection.bounds
-                            )
                         }
                     )
                 }

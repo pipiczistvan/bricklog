@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,6 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SetScannerScreenRoot(
     viewModel: SetScannerViewModel = koinViewModel(),
     onBackClick: () -> Unit,
+    onManualClick: () -> Unit,
     onSetClick: (SetDetailArguments) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,6 +53,7 @@ fun SetScannerScreenRoot(
         onAction = { action ->
             when (action) {
                 SetScannerAction.OnBackClick -> onBackClick()
+                SetScannerAction.OnManualClick -> onManualClick()
                 is SetScannerAction.OnSetClick -> onSetClick(
                     SetDetailArguments(
                         action.id,
@@ -80,6 +83,14 @@ private fun SetScannerScreen(
                     IconButton(onClick = { onAction(SetScannerAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { onAction(SetScannerAction.OnManualClick) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
                             contentDescription = null
                         )
                     }

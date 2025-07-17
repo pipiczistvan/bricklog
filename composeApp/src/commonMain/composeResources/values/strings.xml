@@ -71,6 +71,22 @@
     <string name="feature_set_detail_title_by_theme">%1$s Sets</string>
     <string name="feature_set_list_empty">Oops, there aren't any sets for your search query.</string>
     <string name="feature_set_onboarding_data_fetch_btn_retry">Retry</string>
+    <string name="feature_set_scanner_manual_label">Scan LEGO set boxes or select Collectible Minifigures (CMFs) to view details instantly.</string>
+    <string name="feature_set_scanner_manual_label_barcode_scanning_1">Simply point your camera at the </string>
+    <string name="feature_set_scanner_manual_label_barcode_scanning_2">EAN or UPC barcode</string>
+    <string name="feature_set_scanner_manual_label_barcode_scanning_3"> on a LEGO set box. If the barcode is recognized, the corresponding set will appear on screen.</string>
+    <string name="feature_set_scanner_manual_label_barcode_scanning_tap">Tap the set to view its full details.</string>
+    <string name="feature_set_scanner_manual_label_barcode_scanning_warning">⚠️ Not all LEGO sets have barcode data available. If a set isn’t recognized, it may be due to missing information in the database.</string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_1">You can also scan the </string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_2">data matrix code</string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_3"> found on some CMF packaging. If identified, the app will show the matching minifigure.</string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_info">ℹ️ CMF recognition is based on community-sourced data and may not be 100% accurate. Results may vary.</string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_warning_1">❌ Only larger data matrix codes are supported. Smaller versions used on older CMF boxes are </string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_warning_2">not compatible</string>
+    <string name="feature_set_scanner_manual_label_data_matrix_scanning_warning_3">.</string>
+    <string name="feature_set_scanner_manual_title">Scanner Manual</string>
+    <string name="feature_set_scanner_manual_title_barcode_scanning">Set Barcode Scanning</string>
+    <string name="feature_set_scanner_manual_title_data_matrix_scanning">CMF Data Matrix Scanning</string>
     <string name="feature_set_search_btn_show_all">Show All</string>
     <string name="feature_set_search_chip_collections">User collections</string>
     <string name="feature_set_search_chip_packaging_types">Packaging types</string>
@@ -195,9 +211,9 @@
     <string name="feature_user_password_reset_message_success">Password reset email sent!</string>
     <string name="feature_user_password_reset_title">Forgot password</string>
     <string name="feature_user_register_btn_login">Log In</string>
-    <string name="feature_user_register_label_disclosure">Please note after registration your local data will be overridden by the remote data.</string>
     <string name="feature_user_register_form_btn_submit">Sign up</string>
     <string name="feature_user_register_form_field_password_invalid">Password should contain both letters and numbers, with minimum length of 8 characters.</string>
+    <string name="feature_user_register_label_disclosure">Please note after registration your local data will be overridden by the remote data.</string>
     <string name="feature_user_register_title">Register</string>
     <string name="navigation_go_back">Go back</string>
 </resources>

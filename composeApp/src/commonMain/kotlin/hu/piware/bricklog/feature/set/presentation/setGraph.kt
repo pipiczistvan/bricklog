@@ -16,6 +16,7 @@ import hu.piware.bricklog.feature.set.presentation.set_image.SetImageScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListScreenRoot
 import hu.piware.bricklog.feature.set.presentation.set_scanner.SetScannerScreenRoot
+import hu.piware.bricklog.feature.set.presentation.set_scanner_manual.SetScannerManualScreenRoot
 import hu.piware.bricklog.feature.set.presentation.theme_list.ThemeListScreenRoot
 import hu.piware.bricklog.feature.settings.presentation.SettingsRoute
 import hu.piware.bricklog.feature.user.presentation.AuthenticationRoute
@@ -40,6 +41,9 @@ sealed interface SetRoute {
 
     @Serializable
     data object SetScannerScreen : SetRoute
+
+    @Serializable
+    data object SetScannerManualScreen : SetRoute
 
     @Serializable
     data object ThemeListScreen : SetRoute
@@ -150,11 +154,21 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
         composable<SetRoute.SetScannerScreen> {
             SetScannerScreenRoot(
                 onBackClick = navController::navigateUp,
+                onManualClick = {
+                    navController.navigate(SetRoute.SetScannerManualScreen) {
+                        launchSingleTop = true
+                    }
+                },
                 onSetClick = { arguments ->
                     navController.navigate(SetRoute.SetDetails(arguments)) {
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        composable<SetRoute.SetScannerManualScreen> {
+            SetScannerManualScreenRoot(
+                onBackClick = navController::navigateUp
             )
         }
         composable<SetRoute.ThemeListScreen> {
