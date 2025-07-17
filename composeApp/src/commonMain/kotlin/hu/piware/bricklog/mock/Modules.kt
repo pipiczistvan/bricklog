@@ -1,5 +1,6 @@
 package hu.piware.bricklog.mock
 
+import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetImageDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetInstructionDataSource
@@ -13,4 +14,5 @@ val mockModule = module {
     singleOf(::MockRemoteSetImageDataSource).bind<RemoteSetImageDataSource>()
     singleOf(::MockRemoteSetInstructionDataSource).bind<RemoteSetInstructionDataSource>()
     singleOf(::MockRemoteUserDataSource).bind<RemoteUserDataSource>()
+    singleOf(::MockRemoteCollectionDataSource).bind<RemoteCollectionDataSource>()
 }
