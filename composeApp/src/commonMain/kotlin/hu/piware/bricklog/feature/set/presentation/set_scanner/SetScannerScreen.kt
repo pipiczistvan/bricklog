@@ -26,11 +26,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.icerock.moko.permissions.PermissionsController
-import hu.piware.barcode_scanner.BarcodeFormat
 import hu.piware.barcode_scanner.BarcodeScannerWithPermission
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_scanner.components.SetDetectionBox
+import hu.piware.bricklog.feature.set.presentation.set_scanner.util.supportedBarcodeFormats
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -97,7 +97,7 @@ private fun SetScannerScreen(
             onScanResult = { results ->
                 onAction(SetScannerAction.OnBarcodeDetected(results))
             },
-            formats = listOf(BarcodeFormat.DataMatrix),
+            formats = supportedBarcodeFormats,
         )
 
         Box(Modifier.fillMaxSize()) {

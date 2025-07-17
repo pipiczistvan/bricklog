@@ -152,9 +152,6 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                 onBackClick = navController::navigateUp,
                 onSetClick = { arguments ->
                     navController.navigate(SetRoute.SetDetails(arguments)) {
-                        popUpTo(SetRoute.SetScannerScreen) {
-                            inclusive = true
-                        }
                         launchSingleTop = true
                     }
                 }
