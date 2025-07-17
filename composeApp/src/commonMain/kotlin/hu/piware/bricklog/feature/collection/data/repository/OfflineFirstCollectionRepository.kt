@@ -12,6 +12,7 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.SyncedRepository
 import hu.piware.bricklog.feature.core.domain.data
+import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import kotlinx.coroutines.CoroutineScope
@@ -93,57 +94,65 @@ class OfflineFirstCollectionRepository(
     }
 
     override suspend fun deleteCollectionById(id: CollectionId): EmptyResult<DataError> {
-        val user = sessionManager.currentUser.value
+        localDataSource.deleteCollection(id)
+            .onError { return it }
 
-        return if (user != null) {
+        val user = sessionManager.currentUser.value
+        if (user != null) {
             remoteDataSource.deleteCollection(user.uid, id)
-        } else {
-            localDataSource.deleteCollection(id)
+                .onError { return it }
         }
+
+        return Result.Success(Unit)
     }
 
     override suspend fun saveCollection(collection: Collection): EmptyResult<DataError> {
-        val user = sessionManager.currentUser.value
+        localDataSource.upsertCollection(collection)
+            .onError { return it }
 
-        return if (user != null) {
+        val user = sessionManager.currentUser.value
+        if (user != null) {
             remoteDataSource.upsertCollection(user.uid, collection)
-        } else {
-            localDataSource.upsertCollection(collection)
+                .onError { return it }
         }
+
+        return Result.Success(Unit)
     }
 
     override suspend fun addSetToCollection(
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError> {
-        val user = sessionManager.currentUser.value
+        localDataSource.addSetToCollection(setId, collectionId)
+            .onError { return it }
 
-        return if (user != null) {
+        val user = sessionManager.currentUser.value
+        if (user != null) {
             remoteDataSource.addSetToCollection(user.uid, setId, collectionId)
-        } else {
-            localDataSource.addSetToCollection(setId, collectionId)
+                .onError { return it }
         }
+
+        return Result.Success(Unit)
     }
 
     override suspend fun removeSetFromCollection(
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError> {
-        val user = sessionManager.currentUser.value
+        localDataSource.removeSetFromCollection(setId, collectionId)
+            .onError { return it }
 
-        return if (user != null) {
+        val user = sessionManager.currentUser.value
+        if (user != null) {
             remoteDataSource.removeSetFromCollection(user.uid, setId, collectionId)
-        } else {
-            localDataSource.removeSetFromCollection(setId, collectionId)
+                .onError { return it }
         }
+
+        return Result.Success(Unit)
     }
 
     override suspend fun getCollection(id: CollectionId): Result<Collection, DataError> {
         return localDataSource.getCollection(id)
-    }
-
-    override suspend fun deleteCollection(id: CollectionId): EmptyResult<DataError> {
-        return localDataSource.deleteCollection(id)
     }
 
     override fun watchCollection(id: CollectionId): Flow<Collection> {
