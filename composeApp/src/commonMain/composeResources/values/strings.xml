@@ -165,6 +165,7 @@
     <string name="feature_settings_notifications_title_general">General notifications</string>
     <string name="feature_settings_notifications_title_new_items">When new items added to the database</string>
     <string name="feature_settings_notifications_title_permission">Allow Push Notifications</string>
+    <string name="feature_user_delete_user_data_action_reauthenticate">Login</string>
     <string name="feature_user_delete_user_data_confirm_btn_cancel">No</string>
     <string name="feature_user_delete_user_data_confirm_btn_confirm">Yes</string>
     <string name="feature_user_delete_user_data_confirm_label">Do you really want to delete your user and your data? It cannot be undone!</string>

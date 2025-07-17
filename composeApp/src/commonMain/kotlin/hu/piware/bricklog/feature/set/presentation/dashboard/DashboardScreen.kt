@@ -41,6 +41,7 @@ import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
+import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
@@ -86,6 +87,12 @@ fun DashboardScreenRoot(
     selectedPackagingTypes: Set<String>?,
 ) {
     App.firstScreenLoaded = true
+
+    observeAsEvents(viewModel.eventChannel) { event ->
+        when (event) {
+            DashboardEvent.LoginProposed -> onLoginClick()
+        }
+    }
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()

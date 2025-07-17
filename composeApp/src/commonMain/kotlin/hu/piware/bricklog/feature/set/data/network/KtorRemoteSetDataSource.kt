@@ -24,7 +24,7 @@ class KtorRemoteSetDataSource(
 
     override suspend fun downloadSetsCsv(url: String): Result<ByteArray, DataError.Remote> {
         return try {
-            logger.i { "Downloading sets zip" }
+            logger.d { "Downloading sets zip" }
             val (downloadResult, downloadTimeTaken) = measureTimedValue {
                 safeCall<ByteArray> {
                     withContext(Dispatchers.IO) {
@@ -36,13 +36,13 @@ class KtorRemoteSetDataSource(
                 Logger.w { "Downloading sets zip failed" }
                 return downloadResult
             }
-            logger.i { "Downloading sets zip took $downloadTimeTaken" }
+            logger.d { "Downloading sets zip took $downloadTimeTaken" }
 
             withContext(Dispatchers.Default) {
-                logger.i { "Uncompressing zip file" }
+                logger.d { "Uncompressing zip file" }
                 val zipBytes = (downloadResult as Result.Success).data
                 val (csvBytes, uncompressTimeTaken) = measureTimedValue { zipBytes.uncompress(method = GZIP) }
-                logger.i { "Uncompressing zip file took $uncompressTimeTaken" }
+                logger.d { "Uncompressing zip file took $uncompressTimeTaken" }
 
                 Result.Success(csvBytes)
             }

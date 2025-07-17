@@ -1,6 +1,6 @@
 package hu.piware.bricklog.feature.user.domain.model
 
-import dev.gitlive.firebase.auth.FirebaseUser
+import com.mmk.kmpauth.google.GoogleUser
 
 sealed interface AuthenticationMethod {
     data class EmailPassword(
@@ -9,6 +9,6 @@ sealed interface AuthenticationMethod {
     ) : AuthenticationMethod
 
     data class GoogleSignIn(
-        val result: Result<FirebaseUser?>,
+        val googleUser: GoogleUser?,
     ) : AuthenticationMethod
 }

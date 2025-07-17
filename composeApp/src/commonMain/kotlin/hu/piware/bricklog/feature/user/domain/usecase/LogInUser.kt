@@ -20,7 +20,11 @@ class LogInUser(
                 }
             }
 
-            is AuthenticationMethod.GoogleSignIn -> Unit
+            is AuthenticationMethod.GoogleSignIn -> {
+                if (method.googleUser?.idToken == null || method.googleUser.email == null) {
+                    return Result.Error(UserError.Login.INVALID_CREDENTIALS)
+                }
+            }
         }
 
         syncedRepositories.forEach {

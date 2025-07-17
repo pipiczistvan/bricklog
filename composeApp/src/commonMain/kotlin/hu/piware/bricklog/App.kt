@@ -136,8 +136,8 @@ private fun observeSnackbarEvents(
             snackbarHostState.currentSnackbarData?.dismiss()
 
             val result = snackbarHostState.showSnackbar(
-                message = event.message,
-                actionLabel = event.action?.name,
+                message = event.message.getAsString(),
+                actionLabel = event.action?.name?.getAsString(),
                 duration = SnackbarDuration.Long
             )
 

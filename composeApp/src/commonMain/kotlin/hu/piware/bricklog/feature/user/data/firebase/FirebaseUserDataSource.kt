@@ -2,9 +2,11 @@ package hu.piware.bricklog.feature.user.data.firebase
 
 import co.touchlab.kermit.Logger
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.EmailAuthProvider
 import dev.gitlive.firebase.auth.FirebaseAuthInvalidCredentialsException
 import dev.gitlive.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import dev.gitlive.firebase.auth.FirebaseAuthUserCollisionException
+import dev.gitlive.firebase.auth.GoogleAuthProvider
 import dev.gitlive.firebase.auth.auth
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
@@ -27,31 +29,31 @@ class FirebaseUserDataSource : RemoteUserDataSource {
     }
 
     override suspend fun login(method: AuthenticationMethod): Result<User?, UserError.Login> {
-        return when (method) {
+        val credentials = when (method) {
             is AuthenticationMethod.EmailPassword -> {
-                try {
-                    val result = auth.signInWithEmailAndPassword(method.email, method.password)
-                    logger.i { "Logged in successfully with email and password" }
-                    Result.Success(result.user?.toUser())
-                } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    logger.e(e) { "Invalid email or password" }
-                    return Result.Error(UserError.Login.INVALID_CREDENTIALS)
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    logger.e(e) { "An error occurred while logging in with email and password" }
-                    return Result.Error(UserError.Login.UNKNOWN)
-                }
+                EmailAuthProvider.credential(method.email, method.password)
             }
 
             is AuthenticationMethod.GoogleSignIn -> {
-                if (method.result.isSuccess) {
-                    logger.i { "Logged in successfully with Google sign-in" }
-                    Result.Success(method.result.getOrNull()?.toUser())
-                } else {
-                    logger.e(method.result.exceptionOrNull()) { "An error occurred while logging in with Google sign-in" }
-                    Result.Error(UserError.Login.UNKNOWN)
-                }
+                GoogleAuthProvider.credential(
+                    method.googleUser?.idToken,
+                    method.googleUser?.accessToken
+                )
             }
+        }
+
+        try {
+            val result = auth.currentUser?.reauthenticateAndRetrieveData(credentials)
+                ?: auth.signInWithCredential(credentials)
+            logger.d { "Logged in successfully" }
+            return Result.Success(result.user?.toUser())
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            logger.e(e) { "Invalid credentials" }
+            return Result.Error(UserError.Login.INVALID_CREDENTIALS)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logger.e(e) { "An error occurred while logging in" }
+            return Result.Error(UserError.Login.UNKNOWN)
         }
     }
 
@@ -60,7 +62,7 @@ class FirebaseUserDataSource : RemoteUserDataSource {
             is AuthenticationMethod.EmailPassword -> {
                 try {
                     val result = auth.createUserWithEmailAndPassword(method.email, method.password)
-                    logger.i { "Registered successfully with email and password" }
+                    logger.d { "Registered successfully with email and password" }
                     return Result.Success(result.user?.toUser())
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
                     logger.e(e) { "Invalid email or password" }
@@ -85,7 +87,7 @@ class FirebaseUserDataSource : RemoteUserDataSource {
     override suspend fun logout(): Result<User?, UserError.General> {
         try {
             auth.signOut()
-            logger.i { "Logged out successfully" }
+            logger.d { "Logged out successfully" }
             return Result.Success(getCurrentUser())
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while logging out" }
@@ -96,7 +98,7 @@ class FirebaseUserDataSource : RemoteUserDataSource {
     override suspend fun passwordReset(email: String): EmptyResult<UserError.General> {
         try {
             auth.sendPasswordResetEmail(email)
-            logger.i { "Password reset email sent" }
+            logger.d { "Password reset email sent" }
             return Result.Success(null).asEmptyDataResult()
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while sending password reset email" }
@@ -107,7 +109,7 @@ class FirebaseUserDataSource : RemoteUserDataSource {
     override suspend fun deleteUser(): Result<User?, UserError.General> {
         try {
             auth.currentUser?.delete()
-            logger.i { "User deleted successfully" }
+            logger.d { "User deleted successfully" }
             return Result.Success(getCurrentUser())
         } catch (e: FirebaseAuthRecentLoginRequiredException) {
             logger.e(e) { "User must reauthenticate before deleting" }

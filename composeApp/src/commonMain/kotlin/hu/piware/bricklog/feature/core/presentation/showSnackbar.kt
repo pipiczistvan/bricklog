@@ -5,13 +5,15 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 
-suspend fun <T, E : Error> Result<T, E>.showSnackbarOnError(): Result<T, E> {
+suspend fun <T, E : Error> Result<T, E>.showSnackbarOnError(
+    action: (E) -> SnackbarAction? = { null },
+): Result<T, E> {
     return onError { result ->
         SnackbarController.sendEvent(
             SnackbarEvent(
-                message = result.error.toUiText().getAsString()
+                message = result.error.toUiText(),
+                action = action(result.error)
             )
         )
     }
@@ -21,7 +23,7 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnSuccess(res: StringResourc
     return onSuccess {
         SnackbarController.sendEvent(
             SnackbarEvent(
-                message = getString(res)
+                message = UiText.StringResourceId(res)
             )
         )
     }

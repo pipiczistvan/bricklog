@@ -30,7 +30,7 @@ import bricklog.composeapp.generated.resources.feature_user_login_btn_register
 import bricklog.composeapp.generated.resources.feature_user_login_label_disclosure
 import bricklog.composeapp.generated.resources.feature_user_login_label_or
 import bricklog.composeapp.generated.resources.feature_user_login_title
-import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
+import com.mmk.kmpauth.google.GoogleButtonUiContainer
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
@@ -72,14 +72,9 @@ fun LoginScreenRoot(
             viewModel.onAction(action)
         },
         googleSignInButton = { onAction ->
-            GoogleButtonUiContainerFirebase(
-                linkAccount = true,
-                onResult = {
-                    onAction(
-                        LoginAction.OnAuthenticate(
-                            AuthenticationMethod.GoogleSignIn(it)
-                        )
-                    )
+            GoogleButtonUiContainer(
+                onGoogleSignInResult = {
+                    onAction(LoginAction.OnAuthenticate(AuthenticationMethod.GoogleSignIn(it)))
                 }
             ) {
                 GoogleSignInButton(
