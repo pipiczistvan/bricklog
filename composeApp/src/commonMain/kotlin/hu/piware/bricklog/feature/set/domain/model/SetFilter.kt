@@ -6,6 +6,7 @@ import bricklog.composeapp.generated.resources.feature_set_search_date_filter_bt
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_month
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_week
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_year
+import bricklog.composeapp.generated.resources.feature_set_search_sort_appear_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_appear_date_descending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_descending
@@ -28,6 +29,7 @@ data class SetFilter(
     val limit: Int? = null,
     val barcode: String? = null,
     val collectionIds: Set<CollectionId>? = null,
+    val setIds: Set<SetId>? = null,
 )
 
 @Serializable
@@ -45,6 +47,9 @@ enum class SetSortOption(
     ),
     RETIRING_DATE_DESCENDING(
         titleRes = Res.string.feature_set_search_sort_retiring_date_descending
+    ),
+    APPEARANCE_DATE_ASCENDING(
+        titleRes = Res.string.feature_set_search_sort_appear_date_ascending
     ),
     APPEARANCE_DATE_DESCENDING(
         titleRes = Res.string.feature_set_search_sort_appear_date_descending

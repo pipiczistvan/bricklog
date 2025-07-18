@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.set.domain.model
 
 data class Collectible(
     val setNumber: String,
+    val setId: SetId,
     val name: String,
     val codes: Map<SetId, CodeList>,
 )

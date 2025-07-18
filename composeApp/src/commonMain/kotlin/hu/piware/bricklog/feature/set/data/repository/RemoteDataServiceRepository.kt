@@ -6,6 +6,7 @@ import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSou
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
+import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 
 @Single
@@ -19,5 +20,9 @@ class RemoteDataServiceRepository(
 
     override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
         return remoteDataSource.getCollectibles()
+    }
+
+    override fun watchCollectibles(): Flow<List<Collectible>> {
+        return remoteDataSource.watchCollectibles()
     }
 }

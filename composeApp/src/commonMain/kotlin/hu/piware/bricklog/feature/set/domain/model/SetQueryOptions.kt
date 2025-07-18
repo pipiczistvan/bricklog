@@ -17,6 +17,7 @@ data class SetQueryOptions(
     val limit: Int? = null,
     val barcode: String? = null,
     val collectionIds: Set<CollectionId> = emptySet(),
+    val setIds: Set<SetId> = emptySet(),
 )
 
 fun buildSetQueryOptions(
@@ -35,6 +36,7 @@ fun buildSetQueryOptions(
         showIncomplete = filter?.showIncomplete ?: preferences.showIncomplete,
         limit = filter?.limit,
         barcode = filter?.barcode,
-        collectionIds = filter?.collectionIds ?: preferences.collectionIds
+        collectionIds = filter?.collectionIds ?: preferences.collectionIds,
+        setIds = filter?.setIds ?: emptySet(),
     )
 }

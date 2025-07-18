@@ -23,6 +23,7 @@ fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
         "name LIKE '%$it%' OR number LIKE '%$it%'"
     }
 
+    val setIdSelect = buildSetIdSelect(queryOptions.setIds)
     val launchDateSelect = buildLaunchDateSelect(queryOptions.launchDate, now)
     val infoCompleteDateSelect = buildInfoCompleteDateSelect(queryOptions.appearanceDate, now)
     val themeSelect = buildThemeSelect(queryOptions.themes)
@@ -41,6 +42,7 @@ fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
             SELECT * FROM set_details_view 
             WHERE 
                 ($querySelect)
+                AND ($setIdSelect)
                 AND ($launchDateSelect)
                 AND ($infoCompleteDateSelect)
                 AND ($themeSelect)
@@ -56,6 +58,13 @@ fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
     logger.d { sql }
 
     return sql
+}
+
+private fun buildSetIdSelect(setIds: Set<Int>): String {
+    return if (setIds.isNotEmpty())
+        "id IN (${setIds.joinToString(separator = ", ") { "$it" }})"
+    else
+        "1"
 }
 
 private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String {
@@ -130,6 +139,7 @@ private fun buildOrderBy(sortOption: SetSortOption): String {
         SetSortOption.LAUNCH_DATE_DESCENDING -> "COALESCE(launchDate, year) DESC"
         SetSortOption.RETIRING_DATE_ASCENDING -> "COALESCE(exitDate, year) ASC"
         SetSortOption.RETIRING_DATE_DESCENDING -> "COALESCE(exitDate, year) DESC"
+        SetSortOption.APPEARANCE_DATE_ASCENDING -> "infoCompleteDate ASC"
         SetSortOption.APPEARANCE_DATE_DESCENDING -> "infoCompleteDate DESC"
     }
 }

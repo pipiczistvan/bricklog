@@ -8,6 +8,8 @@ import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -41,5 +43,9 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
 
     override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
         return Result.Success(emptyList())
+    }
+
+    override fun watchCollectibles(): Flow<List<Collectible>> {
+        return emptyFlow()
     }
 }

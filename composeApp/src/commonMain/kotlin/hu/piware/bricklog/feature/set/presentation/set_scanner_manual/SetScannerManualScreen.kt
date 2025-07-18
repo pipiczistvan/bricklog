@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.example_barcode
 import bricklog.composeapp.generated.resources.example_data_matrix_large
@@ -55,6 +57,7 @@ import bricklog.composeapp.generated.resources.feature_set_scanner_manual_label_
 import bricklog.composeapp.generated.resources.feature_set_scanner_manual_title
 import bricklog.composeapp.generated.resources.feature_set_scanner_manual_title_barcode_scanning
 import bricklog.composeapp.generated.resources.feature_set_scanner_manual_title_data_matrix_scanning
+import bricklog.composeapp.generated.resources.feature_set_scanner_manual_title_data_matrix_scanning_supported_boxes
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -62,13 +65,18 @@ import hu.piware.bricklog.ui.theme.Shapes
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SetScannerManualScreenRoot(
+    viewModel: SetScannerManualViewModel = koinViewModel(),
     onBackClick: () -> Unit,
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     SetScannerManualScreen(
         modifier = Modifier.testTag("set_scanner_manual_screen"),
+        state = state,
         onAction = { action ->
             when (action) {
                 SetScannerManualAction.OnBackClick -> onBackClick()
@@ -79,6 +87,7 @@ fun SetScannerManualScreenRoot(
 
 @Composable
 private fun SetScannerManualScreen(
+    state: SetScannerManualState,
     onAction: (SetScannerManualAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -255,6 +264,15 @@ private fun SetScannerManualScreen(
                     }
                 }
             }
+
+            Text(
+                text = stringResource(Res.string.feature_set_scanner_manual_title_data_matrix_scanning_supported_boxes),
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            state.collectibleSetDetails.mapNotNull { it.set.name }.forEach { setName ->
+                Text(setName)
+            }
         }
     }
 }
@@ -264,6 +282,7 @@ private fun SetScannerManualScreen(
 private fun SetScannerManualScreenPreview() {
     BricklogTheme {
         SetScannerManualScreen(
+            state = SetScannerManualState(),
             onAction = {}
         )
     }

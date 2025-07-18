@@ -87,6 +87,7 @@
     <string name="feature_set_scanner_manual_title">Scanner Manual</string>
     <string name="feature_set_scanner_manual_title_barcode_scanning">Set Barcode Scanning</string>
     <string name="feature_set_scanner_manual_title_data_matrix_scanning">CMF Data Matrix Scanning</string>
+    <string name="feature_set_scanner_manual_title_data_matrix_scanning_supported_boxes">Supported CMF boxes</string>
     <string name="feature_set_search_btn_show_all">Show All</string>
     <string name="feature_set_search_chip_collections">User collections</string>
     <string name="feature_set_search_chip_packaging_types">Packaging types</string>
@@ -110,7 +111,8 @@
     <string name="feature_set_search_reset_filter_confirm_dialog_btn_confirm">Confirm</string>
     <string name="feature_set_search_reset_filter_confirm_dialog_label">Are you sure you want to reset the filter?</string>
     <string name="feature_set_search_reset_filter_confirm_dialog_title">Reset filter</string>
-    <string name="feature_set_search_sort_appear_date_descending">By appearance</string>
+    <string name="feature_set_search_sort_appear_date_ascending">Ascending by appearance</string>
+    <string name="feature_set_search_sort_appear_date_descending">Descending by appearance</string>
     <string name="feature_set_search_sort_launch_date_ascending">Ascending by launch date</string>
     <string name="feature_set_search_sort_launch_date_descending">Descending by launch date</string>
     <string name="feature_set_search_sort_retiring_date_ascending">Ascending by retiring date</string>
