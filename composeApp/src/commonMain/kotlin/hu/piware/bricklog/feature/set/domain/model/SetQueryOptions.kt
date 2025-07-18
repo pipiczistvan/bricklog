@@ -1,12 +1,11 @@
 package hu.piware.bricklog.feature.set.domain.model
 
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import kotlin.collections.Set
 
 data class SetQueryOptions(
-    val queries: List<String> = "".parseQueries(),
+    val queries: List<String> = emptyList(),
     val sortOption: SetSortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     val launchDate: DateFilter = DateFilter.AnyTime,
     val appearanceDate: DateFilter = DateFilter.AnyTime,

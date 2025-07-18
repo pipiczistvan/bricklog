@@ -17,65 +17,63 @@ private val logger = Logger.withTag("buildGetSetDetailsSql")
 fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
     val now = Clock.System.now()
 
-    val querySelect = queryOptions.queries.joinToString(
-        separator = " OR "
-    ) {
-        "name LIKE '%$it%' OR number LIKE '%$it%'"
-    }
+    val conditions = listOfNotNull(
+        buildQuerySelect(queryOptions.queries),
+        buildSetIdSelect(queryOptions.setIds),
+        buildLaunchDateSelect(queryOptions.launchDate, now),
+        buildInfoCompleteDateSelect(queryOptions.appearanceDate, now),
+        buildThemeSelect(queryOptions.themes),
+        buildPackagingTypeSelect(queryOptions.packagingTypes),
+        buildStatusSelect(queryOptions.statuses),
+        buildShowIncompleteSelect(queryOptions.showIncomplete),
+        buildBarcodeSelect(queryOptions.barcode),
+        buildCollectionIdSelect(queryOptions.collectionIds)
+    ).joinToString(separator = " AND ") { "($it)" }
 
-    val setIdSelect = buildSetIdSelect(queryOptions.setIds)
-    val launchDateSelect = buildLaunchDateSelect(queryOptions.launchDate, now)
-    val infoCompleteDateSelect = buildInfoCompleteDateSelect(queryOptions.appearanceDate, now)
-    val themeSelect = buildThemeSelect(queryOptions.themes)
-    val packagingTypeSelect = buildPackagingTypeSelect(queryOptions.packagingTypes)
-    val statusSelect = buildStatusSelect(queryOptions.statuses)
-    val showIncomplete = buildShowIncompleteSelect(queryOptions.showIncomplete)
-    val barcodeSelect = buildBarcodeSelect(queryOptions.barcode)
-    val collectionSelect = buildCollectionIdSelect(queryOptions.collectionIds)
     val orderBy = buildOrderBy(queryOptions.sortOption)
-    val limit = when (queryOptions.limit) {
-        null -> ""
-        else -> "LIMIT ${queryOptions.limit}"
-    }
+    val limit = queryOptions.limit?.let { " LIMIT $it" } ?: ""
 
-    val sql = """
-            SELECT * FROM set_details_view 
-            WHERE 
-                ($querySelect)
-                AND ($setIdSelect)
-                AND ($launchDateSelect)
-                AND ($infoCompleteDateSelect)
-                AND ($themeSelect)
-                AND ($packagingTypeSelect)
-                AND ($statusSelect)
-                AND ($showIncomplete)
-                AND ($barcodeSelect)
-                AND ($collectionSelect)
-            ORDER BY $orderBy
-            $limit
-            """.trimMargin()
+    val sql = StringBuilder()
+        .append("SELECT * FROM set_details_view")
+        .append(if (conditions.isNotEmpty()) " WHERE $conditions" else "")
+        .append(" ORDER BY $orderBy")
+        .append(limit)
+        .toString()
 
     logger.d { sql }
 
     return sql
 }
 
-private fun buildSetIdSelect(setIds: Set<Int>): String {
-    return if (setIds.isNotEmpty())
-        "id IN (${setIds.joinToString(separator = ", ") { "$it" }})"
-    else
-        "1"
+private fun buildQuerySelect(queries: List<String>): String? {
+    if (queries.isEmpty()) return null
+
+    return queries.joinToString(
+        separator = " OR "
+    ) {
+        "name LIKE '%$it%' OR number LIKE '%$it%'"
+    }
 }
 
-private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String {
+private fun buildSetIdSelect(setIds: Set<Int>): String? {
+    if (setIds.isEmpty()) return null
+
+    return "id IN (${setIds.joinToString(separator = ", ") { "$it" }})"
+}
+
+private fun buildLaunchDateSelect(dateFilter: DateFilter, now: Instant): String? {
     return buildDateFilterSelect("launchDate", dateFilter, now)
 }
 
-private fun buildInfoCompleteDateSelect(dateFilter: DateFilter, now: Instant): String {
+private fun buildInfoCompleteDateSelect(dateFilter: DateFilter, now: Instant): String? {
     return buildDateFilterSelect("infoCompleteDate", dateFilter, now)
 }
 
-private fun buildDateFilterSelect(dateField: String, dateFilter: DateFilter, now: Instant): String {
+private fun buildDateFilterSelect(
+    dateField: String,
+    dateFilter: DateFilter,
+    now: Instant,
+): String? {
     val (startDate, endDate) = when (dateFilter) {
         DateFilter.AnyTime -> Pair(null, null)
         DateFilter.OneWeek -> Pair(now - 7.days, now)
@@ -87,50 +85,51 @@ private fun buildDateFilterSelect(dateField: String, dateFilter: DateFilter, now
         )
     }
 
-    val startDateSelect =
-        startDate?.let { "$dateField >= ${instantConverter.fromInstant(it)}" } ?: "1"
-    val endDateSelect = endDate?.let { "$dateField <= ${instantConverter.fromInstant(it)}" } ?: "1"
+    val startDateSelect = startDate?.let { "$dateField >= ${instantConverter.fromInstant(it)}" }
+    val endDateSelect = endDate?.let { "$dateField <= ${instantConverter.fromInstant(it)}" }
 
-    return "$startDateSelect AND $endDateSelect"
+    return when {
+        startDateSelect != null && endDateSelect != null -> "$startDateSelect AND $endDateSelect"
+        startDateSelect != null -> startDateSelect
+        endDateSelect != null -> endDateSelect
+        else -> null
+    }
 }
 
-private fun buildThemeSelect(themes: Set<String>): String {
+private fun buildThemeSelect(themes: Set<String>): String? {
     return buildStringCollectionSelect("theme", themes)
 }
 
-private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String {
+private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String? {
     return buildStringCollectionSelect("packagingType", packagingTypes)
 }
 
-private fun buildStatusSelect(statuses: Set<SetStatus>): String {
+private fun buildStatusSelect(statuses: Set<SetStatus>): String? {
     return buildStringCollectionSelect("status", statuses.map { it.name })
 }
 
-private fun buildShowIncompleteSelect(showIncomplete: Boolean): String {
+private fun buildShowIncompleteSelect(showIncomplete: Boolean): String? {
     return if (!showIncomplete)
         "infoCompleteDate IS NOT NULL"
     else
-        "1"
+        null
 }
 
-private fun buildBarcodeSelect(barcode: String?): String {
-    return if (barcode != null)
-        "barcodeEAN = '$barcode' OR barcodeUPC = '$barcode'"
-    else
-        "1"
+private fun buildBarcodeSelect(barcode: String?): String? {
+    return barcode?.let { "barcodeEAN = '$it' OR barcodeUPC = '$it'" }
 }
 
-private fun buildCollectionIdSelect(collectionIds: Set<CollectionId>): String {
-    return if (collectionIds.isNotEmpty())
-        """EXISTS(
-            SELECT * FROM set_collections 
-            WHERE
-             setId = set_details_view.id
-             AND collectionId IN (${collectionIds.joinToString(separator = ", ") { "'$it'" }})
-             LIMIT 1
-           )""".trimIndent()
-    else
-        "1"
+private fun buildCollectionIdSelect(collectionIds: Set<CollectionId>): String? {
+    if (collectionIds.isEmpty()) return null
+
+    return StringBuilder()
+        .append("EXISTS(")
+        .append("SELECT * FROM set_collections WHERE ")
+        .append("setId = set_details_view.id ")
+        .append("AND collectionId IN (${collectionIds.joinToString(separator = ", ") { "'$it'" }}) ")
+        .append("LIMIT 1")
+        .append(")")
+        .toString()
 }
 
 private fun buildOrderBy(sortOption: SetSortOption): String {
@@ -147,11 +146,10 @@ private fun buildOrderBy(sortOption: SetSortOption): String {
 private fun buildStringCollectionSelect(
     columnName: String,
     collection: Collection<String>,
-): String {
-    return if (collection.isNotEmpty())
-        "$columnName IN (${collection.joinToString(separator = ", ") { "'${it.sqlEscape()}'" }})"
-    else
-        "1"
+): String? {
+    if (collection.isEmpty()) return null
+
+    return "$columnName IN (${collection.joinToString(separator = ", ") { "'${it.sqlEscape()}'" }})"
 }
 
 private fun String.sqlEscape() = replace("'", "''")
