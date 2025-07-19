@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 class MockRemoteUserDataSource : RemoteUserDataSource {
 
     private var currentUser: User? = null
+    private val firestore = MockFirestore
 
     override suspend fun getCurrentUser(): User? {
         return currentUser
@@ -38,6 +39,7 @@ class MockRemoteUserDataSource : RemoteUserDataSource {
     }
 
     override suspend fun deleteUser(): Result<User?, UserError.General> {
+        firestore.clear()
         return logout()
     }
 }

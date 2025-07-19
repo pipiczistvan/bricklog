@@ -175,6 +175,7 @@
     <string name="feature_settings_appearance_language_label_hungarian">Hungarian</string>
     <string name="feature_settings_appearance_language_label_system">System</string>
     <string name="feature_settings_appearance_title">Appearance</string>
+    <string name="feature_settings_appearance_title_greetings">Greetings</string>
     <string name="feature_settings_appearance_title_theme">Theme</string>
     <string name="feature_settings_license_title">License</string>
     <string name="feature_settings_notifications_btn_settings">Open Device Settings</string>
@@ -192,6 +193,8 @@
     <string name="feature_user_form_field_email_hint">Enter your email address...</string>
     <string name="feature_user_form_field_email_invalid">The email you entered is not in the correct format. Please check.</string>
     <string name="feature_user_form_field_email_title">Email address</string>
+    <string name="feature_user_form_field_name_invalid">Name cannot be longer than 20 characters.</string>
+    <string name="feature_user_form_field_name_title">Display name</string>
     <string name="feature_user_form_field_password_hint">Enter your password...</string>
     <string name="feature_user_form_field_password_invalid">Password is invalid.</string>
     <string name="feature_user_form_field_password_title">Password</string>

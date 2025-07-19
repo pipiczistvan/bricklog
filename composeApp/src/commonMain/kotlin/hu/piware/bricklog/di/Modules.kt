@@ -32,7 +32,7 @@ val viewModelModule = module {
 val useCaseModule = module {
     single { LogOutUser(get(), getAll()) }
     single { LogInUser(get(), getAll()) }
-    single { RegisterUser(get(), getAll()) }
+    single { RegisterUser(get(), get(), getAll()) }
     single { DeleteUserData(get(), getAll()) }
 }
 

@@ -8,34 +8,26 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
 
-    private var collections = MutableStateFlow(listOf<Collection>())
-    private var setCollections = MutableStateFlow(mapOf<SetId, List<CollectionId>>())
+    private val firestore = MockFirestore
 
     override fun watchCollections(userId: String): Flow<List<Collection>> {
-        return collections.asStateFlow()
+        return firestore.collections.asStateFlow()
     }
 
     override fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>> {
-        return setCollections.asStateFlow()
+        return firestore.setCollections.asStateFlow()
     }
 
     override suspend fun deleteCollection(
         userId: String,
         id: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        collections.update { it.filter { it.id != id } }
-        return Result.Success(Unit)
-    }
-
-    override suspend fun deleteAllCollections(userId: String): EmptyResult<DataError.Remote> {
-        collections.update { emptyList() }
-        setCollections.update { emptyMap() }
+        firestore.collections.update { it.filter { it.id != id } }
         return Result.Success(Unit)
     }
 
@@ -43,7 +35,7 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         userId: String,
         collection: Collection,
     ): EmptyResult<DataError.Remote> {
-        collections.update { currentCollections ->
+        firestore.collections.update { currentCollections ->
             currentCollections.filter { it.id != collection.id } + collection
         }
         return Result.Success(Unit)
@@ -54,13 +46,13 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        val collection = collections.value.find { it.id == collectionId }
+        val collection = firestore.collections.value.find { it.id == collectionId }
 
         if (collection == null) {
             return Result.Error(DataError.Remote.UNKNOWN)
         }
 
-        setCollections.update { currentMap ->
+        firestore.setCollections.update { currentMap ->
             val currentCollections = currentMap[setId] ?: emptyList()
 
             // Check if the collection is already present
@@ -81,13 +73,13 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        val collection = collections.value.find { it.id == collectionId }
+        val collection = firestore.collections.value.find { it.id == collectionId }
 
         if (collection == null) {
             return Result.Error(DataError.Remote.UNKNOWN)
         }
 
-        setCollections.update { currentMap ->
+        firestore.setCollections.update { currentMap ->
             val currentCollections = currentMap[setId] ?: emptyList()
 
             // Check if the collection is already present

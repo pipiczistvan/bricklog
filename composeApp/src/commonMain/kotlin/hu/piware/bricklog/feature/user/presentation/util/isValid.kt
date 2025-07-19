@@ -9,3 +9,7 @@ fun isValidPassword(password: String): Boolean {
     val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d\\w\\W]{8,}\$".toRegex()
     return password.matches(passwordRegex)
 }
+
+fun isValidName(name: String): Boolean {
+    return name.length <= 20
+}

@@ -63,7 +63,6 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilte
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
-import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -236,10 +235,11 @@ private fun DashboardScreen(
                             bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
                         )
                     ) {
-                        if (state.currentUser != null) {
+                        if (state.userPreferences.showGreetings) {
                             Greetings(
                                 modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
-                                user = state.currentUser
+                                displayName = state.userPreferences.displayName
+                                    ?: state.currentUser?.displayName?.split(" ")?.firstOrNull()
                             )
                         }
 
@@ -316,11 +316,9 @@ private fun DashboardScreen(
 
 @Composable
 private fun Greetings(
-    user: User,
+    displayName: String?,
     modifier: Modifier = Modifier,
 ) {
-    val firstName = user.displayName?.split(" ")?.firstOrNull()
-
     Row(
         modifier = modifier.padding(Dimens.MediumPadding.size)
     ) {
@@ -329,9 +327,9 @@ private fun Greetings(
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
-        if (firstName != null) {
+        if (displayName != null) {
             Text(
-                text = " $firstName",
+                text = " $displayName",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary

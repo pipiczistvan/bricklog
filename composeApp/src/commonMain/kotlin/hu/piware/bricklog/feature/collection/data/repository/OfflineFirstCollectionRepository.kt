@@ -106,16 +106,6 @@ class OfflineFirstCollectionRepository(
         return localDataSource.deleteAllCollections()
     }
 
-    override suspend fun clearRemote(): EmptyResult<DataError> {
-        val user = sessionManager.currentUser.value
-
-        if (user == null) {
-            return Result.Error(DataError.Remote.UNKNOWN)
-        }
-
-        return remoteDataSource.deleteAllCollections(user.uid)
-    }
-
     override fun watchCollections(): Flow<List<Collection>> {
         return localDataSource.watchCollections()
     }

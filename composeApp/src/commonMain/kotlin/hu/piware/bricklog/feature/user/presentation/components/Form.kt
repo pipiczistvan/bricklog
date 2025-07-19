@@ -37,12 +37,15 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_user_form_field_email_hint
 import bricklog.composeapp.generated.resources.feature_user_form_field_email_invalid
 import bricklog.composeapp.generated.resources.feature_user_form_field_email_title
+import bricklog.composeapp.generated.resources.feature_user_form_field_name_invalid
+import bricklog.composeapp.generated.resources.feature_user_form_field_name_title
 import bricklog.composeapp.generated.resources.feature_user_form_field_password_hint
 import bricklog.composeapp.generated.resources.feature_user_form_field_password_invalid
 import bricklog.composeapp.generated.resources.feature_user_form_field_password_title
 import bricklog.composeapp.generated.resources.feature_user_login_form_btn_submit
 import bricklog.composeapp.generated.resources.feature_user_login_label_forgot_password
 import hu.piware.bricklog.feature.user.presentation.util.isValidEmail
+import hu.piware.bricklog.feature.user.presentation.util.isValidName
 import hu.piware.bricklog.feature.user.presentation.util.isValidPassword
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -225,6 +228,63 @@ fun PasswordField(
         supportingText = {
             if (!isValid) {
                 Text(text = supportText)
+            }
+        },
+        isError = !isValid
+    )
+}
+
+@Composable
+fun NameField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    labelValue: String?,
+    placeholderName: String? = null,
+    onValidate: (Boolean) -> Unit,
+    validate: (String) -> Boolean = ::isValidName,
+) {
+    val focusManager = LocalFocusManager.current
+
+    var isValid by remember { mutableStateOf(true) }
+    var hasTouched by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isValid) {
+        onValidate(isValid)
+    }
+
+    OutlinedTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged {
+                if (it.isFocused) {
+                    hasTouched = true
+                }
+                if (!it.isFocused && hasTouched) {
+                    isValid = validate(value)
+                }
+            },
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { placeholderName?.let { Text(it) } },
+        label = {
+            Text(
+                text = labelValue ?: stringResource(Res.string.feature_user_form_field_name_title)
+            )
+        },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        ),
+        supportingText = {
+            if (!isValid) {
+                Text(text = stringResource(Res.string.feature_user_form_field_name_invalid))
             }
         },
         isError = !isValid

@@ -4,6 +4,7 @@ import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionD
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetImageDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetInstructionDataSource
+import hu.piware.bricklog.feature.settings.domain.datasource.RemoteSettingsDataSource
 import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserDataSource
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -15,4 +16,5 @@ val mockModule = module {
     singleOf(::MockRemoteSetInstructionDataSource).bind<RemoteSetInstructionDataSource>()
     singleOf(::MockRemoteUserDataSource).bind<RemoteUserDataSource>()
     singleOf(::MockRemoteCollectionDataSource).bind<RemoteCollectionDataSource>()
+    singleOf(::MockRemoteSettingsDataSource).bind<RemoteSettingsDataSource>()
 }

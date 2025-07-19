@@ -8,6 +8,7 @@ import dev.gitlive.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import dev.gitlive.firebase.auth.FirebaseAuthUserCollisionException
 import dev.gitlive.firebase.auth.GoogleAuthProvider
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.firestore.firestore
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.UserError
@@ -22,6 +23,8 @@ import org.koin.core.annotation.Single
 class FirebaseUserDataSource : RemoteUserDataSource {
 
     private val logger = Logger.withTag("FirebaseUserDataSource")
+
+    private val firestore = Firebase.firestore
     private val auth = Firebase.auth
 
     override suspend fun getCurrentUser(): User? {
@@ -108,7 +111,11 @@ class FirebaseUserDataSource : RemoteUserDataSource {
 
     override suspend fun deleteUser(): Result<User?, UserError.General> {
         try {
-            auth.currentUser?.delete()
+            val user =
+                auth.currentUser ?: return Result.Error(UserError.General.REAUTHENTICATION_REQUIRED)
+            firestore.document("user-data/${user.uid}").delete()
+            logger.d { "User data deleted successfully" }
+            user.delete()
             logger.d { "User deleted successfully" }
             return Result.Success(getCurrentUser())
         } catch (e: FirebaseAuthRecentLoginRequiredException) {

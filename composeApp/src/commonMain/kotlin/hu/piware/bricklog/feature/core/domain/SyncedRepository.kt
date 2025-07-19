@@ -5,5 +5,4 @@ import kotlinx.coroutines.CoroutineScope
 interface SyncedRepository {
     fun startSync(scope: CoroutineScope)
     suspend fun clearLocal(): EmptyResult<DataError>
-    suspend fun clearRemote(): EmptyResult<DataError>
 }

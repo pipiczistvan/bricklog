@@ -44,6 +44,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilte
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
+import hu.piware.bricklog.feature.settings.domain.usecase.WatchUserPreferences
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
@@ -81,6 +82,7 @@ class DashboardViewModel(
     @Provided private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
     private val initializeDefaultCollections: InitializeDefaultCollections,
+    private val watchUserPreferences: WatchUserPreferences,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -99,6 +101,7 @@ class DashboardViewModel(
             observeSetFilterDomain()
             observeNewChangelog()
             observeCurrentUser()
+            observeUserPreferences()
             askNotificationPermission()
         }
 
@@ -313,6 +316,12 @@ class DashboardViewModel(
         watchCurrentUser()
             .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
             .onEach { user -> _navigationDrawerState.update { it.copy(currentUser = user) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeUserPreferences() {
+        watchUserPreferences()
+            .onEach { preferences -> _uiState.update { it.copy(userPreferences = preferences) } }
             .launchIn(viewModelScope)
     }
 

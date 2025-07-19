@@ -12,7 +12,6 @@ class DeleteUserData(
     suspend operator fun invoke(): EmptyResult<UserError> {
         syncedRepositories.forEach {
             it.clearLocal()
-            it.clearRemote()
         }
 
         return userRepository.deleteUser()
