@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Bricklog.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#AC9C80</item>
+        <item name="windowSplashScreenBackground">#FFFDF8F6</item>
         <item name="postSplashScreenTheme">@android:style/Theme.Material.Light.NoActionBar</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
     </style>
