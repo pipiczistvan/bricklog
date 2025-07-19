@@ -347,6 +347,7 @@ private fun FeaturedSets(
         verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
     ) {
         FeaturedSetsRow(
+            modifier = Modifier.testTag("dashboard:latest_sets_row"),
             title = stringResource(Res.string.feature_set_dashboard_title_latest_sets),
             onDashboardAction = onAction,
             sets = state.latestSets,

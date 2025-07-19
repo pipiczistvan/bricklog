@@ -13,6 +13,7 @@ val BuildConfig.RELEASE_VERSION: Int
 enum class Flavor {
     DEVELOPMENT,
     MOCK,
+    BENCHMARK,
     PRODUCTION
 }
 
@@ -20,8 +21,15 @@ val BuildConfig.flavor: Flavor
     get() = when (BuildKonfig.FLAVOR) {
         "DEV" -> Flavor.DEVELOPMENT
         "MOCK" -> Flavor.MOCK
+        "BENCHMARK" -> Flavor.BENCHMARK
         else -> Flavor.PRODUCTION
     }
 
 val BuildConfig.isDebugFlavor: Boolean
-    get() = BuildConfig.flavor == Flavor.DEVELOPMENT || BuildConfig.flavor == Flavor.MOCK
+    get() = BuildConfig.flavor == Flavor.DEVELOPMENT || isMockFlavor
+
+val BuildConfig.isMockFlavor: Boolean
+    get() = BuildConfig.flavor == Flavor.MOCK || BuildConfig.flavor == Flavor.BENCHMARK
+
+val BuildConfig.isBenchmarkFlavor: Boolean
+    get() = BuildConfig.flavor == Flavor.BENCHMARK

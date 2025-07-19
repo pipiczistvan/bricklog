@@ -65,11 +65,11 @@ Configure build flavor in [local.properties](local.properties) like this: `build
 
 ### Available flavors
 
-| 	                           | prod (default) 	 | dev 	 | mock 	 |
-|-----------------------------|------------------|-------|--------|
-| Requires Firebase setup   	 | yes            	 | yes 	 | no   	 |
-| Requires Brickset API key 	 | yes            	 | yes 	 | no   	 |
-| Developer options enabled 	 | no             	 | yes 	 | yes  	 |
+| 	                           | prod (default) 	 | dev 	 | mock 	 | benchmark |
+|-----------------------------|------------------|-------|--------|-----------|
+| Requires Firebase setup   	 | yes            	 | yes 	 | no   	 | no   	    |
+| Requires Brickset API key 	 | yes            	 | yes 	 | no   	 | no   	    |
+| Developer options enabled 	 | no             	 | yes 	 | yes  	 | yes  	    |
 
 ### Brickset API key
 
@@ -100,11 +100,10 @@ Download a `google-services.json` from Firebase and place in `composeApp` folder
 Generate baseline profile using BaselineProfileGenerator on a rooted emulator.
 Run benchmarks on real device.
 
-1. Use mock remote implementations and turn off startup permission requests
-2. Select benchmarkRelease build variant
-3. Execute ./gradlew :composeApp:generateReleaseBaselineProfile
-4. Test with benchmarks
-5. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
+1. Use benchmark flavor
+2. Execute ./gradlew :composeApp:generateReleaseBaselineProfile
+3. Test with benchmarks on real device
+4. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
 
 ## Troubleshoot
 

@@ -37,6 +37,11 @@ fun Modifier.drawFlavorRibbon() = composed(
                         color = Color.Red.copy(alpha = 0.5f)
                     )
 
+                    Flavor.BENCHMARK -> it.drawDiagonalLabel(
+                        text = "BENCHMARK",
+                        color = Color.Green.copy(alpha = 0.5f)
+                    )
+
                     Flavor.PRODUCTION -> it
                 }
             }

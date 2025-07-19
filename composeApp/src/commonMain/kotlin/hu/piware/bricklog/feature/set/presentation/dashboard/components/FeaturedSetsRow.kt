@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
@@ -30,12 +31,16 @@ fun FeaturedSetsRow(
     sets: List<SetDetails>,
     filterOverrides: SetFilter,
     sharedElementPrefix: String,
+    modifier: Modifier = Modifier,
 ) {
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
     ) {
         SectionTitle(
-            modifier = Modifier.padding(start = Dimens.MediumPadding.size),
+            modifier = Modifier
+                .testTag("featured_sets_row:title")
+                .padding(start = Dimens.MediumPadding.size),
             title = title,
             onClick = {
                 onDashboardAction(

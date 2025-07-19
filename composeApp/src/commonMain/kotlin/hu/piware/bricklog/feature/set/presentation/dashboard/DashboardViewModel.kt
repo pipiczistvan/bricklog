@@ -48,6 +48,8 @@ import hu.piware.bricklog.feature.settings.domain.usecase.WatchUserPreferences
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
+import hu.piware.bricklog.util.BuildConfig
+import hu.piware.bricklog.util.isBenchmarkFlavor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -102,7 +104,9 @@ class DashboardViewModel(
             observeNewChangelog()
             observeCurrentUser()
             observeUserPreferences()
-            askNotificationPermission()
+            if (!BuildConfig.isBenchmarkFlavor) {
+                askNotificationPermission()
+            }
         }
 
     private val _eventChannel = Channel<DashboardEvent>()

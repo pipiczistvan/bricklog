@@ -206,6 +206,9 @@ buildkonfig {
     defaultConfigs("mock") {
         buildConfigField(STRING, "FLAVOR", "MOCK")
     }
+    defaultConfigs("benchmark") {
+        buildConfigField(STRING, "FLAVOR", "BENCHMARK")
+    }
     defaultConfigs("dev") {
         buildConfigField(STRING, "FLAVOR", "DEV")
     }

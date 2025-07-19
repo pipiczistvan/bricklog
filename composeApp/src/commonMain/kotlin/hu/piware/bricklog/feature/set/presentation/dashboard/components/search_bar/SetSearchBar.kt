@@ -4,6 +4,7 @@ package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -91,76 +92,80 @@ private fun Content(
 ) {
     val scope = rememberCoroutineScope()
 
-    SetFilterRow(
-        filterPreferences = state.filterPreferences,
-        onFilterPreferencesChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
-        filterDomain = state.filterDomain
-    )
+    Column(
+        modifier = Modifier.testTag("search_bar:content")
+    ) {
+        SetFilterRow(
+            filterPreferences = state.filterPreferences,
+            onFilterPreferencesChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
+            filterDomain = state.filterDomain
+        )
 
-    if (state.searchResults.isNotEmpty()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(Res.string.feature_set_search_title_results),
-                style = MaterialTheme.typography.titleLarge
-            )
-            TextButton(
+        if (state.searchResults.isNotEmpty()) {
+            Row(
                 modifier = Modifier
-                    .testTag("search_bar:show_all_button"),
-                onClick = {
-                    scope.launch {
-                        onAction(
-                            SetSearchBarAction.OnShowAllClick(
-                                SetListArguments(
-                                    title = getString(Res.string.feature_set_search_title_results),
-                                    searchQuery = state.typedQuery
-                                )
-                            )
-                        )
-                    }
-                }
+                    .fillMaxWidth()
+                    .padding(start = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(stringResource(Res.string.feature_set_search_btn_show_all))
-            }
-        }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            items(state.searchResults) { setDetails ->
-                Row(
+                Text(
+                    text = stringResource(Res.string.feature_set_search_title_results),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                TextButton(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
+                        .testTag("search_bar:show_all_button"),
+                    onClick = {
+                        scope.launch {
                             onAction(
-                                SetSearchBarAction.OnSetClick(
-                                    SetDetailArguments(
-                                        setId = setDetails.setID,
-                                        sharedElementPrefix = "search_bar"
+                                SetSearchBarAction.OnShowAllClick(
+                                    SetListArguments(
+                                        title = getString(Res.string.feature_set_search_title_results),
+                                        searchQuery = state.typedQuery
                                     )
                                 )
                             )
                         }
+                    }
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = Dimens.MediumPadding.size,
-                                vertical = Dimens.SmallPadding.size
-                            ),
-                        text = setDetails.set.name ?: "",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                    Text(stringResource(Res.string.feature_set_search_btn_show_all))
                 }
             }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(state.searchResults) { setDetails ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onAction(
+                                    SetSearchBarAction.OnSetClick(
+                                        SetDetailArguments(
+                                            setId = setDetails.setID,
+                                            sharedElementPrefix = "search_bar"
+                                        )
+                                    )
+                                )
+                            }
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = Dimens.MediumPadding.size,
+                                    vertical = Dimens.SmallPadding.size
+                                ),
+                            text = setDetails.set.name ?: "",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
 
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                item {
+                    Spacer(modifier = Modifier.navigationBarsPadding())
+                }
             }
         }
     }
