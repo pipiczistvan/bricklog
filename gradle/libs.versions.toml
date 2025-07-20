@@ -26,6 +26,7 @@ coil3 = "3.2.0"                                 # https://github.com/coil-kt/coi
 compose-multiplatform = "1.9.0-alpha03"         # https://github.com/JetBrains/compose-multiplatform
 crashlytics = "3.0.4"                           # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 firebase-bom = "33.16.0"                        # https://firebase.google.com/support/release-notes/android
+firebaseAppdistribution = "5.1.1"               # https://firebase.google.com/docs/app-distribution/android/distribute-gradle
 gitLive = "2.1.0"                               # https://github.com/GitLiveApp/firebase-kotlin-sdk
 google-services = "4.4.3"                       # https://developers.google.com/android/guides/google-services-plugin
 kermit = "2.0.6"                                # https://github.com/touchlab/Kermit
@@ -138,6 +139,7 @@ room = { id = "androidx.room", version.ref = "androidx-room" }
 android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineprofile" }
+firebaseAppdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppdistribution" }
 
 [bundles]
 ktor = [

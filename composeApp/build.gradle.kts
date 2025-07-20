@@ -2,10 +2,12 @@ import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.google.devtools.ksp.KspExperimental
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import java.io.FileInputStream
 import java.util.Properties
+import java.util.zip.ZipFile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -17,9 +19,12 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.firebaseAppdistribution)
 }
 
 loadLocalProperties()
+
+val archiveName = createArchiveName()
 
 kotlin {
     androidTarget {
@@ -135,7 +140,7 @@ android {
         versionName = libs.versions.app.version.get()
         setProperty(
             "archivesBaseName",
-            "bricklog-$versionName-$versionCode-${project.findProperty("buildkonfig.flavor") ?: "prod"}"
+            archiveName
         )
     }
     packaging {
@@ -174,6 +179,11 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             ndk {
                 debugSymbolLevel = "FULL"
+            }
+            firebaseAppDistribution {
+                artifactType = "APK"
+                groups = "testers"
+                serviceCredentialsFile = "release/google-services-credentials.json"
             }
         }
     }
@@ -263,4 +273,53 @@ private fun loadLocalProperties() {
     localProperties.forEach { key, value ->
         extra.set(key.toString(), value)
     }
+}
+
+private fun createArchiveName(): String {
+    val versionCode = libs.versions.app.release.get().toInt()
+    val versionName = libs.versions.app.version.get()
+    val flavor = project.findProperty("buildkonfig.flavor") ?: "prod"
+    return "bricklog-$versionName-$versionCode-$flavor"
+}
+
+val bundleReleaseApk by tasks.registering {
+    group = "bundle"
+    description = "Generate universal APK from the release AAB"
+
+    val aab = layout.buildDirectory.file("outputs/bundle/release/$archiveName-release.aab")
+    val apks = layout.buildDirectory.file("outputs/bundle/release/app-release.apks")
+    val apkOutput = layout.buildDirectory.file("outputs/apk/release/$archiveName-release.apk")
+
+    inputs.file(aab)
+    outputs.file(apkOutput)
+
+    dependsOn("bundleRelease")
+
+    doLast {
+        exec {
+            commandLine(
+                "java", "-jar", "../release/bundletool-all-1.18.1.jar",
+                "build-apks",
+                "--bundle=${aab.get().asFile}",
+                "--output=${apks.get().asFile}",
+                "--mode=universal",
+                "--ks=../release/app-release.jks",
+                "--ks-pass=pass:${properties["BRICKLOG_RELEASE_KEYSTORE_PWD"]}",
+                "--ks-key-alias=bricklog",
+                "--key-pass=pass:${properties["BRICKLOG_RELEASE_KEY_PWD"]}"
+            )
+        }
+        // unzip the universal APK
+        ZipFile(apks.get().asFile).use { zip ->
+            val entry =
+                zip.getEntry("universal.apk") ?: error("universal.apk not found in ${apks.get()}")
+            zip.getInputStream(entry).use { input ->
+                apkOutput.get().asFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+
+    notCompatibleWithConfigurationCache("Gradle's configuration cache doesn't allow serializing script object references")
 }

@@ -20,5 +20,6 @@ captures
 AppSecrets.plist
 GoogleService-Info.plist
 google-services.json
+google-services-credentials.json
 app-release.jks
 Secrets.xcconfig
