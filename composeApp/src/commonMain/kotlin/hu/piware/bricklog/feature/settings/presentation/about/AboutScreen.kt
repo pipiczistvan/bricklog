@@ -54,6 +54,7 @@ import bricklog.composeapp.generated.resources.feature_settings_about_title_fram
 import bricklog.composeapp.generated.resources.feature_settings_about_title_lego_api
 import bricklog.composeapp.generated.resources.feature_settings_about_title_tools
 import bricklog.composeapp.generated.resources.github_logo
+import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationType
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
@@ -295,7 +296,7 @@ private fun AppProfile(
                     Res.string.feature_settings_about_label_build_version,
                     BuildConfig.VERSION_NAME,
                     BuildConfig.RELEASE_VERSION,
-                    BuildConfig.VERSION_CODE
+                    BuildKonfig.REVISION
                 ),
                 style = OverpassMonoTypography().bodySmall
             )

@@ -13,7 +13,13 @@ pipeline {
             }
         }
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+                script {
+                    env.GIT_COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    echo "Short Git commit hash: ${env.GIT_COMMIT_HASH}"
+                }
+             }
         }
 
         stage('Decrypt necessary files') {
@@ -29,9 +35,32 @@ pipeline {
             }
         }
 
+        stage('Generate Release Notes') {
+            steps {
+                script {
+                    def releaseNotes = ''
+
+                    for (changeSet in currentBuild.changeSets) {
+                        for (entry in changeSet.items) {
+                            def msg = entry.msg
+                            releaseNotes += "- ${entry.msg}\n"
+                        }
+                    }
+
+                    // Fallback if no changes
+                    if (releaseNotes.trim().isEmpty()) {
+                        releaseNotes = "No changes since last build.\n"
+                    }
+
+                    // Write to file
+                    writeFile file: 'release_notes.txt', text: releaseNotes
+                }
+            }
+        }
+
         stage('Build AAB') {
             steps {
-                sh './gradlew clean bundleReleaseApk'
+                sh "./gradlew clean bundleReleaseApk -PREVISION=${env.GIT_COMMIT_HASH}"
             }
         }
 

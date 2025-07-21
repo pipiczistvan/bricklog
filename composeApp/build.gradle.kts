@@ -184,6 +184,7 @@ android {
                 artifactType = "APK"
                 groups = "testers"
                 serviceCredentialsFile = "release/google-services-credentials.json"
+                releaseNotesFile = "release_notes.txt"
             }
         }
     }
@@ -212,6 +213,7 @@ buildkonfig {
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
         buildConfigField(STRING, "GOOGLE_AUTH_WEB_CLIENT_ID", googleAuthWebClientId)
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
+        buildConfigField(STRING, "REVISION", properties["REVISION"]?.toString() ?: "")
     }
     defaultConfigs("mock") {
         buildConfigField(STRING, "FLAVOR", "MOCK")
@@ -280,8 +282,9 @@ private fun loadLocalProperties() {
 private fun createArchiveName(): String {
     val versionCode = libs.versions.app.release.get().toInt()
     val versionName = libs.versions.app.version.get()
-    val flavor = project.findProperty("buildkonfig.flavor") ?: "prod"
-    return "bricklog-$versionName-$versionCode-$flavor"
+    val flavor = properties["buildkonfig.flavor"] ?: "prod"
+    val revision = properties["REVISION"]?.toString()
+    return "bricklog-$versionName-$versionCode${revision?.let { "-$it" }}-$flavor"
 }
 
 val bundleReleaseApk by tasks.registering {
