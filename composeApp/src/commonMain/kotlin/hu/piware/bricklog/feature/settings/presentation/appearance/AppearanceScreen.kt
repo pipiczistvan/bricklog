@@ -213,6 +213,7 @@ private fun ThemeSettings(
     ) {
         choices.forEachIndexed { index, themeOption ->
             SegmentedButton(
+                modifier = Modifier.testTag("theme_settings:theme_option"),
                 selected = theme == themeOption,
                 onClick = {
                     onThemeChange(themeOption)

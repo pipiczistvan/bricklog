@@ -271,7 +271,9 @@ private fun loadLocalProperties() {
     }
 
     localProperties.forEach { key, value ->
-        extra.set(key.toString(), value)
+        if (!project.hasProperty(key.toString())) {
+            extra.set(key.toString(), value)
+        }
     }
 }
 

@@ -77,6 +77,7 @@ private fun LicenseScreen(
                 if (state.license != null) {
                     ContentColumn(
                         modifier = Modifier
+                            .testTag("license:body")
                             .padding(horizontal = 8.dp)
                             .fillMaxSize(),
                         contentPadding = PaddingValues(

@@ -132,6 +132,7 @@ private fun SetDetailScreen(
                 },
                 actions = {
                     FilledIconButton(
+                        modifier = Modifier.testTag("set_detail:favourite_btn"),
                         onClick = {
                             onAction(
                                 SetDetailAction.OnToggleCollection(
@@ -163,6 +164,7 @@ private fun SetDetailScreen(
         )
 
         Content(
+            modifier = Modifier.testTag("set_detail:body"),
             setDetails = state.setDetails,
             instructions = state.instructions,
             availableCollections = state.availableCollections,
@@ -181,9 +183,10 @@ private fun Content(
     sharedElementPrefix: String,
     paddingValues: PaddingValues,
     onAction: (SetDetailAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ContentColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = Dimens.MediumPadding.size),
         contentPadding = PaddingValues(

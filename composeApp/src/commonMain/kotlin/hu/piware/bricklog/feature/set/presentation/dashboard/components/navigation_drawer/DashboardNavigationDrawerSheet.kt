@@ -53,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_about
@@ -95,8 +96,28 @@ fun DashboardNavigationDrawerSheet(
 ) {
     ModalDrawerSheet(
         modifier = modifier
+            .testTag("navigation_drawer")
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
+    ) {
+        Content(
+            drawerState = drawerState,
+            state = state,
+            onAction = onAction,
+            modifier = Modifier.testTag("navigation_drawer:content")
+        )
+    }
+}
+
+@Composable
+private fun Content(
+    drawerState: DrawerState,
+    state: DashboardNavigationDrawerState,
+    onAction: (DashboardNavigationDrawerAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
     ) {
         Spacer(modifier = Modifier.statusBarsPadding())
         Spacer(modifier = Modifier.height(24.dp))
@@ -159,6 +180,7 @@ private fun CollectionsSection(
         }) {
         collections.map {
             NavigationSectionButton(
+                modifier = Modifier.testTag("navigation_drawer:collection_btn"),
                 state = drawerState,
                 title = it.name,
                 onClick = {
@@ -175,6 +197,7 @@ private fun CollectionsSection(
                 icon = it.icon.outlinedIcon,
                 trailingIcon = {
                     IconButton(
+                        modifier = Modifier.testTag("navigation_drawer:collection_edit_btn"),
                         onClick = {
                             onAction(
                                 DashboardNavigationDrawerAction.OnCollectionEditClick(
@@ -203,6 +226,7 @@ private fun SettingsSection(
     ) {
         val isLoggedIn = currentUser != null
         NavigationSectionButton(
+            modifier = Modifier.testTag("navigation_drawer:login_btn"),
             state = drawerState,
             title = if (isLoggedIn)
                 stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_logout)
@@ -222,18 +246,21 @@ private fun SettingsSection(
             }
         )
         NavigationSectionButton(
+            modifier = Modifier.testTag("navigation_drawer:notifications_btn"),
             state = drawerState,
             title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_notification_settings),
             onClick = { onAction(DashboardNavigationDrawerAction.OnNotificationSettingsClick) },
             icon = Icons.Outlined.Notifications,
         )
         NavigationSectionButton(
+            modifier = Modifier.testTag("navigation_drawer:appearance_btn"),
             state = drawerState,
             title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_appearance),
             onClick = { onAction(DashboardNavigationDrawerAction.OnAppearanceClick) },
             icon = Icons.Outlined.Palette,
         )
         NavigationSectionButton(
+            modifier = Modifier.testTag("navigation_drawer:about_btn"),
             state = drawerState,
             title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_about),
             onClick = { onAction(DashboardNavigationDrawerAction.OnAboutClick) },
@@ -336,11 +363,12 @@ private fun NavigationSectionButton(
     onClick: () -> Unit,
     icon: ImageVector,
     trailingIcon: @Composable () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
     NavigationDrawerItem(
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+        modifier = modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         label = { Text(title) },
         selected = false,
         onClick = {

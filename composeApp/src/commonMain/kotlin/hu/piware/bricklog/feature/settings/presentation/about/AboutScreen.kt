@@ -239,6 +239,7 @@ private fun ActionsTable(
         )
         HorizontalDivider()
         ActionRow(
+            modifier = Modifier.testTag("about:changelog_btn"),
             title = stringResource(Res.string.feature_settings_about_btn_changelog),
             onClick = {
                 onAction(AboutAction.OnChangelogClick)
@@ -253,6 +254,7 @@ private fun ActionsTable(
         )
         HorizontalDivider()
         ActionRow(
+            modifier = Modifier.testTag("about:license_btn"),
             title = stringResource(Res.string.feature_settings_about_btn_license),
             onClick = {
                 onAction(AboutAction.OnLicenseClick)

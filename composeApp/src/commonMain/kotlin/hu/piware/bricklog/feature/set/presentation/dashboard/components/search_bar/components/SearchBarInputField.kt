@@ -71,6 +71,7 @@ fun SearchBarInputField(
             leadingIcon = {
                 if (!expanded) {
                     IconButton(
+                        modifier = Modifier.testTag("search_bar_input_field:drawer_button"),
                         onClick = onDrawerClick
                     ) {
                         Icon(

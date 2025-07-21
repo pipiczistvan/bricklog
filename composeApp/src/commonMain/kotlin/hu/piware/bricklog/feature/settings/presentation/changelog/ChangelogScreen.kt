@@ -81,6 +81,7 @@ private fun ChangelogScreen(
                 if (state.changelog != null) {
                     ContentColumn(
                         modifier = Modifier
+                            .testTag("changelog:body")
                             .padding(horizontal = Dimens.MediumPadding.size)
                             .fillMaxSize(),
                         contentPadding = PaddingValues(

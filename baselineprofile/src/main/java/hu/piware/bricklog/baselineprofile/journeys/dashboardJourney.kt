@@ -2,6 +2,8 @@ package hu.piware.bricklog.baselineprofile.journeys
 
 import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.test.uiautomator.Direction
+import hu.piware.bricklog.baselineprofile.util.waitAndClick
+import hu.piware.bricklog.baselineprofile.util.waitAndFling
 import hu.piware.bricklog.baselineprofile.util.waitUntilGone
 import hu.piware.bricklog.baselineprofile.util.waitUntilObject
 import hu.piware.bricklog.baselineprofile.util.waitUntilObjects
@@ -10,71 +12,74 @@ import hu.piware.bricklog.baselineprofile.util.waitUntilScreenLoads
 fun MacrobenchmarkScope.dashboardJourney() {
     waitUntilScreenLoads("dashboard_screen")
 
-    val body = waitUntilObject("dashboard:body")
-    body.setGestureMargin(device.displayWidth / 5)
-    body.fling(Direction.DOWN)
-    device.waitForIdle()
-    body.fling(Direction.UP)
-    device.waitForIdle()
+    scrollBody()
+    scrollFeaturedThemes()
 
-    val list = waitUntilObject("dashboard:featured_themes")
-    list.setGestureMargin(device.displayWidth / 5)
-    list.fling(Direction.RIGHT)
-    device.waitForIdle()
-    list.fling(Direction.LEFT)
-    device.waitForIdle()
+    openDrawer()
+    openCollectionEdit()
+    collectionEditJourney()
 
-    val latestSetsFeaturedSetsRow = waitUntilObject("dashboard:latest_sets_row")
-    val featuredSetsTitle = latestSetsFeaturedSetsRow.waitUntilObject("featured_sets_row:title")
-    featuredSetsTitle.click()
-    device.waitForIdle()
+    //openDrawer()
+    openNotifications()
+    notificationsJourney()
 
-    setListScreenJourney()
-    searchBarJourney()
-}
+    openDrawer()
+    openAppearance()
+    appearanceJourney()
 
-private fun MacrobenchmarkScope.setListScreenJourney() {
-    waitUntilScreenLoads("set_list_screen")
+    openDrawer()
+    openAbout()
+    aboutJourney()
 
-    val list = waitUntilObject("set_list:sets")
-    list.setGestureMargin(device.displayWidth / 5)
-    list.fling(Direction.DOWN)
-    device.waitForIdle()
-    list.fling(Direction.UP)
-    device.waitForIdle()
+    openLatestSetsList()
+    setListJourney()
 
-    val items = waitUntilObjects("set_list:item")
-    val index = (iteration ?: 0) % items.size
-    items[index].click()
-
-    setDetailJourney()
-
-    device.pressBack()
-    waitUntilGone("set_list_screen")
-}
-
-private fun MacrobenchmarkScope.setDetailJourney() {
+    openFirstLatestSet()
     waitUntilScreenLoads("set_detail_screen")
-
-    waitUntilObject("set_detail:image").click()
-
-    setImageJourney()
-
     device.pressBack()
     waitUntilGone("set_detail_screen")
+
+    openDrawer()
+    openLogin()
+    loginJourney()
+
+//    searchBarJourney()
 }
 
-private fun MacrobenchmarkScope.setImageJourney() {
-    waitUntilScreenLoads("set_image_screen")
+private fun MacrobenchmarkScope.scrollBody() {
+    val body = waitUntilObject("dashboard:body")
+    body.setGestureMargin(device.displayWidth / 5)
+    body.waitAndFling(Direction.DOWN)
+    device.waitForIdle()
+    body.waitAndFling(Direction.UP)
+    device.waitForIdle()
+}
 
-    device.pressBack()
-    waitUntilGone("set_image_screen")
+private fun MacrobenchmarkScope.scrollFeaturedThemes() {
+    val list = waitUntilObject("dashboard:featured_themes")
+    list.setGestureMargin(device.displayWidth / 5)
+    list.waitAndFling(Direction.RIGHT)
+    device.waitForIdle()
+    list.waitAndFling(Direction.LEFT)
+    device.waitForIdle()
+}
+
+private fun MacrobenchmarkScope.openLatestSetsList() {
+    val latestSetsFeaturedSetsRow = waitUntilObject("dashboard:latest_sets_row")
+    val featuredSetsTitle = latestSetsFeaturedSetsRow.waitUntilObject("featured_sets_row:title")
+    featuredSetsTitle.waitAndClick()
+}
+
+private fun MacrobenchmarkScope.openFirstLatestSet() {
+    val latestSetsFeaturedSetsRow = waitUntilObject("dashboard:latest_sets_row")
+    val cards = latestSetsFeaturedSetsRow.waitUntilObjects("set_card")
+    cards[0].waitAndClick()
 }
 
 fun MacrobenchmarkScope.searchBarJourney() {
-    waitUntilObject("search_bar:input_field").click()
+    waitUntilObject("dashboard_screen:search_bar").waitAndClick()
     waitUntilObject("search_bar:content")
-
+    device.pressBack() // focus
     device.pressBack()
-    waitUntilGone("set_image_screen")
+    waitUntilGone("search_bar:content")
 }

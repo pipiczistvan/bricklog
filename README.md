@@ -100,10 +100,9 @@ Download a `google-services.json` from Firebase and place in `composeApp` folder
 Generate baseline profile using BaselineProfileGenerator on a rooted emulator.
 Run benchmarks on real device.
 
-1. Use benchmark flavor
-2. Execute ./gradlew :composeApp:generateReleaseBaselineProfile
-3. Test with benchmarks on real device
-4. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
+1. Execute ./gradlew generateReleaseBaselineProfile -Pbuildkonfig.flavor=benchmark
+2. Test with benchmarks on real device
+3. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
 
 ## Troubleshoot
 

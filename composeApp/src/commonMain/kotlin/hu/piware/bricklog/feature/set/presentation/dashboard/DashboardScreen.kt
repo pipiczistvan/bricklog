@@ -190,7 +190,6 @@ private fun DashboardScreen(
         drawerState = drawerState
     ) {
         Scaffold(
-            modifier = modifier,
             topBar = {
                 Box(
                     modifier = Modifier.fillMaxWidth(),

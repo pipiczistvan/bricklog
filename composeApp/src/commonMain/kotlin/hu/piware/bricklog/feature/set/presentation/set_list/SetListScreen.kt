@@ -113,6 +113,7 @@ private fun SetListScreen(
                 },
                 actions = {
                     IconButton(
+                        modifier = Modifier.testTag("set_list:display_mode_btn"),
                         onClick = {
                             onAction(
                                 SetListAction.OnDisplayModeChange(

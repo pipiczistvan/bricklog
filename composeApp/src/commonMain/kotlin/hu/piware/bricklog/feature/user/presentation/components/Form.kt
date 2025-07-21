@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -67,6 +68,7 @@ fun EmailPasswordForm(
         var isEmailValid by remember { mutableStateOf(true) }
 
         EmailField(
+            modifier = Modifier.testTag("email_field"),
             value = email,
             onValueChange = { email = it },
             validate = validateEmail,
@@ -79,6 +81,7 @@ fun EmailPasswordForm(
 
         Column {
             PasswordField(
+                modifier = Modifier.testTag("password_field"),
                 value = password,
                 supportText = stringResource(Res.string.feature_user_form_field_password_invalid),
                 onValueChange = { password = it },
@@ -103,7 +106,9 @@ fun EmailPasswordForm(
         val isFormValid by derivedStateOf { isEmailValid && isPasswordValid }
 
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .testTag("submit_button")
+                .fillMaxWidth(),
             onClick = {
                 focusManager.clearFocus()
                 if (validateEmail(email) && validatePassword(password)) {
