@@ -100,25 +100,6 @@ fun DashboardNavigationDrawerSheet(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
     ) {
-        Content(
-            drawerState = drawerState,
-            state = state,
-            onAction = onAction,
-            modifier = Modifier.testTag("navigation_drawer:content")
-        )
-    }
-}
-
-@Composable
-private fun Content(
-    drawerState: DrawerState,
-    state: DashboardNavigationDrawerState,
-    onAction: (DashboardNavigationDrawerAction) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-    ) {
         Spacer(modifier = Modifier.statusBarsPadding())
         Spacer(modifier = Modifier.height(24.dp))
 
