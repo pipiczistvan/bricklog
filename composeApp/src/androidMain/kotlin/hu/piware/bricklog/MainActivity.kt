@@ -3,12 +3,13 @@
 package hu.piware.bricklog
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.FirebaseApp
 import com.mmk.kmpnotifier.extensions.onCreateOrOnNewIntent
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
         NotifierManager.onCreateOrOnNewIntent(intent)
         installSplashScreen()
             .setKeepOnScreenCondition { !App.firstScreenLoaded }
+        enableEdgeToEdge()
         setContent {
             App(
                 modifier = Modifier
@@ -51,21 +54,20 @@ class MainActivity : ComponentActivity() {
         watchThemeOption()
             .onEach { themeOption ->
                 when (themeOption) {
-                    ThemeOption.SYSTEM -> enableEdgeToEdge()
-                    ThemeOption.LIGHT -> enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.light(
-                            DefaultLightScrim,
-                            DefaultDarkScrim
-                        )
-                    )
+                    ThemeOption.SYSTEM ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
-                    ThemeOption.DARK -> enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.dark(
-                            DefaultLightScrim
-                        )
-                    )
+                    ThemeOption.LIGHT ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                    ThemeOption.DARK ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
 
+                WindowCompat.getInsetsController(
+                    window,
+                    window.decorView
+                ).isAppearanceLightStatusBars = !isDarkTheme()
             }
             .launchIn(lifecycleScope)
 
@@ -75,6 +77,18 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         NotifierManager.onCreateOrOnNewIntent(intent)
+    }
+
+    private fun isDarkTheme(): Boolean {
+        return when (AppCompatDelegate.getDefaultNightMode()) {
+            AppCompatDelegate.MODE_NIGHT_YES -> true
+            AppCompatDelegate.MODE_NIGHT_NO -> false
+            else -> {
+                val currentNightMode = resources.configuration.uiMode and
+                        Configuration.UI_MODE_NIGHT_MASK
+                currentNightMode == Configuration.UI_MODE_NIGHT_YES
+            }
+        }
     }
 }
 
