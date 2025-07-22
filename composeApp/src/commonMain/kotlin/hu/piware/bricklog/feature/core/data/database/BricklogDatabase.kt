@@ -20,6 +20,8 @@ import hu.piware.bricklog.feature.set.data.database.ThemeGroupDao
 import hu.piware.bricklog.feature.set.data.database.ThemeGroupView
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoDao
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
+import hu.piware.bricklog.feature.user.data.database.UserPreferencesDao
+import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
 
 @Database(
     entities = [
@@ -28,7 +30,8 @@ import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
         SetImageEntity::class,
         SetInstructionEntity::class,
         CollectionEntity::class,
-        SetCollectionEntity::class
+        SetCollectionEntity::class,
+        UserPreferencesEntity::class
     ],
     views = [
         SetDetailsView::class,
@@ -50,6 +53,7 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val collectionDao: CollectionDao
     abstract val setCollectionDao: SetCollectionDao
     abstract val themeGroupDao: ThemeGroupDao
+    abstract val userPreferencesDao: UserPreferencesDao
 
     companion object {
         const val DB_NAME = "bricklog.db"

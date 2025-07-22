@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package hu.piware.bricklog.feature.set.data.repository
 
 import androidx.paging.PagingData
@@ -14,7 +16,10 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
+import hu.piware.bricklog.feature.user.domain.manager.SessionManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
 import kotlin.time.measureTimedValue
@@ -23,25 +28,32 @@ import kotlin.time.measureTimedValue
 class OfflineFirstSetRepository(
     private val remoteDataSource: RemoteSetDataSource,
     private val localDataSource: LocalSetDataSource,
+    private val sessionManager: SessionManager,
     private val csvParser: SetListCsvParser,
 ) : SetRepository {
 
     private val logger = Logger.withTag("OfflineFirstSetRepository")
 
     override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
-        return localDataSource.watchSetDetails(queryOptions)
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchSetDetails(userId, queryOptions)
+        }
     }
 
     override suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError> {
-        return localDataSource.getSetDetails(queryOptions)
+        return localDataSource.getSetDetails(sessionManager.currentUserId, queryOptions)
     }
 
     override fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>> {
-        return localDataSource.watchSetDetailsPaged(queryOptions)
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchSetDetailsPaged(userId, queryOptions)
+        }
     }
 
     override fun watchSetDetailsById(id: Int): Flow<SetDetails> {
-        return localDataSource.watchSetDetailsById(id)
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchSetDetailsById(userId, id)
+        }
     }
 
     override suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError> {

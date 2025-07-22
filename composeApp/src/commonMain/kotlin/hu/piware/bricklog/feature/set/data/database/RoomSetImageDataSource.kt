@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.set.domain.model.Image
 import org.koin.core.annotation.Single
 
 @Single
-class RoomLocalSetImageDataSource(
+class RoomSetImageDataSource(
     database: BricklogDatabase,
 ) : LocalSetImageDataSource {
 

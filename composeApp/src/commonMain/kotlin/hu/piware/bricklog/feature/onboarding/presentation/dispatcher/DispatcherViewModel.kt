@@ -7,7 +7,6 @@ import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.onboarding.domain.usecase.HasAnySets
 import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogReadVersion
-import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeDefaultCollections
 import hu.piware.bricklog.feature.user.domain.usecase.InitializeSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,7 +18,6 @@ class DispatcherViewModel(
     private val hasAnySets: HasAnySets,
     private val initializeSession: InitializeSession,
     private val initializeChangelogReadVersion: InitializeChangelogReadVersion,
-    private val initializeDefaultCollections: InitializeDefaultCollections,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<DispatcherState>(DispatcherState.Loading)
@@ -34,8 +32,6 @@ class DispatcherViewModel(
             initializeSession()
                 .showSnackbarOnError()
             initializeChangelogReadVersion()
-            initializeDefaultCollections()
-                .showSnackbarOnError()
         }
     }
 

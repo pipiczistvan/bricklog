@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.usecase.ToggleFavouriteSetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.domain.data
@@ -28,6 +29,7 @@ class SetDetailViewModel(
     private val watchSetDetailsById: WatchSetDetailsById,
     private val getInstructions: GetInstructions,
     private val toggleSetCollection: ToggleSetCollection,
+    private val toggleFavouriteSetCollection: ToggleFavouriteSetCollection,
     private val watchCollections: WatchCollections,
 ) : ViewModel() {
 
@@ -52,6 +54,8 @@ class SetDetailViewModel(
                 action.setId,
                 action.collectionId
             )
+
+            is SetDetailAction.OnToggleFavourite -> toggleFavourite(action.setId)
 
             else -> Unit
         }
@@ -89,6 +93,13 @@ class SetDetailViewModel(
     private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
         viewModelScope.launch {
             toggleSetCollection(setId, collectionId)
+                .showSnackbarOnError()
+        }
+    }
+
+    private fun toggleFavourite(setId: SetId) {
+        viewModelScope.launch {
+            toggleFavouriteSetCollection(setId)
                 .showSnackbarOnError()
         }
     }

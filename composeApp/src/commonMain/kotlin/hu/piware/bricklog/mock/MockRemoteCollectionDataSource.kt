@@ -7,89 +7,95 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
 
     private val firestore = MockFirestore
 
-    override fun watchCollections(userId: String): Flow<List<Collection>> {
-        return firestore.collections.asStateFlow()
+    override fun watchUserCollections(userId: UserId): Flow<List<Collection>> {
+        return firestore.userCollections.map { it[userId] ?: emptyList() }
     }
 
-    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>> {
-        return firestore.setCollections.asStateFlow()
+    override fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
+        return firestore.setCollections.map { it[userId] ?: emptyMap() }
     }
 
-    override suspend fun deleteCollection(
-        userId: String,
-        id: CollectionId,
+    override suspend fun deleteUserCollection(
+        userId: UserId,
+        collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        firestore.collections.update { it.filter { it.id != id } }
+        firestore.userCollections.update { currentMap ->
+            val updatedUserCollections = currentMap[userId]
+                ?.filterNot { it.id == collectionId }
+                ?: return@update currentMap // No change if user or collection not found
+
+            currentMap + (userId to updatedUserCollections)
+        }
         return Result.Success(Unit)
     }
 
-    override suspend fun upsertCollection(
-        userId: String,
+    override suspend fun upsertUserCollection(
+        userId: UserId,
         collection: Collection,
     ): EmptyResult<DataError.Remote> {
-        firestore.collections.update { currentCollections ->
-            currentCollections.filter { it.id != collection.id } + collection
+        firestore.userCollections.update { currentMap ->
+            val currentCollections = currentMap[userId].orEmpty()
+            val updatedCollections = currentCollections
+                .filterNot { it.id == collection.id } + collection
+
+            currentMap + (userId to updatedCollections)
         }
         return Result.Success(Unit)
     }
 
-    override suspend fun addSetToCollection(
-        userId: String,
+    override suspend fun addSetToUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        val collection = firestore.collections.value.find { it.id == collectionId }
-
-        if (collection == null) {
-            return Result.Error(DataError.Remote.UNKNOWN)
-        }
-
         firestore.setCollections.update { currentMap ->
-            val currentCollections = currentMap[setId] ?: emptyList()
+            val userMap = currentMap[userId].orEmpty()
+            val collectionIds = userMap[setId].orEmpty()
 
-            // Check if the collection is already present
-            val updatedCollections = if (currentCollections.any { it == collectionId }) {
-                currentCollections // No change
-            } else {
-                currentCollections + collection.id
-            }
+            // Avoid duplicates
+            if (collectionId in collectionIds) return@update currentMap
 
-            currentMap + (setId to updatedCollections)
+            val updatedCollectionIds = collectionIds + collectionId
+            val updatedUserMap = userMap + (setId to updatedCollectionIds)
+
+            currentMap + (userId to updatedUserMap)
         }
 
         return Result.Success(Unit)
     }
 
-    override suspend fun removeSetFromCollection(
-        userId: String,
+    override suspend fun removeSetFromUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
-        val collection = firestore.collections.value.find { it.id == collectionId }
-
-        if (collection == null) {
-            return Result.Error(DataError.Remote.UNKNOWN)
-        }
-
         firestore.setCollections.update { currentMap ->
-            val currentCollections = currentMap[setId] ?: emptyList()
+            val userMap = currentMap[userId] ?: return@update currentMap
+            val collectionIds = userMap[setId] ?: return@update currentMap
 
-            // Check if the collection is already present
-            val updatedCollections = if (currentCollections.none { it == collectionId }) {
-                currentCollections // No change
+            val updatedCollectionIds = collectionIds - collectionId
+            val updatedUserMap = if (updatedCollectionIds.isEmpty()) {
+                userMap - setId
             } else {
-                currentCollections - collection.id
+                userMap + (setId to updatedCollectionIds)
             }
 
-            currentMap + (setId to updatedCollections)
+            val finalUserMap = if (updatedUserMap.isEmpty()) {
+                currentMap - userId
+            } else {
+                currentMap + (userId to updatedUserMap)
+            }
+
+            finalUserMap
         }
 
         return Result.Success(Unit)

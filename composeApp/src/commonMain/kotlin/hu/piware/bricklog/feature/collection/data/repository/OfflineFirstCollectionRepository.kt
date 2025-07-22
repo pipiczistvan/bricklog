@@ -7,7 +7,9 @@ import hu.piware.bricklog.feature.collection.domain.datasource.LocalCollectionDa
 import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionDataSource
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
+import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
@@ -16,12 +18,15 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
+import hu.piware.bricklog.feature.user.domain.manager.filterAuthenticated
+import hu.piware.bricklog.feature.user.domain.manager.filterGuest
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Single
 
@@ -35,125 +40,94 @@ class OfflineFirstCollectionRepository(
     private val logger = Logger.withTag("OfflineFirstCollectionRepository")
 
     override fun startSync(scope: CoroutineScope) {
-        sessionManager.currentUser
-            .filterNotNull()
-            .flatMapLatest { user ->
-                remoteDataSource.watchCollections(user.uid)
+        sessionManager.userId
+            .filterAuthenticated()
+            .flatMapLatest { userId ->
+                remoteDataSource.watchUserCollections(userId).map { Pair(userId, it) }
             }
-            .onEach { remoteCollections ->
-                logger.d { "Syncing ${remoteCollections.size} collections" }
-                val localCollections = localDataSource.getCollections().data()
-                val collectionsToDelete = localCollections.filter { localCollection ->
-                    remoteCollections.none { remoteCollection ->
-                        remoteCollection.id == localCollection.id
-                    }
-                }.map { it.id }
-                val collectionsToUpsert = remoteCollections.filter { remoteCollection ->
-                    localCollections.none { localCollection ->
-                        localCollection == remoteCollection
-                    }
-                }
-
-                if (collectionsToDelete.isNotEmpty()) {
-                    localDataSource.deleteCollections(collectionsToDelete)
-                }
-                if (collectionsToUpsert.isNotEmpty()) {
-                    localDataSource.upsertCollections(collectionsToUpsert)
-                }
+            .syncRemoteCollections()
+            .createDefaultCollections()
+            .flatMapLatest { (userId, _) ->
+                remoteDataSource.watchUserSetCollections(userId).map { Pair(userId, it) }
             }
+            .syncRemoteSetCollections()
             .launchIn(scope)
 
-        sessionManager.currentUser
-            .filterNotNull()
-            .flatMapLatest { user ->
-                remoteDataSource.watchSetCollections(user.uid)
+        sessionManager.userId
+            .filterGuest()
+            .flatMapLatest { userId ->
+                localDataSource.watchUserCollections(userId).map { Pair(userId, it) }
             }
-            .onEach { remoteSetCollections ->
-                logger.d { "Syncing ${remoteSetCollections.size} set collections" }
-                val localSetCollections = localDataSource.getSetCollections().data()
-                val setCollectionsToDelete = localSetCollections
-                    .map { setCollection ->
-                        setCollection.key to setCollection.value.filter { localCollection ->
-                            remoteSetCollections[setCollection.key]?.none { remoteCollection ->
-                                remoteCollection == localCollection.id
-                            } ?: true
-                        }.map { it.id }
-                    }
-                    .toMap()
-                    .filter { it.value.isNotEmpty() }
-                val setCollectionsToUpsert = remoteSetCollections
-                    .map { remoteSetCollection ->
-                        remoteSetCollection.key to remoteSetCollection.value.filter { remoteCollection ->
-                            localSetCollections[remoteSetCollection.key]?.none { localCollection ->
-                                localCollection.id == remoteCollection
-                            } ?: true
-                        }
-                    }
-                    .toMap()
-                    .filter { it.value.isNotEmpty() }
-
-                if (setCollectionsToDelete.isNotEmpty()) {
-                    localDataSource.deleteSetCollections(setCollectionsToDelete)
-                }
-                if (setCollectionsToUpsert.isNotEmpty()) {
-                    localDataSource.upsertSetCollections(setCollectionsToUpsert)
-                }
-            }
+            .createDefaultCollections()
             .launchIn(scope)
     }
 
     override suspend fun clearLocal(): EmptyResult<DataError> {
-        return localDataSource.deleteAllCollections()
+        return localDataSource.deleteAllUserCollections(sessionManager.currentUserId)
     }
 
     override fun watchCollections(): Flow<List<Collection>> {
-        return localDataSource.watchCollections()
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchUserCollections(userId)
+        }
     }
 
     override fun watchCollectionsBySets(): Flow<Map<SetId, List<Collection>>> {
-        return localDataSource.watchCollectionsBySets()
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchUserCollectionsBySets(userId)
+        }
     }
 
     override fun watchCollectionsBySet(setId: SetId): Flow<List<Collection>> {
-        return localDataSource.watchCollectionsBySet(setId)
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchUserCollectionsBySet(userId, setId)
+        }
     }
 
-    override suspend fun deleteCollectionById(id: CollectionId): EmptyResult<DataError> {
-        localDataSource.deleteCollection(id)
+    override suspend fun deleteCollectionById(collectionId: CollectionId): EmptyResult<DataError> {
+        localDataSource.deleteUserCollection(sessionManager.currentUserId, collectionId)
             .onError { return it }
 
-        val user = sessionManager.currentUser.value
-        if (user != null) {
-            remoteDataSource.deleteCollection(user.uid, id)
+        if (sessionManager.isAuthenticated) {
+            remoteDataSource.deleteUserCollection(sessionManager.currentUserId, collectionId)
                 .onError { return it }
         }
 
         return Result.Success(Unit)
     }
 
-    override suspend fun saveCollection(collection: Collection): EmptyResult<DataError> {
-        localDataSource.upsertCollection(collection)
+    override suspend fun saveCollection(collection: Collection): Result<Collection, DataError> {
+        return saveCollection(sessionManager.currentUserId, collection)
+    }
+
+    private suspend fun saveCollection(
+        userId: UserId,
+        collection: Collection,
+    ): Result<Collection, DataError> {
+        localDataSource.upsertUserCollection(userId, collection)
             .onError { return it }
 
-        val user = sessionManager.currentUser.value
-        if (user != null) {
-            remoteDataSource.upsertCollection(user.uid, collection)
+        if (sessionManager.isAuthenticated) {
+            remoteDataSource.upsertUserCollection(userId, collection)
                 .onError { return it }
         }
 
-        return Result.Success(Unit)
+        return Result.Success(collection)
     }
 
     override suspend fun addSetToCollection(
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError> {
-        localDataSource.addSetToCollection(setId, collectionId)
+        localDataSource.addSetToUserCollection(setId, sessionManager.currentUserId, collectionId)
             .onError { return it }
 
-        val user = sessionManager.currentUser.value
-        if (user != null) {
-            remoteDataSource.addSetToCollection(user.uid, setId, collectionId)
+        if (sessionManager.isAuthenticated) {
+            remoteDataSource.addSetToUserCollection(
+                sessionManager.currentUserId,
+                setId,
+                collectionId
+            )
                 .onError { return it }
         }
 
@@ -164,23 +138,101 @@ class OfflineFirstCollectionRepository(
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError> {
-        localDataSource.removeSetFromCollection(setId, collectionId)
+        localDataSource.removeSetFromUserCollection(
+            setId,
+            sessionManager.currentUserId,
+            collectionId
+        )
             .onError { return it }
 
-        val user = sessionManager.currentUser.value
-        if (user != null) {
-            remoteDataSource.removeSetFromCollection(user.uid, setId, collectionId)
+        if (sessionManager.isAuthenticated) {
+            remoteDataSource.removeSetFromUserCollection(
+                sessionManager.currentUserId,
+                setId,
+                collectionId
+            )
                 .onError { return it }
         }
 
         return Result.Success(Unit)
     }
 
-    override suspend fun getCollection(id: CollectionId): Result<Collection, DataError> {
-        return localDataSource.getCollection(id)
+    override suspend fun getCollection(collectionId: CollectionId): Result<Collection, DataError> {
+        return localDataSource.getUserCollection(sessionManager.currentUserId, collectionId)
     }
 
-    override fun watchCollection(id: CollectionId): Flow<Collection> {
-        return localDataSource.watchCollection(id)
+    override fun watchCollection(collectionId: CollectionId): Flow<Collection> {
+        return sessionManager.userId.flatMapLatest { userId ->
+            localDataSource.watchUserCollection(userId, collectionId)
+        }
     }
+
+    override suspend fun getUserCollectionsByType(type: CollectionType): Result<List<Collection>, DataError> {
+        return localDataSource.getUserCollectionsByType(sessionManager.currentUserId, type)
+    }
+
+    private fun Flow<Pair<UserId, Map<SetId, List<CollectionId>>>>.syncRemoteSetCollections() =
+        onEach { (userId, remoteSetCollections) ->
+            logger.d { "Syncing ${remoteSetCollections.size} set collections" }
+            val localSetCollections = localDataSource.getUserSetCollections(userId).data()
+            val setCollectionsToDelete = localSetCollections
+                .map { setCollection ->
+                    setCollection.key to setCollection.value.filter { localCollection ->
+                        remoteSetCollections[setCollection.key]?.none { remoteCollection ->
+                            remoteCollection == localCollection.id
+                        } ?: true
+                    }.map { it.id }
+                }
+                .toMap()
+                .filter { it.value.isNotEmpty() }
+            val setCollectionsToUpsert = remoteSetCollections
+                .map { remoteSetCollection ->
+                    remoteSetCollection.key to remoteSetCollection.value.filter { remoteCollection ->
+                        localSetCollections[remoteSetCollection.key]?.none { localCollection ->
+                            localCollection.id == remoteCollection
+                        } ?: true
+                    }
+                }
+                .toMap()
+                .filter { it.value.isNotEmpty() }
+
+            if (setCollectionsToDelete.isNotEmpty()) {
+                localDataSource.deleteUserSetCollections(userId, setCollectionsToDelete)
+            }
+            if (setCollectionsToUpsert.isNotEmpty()) {
+                localDataSource.upsertUserSetCollections(userId, setCollectionsToUpsert)
+            }
+        }
+
+    private fun Flow<Pair<UserId, List<Collection>>>.syncRemoteCollections() =
+        onEach { (userId, remoteCollections) ->
+            logger.d { "Syncing ${remoteCollections.size} collections" }
+            val localCollections = localDataSource.getUserCollections(userId).data()
+            val collectionsToDelete = localCollections.filter { localCollection ->
+                remoteCollections.none { remoteCollection ->
+                    remoteCollection.id == localCollection.id
+                }
+            }.map { it.id }
+            val collectionsToUpsert = remoteCollections.filter { remoteCollection ->
+                localCollections.none { localCollection ->
+                    localCollection == remoteCollection
+                }
+            }
+
+            if (collectionsToDelete.isNotEmpty()) {
+                localDataSource.deleteUserCollections(userId, collectionsToDelete)
+            }
+            if (collectionsToUpsert.isNotEmpty()) {
+                localDataSource.upsertUserCollections(userId, collectionsToUpsert)
+            }
+        }
+
+    private fun Flow<Pair<UserId, List<Collection>>>.createDefaultCollections() =
+        onEach { (userId, collections) ->
+            defaultCollections.forEach { defaultCollection ->
+                if (collections.none { it.type == defaultCollection.type }) {
+                    saveCollection(userId, defaultCollection)
+                }
+            }
+        }
 }

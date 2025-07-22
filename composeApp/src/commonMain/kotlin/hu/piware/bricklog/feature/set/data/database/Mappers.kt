@@ -6,6 +6,7 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
+import hu.piware.bricklog.feature.user.domain.model.UserId
 
 fun Set.toEntity(): SetEntity {
     return SetEntity(
@@ -79,10 +80,10 @@ fun SetEntity.toDomainModel(): Set {
     )
 }
 
-fun SetDetailsView.toDomainModel(): SetDetails {
+fun SetDetailsView.toDomainModel(userId: UserId): SetDetails {
     return SetDetails(
         set = legoSet.toDomainModel(),
-        collections = collections.map { it.toDomainModel() },
+        collections = collections.filter { it.userId == userId }.map { it.toDomainModel() },
         status = status
     )
 }

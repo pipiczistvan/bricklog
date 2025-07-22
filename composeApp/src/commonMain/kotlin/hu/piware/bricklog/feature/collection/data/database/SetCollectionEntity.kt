@@ -6,12 +6,14 @@ import androidx.room.Index
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.data.database.SetEntity
 import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.feature.user.domain.model.UserId
 
 @Entity(
     tableName = "set_collections",
     primaryKeys = [
         "setId",
-        "collectionId"
+        "collectionId",
+        "userId"
     ],
     foreignKeys = [
         ForeignKey(
@@ -22,16 +24,17 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
         ),
         ForeignKey(
             entity = CollectionEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["collectionId"],
+            parentColumns = ["id", "userId"],
+            childColumns = ["collectionId", "userId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index("collectionId")
+        Index("collectionId", "userId")
     ]
 )
 data class SetCollectionEntity(
     val setId: SetId,
     val collectionId: CollectionId,
+    val userId: UserId,
 )

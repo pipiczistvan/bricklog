@@ -7,13 +7,15 @@ fun CollectionDocument.toDomainModel(id: CollectionId): Collection {
     return Collection(
         id = id,
         name = name,
-        icon = icon
+        icon = icon,
+        type = type
     )
 }
 
 fun Collection.toDocument(): CollectionDocument {
     return CollectionDocument(
         name = name,
-        icon = icon
+        icon = icon,
+        type = type,
     )
 }

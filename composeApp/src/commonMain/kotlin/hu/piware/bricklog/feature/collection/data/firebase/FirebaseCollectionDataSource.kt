@@ -13,6 +13,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Single
@@ -24,7 +25,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
     private val firestore = Firebase.firestore
 
-    override fun watchCollections(userId: String): Flow<List<Collection>> {
+    override fun watchUserCollections(userId: UserId): Flow<List<Collection>> {
         return flow {
             try {
                 firestore.collection("user-data/$userId/collections").snapshots.collect { snapshot ->
@@ -40,7 +41,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>> {
+    override fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
         return flow {
             try {
                 firestore.collection("user-data/$userId/set-collections").snapshots.collect { snapshot ->
@@ -59,8 +60,8 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override suspend fun deleteCollection(
-        userId: String,
+    override suspend fun deleteUserCollection(
+        userId: UserId,
         id: CollectionId,
     ): EmptyResult<DataError.Remote> {
         return try {
@@ -78,8 +79,8 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override suspend fun upsertCollection(
-        userId: String,
+    override suspend fun upsertUserCollection(
+        userId: UserId,
         collection: Collection,
     ): EmptyResult<DataError.Remote> {
         return try {
@@ -102,8 +103,8 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override suspend fun addSetToCollection(
-        userId: String,
+    override suspend fun addSetToUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {
@@ -123,8 +124,8 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override suspend fun removeSetFromCollection(
-        userId: String,
+    override suspend fun removeSetFromUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote> {

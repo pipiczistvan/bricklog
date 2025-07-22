@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.settings.domain.model
+package hu.piware.bricklog.feature.user.domain.model
 
 import kotlinx.serialization.Serializable
 

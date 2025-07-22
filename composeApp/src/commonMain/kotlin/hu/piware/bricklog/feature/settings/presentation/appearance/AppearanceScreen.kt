@@ -42,7 +42,8 @@ import bricklog.composeapp.generated.resources.feature_settings_appearance_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
-import hu.piware.bricklog.feature.settings.domain.model.UserPreferences
+import hu.piware.bricklog.feature.user.domain.model.UserPreferences
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.feature.user.presentation.components.NameField
 import hu.piware.bricklog.feature.user.presentation.util.isValidName
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -110,7 +111,7 @@ private fun AppearanceScreen(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
                 ) {
-                    if (state.currentUser != null) {
+                    if (state.currentUser.isAuthenticated) {
                         GreetingsSettings(
                             userPreferences = state.userPreferences,
                             onUserPreferencesChange = { preferences, showLoading ->

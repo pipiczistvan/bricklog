@@ -8,14 +8,23 @@ import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
 interface LocalSetDataSource {
-    fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
-    suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError.Local>
-    fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
-    fun watchSetDetailsById(id: Int): Flow<SetDetails>
+    fun watchSetDetails(userId: UserId, queryOptions: SetQueryOptions): Flow<List<SetDetails>>
+    suspend fun getSetDetails(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Result<List<SetDetails>, DataError.Local>
+
+    fun watchSetDetailsPaged(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Flow<PagingData<SetDetails>>
+
+    fun watchSetDetailsById(userId: UserId, id: Int): Flow<SetDetails>
     suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local>
     suspend fun getSetCount(): Result<Int, DataError.Local>
     fun watchThemes(): Flow<List<String>>

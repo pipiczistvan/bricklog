@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 import org.koin.core.annotation.Single
 
 @Single
-class RoomLocalSetInstructionDataSource(
+class RoomSetInstructionDataSource(
     database: BricklogDatabase,
 ) : LocalSetInstructionDataSource {
 

@@ -9,9 +9,7 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
-import hu.piware.bricklog.feature.user.domain.usecase.LogInUser
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
-import hu.piware.bricklog.feature.user.domain.usecase.RegisterUser
 import io.ktor.client.engine.HttpClientEngine
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -31,8 +29,6 @@ val viewModelModule = module {
 // Only necessary when injecting list of dependencies
 val useCaseModule = module {
     single { LogOutUser(get(), getAll()) }
-    single { LogInUser(get(), getAll()) }
-    single { RegisterUser(get(), get(), getAll()) }
     single { DeleteUserData(get(), getAll()) }
 }
 

@@ -7,5 +7,5 @@ import org.koin.core.annotation.Single
 class WatchCurrentUser(
     private val sessionManager: SessionManager,
 ) {
-    operator fun invoke() = sessionManager.currentUser
+    operator fun invoke() = sessionManager.user
 }

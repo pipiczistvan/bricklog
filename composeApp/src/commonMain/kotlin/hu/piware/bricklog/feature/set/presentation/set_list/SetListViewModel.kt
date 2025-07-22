@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.ToggleFavouriteSetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
-import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
@@ -39,7 +38,7 @@ import kotlin.reflect.typeOf
 class SetListViewModel(
     savedStateHandle: SavedStateHandle,
     watchSetDetailsPaged: WatchSetDetailsPaged,
-    private val toggleSetCollection: ToggleSetCollection,
+    private val toggleFavouriteSetCollection: ToggleFavouriteSetCollection,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
@@ -96,7 +95,7 @@ class SetListViewModel(
 
     private fun toggleFavourite(setId: Int) {
         viewModelScope.launch {
-            toggleSetCollection(setId, COLLECTION_ID_FAVOURITE_SETS)
+            toggleFavouriteSetCollection(setId)
                 .showSnackbarOnError()
         }
     }

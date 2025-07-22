@@ -2,6 +2,7 @@ package hu.piware.bricklog.mock
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
+import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
@@ -77,7 +78,8 @@ object PreviewData {
         Collection(
             id = "$it",
             name = "Collection $it",
-            icon = CollectionIcon.entries[it % CollectionIcon.entries.size]
+            icon = CollectionIcon.entries[it % CollectionIcon.entries.size],
+            type = CollectionType.USER_DEFINED
         )
     }
 

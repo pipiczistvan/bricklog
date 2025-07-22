@@ -17,14 +17,12 @@ import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.domain.UserError
-import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.SnackbarAction
 import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
-import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeDefaultCollections
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
@@ -44,10 +42,10 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilte
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
-import hu.piware.bricklog.feature.settings.domain.usecase.WatchUserPreferences
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
+import hu.piware.bricklog.feature.user.domain.usecase.WatchUserPreferences
 import hu.piware.bricklog.util.BuildConfig
 import hu.piware.bricklog.util.isBenchmarkFlavor
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +81,6 @@ class DashboardViewModel(
     @Provided private val logOutUser: LogOutUser,
     @Provided private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
-    private val initializeDefaultCollections: InitializeDefaultCollections,
     private val watchUserPreferences: WatchUserPreferences,
 ) : ViewModel() {
 
@@ -179,10 +176,6 @@ class DashboardViewModel(
                 logOutUser()
                     .showSnackbarOnSuccess(Res.string.feature_user_logout_message_success)
                     .showSnackbarOnError()
-                    .onSuccess {
-                        initializeDefaultCollections()
-                            .showSnackbarOnError()
-                    }
             }
 
 
@@ -214,10 +207,6 @@ class DashboardViewModel(
                         } else {
                             null
                         }
-                    }
-                    .onSuccess {
-                        initializeDefaultCollections()
-                            .showSnackbarOnError()
                     }
             }
 

@@ -238,7 +238,7 @@ private fun DashboardScreen(
                             Greetings(
                                 modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
                                 displayName = state.userPreferences.displayName
-                                    ?: state.currentUser?.displayName?.split(" ")?.firstOrNull()
+                                    ?: state.currentUser.displayName?.split(" ")?.firstOrNull()
                             )
                         }
 

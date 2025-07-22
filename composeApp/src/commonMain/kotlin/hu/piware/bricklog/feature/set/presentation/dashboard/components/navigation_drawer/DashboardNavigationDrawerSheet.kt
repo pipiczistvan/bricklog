@@ -75,6 +75,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import hu.piware.bricklog.util.BuildConfig
 import hu.piware.bricklog.util.isDebugFlavor
@@ -199,13 +200,13 @@ private fun CollectionsSection(
 @Composable
 private fun SettingsSection(
     drawerState: DrawerState,
-    currentUser: User?,
+    currentUser: User,
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
         title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_settings)
     ) {
-        val isLoggedIn = currentUser != null
+        val isLoggedIn = currentUser.isAuthenticated
         NavigationSectionButton(
             modifier = Modifier.testTag("navigation_drawer:login_btn"),
             state = drawerState,

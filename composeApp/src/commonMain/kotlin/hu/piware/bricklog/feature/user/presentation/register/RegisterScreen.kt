@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_user_register_btn_login
-import bricklog.composeapp.generated.resources.feature_user_register_label_disclosure
 import bricklog.composeapp.generated.resources.feature_user_register_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
@@ -104,8 +103,6 @@ private fun RegisterScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
             ) {
-                Text(stringResource(Res.string.feature_user_register_label_disclosure))
-
                 EmailPasswordForm(
                     onSubmit = { email, password ->
                         onAction(

@@ -88,7 +88,7 @@ private fun CollectionEditScreen(
             TopAppBar(
                 title = {
                     Text(
-                        if (state.collectionId == null)
+                        if (state.collection == null)
                             stringResource(Res.string.feature_collection_edit_title_create)
                         else
                             stringResource(Res.string.feature_collection_edit_title_modify)
@@ -103,7 +103,7 @@ private fun CollectionEditScreen(
                     }
                 },
                 actions = {
-                    if (state.collectionId != null && defaultCollections.none { it.id == state.collectionId }) {
+                    if (defaultCollections.none { it.type == state.collection?.type }) {
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
@@ -147,7 +147,7 @@ private fun CollectionEditScreen(
                 value = state.name,
                 onValueChange = { onAction(CollectionEditAction.OnNameChanged(it)) },
                 isError = state.nameError != null,
-                label = { Text("Name") },
+                label = { Text(state.collection?.name ?: "Name") },
                 placeholder = { Text("Enter a name") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(

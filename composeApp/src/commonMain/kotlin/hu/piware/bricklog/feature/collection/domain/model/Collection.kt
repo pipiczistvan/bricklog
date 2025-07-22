@@ -25,6 +25,7 @@ data class Collection(
     val id: CollectionId = "",
     val name: String,
     val icon: CollectionIcon,
+    val type: CollectionType,
 )
 
 enum class CollectionIcon(
@@ -33,7 +34,7 @@ enum class CollectionIcon(
 ) {
     STAR(Icons.Filled.Star, Icons.Outlined.StarOutline),
     HOME(Icons.Filled.Home, Icons.Outlined.Home),
-    FAVORITE(Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
+    FAVOURITE(Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
     DELETE(Icons.Filled.Delete, Icons.Outlined.Delete),
     STORE(Icons.Filled.Store, Icons.Outlined.Store),
     PAYMENTS(Icons.Filled.Payments, Icons.Outlined.Payments),

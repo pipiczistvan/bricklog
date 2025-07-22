@@ -5,29 +5,33 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteCollectionDataSource {
 
-    fun watchCollections(userId: String): Flow<List<Collection>>
+    fun watchUserCollections(userId: UserId): Flow<List<Collection>>
 
-    fun watchSetCollections(userId: String): Flow<Map<SetId, List<CollectionId>>>
+    fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>>
 
-    suspend fun deleteCollection(userId: String, id: CollectionId): EmptyResult<DataError.Remote>
+    suspend fun deleteUserCollection(
+        userId: UserId,
+        collectionId: CollectionId,
+    ): EmptyResult<DataError.Remote>
 
-    suspend fun upsertCollection(
-        userId: String,
+    suspend fun upsertUserCollection(
+        userId: UserId,
         collection: Collection,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun addSetToCollection(
-        userId: String,
+    suspend fun addSetToUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun removeSetFromCollection(
-        userId: String,
+    suspend fun removeSetFromUserCollection(
+        userId: UserId,
         setId: SetId,
         collectionId: CollectionId,
     ): EmptyResult<DataError.Remote>

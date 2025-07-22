@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveThemeOption
-import hu.piware.bricklog.feature.settings.domain.usecase.SaveUserPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchThemeOption
-import hu.piware.bricklog.feature.settings.domain.usecase.WatchUserPreferences
+import hu.piware.bricklog.feature.user.domain.usecase.SaveUserPreferences
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
+import hu.piware.bricklog.feature.user.domain.usecase.WatchUserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

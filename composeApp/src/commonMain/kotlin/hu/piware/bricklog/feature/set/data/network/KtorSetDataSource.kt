@@ -17,7 +17,7 @@ import org.koin.core.annotation.Single
 import kotlin.time.measureTimedValue
 
 @Single
-class KtorRemoteSetDataSource(
+class KtorSetDataSource(
     @param:DownloadHttpClient private val httpClient: HttpClient,
 ) : RemoteSetDataSource {
     private val logger = Logger.withTag("KtorRemoteSetDataSource")

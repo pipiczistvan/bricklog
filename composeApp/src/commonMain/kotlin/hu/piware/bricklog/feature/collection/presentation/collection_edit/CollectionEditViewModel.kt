@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.GetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollection
@@ -32,11 +33,7 @@ class CollectionEditViewModel(
 
     private val collectionId =
         savedStateHandle.toRoute<CollectionRoute.CollectionEditScreen>().collectionId
-    private val _uiState = MutableStateFlow(
-        CollectionEditState(
-            collectionId = collectionId
-        )
-    )
+    private val _uiState = MutableStateFlow(CollectionEditState())
     private val _eventChannel = Channel<CollectionEditEvent>()
 
     val uiState = _uiState.asStateFlowIn(viewModelScope) {
@@ -75,9 +72,10 @@ class CollectionEditViewModel(
         viewModelScope.launch {
             saveCollection(
                 Collection(
-                    id = uiState.value.collectionId ?: "",
+                    id = uiState.value.collection?.id ?: "",
                     name = uiState.value.name,
-                    icon = uiState.value.icon
+                    icon = uiState.value.icon,
+                    type = uiState.value.collection?.type ?: CollectionType.USER_DEFINED
                 )
             )
                 .showSnackbarOnError()
@@ -97,6 +95,7 @@ class CollectionEditViewModel(
                 .onSuccess { collection ->
                     _uiState.update {
                         it.copy(
+                            collection = collection,
                             name = collection.name,
                             icon = collection.icon,
                         )
@@ -107,7 +106,7 @@ class CollectionEditViewModel(
 
     private fun deleteCollection() {
         viewModelScope.launch {
-            deleteCollection(uiState.value.collectionId ?: "")
+            deleteCollection(uiState.value.collection?.id ?: "")
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(CollectionEditEvent.Back)

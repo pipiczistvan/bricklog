@@ -12,13 +12,11 @@ import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettings
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_SET_FILTER
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_SET_LIST_DISPLAY_MODE
 import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_THEME
-import hu.piware.bricklog.feature.settings.data.datastore.DataStoreLocalSettingsDataSource.PreferenceKeys.KEY_USER_PREFERENCES
 import hu.piware.bricklog.feature.settings.domain.datasource.LocalSettingsDataSource
 import hu.piware.bricklog.feature.settings.domain.model.LanguageOption
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
-import hu.piware.bricklog.feature.settings.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
@@ -93,16 +91,6 @@ class DataStoreLocalSettingsDataSource(
             }
     }
 
-    override fun watchUserPreferences(): Flow<UserPreferences> {
-        return dataStore.data
-            .map { preferences ->
-                preferences[KEY_USER_PREFERENCES]
-            }
-            .map { jsonString ->
-                jsonString?.let { json.decodeFromString(it) } ?: UserPreferences()
-            }
-    }
-
     override suspend fun saveSetFilterPreferences(filter: SetFilterPreferences) {
         dataStore.edit { preferences ->
             preferences[KEY_SET_FILTER] = json.encodeToString(filter)
@@ -139,18 +127,6 @@ class DataStoreLocalSettingsDataSource(
         }
     }
 
-    override suspend fun saveUserPreferences(userPreferences: UserPreferences) {
-        dataStore.edit { preferences ->
-            preferences[KEY_USER_PREFERENCES] = json.encodeToString(userPreferences)
-        }
-    }
-
-    override suspend fun removeUserPreferences() {
-        dataStore.edit { preferences ->
-            preferences.remove(KEY_USER_PREFERENCES)
-        }
-    }
-
     private object PreferenceKeys {
         val KEY_SET_FILTER = stringPreferencesKey(name = "set_filter")
         val KEY_NOTIFICATION = stringPreferencesKey(name = "notification")
@@ -158,6 +134,5 @@ class DataStoreLocalSettingsDataSource(
         val KEY_THEME = stringPreferencesKey(name = "theme")
         val KEY_SET_LIST_DISPLAY_MODE = stringPreferencesKey(name = "set_list_display_mode")
         val KEY_CHANGELOG_READ_VERSION = intPreferencesKey(name = "changelog_read_version")
-        val KEY_USER_PREFERENCES = stringPreferencesKey(name = "user_preferences")
     }
 }

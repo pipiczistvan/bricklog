@@ -1,0 +1,44 @@
+package hu.piware.bricklog.feature.collection.domain.usecase
+
+import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
+import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
+import hu.piware.bricklog.feature.core.domain.DataError
+import hu.piware.bricklog.feature.core.domain.EmptyResult
+import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.data
+import hu.piware.bricklog.feature.core.domain.onError
+import hu.piware.bricklog.feature.set.domain.model.SetId
+import kotlinx.coroutines.flow.firstOrNull
+import org.koin.core.annotation.Single
+
+@Single
+class ToggleFavouriteSetCollection(
+    private val collectionRepository: CollectionRepository,
+) {
+    suspend operator fun invoke(setId: SetId): EmptyResult<DataError> {
+        val favouriteSetCollection =
+            collectionRepository.getUserCollectionsByType(CollectionType.FAVOURITE)
+                .onError { return it }
+                .data()
+                .firstOrNull() ?: createFavouriteCollection()
+                .onError { return it }
+                .data()
+
+        val setCollections = collectionRepository.watchCollectionsBySet(setId)
+            .firstOrNull()
+
+        val setIsInCollection = setCollections?.any { it.id == favouriteSetCollection.id } ?: false
+
+        return if (setIsInCollection) {
+            collectionRepository.removeSetFromCollection(setId, favouriteSetCollection.id)
+        } else {
+            collectionRepository.addSetToCollection(setId, favouriteSetCollection.id)
+        }
+    }
+
+    private suspend fun createFavouriteCollection(): Result<Collection, DataError> {
+        return collectionRepository.saveCollection(defaultCollections.find { it.type == CollectionType.FAVOURITE }!!)
+    }
+}

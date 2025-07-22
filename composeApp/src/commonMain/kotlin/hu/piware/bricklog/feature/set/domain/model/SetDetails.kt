@@ -11,7 +11,7 @@ import bricklog.composeapp.generated.resources.feature_set_search_status_retired
 import bricklog.composeapp.generated.resources.feature_set_search_status_retired_soon
 import bricklog.composeapp.generated.resources.feature_set_search_status_unknown
 import hu.piware.bricklog.feature.collection.domain.model.Collection
-import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
+import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -25,7 +25,7 @@ data class SetDetails(
 )
 
 val SetDetails.isFavourite: Boolean
-    get() = collections.any { it.id == COLLECTION_ID_FAVOURITE_SETS }
+    get() = collections.any { it.type == CollectionType.FAVOURITE }
 
 val SetDetails.setID: Int
     get() = set.setID

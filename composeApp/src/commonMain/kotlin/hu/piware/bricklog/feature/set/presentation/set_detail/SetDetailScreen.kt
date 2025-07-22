@@ -48,7 +48,6 @@ import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_
 import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_upc
 import bricklog.composeapp.generated.resources.navigation_go_back
 import hu.piware.bricklog.feature.collection.domain.model.Collection
-import hu.piware.bricklog.feature.collection.domain.util.COLLECTION_ID_FAVOURITE_SETS
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Instruction
@@ -135,10 +134,7 @@ private fun SetDetailScreen(
                         modifier = Modifier.testTag("set_detail:favourite_btn"),
                         onClick = {
                             onAction(
-                                SetDetailAction.OnToggleCollection(
-                                    setId = state.setDetails.setID,
-                                    collectionId = COLLECTION_ID_FAVOURITE_SETS
-                                )
+                                SetDetailAction.OnToggleFavourite(state.setDetails.setID)
                             )
                         },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(

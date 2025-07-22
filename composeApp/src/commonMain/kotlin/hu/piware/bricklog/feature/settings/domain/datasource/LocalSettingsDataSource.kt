@@ -5,7 +5,6 @@ import hu.piware.bricklog.feature.settings.domain.model.LanguageOption
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
-import hu.piware.bricklog.feature.settings.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 
 interface LocalSettingsDataSource {
@@ -22,8 +21,6 @@ interface LocalSettingsDataSource {
 
     fun watchChangelogReadVersion(): Flow<Int>
 
-    fun watchUserPreferences(): Flow<UserPreferences>
-
     suspend fun saveSetFilterPreferences(filter: SetFilterPreferences)
 
     suspend fun saveNotificationPreferences(notification: NotificationPreferences)
@@ -35,8 +32,4 @@ interface LocalSettingsDataSource {
     suspend fun saveSetListDisplayMode(mode: SetListDisplayMode)
 
     suspend fun saveChangelogReadVersion(version: Int)
-
-    suspend fun saveUserPreferences(userPreferences: UserPreferences)
-
-    suspend fun removeUserPreferences()
 }

@@ -17,6 +17,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetTheme
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -24,7 +25,7 @@ import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
 
 @Single
-class RoomLocalSetDataSource(
+class RoomSetDataSource(
     database: BricklogDatabase,
 ) : LocalSetDataSource {
 
@@ -32,27 +33,36 @@ class RoomLocalSetDataSource(
     private val setDetailsDao = database.setDetailsDao
     private val themeGroupDao = database.themeGroupDao
 
-    override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
+    override fun watchSetDetails(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Flow<List<SetDetails>> {
         val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
 
         return setDetailsDao.watchSetDetails(query)
             .map { entities ->
-                entities.map { it.toDomainModel() }
+                entities.map { it.toDomainModel(userId) }
             }
     }
 
-    override suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError.Local> {
+    override suspend fun getSetDetails(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Result<List<SetDetails>, DataError.Local> {
         val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
 
         return try {
-            val sets = setDetailsDao.getSetDetails(query).map { it.toDomainModel() }
+            val sets = setDetailsDao.getSetDetails(query).map { it.toDomainModel(userId) }
             return Result.Success(sets)
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
 
-    override fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>> {
+    override fun watchSetDetailsPaged(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Flow<PagingData<SetDetails>> {
         return Pager(
             PagingConfig(
                 pageSize = 10,
@@ -63,13 +73,13 @@ class RoomLocalSetDataSource(
             val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
             setDetailsDao.pagingSource(query)
         }.flow.map { pagingData ->
-            pagingData.map { it.toDomainModel() }
+            pagingData.map { it.toDomainModel(userId) }
         }
     }
 
-    override fun watchSetDetailsById(id: SetId): Flow<SetDetails> {
+    override fun watchSetDetailsById(userId: UserId, id: SetId): Flow<SetDetails> {
         return setDetailsDao.watchSetDetails(id)
-            .mapNotNull { it?.toDomainModel() }
+            .mapNotNull { it?.toDomainModel(userId) }
     }
 
     override suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local> {

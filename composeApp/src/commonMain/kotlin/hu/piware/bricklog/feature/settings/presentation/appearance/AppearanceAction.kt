@@ -1,7 +1,7 @@
 package hu.piware.bricklog.feature.settings.presentation.appearance
 
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
-import hu.piware.bricklog.feature.settings.domain.model.UserPreferences
+import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 
 sealed interface AppearanceAction {
     data object OnBackClick : AppearanceAction

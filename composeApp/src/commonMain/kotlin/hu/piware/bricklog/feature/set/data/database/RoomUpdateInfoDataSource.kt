@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
 
 @Single
-class RoomLocalUpdateInfoDataSource(
+class RoomUpdateInfoDataSource(
     database: BricklogDatabase,
 ) : LocalUpdateInfoDataSource {
 
