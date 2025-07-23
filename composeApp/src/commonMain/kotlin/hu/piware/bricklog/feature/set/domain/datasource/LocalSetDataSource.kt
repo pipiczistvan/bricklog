@@ -13,23 +13,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
 interface LocalSetDataSource {
+
+    suspend fun getSetCount(): Result<Int, DataError.Local>
+
+    suspend fun getLastUpdatedSet(): Result<Set?, DataError>
+
+    fun watchThemes(): Flow<List<String>>
+
+    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
+
+    fun watchPackagingTypes(): Flow<List<String>>
+
     fun watchSetDetails(userId: UserId, queryOptions: SetQueryOptions): Flow<List<SetDetails>>
-    suspend fun getSetDetails(
-        userId: UserId,
-        queryOptions: SetQueryOptions,
-    ): Result<List<SetDetails>, DataError.Local>
 
     fun watchSetDetailsPaged(
         userId: UserId,
         queryOptions: SetQueryOptions,
     ): Flow<PagingData<SetDetails>>
 
-    fun watchSetDetailsById(userId: UserId, id: Int): Flow<SetDetails>
-    suspend fun updateSets(sets: List<Set>): EmptyResult<DataError.Local>
-    suspend fun getSetCount(): Result<Int, DataError.Local>
-    fun watchThemes(): Flow<List<String>>
-    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
-    fun watchPackagingTypes(): Flow<List<String>>
+    suspend fun upsertSets(sets: List<Set>): EmptyResult<DataError.Local>
+
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
-    suspend fun getLastUpdatedSet(): Result<Set?, DataError>
 }

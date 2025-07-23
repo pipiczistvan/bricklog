@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import hu.piware.bricklog.feature.collection.data.database.CollectionDao
 import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
+import hu.piware.bricklog.feature.collection.data.database.CollectionWithSetIdDao
 import hu.piware.bricklog.feature.collection.data.database.SetCollectionDao
 import hu.piware.bricklog.feature.collection.data.database.SetCollectionEntity
 import hu.piware.bricklog.feature.set.data.database.SetDao
@@ -51,6 +52,7 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val setImagesDao: SetImageDao
     abstract val setInstructionsDao: SetInstructionDao
     abstract val collectionDao: CollectionDao
+    abstract val collectionWithSetIdDao: CollectionWithSetIdDao
     abstract val setCollectionDao: SetCollectionDao
     abstract val themeGroupDao: ThemeGroupDao
     abstract val userPreferencesDao: UserPreferencesDao

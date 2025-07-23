@@ -13,7 +13,7 @@ import hu.piware.bricklog.feature.set.domain.usecase.GetAdditionalImages
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsById
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
@@ -38,15 +38,16 @@ class SetImageViewModel(
 
     private fun loadSet(id: Int) {
         viewModelScope.launch {
-            val setDetails = watchSetDetailsById(id)
-                .first()
-
-            _uiState.update {
-                it.copy(
-                    setId = setDetails.set.setID,
-                    images = listOf(setDetails.set.image) + it.images
-                )
-            }
+            watchSetDetailsById(id)
+                .firstOrNull()
+                ?.let { setDetails ->
+                    _uiState.update {
+                        it.copy(
+                            setId = setDetails.set.setID,
+                            images = listOf(setDetails.set.image) + it.images
+                        )
+                    }
+                }
         }
     }
 

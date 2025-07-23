@@ -21,7 +21,7 @@ class WatchNewChangelog(
                     emit(it)
                 }
         }
-        val readVersionFlow = settingsRepository.changelogReadVersion
+        val readVersionFlow = settingsRepository.watchChangelogReadVersion()
 
         return combine(changelogFlow, readVersionFlow) { changelog, readVersion ->
             changelog.copy(

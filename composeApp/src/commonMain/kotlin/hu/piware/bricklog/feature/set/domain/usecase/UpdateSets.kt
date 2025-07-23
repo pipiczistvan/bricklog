@@ -39,12 +39,12 @@ class UpdateSets(
 
         logger.i { "Updating with ${updateBatches.size} update batches" }
         for (batch in updateBatches) {
-            setRepository.updateSets(batch.fileUploads)
+            setRepository.saveSets(batch.fileUploads)
                 .onError { return it }
         }
 
         logger.i { "Storing update info date" }
-        updateInfoRepository.storeUpdateInfo(
+        updateInfoRepository.saveUpdateInfo(
             UpdateInfo(
                 dataType = DataType.SET_DATA,
                 lastUpdated = Clock.System.now()

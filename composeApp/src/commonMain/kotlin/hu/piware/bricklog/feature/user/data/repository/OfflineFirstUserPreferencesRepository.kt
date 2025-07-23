@@ -58,7 +58,7 @@ class OfflineFirstUserPreferencesRepository(
             .onError { return it }
 
         if (sessionManager.isAuthenticated) {
-            remoteDataSource.saveUserPreferences(sessionManager.currentUserId, userPreferences)
+            remoteDataSource.upsertUserPreferences(sessionManager.currentUserId, userPreferences)
                 .onError { return it }
         }
 

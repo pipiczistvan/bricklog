@@ -13,15 +13,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
 interface SetRepository {
-    fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
-    suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError>
-    fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
-    fun watchSetDetailsById(id: Int): Flow<SetDetails>
-    suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError>
+
     suspend fun getSetCount(): Result<Int, DataError>
-    fun watchThemes(): Flow<List<String>>
-    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
-    fun watchPackagingTypes(): Flow<List<String>>
-    suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
+
     suspend fun getLastUpdatedSet(): Result<Set?, DataError>
+
+    fun watchThemes(): Flow<List<String>>
+
+    fun watchThemeGroups(): Flow<List<SetThemeGroup>>
+
+    fun watchPackagingTypes(): Flow<List<String>>
+
+    fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
+
+    fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
+
+    suspend fun saveSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError>
+
+    suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
 }

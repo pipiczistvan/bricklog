@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import androidx.sqlite.SQLiteException
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -17,32 +18,25 @@ class RoomUpdateInfoDataSource(
     database: BricklogDatabase,
 ) : LocalUpdateInfoDataSource {
 
+    private val logger = Logger.withTag("RoomUpdateInfoDataSource")
+
     private val dao = database.updateInfoDao
 
-    override suspend fun getUpdateInfo(
-        type: DataType,
-        setId: Int?,
-    ): Result<UpdateInfo?, DataError.Local> {
-        return try {
-            val updateInfo = dao.getByType(type, setId)?.toDomainModel()
-            Result.Success(updateInfo)
-        } catch (e: Exception) {
-            Result.Error(DataError.Local.UNKNOWN)
-        }
-    }
-
     override fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?> {
-        return dao.watchByType(type, setId)
+        return dao.watchUpsertInfo(type, setId)
             .map { it?.toDomainModel() }
     }
 
-    override suspend fun storeUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError.Local> {
+    override suspend fun upsertUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError.Local> {
         return try {
-            dao.upsert(updateInfo.toEntity())
+            logger.d { "Storing update info" }
+            dao.upsertUpdateInfo(updateInfo.toEntity())
             Result.Success(Unit)
         } catch (e: SQLiteException) {
+            logger.e(e) { "Error storing update info" }
             Result.Error(DataError.Local.DISK_FULL)
         } catch (e: Exception) {
+            logger.e(e) { "Error storing update info" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

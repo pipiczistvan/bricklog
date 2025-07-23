@@ -7,8 +7,10 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteUserPreferencesDataSource {
+
     fun watchUserPreferences(userId: UserId): Flow<UserPreferences?>
-    suspend fun saveUserPreferences(
+
+    suspend fun upsertUserPreferences(
         userId: UserId,
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Remote>

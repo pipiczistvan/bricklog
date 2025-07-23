@@ -6,7 +6,7 @@ import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
-import kotlinx.coroutines.flow.firstOrNull
+import hu.piware.bricklog.util.firstOrDefault
 import org.koin.core.annotation.Single
 
 @Single
@@ -17,8 +17,8 @@ class SendNewSetNotification(
 
     suspend operator fun invoke(newSets: List<SetDetails>) {
         logger.i { "Reading notification preferences" }
-        val notificationPreferences = settingsRepository.notificationPreferences.firstOrNull()
-            ?: NotificationPreferences()
+        val notificationPreferences = settingsRepository.watchNotificationPreferences()
+            .firstOrDefault { NotificationPreferences() }
 
         logger.i { "Read notification preferences" }
         if (newSets.isNotEmpty() && notificationPreferences.newSets) {

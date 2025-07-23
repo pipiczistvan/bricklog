@@ -41,10 +41,6 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
         )
     }
 
-    override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
-        return Result.Success(emptyList())
-    }
-
     override fun watchCollectibles(): Flow<List<Collectible>> {
         return emptyFlow()
     }

@@ -26,7 +26,7 @@ class WatchSetDetails(
     ): Flow<List<SetDetails>> {
         val parsedQueries = query.parseQueries()
 
-        return settingsRepository.setFilterPreferences
+        return settingsRepository.watchSetFilterPreferences()
             .map { filterPreferences ->
                 buildSetQueryOptions(filterOverrides, filterPreferences, parsedQueries)
             }

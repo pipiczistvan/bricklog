@@ -44,11 +44,11 @@ fun BarcodeScannerWithPermission(
             permissionsController.providePermission(Permission.CAMERA)
             cameraPermissionGranted = true
         } catch (e: DeniedAlwaysException) {
-            logger.w { "Camera permission denied always." }
+            logger.w(e) { "Camera permission denied always." }
         } catch (e: DeniedException) {
-            logger.w { "Camera permission denied." }
+            logger.d(e) { "Camera permission denied." }
         } catch (e: RequestCanceledException) {
-            logger.w { "Camera permission canceled." }
+            logger.w(e) { "Camera permission canceled." }
         }
     }
 

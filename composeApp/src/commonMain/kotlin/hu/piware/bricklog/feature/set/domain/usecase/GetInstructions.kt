@@ -10,6 +10,7 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.SetInstructionRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
+import hu.piware.bricklog.util.asResultOrNull
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
@@ -23,8 +24,9 @@ class GetInstructions(
     private val logger = Logger.withTag("GetInstructions")
 
     suspend operator fun invoke(setId: Int): Result<List<Instruction>, DataError> {
-        logger.d { "Getting update info." }
-        val updateInfo = updateInfoRepository.getUpdateInfo(DataType.INSTRUCTIONS, setId)
+        logger.d { "Getting update info for instructions." }
+        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.INSTRUCTIONS, setId)
+            .asResultOrNull()
             .onError { return it }
             .data()
 
@@ -41,7 +43,7 @@ class GetInstructions(
 
         if (isUpdateNeeded) {
             logger.d { "Storing update info." }
-            updateInfoRepository.storeUpdateInfo(
+            updateInfoRepository.saveUpdateInfo(
                 UpdateInfo(
                     dataType = DataType.INSTRUCTIONS,
                     setId = setId,

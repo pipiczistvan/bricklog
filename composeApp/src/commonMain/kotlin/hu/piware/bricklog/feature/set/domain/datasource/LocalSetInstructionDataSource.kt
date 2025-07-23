@@ -7,12 +7,12 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 
 interface LocalSetInstructionDataSource {
 
-    suspend fun updateInstructions(
+    suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Local>
+
+    suspend fun upsertInstructions(
         setId: Int,
         instructions: List<Instruction>,
     ): EmptyResult<DataError.Local>
-
-    suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Local>
 
     suspend fun deleteInstructions(setId: Int): EmptyResult<DataError.Local>
 }

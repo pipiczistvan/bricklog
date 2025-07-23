@@ -27,7 +27,7 @@ class WatchSetDetailsPaged(
     ): Flow<PagingData<SetDetails>> {
         val parsedQueries = query.parseQueries()
 
-        return settingsRepository.setFilterPreferences
+        return settingsRepository.watchSetFilterPreferences()
             .map { filterPreferences ->
                 buildSetQueryOptions(filterOverrides, filterPreferences, parsedQueries)
             }

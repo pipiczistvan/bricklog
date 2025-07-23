@@ -8,8 +8,10 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.data
+import hu.piware.bricklog.feature.core.domain.first
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.util.asResultOrDefault
 import kotlinx.coroutines.flow.firstOrNull
 import org.koin.core.annotation.Single
 
@@ -19,26 +21,29 @@ class ToggleFavouriteSetCollection(
 ) {
     suspend operator fun invoke(setId: SetId): EmptyResult<DataError> {
         val favouriteSetCollection =
-            collectionRepository.getUserCollectionsByType(CollectionType.FAVOURITE)
+            collectionRepository.watchCollections(CollectionType.FAVOURITE)
+                .asResultOrDefault { emptyList() }
                 .onError { return it }
                 .data()
                 .firstOrNull() ?: createFavouriteCollection()
                 .onError { return it }
                 .data()
 
-        val setCollections = collectionRepository.watchCollectionsBySet(setId)
+        val setCollections = collectionRepository.watchCollections(setId = setId)
             .firstOrNull()
 
         val setIsInCollection = setCollections?.any { it.id == favouriteSetCollection.id } ?: false
 
         return if (setIsInCollection) {
-            collectionRepository.removeSetFromCollection(setId, favouriteSetCollection.id)
+            collectionRepository.removeSetFromCollections(setId, listOf(favouriteSetCollection.id))
         } else {
-            collectionRepository.addSetToCollection(setId, favouriteSetCollection.id)
+            collectionRepository.addSetToCollections(setId, listOf(favouriteSetCollection.id))
         }
     }
 
     private suspend fun createFavouriteCollection(): Result<Collection, DataError> {
-        return collectionRepository.saveCollection(defaultCollections.find { it.type == CollectionType.FAVOURITE }!!)
+        val defaultCollections = defaultCollections.filter { it.type == CollectionType.FAVOURITE }
+
+        return collectionRepository.saveCollections(defaultCollections).first()
     }
 }

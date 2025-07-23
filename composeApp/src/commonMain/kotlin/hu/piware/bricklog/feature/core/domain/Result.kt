@@ -45,4 +45,6 @@ fun <T, E : Error> Result<T, E>.data(): T {
     }
 }
 
+fun <T, E : Error> Result<Collection<T>, E>.first() = map { it.first() }
+
 typealias EmptyResult<E> = Result<Unit, E>

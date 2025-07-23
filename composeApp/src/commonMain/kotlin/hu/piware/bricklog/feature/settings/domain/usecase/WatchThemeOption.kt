@@ -7,5 +7,5 @@ import org.koin.core.annotation.Single
 class WatchThemeOption(
     private val settingsRepository: SettingsRepository,
 ) {
-    operator fun invoke() = settingsRepository.themeOption
+    operator fun invoke() = settingsRepository.watchThemeOption()
 }

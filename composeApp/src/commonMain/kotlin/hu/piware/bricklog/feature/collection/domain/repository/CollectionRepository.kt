@@ -10,18 +10,24 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
 import kotlinx.coroutines.flow.Flow
 
 interface CollectionRepository {
-    fun watchCollectionsBySet(setId: SetId): Flow<List<Collection>>
+
+    fun watchCollection(collectionId: CollectionId): Flow<Collection>
+
+    fun watchCollections(type: CollectionType? = null, setId: SetId? = null): Flow<List<Collection>>
+
     fun watchCollectionsBySets(): Flow<Map<SetId, List<Collection>>>
-    fun watchCollections(): Flow<List<Collection>>
-    suspend fun deleteCollectionById(collectionId: CollectionId): EmptyResult<DataError>
-    suspend fun saveCollection(collection: Collection): Result<Collection, DataError>
-    suspend fun addSetToCollection(setId: SetId, collectionId: CollectionId): EmptyResult<DataError>
-    suspend fun removeSetFromCollection(
+
+    suspend fun saveCollections(collections: List<Collection>): Result<List<Collection>, DataError>
+
+    suspend fun addSetToCollections(
         setId: SetId,
-        collectionId: CollectionId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError>
 
-    suspend fun getCollection(collectionId: CollectionId): Result<Collection, DataError>
-    fun watchCollection(collectionId: CollectionId): Flow<Collection>
-    suspend fun getUserCollectionsByType(type: CollectionType): Result<List<Collection>, DataError>
+    suspend fun deleteCollections(collectionIds: List<CollectionId>): EmptyResult<DataError>
+
+    suspend fun removeSetFromCollections(
+        setId: SetId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError>
 }

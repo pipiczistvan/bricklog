@@ -25,7 +25,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
     private val firestore = Firebase.firestore
 
-    override fun watchUserCollections(userId: UserId): Flow<List<Collection>> {
+    override fun watchCollections(userId: UserId): Flow<List<Collection>> {
         return firestore.collection("user-data/$userId/collections").snapshots
             .mapNotNull { snapshot ->
                 try {
@@ -39,7 +39,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             }
     }
 
-    override fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
+    override fun watchCollectionsBySets(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
         return firestore.collection("user-data/$userId/set-collections").snapshots
             .mapNotNull { snapshot ->
                 try {
@@ -56,15 +56,76 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             }
     }
 
-    override suspend fun deleteUserCollection(
+    override suspend fun upsertCollections(
         userId: UserId,
-        id: CollectionId,
+        collections: List<Collection>,
     ): EmptyResult<DataError.Remote> {
         return try {
             with(firestore) {
                 batch().apply {
-                    delete(collection("user-data/$userId/set-collections").document(id))
-                    delete(collection("user-data/$userId/collections").document(id))
+                    for (collection in collections) {
+                        if (collection.isNew) {
+                            collection("user-data/$userId/collections").add(collection.toDocument())
+                            logger.d { "Collection created successfully" }
+                        } else {
+                            collection("user-data/$userId/collections")
+                                .document(collection.id)
+                                .set(
+                                    data = collection.toDocument(),
+                                    merge = true
+                                )
+                            logger.d { "Collection updated successfully" }
+                        }
+                    }
+                    commit()
+                }
+            }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while saving collection" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun addSetToCollections(
+        userId: UserId,
+        setId: SetId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote> {
+        return try {
+            with(firestore) {
+                batch().apply {
+                    for (collectionId in collectionIds) {
+                        collection("user-data/$userId/set-collections")
+                            .document(collectionId)
+                            .set(
+                                data = mapOf(
+                                    "setIds" to FieldValue.arrayUnion(setId)
+                                ),
+                                merge = true
+                            )
+                    }
+                    commit()
+                }
+            }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while adding set to collections" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteCollections(
+        userId: UserId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote> {
+        return try {
+            with(firestore) {
+                batch().apply {
+                    for (id in collectionIds) {
+                        delete(collection("user-data/$userId/set-collections").document(id))
+                        delete(collection("user-data/$userId/collections").document(id))
+                    }
                     commit()
                 }
             }
@@ -75,68 +136,30 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
-    override suspend fun upsertUserCollection(
+    override suspend fun removeSetFromCollections(
         userId: UserId,
-        collection: Collection,
+        setId: SetId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
         return try {
-            if (collection.isNew) {
-                firestore.collection("user-data/$userId/collections").add(collection.toDocument())
-                logger.d { "Collection created successfully" }
-            } else {
-                firestore.collection("user-data/$userId/collections")
-                    .document(collection.id)
-                    .set(
-                        data = collection.toDocument(),
-                        merge = true
-                    )
-                logger.d { "Collection updated successfully" }
+            with(firestore) {
+                batch().apply {
+                    for (id in collectionIds) {
+                        collection("user-data/$userId/set-collections")
+                            .document(id)
+                            .set(
+                                data = mapOf(
+                                    "setIds" to FieldValue.arrayRemove(setId)
+                                ),
+                                merge = true
+                            )
+                    }
+                    commit()
+                }
             }
             Result.Success(Unit)
         } catch (e: Exception) {
-            logger.e(e) { "An error occurred while saving collection" }
-            Result.Error(DataError.Remote.UNKNOWN)
-        }
-    }
-
-    override suspend fun addSetToUserCollection(
-        userId: UserId,
-        setId: SetId,
-        collectionId: CollectionId,
-    ): EmptyResult<DataError.Remote> {
-        return try {
-            firestore.collection("user-data/$userId/set-collections")
-                .document(collectionId)
-                .set(
-                    data = mapOf(
-                        "setIds" to FieldValue.arrayUnion(setId)
-                    ),
-                    merge = true
-                )
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            logger.e(e) { "An error occurred while adding set to collection" }
-            Result.Error(DataError.Remote.UNKNOWN)
-        }
-    }
-
-    override suspend fun removeSetFromUserCollection(
-        userId: UserId,
-        setId: SetId,
-        collectionId: CollectionId,
-    ): EmptyResult<DataError.Remote> {
-        return try {
-            firestore.collection("user-data/$userId/set-collections")
-                .document(collectionId)
-                .set(
-                    data = mapOf(
-                        "setIds" to FieldValue.arrayRemove(setId)
-                    ),
-                    merge = true
-                )
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            logger.e(e) { "An error occurred while removing set from collection" }
+            logger.e(e) { "An error occurred while removing set from collections" }
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }

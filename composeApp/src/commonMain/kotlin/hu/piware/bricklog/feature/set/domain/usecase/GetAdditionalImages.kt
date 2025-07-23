@@ -10,6 +10,7 @@ import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.SetImageRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
+import hu.piware.bricklog.util.asResultOrNull
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
@@ -23,8 +24,9 @@ class GetAdditionalImages(
     private val logger = Logger.withTag("GetAdditionalImages")
 
     suspend operator fun invoke(setId: Int): Result<List<Image>, DataError> {
-        logger.d { "Getting update info." }
-        val updateInfo = updateInfoRepository.getUpdateInfo(DataType.ADDITIONAL_IMAGES, setId)
+        logger.d { "Getting update info for additional images" }
+        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.ADDITIONAL_IMAGES, setId)
+            .asResultOrNull()
             .onError { return it }
             .data()
 
@@ -41,7 +43,7 @@ class GetAdditionalImages(
 
         if (isUpdateNeeded) {
             logger.d { "Storing update info." }
-            updateInfoRepository.storeUpdateInfo(
+            updateInfoRepository.saveUpdateInfo(
                 UpdateInfo(
                     dataType = DataType.ADDITIONAL_IMAGES,
                     setId = setId,

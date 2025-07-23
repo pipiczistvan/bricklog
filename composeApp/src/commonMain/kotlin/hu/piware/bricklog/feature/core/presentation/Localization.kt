@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.piware.bricklog.feature.settings.domain.model.LanguageOption
-import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
+import hu.piware.bricklog.feature.settings.domain.usecase.WatchLanguageOption
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
 
@@ -17,11 +17,11 @@ val LocalLocalization = staticCompositionLocalOf { LanguageOption.SYSTEM }
 
 @Composable
 fun LocalizedApp(content: @Composable () -> Unit) {
-    val settingsRepository = koinInject<SettingsRepository>()
+    val watchLanguageOption = koinInject<WatchLanguageOption>()
     val localeManager = koinInject<LocaleManager>()
     var language by remember { mutableStateOf(LanguageOption.SYSTEM) }
 
-    settingsRepository.languageOption
+    watchLanguageOption()
         .onEach { languageOption ->
             localeManager.changeLanguage(languageOption)
             language =

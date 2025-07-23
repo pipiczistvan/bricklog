@@ -8,12 +8,18 @@ import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
-    val setFilterPreferences: Flow<SetFilterPreferences>
-    val notificationPreferences: Flow<NotificationPreferences>
-    val languageOption: Flow<LanguageOption>
-    val themeOption: Flow<ThemeOption>
-    val setListDisplayMode: Flow<SetListDisplayMode>
-    val changelogReadVersion: Flow<Int>
+
+    fun watchSetFilterPreferences(): Flow<SetFilterPreferences>
+
+    fun watchNotificationPreferences(): Flow<NotificationPreferences>
+
+    fun watchLanguageOption(): Flow<LanguageOption>
+
+    fun watchThemeOption(): Flow<ThemeOption>
+
+    fun watchSetListDisplayMode(): Flow<SetListDisplayMode>
+
+    fun watchChangelogReadVersion(): Flow<Int>
 
     suspend fun saveSetFilterPreferences(preferences: SetFilterPreferences)
 

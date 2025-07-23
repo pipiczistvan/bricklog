@@ -16,86 +16,110 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
 
     private val firestore = MockFirestore
 
-    override fun watchUserCollections(userId: UserId): Flow<List<Collection>> {
+    override fun watchCollections(userId: UserId): Flow<List<Collection>> {
         return firestore.userCollections.map { it[userId] ?: emptyList() }
     }
 
-    override fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
+    override fun watchCollectionsBySets(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
         return firestore.setCollections.map { it[userId] ?: emptyMap() }
     }
 
-    override suspend fun deleteUserCollection(
+    override suspend fun upsertCollections(
         userId: UserId,
-        collectionId: CollectionId,
-    ): EmptyResult<DataError.Remote> {
-        firestore.userCollections.update { currentMap ->
-            val updatedUserCollections = currentMap[userId]
-                ?.filterNot { it.id == collectionId }
-                ?: return@update currentMap // No change if user or collection not found
-
-            currentMap + (userId to updatedUserCollections)
-        }
-        return Result.Success(Unit)
-    }
-
-    override suspend fun upsertUserCollection(
-        userId: UserId,
-        collection: Collection,
+        collections: List<Collection>,
     ): EmptyResult<DataError.Remote> {
         firestore.userCollections.update { currentMap ->
             val currentCollections = currentMap[userId].orEmpty()
-            val updatedCollections = currentCollections
-                .filterNot { it.id == collection.id } + collection
+
+            // Remove existing collections with the same ids
+            val collectionIds = collections.map { it.id }.toSet()
+            val filtered = currentCollections.filterNot { it.id in collectionIds }
+
+            // Add or replace with the new ones
+            val updatedCollections = filtered + collections
 
             currentMap + (userId to updatedCollections)
         }
+
         return Result.Success(Unit)
     }
 
-    override suspend fun addSetToUserCollection(
+    override suspend fun addSetToCollections(
         userId: UserId,
         setId: SetId,
-        collectionId: CollectionId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
         firestore.setCollections.update { currentMap ->
             val userMap = currentMap[userId].orEmpty()
-            val collectionIds = userMap[setId].orEmpty()
+            val existingIds = userMap[setId].orEmpty()
 
-            // Avoid duplicates
-            if (collectionId in collectionIds) return@update currentMap
+            // Combine and deduplicate
+            val updatedIds = (existingIds + collectionIds).distinct()
 
-            val updatedCollectionIds = collectionIds + collectionId
-            val updatedUserMap = userMap + (setId to updatedCollectionIds)
-
+            val updatedUserMap = userMap + (setId to updatedIds)
             currentMap + (userId to updatedUserMap)
         }
 
         return Result.Success(Unit)
     }
 
-    override suspend fun removeSetFromUserCollection(
+    override suspend fun deleteCollections(
         userId: UserId,
-        setId: SetId,
-        collectionId: CollectionId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
+        val collectionIdSet = collectionIds.toSet()
+
+        // 1. Remove from userCollections
+        firestore.userCollections.update { currentMap ->
+            val currentCollections = currentMap[userId].orEmpty()
+            val updatedCollections = currentCollections.filterNot { it.id in collectionIdSet }
+
+            if (updatedCollections.isEmpty()) {
+                currentMap - userId
+            } else {
+                currentMap + (userId to updatedCollections)
+            }
+        }
+
+        // 2. Remove from setCollections
         firestore.setCollections.update { currentMap ->
             val userMap = currentMap[userId] ?: return@update currentMap
-            val collectionIds = userMap[setId] ?: return@update currentMap
 
-            val updatedCollectionIds = collectionIds - collectionId
-            val updatedUserMap = if (updatedCollectionIds.isEmpty()) {
-                userMap - setId
-            } else {
-                userMap + (setId to updatedCollectionIds)
-            }
+            val updatedUserMap = userMap.mapValues { (_, ids) ->
+                ids.filterNot { it in collectionIdSet }
+            }.filterValues { it.isNotEmpty() }
 
-            val finalUserMap = if (updatedUserMap.isEmpty()) {
+            if (updatedUserMap.isEmpty()) {
                 currentMap - userId
             } else {
                 currentMap + (userId to updatedUserMap)
             }
+        }
 
-            finalUserMap
+        return Result.Success(Unit)
+    }
+
+    override suspend fun removeSetFromCollections(
+        userId: UserId,
+        setId: SetId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote> {
+        firestore.setCollections.update { currentMap ->
+            val userMap = currentMap[userId] ?: return@update currentMap
+            val currentList = userMap[setId] ?: return@update currentMap
+
+            val updatedList = currentList - collectionIds.toSet()
+            val updatedUserMap = if (updatedList.isEmpty()) {
+                userMap - setId
+            } else {
+                userMap + (setId to updatedList)
+            }
+
+            if (updatedUserMap.isEmpty()) {
+                currentMap - userId
+            } else {
+                currentMap + (userId to updatedUserMap)
+            }
         }
 
         return Result.Success(Unit)

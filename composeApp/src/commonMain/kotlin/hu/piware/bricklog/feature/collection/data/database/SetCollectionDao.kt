@@ -8,12 +8,6 @@ import androidx.room.Upsert
 interface SetCollectionDao {
 
     @Delete
-    suspend fun deleteSetCollection(setCollection: SetCollectionEntity)
-
-    @Upsert
-    suspend fun upsertSetCollection(setCollection: SetCollectionEntity)
-
-    @Delete
     suspend fun deleteSetCollections(setCollections: List<SetCollectionEntity>)
 
     @Upsert

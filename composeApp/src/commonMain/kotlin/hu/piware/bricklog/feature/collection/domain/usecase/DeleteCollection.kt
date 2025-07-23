@@ -17,6 +17,6 @@ class DeleteCollection(
             return Result.Error(DataError.Local.UNKNOWN)
         }
 
-        return collectionRepository.deleteCollectionById(id)
+        return collectionRepository.deleteCollections(listOf(id))
     }
 }

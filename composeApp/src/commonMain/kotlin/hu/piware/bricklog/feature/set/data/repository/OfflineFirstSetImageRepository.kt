@@ -41,7 +41,7 @@ class OfflineFirstSetImageRepository(
                 .data()
 
             logger.d { "Storing remote additional images <setId=$setId>." }
-            localDataSource.updateImages(setId, remoteImages)
+            localDataSource.upsertImages(setId, remoteImages)
                 .onError { return it }
 
             Result.Success(remoteImages)

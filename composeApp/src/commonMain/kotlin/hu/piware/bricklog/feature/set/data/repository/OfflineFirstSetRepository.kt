@@ -34,14 +34,30 @@ class OfflineFirstSetRepository(
 
     private val logger = Logger.withTag("OfflineFirstSetRepository")
 
+    override suspend fun getSetCount(): Result<Int, DataError> {
+        return localDataSource.getSetCount()
+    }
+
+    override suspend fun getLastUpdatedSet(): Result<Set?, DataError> {
+        return localDataSource.getLastUpdatedSet()
+    }
+
+    override fun watchThemes(): Flow<List<String>> {
+        return localDataSource.watchThemes()
+    }
+
+    override fun watchThemeGroups(): Flow<List<SetThemeGroup>> {
+        return localDataSource.watchThemeGroups()
+    }
+
+    override fun watchPackagingTypes(): Flow<List<String>> {
+        return localDataSource.watchPackagingTypes()
+    }
+
     override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
         return sessionManager.userId.flatMapLatest { userId ->
             localDataSource.watchSetDetails(userId, queryOptions)
         }
-    }
-
-    override suspend fun getSetDetails(queryOptions: SetQueryOptions): Result<List<SetDetails>, DataError> {
-        return localDataSource.getSetDetails(sessionManager.currentUserId, queryOptions)
     }
 
     override fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>> {
@@ -50,13 +66,7 @@ class OfflineFirstSetRepository(
         }
     }
 
-    override fun watchSetDetailsById(id: Int): Flow<SetDetails> {
-        return sessionManager.userId.flatMapLatest { userId ->
-            localDataSource.watchSetDetailsById(userId, id)
-        }
-    }
-
-    override suspend fun updateSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError> {
+    override suspend fun saveSets(fileUploads: List<FileUploadResult>): EmptyResult<DataError> {
         // Downloading
         logger.i { "Downloading sets" }
         val (downloadResult, downloadTimeTaken) = measureTimedValue {
@@ -83,35 +93,15 @@ class OfflineFirstSetRepository(
         // Storing
         logger.i { "Storing ${parseResult.size} sets" }
         val (storeResult, storeTimeTaken) = measureTimedValue {
-            localDataSource.updateSets(parseResult)
+            localDataSource.upsertSets(parseResult)
         }
         logger.i { "Storing sets took $storeTimeTaken" }
 
         return storeResult
     }
 
-    override suspend fun getSetCount(): Result<Int, DataError> {
-        return localDataSource.getSetCount()
-    }
-
-    override fun watchThemes(): Flow<List<String>> {
-        return localDataSource.watchThemes()
-    }
-
-    override fun watchThemeGroups(): Flow<List<SetThemeGroup>> {
-        return localDataSource.watchThemeGroups()
-    }
-
-    override fun watchPackagingTypes(): Flow<List<String>> {
-        return localDataSource.watchPackagingTypes()
-    }
-
     override suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local> {
         return localDataSource.deleteSetsUpdatedAfter(date)
-    }
-
-    override suspend fun getLastUpdatedSet(): Result<Set?, DataError> {
-        return localDataSource.getLastUpdatedSet()
     }
 
     private suspend fun downloadSets(fileUploads: List<FileUploadResult>): Result<ByteArray, DataError.Remote> {

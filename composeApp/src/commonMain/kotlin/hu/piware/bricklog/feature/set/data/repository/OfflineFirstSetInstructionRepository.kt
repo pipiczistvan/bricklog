@@ -41,7 +41,7 @@ class OfflineFirstSetInstructionRepository(
                 .data()
 
             logger.d { "Storing remote instructions <setId=$setId>." }
-            localDataSource.updateInstructions(setId, remoteInstructions)
+            localDataSource.upsertInstructions(setId, remoteInstructions)
                 .onError { return it }
 
             Result.Success(remoteInstructions)

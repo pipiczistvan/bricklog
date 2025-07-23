@@ -10,6 +10,7 @@ import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 
 @Single
@@ -17,17 +18,29 @@ class OfflineFirstSettingsRepository(
     private val localDataSource: LocalSettingsDataSource,
 ) : SettingsRepository {
 
-    override val setFilterPreferences = localDataSource.watchSetFilterPreferences()
+    override fun watchSetFilterPreferences(): Flow<SetFilterPreferences> {
+        return localDataSource.watchSetFilterPreferences()
+    }
 
-    override val notificationPreferences = localDataSource.watchNotificationPreferences()
+    override fun watchNotificationPreferences(): Flow<NotificationPreferences> {
+        return localDataSource.watchNotificationPreferences()
+    }
 
-    override val languageOption = localDataSource.watchLanguageOption()
+    override fun watchLanguageOption(): Flow<LanguageOption> {
+        return localDataSource.watchLanguageOption()
+    }
 
-    override val themeOption = localDataSource.watchThemeOption()
+    override fun watchThemeOption(): Flow<ThemeOption> {
+        return localDataSource.watchThemeOption()
+    }
 
-    override val setListDisplayMode = localDataSource.watchSetListDisplayMode()
+    override fun watchSetListDisplayMode(): Flow<SetListDisplayMode> {
+        return localDataSource.watchSetListDisplayMode()
+    }
 
-    override val changelogReadVersion = localDataSource.watchChangelogReadVersion()
+    override fun watchChangelogReadVersion(): Flow<Int> {
+        return localDataSource.watchChangelogReadVersion()
+    }
 
     override suspend fun saveSetFilterPreferences(preferences: SetFilterPreferences) {
         localDataSource.saveSetFilterPreferences(preferences)

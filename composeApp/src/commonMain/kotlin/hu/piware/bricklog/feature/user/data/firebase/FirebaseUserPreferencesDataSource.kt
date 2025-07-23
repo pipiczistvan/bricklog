@@ -35,7 +35,7 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
             }
     }
 
-    override suspend fun saveUserPreferences(
+    override suspend fun upsertUserPreferences(
         userId: UserId,
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Remote> {

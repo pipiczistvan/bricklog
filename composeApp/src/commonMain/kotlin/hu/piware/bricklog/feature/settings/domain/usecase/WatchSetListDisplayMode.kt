@@ -7,5 +7,5 @@ import org.koin.core.annotation.Single
 class WatchSetListDisplayMode(
     private val settingsRepository: SettingsRepository,
 ) {
-    operator fun invoke() = settingsRepository.setListDisplayMode
+    operator fun invoke() = settingsRepository.watchSetListDisplayMode()
 }

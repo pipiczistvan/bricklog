@@ -12,16 +12,16 @@ import org.koin.core.annotation.Single
 class ToggleSetCollection(
     private val collectionRepository: CollectionRepository,
 ) {
-    suspend operator fun invoke(setID: SetId, collectionID: CollectionId): EmptyResult<DataError> {
-        val setCollections = collectionRepository.watchCollectionsBySet(setID)
+    suspend operator fun invoke(setId: SetId, collectionID: CollectionId): EmptyResult<DataError> {
+        val setCollections = collectionRepository.watchCollections(setId = setId)
             .firstOrNull()
 
         val setIsInCollection = setCollections?.any { it.id == collectionID } ?: false
 
         return if (setIsInCollection) {
-            collectionRepository.removeSetFromCollection(setID, collectionID)
+            collectionRepository.removeSetFromCollections(setId, listOf(collectionID))
         } else {
-            collectionRepository.addSetToCollection(setID, collectionID)
+            collectionRepository.addSetToCollections(setId, listOf(collectionID))
         }
     }
 }

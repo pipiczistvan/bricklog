@@ -18,10 +18,6 @@ class RemoteDataServiceRepository(
         return remoteDataSource.getBatchExportInfo()
     }
 
-    override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
-        return remoteDataSource.getCollectibles()
-    }
-
     override fun watchCollectibles(): Flow<List<Collectible>> {
         return remoteDataSource.watchCollectibles()
     }

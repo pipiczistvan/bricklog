@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.core.data.network
 
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import io.ktor.client.call.NoTransformationFoundException
@@ -10,6 +11,8 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 
+val logger = Logger.withTag("HttpClientExt")
+
 suspend inline fun <reified T> safeCall(
     transform: (HttpResponse) -> T,
     execute: () -> HttpResponse,
@@ -17,10 +20,13 @@ suspend inline fun <reified T> safeCall(
     val response = try {
         execute()
     } catch (e: SocketTimeoutException) {
+        logger.w(e) { "Socket timed out" }
         return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
     } catch (e: UnresolvedAddressException) {
+        logger.w(e) { "Unresolved address" }
         return Result.Error(DataError.Remote.NO_INTERNET)
     } catch (e: Exception) {
+        logger.w(e) { "Unknown exception" }
         coroutineContext.ensureActive()
         return Result.Error(DataError.Remote.UNKNOWN)
     }

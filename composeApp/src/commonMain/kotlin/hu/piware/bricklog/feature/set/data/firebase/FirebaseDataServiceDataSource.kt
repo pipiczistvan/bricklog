@@ -22,6 +22,7 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
 
     override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError> {
         try {
+            logger.d { "Fetching batch export info from Firestore" }
             val batchExportInfo = firestore
                 .collection("bricklog-data-service")
                 .document("batch-export-info")
@@ -31,23 +32,7 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
 
             return Result.Success(batchExportInfo)
         } catch (e: Exception) {
-            return Result.Error(DataError.Remote.UNKNOWN)
-        }
-    }
-
-    override suspend fun getCollectibles(): Result<List<Collectible>, DataError> {
-        try {
-            val collectibles = firestore
-                .collection("collectibles")
-                .get()
-                .documents
-                .map {
-                    it.data<CollectibleDocument>().toDomainModel(it.id)
-                }
-
-            return Result.Success(collectibles)
-        } catch (e: Exception) {
-            logger.e(e) { "An error occurred while fetching collectibles" }
+            logger.e(e) { "An error occurred while fetching batch export info" }
             return Result.Error(DataError.Remote.UNKNOWN)
         }
     }

@@ -9,12 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UpdateInfoDao {
 
+    @Query("SELECT * FROM update_info WHERE dataType = :type AND (:setId IS NULL OR setId = :setId)")
+    fun watchUpsertInfo(type: DataType, setId: Int?): Flow<UpdateInfoEntity?>
+
     @Upsert
-    suspend fun upsert(updateInfo: UpdateInfoEntity)
-
-    @Query("SELECT * FROM update_info WHERE dataType = :type AND (:setId IS NULL OR setId = :setId)")
-    suspend fun getByType(type: DataType, setId: Int?): UpdateInfoEntity?
-
-    @Query("SELECT * FROM update_info WHERE dataType = :type AND (:setId IS NULL OR setId = :setId)")
-    fun watchByType(type: DataType, setId: Int?): Flow<UpdateInfoEntity?>
+    suspend fun upsertUpdateInfo(updateInfo: UpdateInfoEntity)
 }

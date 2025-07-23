@@ -10,29 +10,29 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteCollectionDataSource {
 
-    fun watchUserCollections(userId: UserId): Flow<List<Collection>>
+    fun watchCollections(userId: UserId): Flow<List<Collection>>
 
-    fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>>
+    fun watchCollectionsBySets(userId: UserId): Flow<Map<SetId, List<CollectionId>>>
 
-    suspend fun deleteUserCollection(
+    suspend fun upsertCollections(
         userId: UserId,
-        collectionId: CollectionId,
+        collections: List<Collection>,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun upsertUserCollection(
-        userId: UserId,
-        collection: Collection,
-    ): EmptyResult<DataError.Remote>
-
-    suspend fun addSetToUserCollection(
+    suspend fun addSetToCollections(
         userId: UserId,
         setId: SetId,
-        collectionId: CollectionId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun removeSetFromUserCollection(
+    suspend fun deleteCollections(
+        userId: UserId,
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote>
+
+    suspend fun removeSetFromCollections(
         userId: UserId,
         setId: SetId,
-        collectionId: CollectionId,
+        collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote>
 }
