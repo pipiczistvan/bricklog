@@ -15,7 +15,7 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import org.koin.core.annotation.Single
 
 @Single
@@ -26,38 +26,34 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
     private val firestore = Firebase.firestore
 
     override fun watchUserCollections(userId: UserId): Flow<List<Collection>> {
-        return flow {
-            try {
-                firestore.collection("user-data/$userId/collections").snapshots.collect { snapshot ->
-                    val collections = snapshot.documents.map { document ->
+        return firestore.collection("user-data/$userId/collections").snapshots
+            .mapNotNull { snapshot ->
+                try {
+                    snapshot.documents.map { document ->
                         document.data<CollectionDocument>().toDomainModel(document.id)
                     }
-                    emit(collections)
+                } catch (e: FirebaseFirestoreException) {
+                    logger.w(e) { "An error occurred while fetching collections" }
+                    null
                 }
-            } catch (e: FirebaseFirestoreException) {
-                logger.e(e) { "An error occurred while fetching collections" }
-                emit(emptyList())
             }
-        }
     }
 
     override fun watchUserSetCollections(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
-        return flow {
-            try {
-                firestore.collection("user-data/$userId/set-collections").snapshots.collect { snapshot ->
-                    val setCollections = snapshot.documents.flatMap { document ->
+        return firestore.collection("user-data/$userId/set-collections").snapshots
+            .mapNotNull { snapshot ->
+                try {
+                    snapshot.documents.flatMap { document ->
                         val setIds = document.get<List<SetId>?>("setIds")
                         setIds?.map { setId ->
                             setId to document.id
                         } ?: emptyList()
                     }.groupBy({ it.first }, { it.second })
-                    emit(setCollections)
+                } catch (e: FirebaseFirestoreException) {
+                    logger.w(e) { "An error occurred while fetching collections" }
+                    null
                 }
-            } catch (e: FirebaseFirestoreException) {
-                logger.e(e) { "An error occurred while fetching collections" }
-                emit(emptyMap())
             }
-        }
     }
 
     override suspend fun deleteUserCollection(

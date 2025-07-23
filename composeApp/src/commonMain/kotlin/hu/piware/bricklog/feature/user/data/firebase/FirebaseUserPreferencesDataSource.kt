@@ -13,7 +13,7 @@ import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserPreferencesDa
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import org.koin.core.annotation.Single
 
 @Single
@@ -24,17 +24,15 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
     private val firestore = Firebase.firestore
 
     override fun watchUserPreferences(userId: UserId): Flow<UserPreferences?> {
-        return flow {
-            try {
-                firestore.document("user-data/$userId").snapshots.collect { snapshot ->
-                    val preferences = snapshot.data<UserPreferencesDocument>().toDomainModel()
-                    emit(preferences)
+        return firestore.document("user-data/$userId").snapshots
+            .mapNotNull { snapshot ->
+                try {
+                    snapshot.data<UserPreferencesDocument>().toDomainModel()
+                } catch (e: Exception) {
+                    logger.w(e) { "An error occurred while fetching user preferences" }
+                    null
                 }
-            } catch (e: Exception) {
-                logger.e(e) { "An error occurred while fetching user preferences" }
-                emit(null)
             }
-        }
     }
 
     override suspend fun saveUserPreferences(

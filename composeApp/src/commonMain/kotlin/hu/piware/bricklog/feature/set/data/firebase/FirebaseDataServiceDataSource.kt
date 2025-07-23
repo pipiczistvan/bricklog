@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSou
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import org.koin.core.annotation.Single
 
 @Single
@@ -53,18 +53,16 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
     }
 
     override fun watchCollectibles(): Flow<List<Collectible>> {
-        return flow {
-            try {
-                firestore.collection("collectibles").snapshots.collect { snapshot ->
-                    val collectibles = snapshot.documents.map { document ->
+        return firestore.collection("collectibles").snapshots
+            .mapNotNull { snapshot ->
+                try {
+                    snapshot.documents.map { document ->
                         document.data<CollectibleDocument>().toDomainModel(document.id)
                     }
-                    emit(collectibles)
+                } catch (e: FirebaseFirestoreException) {
+                    logger.w(e) { "An error occurred while fetching collections" }
+                    null
                 }
-            } catch (e: FirebaseFirestoreException) {
-                logger.e(e) { "An error occurred while fetching collections" }
-                emit(emptyList())
             }
-        }
     }
 }
