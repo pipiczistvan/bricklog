@@ -26,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DataFetchScreenRoot(
     viewModel: DataFetchViewModel = koinViewModel(),
-    onNavigateToDashboard: () -> Unit,
+    onNavigateToDispatcher: () -> Unit,
 ) {
     App.firstScreenLoaded = true
 
@@ -36,7 +36,7 @@ fun DataFetchScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                DataFetchAction.OnContinueClick -> onNavigateToDashboard()
+                DataFetchAction.OnContinueClick -> onNavigateToDispatcher()
                 else -> Unit
             }
             viewModel.onAction(action)

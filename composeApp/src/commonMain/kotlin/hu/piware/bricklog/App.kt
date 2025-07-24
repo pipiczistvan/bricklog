@@ -15,10 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -29,7 +27,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_i
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
-import hu.piware.bricklog.feature.core.domain.SyncedRepository
+import hu.piware.bricklog.feature.core.presentation.AppEventHandler
 import hu.piware.bricklog.feature.core.presentation.LocalizedApp
 import hu.piware.bricklog.feature.core.presentation.SnackbarController
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
@@ -46,11 +44,9 @@ import hu.piware.bricklog.ui.navigation.rootGraph
 import hu.piware.bricklog.ui.navigation.scaleIntoContainer
 import hu.piware.bricklog.ui.navigation.scaleOutOfContainer
 import hu.piware.bricklog.ui.theme.BricklogTheme
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 
 val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
@@ -67,17 +63,9 @@ private val logger = Logger.withTag("App")
 fun App(
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
+    AppEventHandler()
 
-    var themeOption by remember { mutableStateOf(ThemeOption.SYSTEM) }
-
-    koinInject<WatchThemeOption>()()
-        .onEach { themeOption = it }
-        .collectAsStateWithLifecycle(ThemeOption.SYSTEM)
-
-    getKoin().getAll<SyncedRepository>().forEach {
-        it.startSync(scope)
-    }
+    val themeOption by koinInject<WatchThemeOption>()().collectAsStateWithLifecycle(ThemeOption.SYSTEM)
 
     BricklogTheme(
         themeOption = themeOption

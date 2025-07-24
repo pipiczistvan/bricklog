@@ -53,8 +53,8 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
             BackHandler {}
 
             DataFetchScreenRoot(
-                onNavigateToDashboard = {
-                    navController.navigate(SetRoute.DashboardScreen) {
+                onNavigateToDispatcher = {
+                    navController.navigate(OnboardingRoute.DispatcherScreen) {
                         popUpTo<OnboardingRoute.DataFetchScreen> {
                             inclusive = true
                         }

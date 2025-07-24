@@ -17,6 +17,7 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import hu.piware.bricklog.feature.user.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -33,8 +34,11 @@ class OfflineFirstUserPreferencesRepository(
 
     private val logger = Logger.withTag("OfflineFirstUserPreferencesRepository")
 
+    private var firestoreSyncJob: Job? = null
+
     override fun startSync(scope: CoroutineScope) {
-        sessionManager.userId
+        firestoreSyncJob?.cancel()
+        firestoreSyncJob = sessionManager.userId
             .filterAuthenticated()
             .flatMapLatest { userId ->
                 remoteDataSource.watchUserPreferences(userId).map { Pair(userId, it) }

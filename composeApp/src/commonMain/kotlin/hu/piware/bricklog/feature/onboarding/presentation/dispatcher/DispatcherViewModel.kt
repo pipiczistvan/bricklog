@@ -2,7 +2,9 @@ package hu.piware.bricklog.feature.onboarding.presentation.dispatcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import hu.piware.bricklog.feature.core.domain.AppEvent
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.presentation.AppEventController
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.onboarding.domain.usecase.HasAnySets
@@ -39,6 +41,7 @@ class DispatcherViewModel(
         viewModelScope.launch {
             val hasSetsResult = hasAnySets()
             if (hasSetsResult is Result.Success && hasSetsResult.data) {
+                AppEventController.sendEvent(AppEvent.StartSync)
                 _uiState.update { DispatcherState.NavigateToHome }
             } else {
                 _uiState.update { DispatcherState.NavigateToDataFetch }

@@ -23,6 +23,7 @@ import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.util.firstOrDefault
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -39,8 +40,12 @@ class OfflineFirstCollectionRepository(
 
     private val logger = Logger.withTag("OfflineFirstCollectionRepository")
 
+    private var firestoreSyncJob: Job? = null
+    private var defaultCollectionCreatorJob: Job? = null
+
     override fun startSync(scope: CoroutineScope) {
-        sessionManager.userId
+        firestoreSyncJob?.cancel()
+        firestoreSyncJob = sessionManager.userId
             .filterAuthenticated()
             .flatMapLatest { userId ->
                 remoteDataSource.watchCollections(userId).map { Pair(userId, it) }
@@ -53,7 +58,8 @@ class OfflineFirstCollectionRepository(
             .syncRemoteSetCollections()
             .launchIn(scope)
 
-        sessionManager.userId
+        defaultCollectionCreatorJob?.cancel()
+        defaultCollectionCreatorJob = sessionManager.userId
             .filterGuest()
             .flatMapLatest { userId ->
                 localDataSource.watchCollections(userId).map { Pair(userId, it) }

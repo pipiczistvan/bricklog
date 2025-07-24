@@ -20,7 +20,9 @@ fun DispatcherScreenRoot(
         when (currentState) {
             DispatcherState.Loading -> {}
             DispatcherState.NavigateToDataFetch -> onNavigateToDataFetch()
-            DispatcherState.NavigateToHome -> onNavigateToDashboard()
+            DispatcherState.NavigateToHome -> {
+                onNavigateToDashboard()
+            }
         }
     }
 }
