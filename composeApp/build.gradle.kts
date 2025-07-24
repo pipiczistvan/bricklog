@@ -150,19 +150,21 @@ android {
     }
     signingConfigs {
         getByName("debug") {
-            storeFile = rootProject.file("release/app-debug.jks")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+            val config = createDebugSigningConfig()
+
+            storeFile = rootProject.file(config.keystorePath)
+            storePassword = config.keystorePassword
+            keyAlias = config.keyAlias
+            keyPassword = config.keyPassword
         }
         if (rootProject.file("release/app-release.jks").exists()) {
             create("release") {
-                storeFile = rootProject.file("release/app-release.jks")
-                storePassword = properties["BRICKLOG_RELEASE_KEYSTORE_PWD"]?.toString()
-                    ?: throw IllegalArgumentException("BRICKLOG_RELEASE_KEYSTORE_PWD not set")
-                keyAlias = "bricklog"
-                keyPassword = properties["BRICKLOG_RELEASE_KEY_PWD"]?.toString()
-                    ?: throw IllegalArgumentException("BRICKLOG_RELEASE_KEY_PWD not set")
+                val config = createReleaseSigningConfig()
+
+                storeFile = rootProject.file(config.keystorePath)
+                storePassword = config.keystorePassword
+                keyAlias = config.keyAlias
+                keyPassword = config.keyPassword
             }
         }
     }
@@ -287,44 +289,78 @@ private fun createArchiveName(): String {
     return "bricklog-$versionName-$versionCode${revision?.let { "-$it" }}-$flavor"
 }
 
-val bundleReleaseApk by tasks.registering {
-    group = "bundle"
-    description = "Generate universal APK from the release AAB"
+private fun Project.configureBundleApkTask(buildType: String) {
+    val capitalizedBuildType = buildType.capitalize()
 
-    val aab = layout.buildDirectory.file("outputs/bundle/release/$archiveName-release.aab")
-    val apks = layout.buildDirectory.file("outputs/bundle/release/app-release.apks")
-    val apkOutput = layout.buildDirectory.file("outputs/apk/release/$archiveName-release.apk")
+    tasks.register("bundle${capitalizedBuildType}Apk") {
+        group = "bundle"
+        description = "Generate universal APK from the $buildType AAB"
 
-    inputs.file(aab)
-    outputs.file(apkOutput)
+        val aab =
+            layout.buildDirectory.file("outputs/bundle/$buildType/$archiveName-$buildType.aab")
+        val apks = layout.buildDirectory.file("outputs/bundle/$buildType/app-$buildType.apks")
+        val apkOutput =
+            layout.buildDirectory.file("outputs/apk/$buildType/$archiveName-$buildType.apk")
 
-    dependsOn("bundleRelease")
+        inputs.file(aab)
+        outputs.file(apkOutput)
 
-    doLast {
-        exec {
-            commandLine(
-                "java", "-jar", "../release/bundletool-all-1.18.1.jar",
-                "build-apks",
-                "--bundle=${aab.get().asFile}",
-                "--output=${apks.get().asFile}",
-                "--mode=universal",
-                "--ks=../release/app-release.jks",
-                "--ks-pass=pass:${properties["BRICKLOG_RELEASE_KEYSTORE_PWD"]}",
-                "--ks-key-alias=bricklog",
-                "--key-pass=pass:${properties["BRICKLOG_RELEASE_KEY_PWD"]}"
-            )
-        }
-        // unzip the universal APK
-        ZipFile(apks.get().asFile).use { zip ->
-            val entry =
-                zip.getEntry("universal.apk") ?: error("universal.apk not found in ${apks.get()}")
-            zip.getInputStream(entry).use { input ->
-                apkOutput.get().asFile.outputStream().use { output ->
-                    input.copyTo(output)
+        dependsOn("bundle${capitalizedBuildType}")
+
+        doLast {
+            val signingConfig =
+                if (buildType == "release") createReleaseSigningConfig() else createDebugSigningConfig()
+
+            exec {
+                commandLine(
+                    "java", "-jar", "../release/bundletool-all-1.18.1.jar",
+                    "build-apks",
+                    "--bundle=${aab.get().asFile}",
+                    "--output=${apks.get().asFile}",
+                    "--mode=universal",
+                    "--ks=../${signingConfig.keystorePath}",
+                    "--ks-pass=pass:${signingConfig.keystorePassword}",
+                    "--ks-key-alias=${signingConfig.keyAlias}",
+                    "--key-pass=pass:${signingConfig.keyPassword}"
+                )
+            }
+            ZipFile(apks.get().asFile).use { zip ->
+                val entry =
+                    zip.getEntry("universal.apk")
+                        ?: error("universal.apk not found in ${apks.get()}")
+                zip.getInputStream(entry).use { input ->
+                    apkOutput.get().asFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
                 }
             }
         }
-    }
 
-    notCompatibleWithConfigurationCache("Gradle's configuration cache doesn't allow serializing script object references")
+        notCompatibleWithConfigurationCache("Gradle's configuration cache doesn't allow serializing script object references")
+    }
 }
+configureBundleApkTask("release")
+configureBundleApkTask("debug")
+
+data class SigningConfig(
+    val keystorePath: String,
+    val keystorePassword: String,
+    val keyAlias: String,
+    val keyPassword: String
+)
+
+private fun createDebugSigningConfig() = SigningConfig(
+    keystorePath = "release/app-debug.jks",
+    keystorePassword = "android",
+    keyAlias = "androiddebugkey",
+    keyPassword = "android"
+)
+
+private fun createReleaseSigningConfig() = SigningConfig(
+    keystorePath = "release/app-release.jks",
+    keystorePassword = properties["BRICKLOG_RELEASE_KEYSTORE_PWD"]?.toString()
+        ?: throw IllegalArgumentException("BRICKLOG_RELEASE_KEYSTORE_PWD not set"),
+    keyAlias = "bricklog",
+    keyPassword = properties["BRICKLOG_RELEASE_KEY_PWD"]?.toString()
+        ?: throw IllegalArgumentException("BRICKLOG_RELEASE_KEY_PWD not set")
+)
