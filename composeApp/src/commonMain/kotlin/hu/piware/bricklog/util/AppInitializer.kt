@@ -12,9 +12,12 @@ import hu.piware.bricklog.di.initKoin
 import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
 import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
+import hu.piware.bricklog.feature.core.domain.AppEvent
+import hu.piware.bricklog.feature.core.presentation.AppEventController
 import hu.piware.bricklog.feature.set.domain.background_task.SyncSetsPeriodicBackgroundTaskScheduler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
@@ -44,6 +47,10 @@ object AppInitializer : KoinComponent {
         })
 
         scheduleSyncSetsBackgroundTask()
+
+        MainScope().launch {
+            AppEventController.sendEvent(AppEvent.Initialize)
+        }
     }
 
     private fun scheduleSyncSetsBackgroundTask() {

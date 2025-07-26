@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
+import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,7 @@ interface LocalCollectionDataSource {
     suspend fun upsertCollections(
         userId: UserId,
         collections: List<Collection>,
-    ): EmptyResult<DataError.Local>
+    ): Result<List<Collection>, DataError.Local>
 
     suspend fun upsertCollectionsBySets(
         userId: UserId,

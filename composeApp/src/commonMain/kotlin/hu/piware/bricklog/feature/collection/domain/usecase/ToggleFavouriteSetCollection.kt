@@ -1,6 +1,6 @@
 package hu.piware.bricklog.feature.collection.domain.usecase
 
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
 import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
@@ -25,23 +25,23 @@ class ToggleFavouriteSetCollection(
                 .asResultOrDefault { emptyList() }
                 .onError { return it }
                 .data()
-                .firstOrNull() ?: createFavouriteCollection()
+                .firstOrNull()?.id ?: createFavouriteCollection()
                 .onError { return it }
                 .data()
 
         val setCollections = collectionRepository.watchCollections(setId = setId)
             .firstOrNull()
 
-        val setIsInCollection = setCollections?.any { it.id == favouriteSetCollection.id } ?: false
+        val setIsInCollection = setCollections?.any { it.id == favouriteSetCollection } ?: false
 
         return if (setIsInCollection) {
-            collectionRepository.removeSetFromCollections(setId, listOf(favouriteSetCollection.id))
+            collectionRepository.removeSetFromCollections(setId, listOf(favouriteSetCollection))
         } else {
-            collectionRepository.addSetToCollections(setId, listOf(favouriteSetCollection.id))
+            collectionRepository.addSetToCollections(setId, listOf(favouriteSetCollection))
         }
     }
 
-    private suspend fun createFavouriteCollection(): Result<Collection, DataError> {
+    private suspend fun createFavouriteCollection(): Result<CollectionId, DataError> {
         val defaultCollections = defaultCollections.filter { it.type == CollectionType.FAVOURITE }
 
         return collectionRepository.saveCollections(defaultCollections).first()

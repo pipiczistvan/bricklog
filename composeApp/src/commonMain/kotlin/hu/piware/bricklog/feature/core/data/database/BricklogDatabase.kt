@@ -42,7 +42,8 @@ import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
     exportSchema = false
 )
 @TypeConverters(
-    InstantConverter::class
+    InstantConverter::class,
+    StringListConverter::class,
 )
 @ConstructedBy(BricklogDatabaseConstructor::class)
 abstract class BricklogDatabase : RoomDatabase() {

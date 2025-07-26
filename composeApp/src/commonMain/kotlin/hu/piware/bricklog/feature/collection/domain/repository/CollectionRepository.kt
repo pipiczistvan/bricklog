@@ -17,7 +17,7 @@ interface CollectionRepository {
 
     fun watchCollectionsBySets(): Flow<Map<SetId, List<Collection>>>
 
-    suspend fun saveCollections(collections: List<Collection>): Result<List<Collection>, DataError>
+    suspend fun saveCollections(collections: List<Collection>): Result<List<CollectionId>, DataError>
 
     suspend fun addSetToCollections(
         setId: SetId,

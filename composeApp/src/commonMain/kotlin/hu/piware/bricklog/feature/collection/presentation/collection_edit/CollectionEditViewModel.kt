@@ -8,9 +8,9 @@ import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
-import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollections
 import hu.piware.bricklog.feature.collection.domain.usecase.GetCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollections
 import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
@@ -26,9 +26,9 @@ import kotlinx.coroutines.launch
 class CollectionEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val validateCollectionName: ValidateCollectionName,
-    private val saveCollection: SaveCollection,
+    private val saveCollections: SaveCollections,
     private val getCollection: GetCollection,
-    private val deleteCollection: DeleteCollection,
+    private val deleteCollections: DeleteCollections,
 ) : ViewModel() {
 
     private val collectionId =
@@ -70,7 +70,7 @@ class CollectionEditViewModel(
             }
 
         viewModelScope.launch {
-            saveCollection(
+            saveCollections(
                 Collection(
                     id = uiState.value.collection?.id ?: "",
                     name = uiState.value.name,
@@ -106,7 +106,7 @@ class CollectionEditViewModel(
 
     private fun deleteCollection() {
         viewModelScope.launch {
-            deleteCollection(uiState.value.collection?.id ?: "")
+            deleteCollections(uiState.value.collection?.id ?: "")
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(CollectionEditEvent.Back)

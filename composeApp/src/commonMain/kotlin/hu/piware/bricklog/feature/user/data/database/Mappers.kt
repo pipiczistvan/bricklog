@@ -7,6 +7,7 @@ fun UserPreferencesEntity.toDomainModel(): UserPreferences {
     return UserPreferences(
         showGreetings = showGreetings,
         displayName = displayName,
+        collectionOrder = collectionOrder,
     )
 }
 
@@ -15,5 +16,6 @@ fun UserPreferences.toEntity(userId: UserId): UserPreferencesEntity {
         userId = userId,
         showGreetings = showGreetings,
         displayName = displayName,
+        collectionOrder = collectionOrder,
     )
 }

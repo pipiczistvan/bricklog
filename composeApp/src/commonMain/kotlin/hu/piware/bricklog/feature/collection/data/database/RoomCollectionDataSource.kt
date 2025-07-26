@@ -55,11 +55,12 @@ class RoomCollectionDataSource(
     override suspend fun upsertCollections(
         userId: UserId,
         collections: List<Collection>,
-    ): EmptyResult<DataError.Local> {
+    ): Result<List<Collection>, DataError.Local> {
         return try {
             logger.d { "Upserting ${collections.size} collections" }
-            collectionDao.upsertCollections(collections.map { it.toEntity(userId) })
-            Result.Success(Unit)
+            val entities = collections.map { it.toEntity(userId) }
+            collectionDao.upsertCollections(entities)
+            Result.Success(entities.map { it.toDomainModel() })
         } catch (e: SQLiteException) {
             logger.e(e) { "Error upserting collections" }
             Result.Error(DataError.Local.DISK_FULL)

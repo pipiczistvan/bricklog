@@ -7,18 +7,16 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.ksp.generated.module
 
-fun initKoin(config: KoinAppDeclaration?) {
-    startKoin {
-        config?.invoke(this)
+fun initKoin(config: KoinAppDeclaration?) = startKoin {
+    config?.invoke(this)
+    modules(
+        viewModelModule,
+        useCaseModule,
+        AppModule().module
+    )
+    if (BuildConfig.isMockFlavor) {
         modules(
-            viewModelModule,
-            useCaseModule,
-            AppModule().module
+            mockModule
         )
-        if (BuildConfig.isMockFlavor) {
-            modules(
-                mockModule
-            )
-        }
     }
 }

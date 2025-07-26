@@ -9,16 +9,15 @@ import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
-import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.SyncedRepository
+import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import hu.piware.bricklog.feature.user.domain.manager.filterAuthenticated
-import hu.piware.bricklog.feature.user.domain.manager.filterGuest
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.util.firstOrDefault
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +40,6 @@ class OfflineFirstCollectionRepository(
     private val logger = Logger.withTag("OfflineFirstCollectionRepository")
 
     private var firestoreSyncJob: Job? = null
-    private var defaultCollectionCreatorJob: Job? = null
 
     override fun startSync(scope: CoroutineScope) {
         firestoreSyncJob?.cancel()
@@ -51,20 +49,10 @@ class OfflineFirstCollectionRepository(
                 remoteDataSource.watchCollections(userId).map { Pair(userId, it) }
             }
             .syncRemoteCollections()
-            .createDefaultCollections()
             .flatMapLatest { (userId, _) ->
                 remoteDataSource.watchCollectionsBySets(userId).map { Pair(userId, it) }
             }
             .syncRemoteSetCollections()
-            .launchIn(scope)
-
-        defaultCollectionCreatorJob?.cancel()
-        defaultCollectionCreatorJob = sessionManager.userId
-            .filterGuest()
-            .flatMapLatest { userId ->
-                localDataSource.watchCollections(userId).map { Pair(userId, it) }
-            }
-            .createDefaultCollections()
             .launchIn(scope)
     }
 
@@ -90,7 +78,7 @@ class OfflineFirstCollectionRepository(
         }
     }
 
-    override suspend fun saveCollections(collections: List<Collection>): Result<List<Collection>, DataError> {
+    override suspend fun saveCollections(collections: List<Collection>): Result<List<CollectionId>, DataError> {
         return saveCollections(sessionManager.currentUserId, collections)
     }
 
@@ -143,16 +131,17 @@ class OfflineFirstCollectionRepository(
     private suspend fun saveCollections(
         userId: UserId,
         collections: List<Collection>,
-    ): Result<List<Collection>, DataError> {
-        localDataSource.upsertCollections(userId, collections)
+    ): Result<List<CollectionId>, DataError> {
+        val savedCollections = localDataSource.upsertCollections(userId, collections)
             .onError { return it }
+            .data()
 
         if (sessionManager.isAuthenticated) {
-            remoteDataSource.upsertCollections(userId, collections)
+            remoteDataSource.upsertCollections(userId, savedCollections)
                 .onError { return it }
         }
 
-        return Result.Success(collections)
+        return Result.Success(savedCollections.map { it.id })
     }
 
     private fun Flow<Pair<UserId, Map<SetId, List<CollectionId>>>>.syncRemoteSetCollections() =
@@ -211,13 +200,5 @@ class OfflineFirstCollectionRepository(
             if (collectionsToUpsert.isNotEmpty()) {
                 localDataSource.upsertCollections(userId, collectionsToUpsert)
             }
-        }
-
-    private fun Flow<Pair<UserId, List<Collection>>>.createDefaultCollections() =
-        onEach { (userId, collections) ->
-            val missingDefaultCollections = defaultCollections.filter { defaultCollection ->
-                collections.none { it.type == defaultCollection.type }
-            }
-            saveCollections(userId, missingDefaultCollections)
         }
 }
