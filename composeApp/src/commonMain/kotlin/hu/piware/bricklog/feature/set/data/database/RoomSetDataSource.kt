@@ -5,12 +5,16 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room.RoomRawQuery
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import androidx.sqlite.SQLiteException
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.onError
+import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -25,7 +29,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class RoomSetDataSource(
-    database: BricklogDatabase,
+    private val database: BricklogDatabase,
 ) : LocalSetDataSource {
 
     private val logger = Logger.withTag("RoomSetDataSource")
@@ -117,6 +121,26 @@ class RoomSetDataSource(
         } catch (e: Exception) {
             logger.e(e) { "Error upserting sets" }
             Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun upsertSetsChunked(
+        sets: List<Set>,
+        chunkSize: Int,
+        onChunkInserted: suspend (Int) -> Unit,
+    ): EmptyResult<DataError.Local> {
+        var totalInserted = 0
+        return database.useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                sets.chunked(chunkSize).map { chunk ->
+                    upsertSets(chunk)
+                        .onError { return@immediateTransaction it }
+                        .onSuccess {
+                            totalInserted += chunk.size
+                            onChunkInserted(totalInserted)
+                        }
+                }.last()
+            }
         }
     }
 

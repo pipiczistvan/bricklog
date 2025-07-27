@@ -33,5 +33,11 @@ interface LocalSetDataSource {
 
     suspend fun upsertSets(sets: List<Set>): EmptyResult<DataError.Local>
 
+    suspend fun upsertSetsChunked(
+        sets: List<Set>,
+        chunkSize: Int,
+        onChunkInserted: suspend (insertCount: Int) -> Unit,
+    ): EmptyResult<DataError.Local>
+
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
 }

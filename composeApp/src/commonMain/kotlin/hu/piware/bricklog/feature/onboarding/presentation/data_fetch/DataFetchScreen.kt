@@ -2,6 +2,8 @@
 
 package hu.piware.bricklog.feature.onboarding.presentation.data_fetch
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +53,8 @@ private fun DataFetchScreen(
     onAction: (DataFetchAction) -> Unit,
 ) {
     when (state) {
+        is DataFetchState.Initial -> Unit
+
         is DataFetchState.Success -> {
             onAction(DataFetchAction.OnContinueClick)
         }
@@ -59,7 +64,22 @@ private fun DataFetchScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                ContainedLoadingIndicator()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val animatedProgress by animateFloatAsState(
+                        targetValue = state.progress.totalProgress,
+                        animationSpec = tween(durationMillis = 100),
+                        label = "Set update progress"
+                    )
+                    ContainedLoadingIndicator()
+                    LinearWavyProgressIndicator(
+                        progress = { animatedProgress }
+                    )
+                    Text("Current step: ${state.progress.step.name}")
+                    Text("Step progress: ${state.progress.stepProgress}")
+                    Text("Total progress: ${state.progress.totalProgress}")
+                }
             }
         }
 
@@ -85,7 +105,7 @@ private fun DataFetchScreen(
 private fun DataFetchScreenPreview() {
     MaterialTheme {
         DataFetchScreen(
-            state = DataFetchState.Loading,
+            state = DataFetchState.Initial,
             onAction = {}
         )
     }

@@ -3,13 +3,13 @@ package hu.piware.bricklog.feature.set.data.network
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.di.DownloadHttpClient
 import hu.piware.bricklog.feature.core.data.network.safeCall
-import hu.piware.bricklog.feature.core.domain.DataError
-import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
+import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
+import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import korlibs.io.compression.deflate.GZIP
-import korlibs.io.compression.uncompress
+import io.ktor.client.plugins.onDownload
+import io.ktor.client.request.prepareGet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -20,35 +20,45 @@ import kotlin.time.measureTimedValue
 class KtorSetDataSource(
     @param:DownloadHttpClient private val httpClient: HttpClient,
 ) : RemoteSetDataSource {
+
     private val logger = Logger.withTag("KtorRemoteSetDataSource")
 
-    override suspend fun downloadSetsCsv(url: String): Result<ByteArray, DataError.Remote> {
-        return try {
-            logger.d { "Downloading sets zip" }
-            val (downloadResult, downloadTimeTaken) = measureTimedValue {
-                safeCall<ByteArray> {
-                    withContext(Dispatchers.IO) {
-                        httpClient.get(url)
-                    }
+    override fun downloadCompressedCsv(url: String) = flowForResult {
+        logger.d { "Downloading sets zip" }
+        emitProgress(UpdateSetsProgress(0f, UpdateSetsStep.DOWNLOAD_FILE))
+        val (downloadResult, downloadTimeTaken) = measureTimedValue {
+            safeCall<ByteArray> {
+                withContext(Dispatchers.IO) {
+                    var skippedFirstEmission = false
+                    var lastEmittedProgress = 0f
+                    httpClient.prepareGet(url) {
+                        onDownload { bytesSentTotal, contentLength ->
+                            if (contentLength != null && contentLength > 0L) {
+                                if (!skippedFirstEmission) {
+                                    skippedFirstEmission = true
+                                    return@onDownload
+                                }
+
+                                val progress = bytesSentTotal.toFloat() / contentLength
+                                val progressDiff = progress - lastEmittedProgress
+
+                                if (progressDiff > 0.1f) {
+                                    lastEmittedProgress = progress
+
+                                    emitProgress(
+                                        UpdateSetsProgress(
+                                            progress,
+                                            UpdateSetsStep.DOWNLOAD_FILE
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }.execute()
                 }
             }
-            if (downloadResult is Result.Error) {
-                Logger.w { "Downloading sets zip failed" }
-                return downloadResult
-            }
-            logger.d { "Downloading sets zip took $downloadTimeTaken" }
-
-            withContext(Dispatchers.Default) {
-                logger.d { "Uncompressing zip file" }
-                val zipBytes = (downloadResult as Result.Success).data
-                val (csvBytes, uncompressTimeTaken) = measureTimedValue { zipBytes.uncompress(method = GZIP) }
-                logger.d { "Uncompressing zip file took $uncompressTimeTaken" }
-
-                Result.Success(csvBytes)
-            }
-        } catch (e: Exception) {
-            logger.e("Failed to download and parse sets", e)
-            Result.Error(DataError.Remote.UNKNOWN)
         }
+        logger.d { "Downloading sets zip took $downloadTimeTaken" }
+        downloadResult
     }
 }
