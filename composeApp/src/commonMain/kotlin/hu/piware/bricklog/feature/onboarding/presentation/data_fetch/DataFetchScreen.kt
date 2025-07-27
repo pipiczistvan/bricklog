@@ -107,7 +107,7 @@ private fun LoadingIndicator(progress: Float) {
     ) {
         val animatedProgress by animateFloatAsState(
             targetValue = progress,
-            animationSpec = tween(durationMillis = 100),
+            animationSpec = tween(durationMillis = 500),
             label = "Set update progress"
         )
         ContainedLoadingIndicator(

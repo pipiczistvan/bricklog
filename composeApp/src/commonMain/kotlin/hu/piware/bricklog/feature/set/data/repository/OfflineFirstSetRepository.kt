@@ -14,6 +14,7 @@ import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.data.csv.SetListCsvParser
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
+import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -77,16 +78,19 @@ class OfflineFirstSetRepository(
         }
     }
 
-    override fun updateSetsWithProgress(fileUploads: List<FileUploadResult>) = flowForResult {
-        val downloadedFile = awaitInProgressRange(0f..0.25f) { downloadFile(fileUploads) }
-            .onError { return@flowForResult it }
-            .data()
-        val csvFile = awaitInProgressRange(0.25f..0.5f) { uncompressFile(downloadedFile) }
-            .onError { return@flowForResult it }
-            .data()
-        val parsedSets = awaitInProgressRange(0.5f..0.75f) { parseSets(csvFile) }
-            .onError { return@flowForResult it }
-            .data()
+    override fun updateSetsWithProgress(exportBatch: ExportBatch) = flowForResult {
+        val downloadedFile = awaitInProgressRange(0f..0.25f) {
+            downloadFile(exportBatch.fileUploads)
+        }.onError { return@flowForResult it }.data()
+
+        val csvFile = awaitInProgressRange(0.25f..0.5f) {
+            uncompressFile(downloadedFile)
+        }.onError { return@flowForResult it }.data()
+
+        val parsedSets = awaitInProgressRange(0.5f..0.75f) {
+            parseSets(csvFile, exportBatch.rowCount)
+        }.onError { return@flowForResult it }.data()
+
         awaitInProgressRange(0.75f..1f) { storeSets(parsedSets) }
     }
 
@@ -110,16 +114,17 @@ class OfflineFirstSetRepository(
         emitProgress(UpdateSetsProgress(0f, UpdateSetsStep.STORE_SETS))
         val (storeResult, storeTimeTaken) = measureTimedValue {
             localDataSource.upsertSetsChunked(sets, SET_CHUNK_SIZE) { insertCount ->
-                val progress = insertCount.toFloat() / sets.size
-                emitProgress(UpdateSetsProgress(progress, UpdateSetsStep.STORE_SETS))
+                if (sets.isNotEmpty()) {
+                    val progress = insertCount.toFloat() / sets.size
+                    emitProgress(UpdateSetsProgress(progress, UpdateSetsStep.STORE_SETS))
+                }
             }
         }
         logger.i { "Storing sets took $storeTimeTaken" }
-        emitProgress(UpdateSetsProgress(1f, UpdateSetsStep.STORE_SETS))
         storeResult
     }
 
-    private fun parseSets(csv: ByteArray) = flowForResult {
+    private fun parseSets(csv: ByteArray, linesCount: Int) = flowForResult {
         logger.i { "Parsing sets" }
         emitProgress(UpdateSetsProgress(0f, UpdateSetsStep.PARSE_SETS))
         val (parseResult, parseTimeTaken) = measureTimedValue {
@@ -127,10 +132,11 @@ class OfflineFirstSetRepository(
                 val parsedSets = mutableListOf<Set>()
                 csvParser.parseInChunksAsync(csv, SET_CHUNK_SIZE) { sets ->
                     parsedSets.addAll(sets)
-                    val progress = parsedSets.size.toFloat() / sets.size
-                    emitProgress(UpdateSetsProgress(progress, UpdateSetsStep.PARSE_SETS))
+                    if (linesCount > 0) {
+                        val progress = parsedSets.size.toFloat() / linesCount
+                        emitProgress(UpdateSetsProgress(progress, UpdateSetsStep.PARSE_SETS))
+                    }
                 }
-                emitProgress(UpdateSetsProgress(1f, UpdateSetsStep.PARSE_SETS))
                 Result.Success(parsedSets)
             } catch (e: Exception) {
                 logger.e("Failed to parse sets", e)

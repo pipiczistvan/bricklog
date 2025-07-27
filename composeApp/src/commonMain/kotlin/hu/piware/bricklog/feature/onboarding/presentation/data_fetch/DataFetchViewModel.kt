@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.onboarding.presentation.data_fetch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.collectForValue
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
@@ -19,6 +20,8 @@ class DataFetchViewModel(
     private val updateSetsWithProgress: UpdateSetsWithProgress,
 ) : ViewModel() {
 
+    private val logger = Logger.withTag("DataFetchViewModel")
+
     private var _uiState = MutableStateFlow<DataFetchState>(DataFetchState.Initial)
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
@@ -35,7 +38,10 @@ class DataFetchViewModel(
     private fun fetchSets() {
         viewModelScope.launch {
             updateSetsWithProgress(force = true)
-                .collectForValue { progress -> _uiState.update { DataFetchState.Loading(progress) } }
+                .collectForValue { progress ->
+                    logger.d { "Progress: $progress" }
+                    _uiState.update { DataFetchState.Loading(progress) }
+                }
                 .showSnackbarOnError()
                 .onError { _uiState.update { DataFetchState.Error } }
                 .onSuccess {

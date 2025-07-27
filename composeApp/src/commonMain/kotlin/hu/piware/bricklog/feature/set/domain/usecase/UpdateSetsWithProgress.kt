@@ -74,7 +74,7 @@ class UpdateSetsWithProgress(
         }
 
         batchesWithProgressRanges.map { (batch, range) ->
-            awaitInProgressRange(range) { setRepository.updateSetsWithProgress(batch.fileUploads) }
+            awaitInProgressRange(range) { setRepository.updateSetsWithProgress(batch) }
                 .onError { return@flowForResult it }
         }
 

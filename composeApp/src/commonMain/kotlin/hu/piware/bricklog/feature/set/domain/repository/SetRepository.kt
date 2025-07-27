@@ -5,7 +5,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.FlowForResult
 import hu.piware.bricklog.feature.core.domain.Result
-import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
+import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
@@ -30,7 +30,7 @@ interface SetRepository {
 
     fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
 
-    fun updateSetsWithProgress(fileUploads: List<FileUploadResult>): FlowForResult<Unit, UpdateSetsProgress>
+    fun updateSetsWithProgress(exportBatch: ExportBatch): FlowForResult<Unit, UpdateSetsProgress>
 
     suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
 }
