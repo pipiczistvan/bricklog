@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSetsWithProgress
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,7 +38,10 @@ class DataFetchViewModel(
                 .collectForValue { progress -> _uiState.update { DataFetchState.Loading(progress) } }
                 .showSnackbarOnError()
                 .onError { _uiState.update { DataFetchState.Error } }
-                .onSuccess { _uiState.update { DataFetchState.Success } }
+                .onSuccess {
+                    delay(500) // Slight delay to display 100% progress
+                    _uiState.update { DataFetchState.Success }
+                }
         }
     }
 }

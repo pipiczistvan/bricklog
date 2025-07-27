@@ -8,20 +8,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_onboarding_data_fetch_btn_retry
 import hu.piware.bricklog.App
+import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
+import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
+import hu.piware.bricklog.feature.set.domain.model.toUiText
+import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -60,25 +67,18 @@ private fun DataFetchScreen(
         }
 
         is DataFetchState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+            Scaffold {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    val animatedProgress by animateFloatAsState(
-                        targetValue = state.progress.totalProgress,
-                        animationSpec = tween(durationMillis = 100),
-                        label = "Set update progress"
-                    )
-                    ContainedLoadingIndicator()
-                    LinearWavyProgressIndicator(
-                        progress = { animatedProgress }
-                    )
-                    Text("Current step: ${state.progress.step.name}")
-                    Text("Step progress: ${state.progress.stepProgress}")
-                    Text("Total progress: ${state.progress.totalProgress}")
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(Dimens.LargePadding.size)
+                    ) {
+                        LoadingIndicator(state.progress.totalProgress)
+                        Text(state.progress.step.toUiText().asString())
+                    }
                 }
             }
         }
@@ -100,12 +100,41 @@ private fun DataFetchScreen(
     }
 }
 
+@Composable
+private fun LoadingIndicator(progress: Float) {
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+        val animatedProgress by animateFloatAsState(
+            targetValue = progress,
+            animationSpec = tween(durationMillis = 100),
+            label = "Set update progress"
+        )
+        ContainedLoadingIndicator(
+            modifier = Modifier
+                .size(100.dp)
+        )
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(120.dp),
+            strokeWidth = 6.dp,
+            progress = { animatedProgress },
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun DataFetchScreenPreview() {
     MaterialTheme {
         DataFetchScreen(
-            state = DataFetchState.Initial,
+            state = DataFetchState.Loading(
+                UpdateSetsProgress(
+                    stepProgress = 0.5f,
+                    step = UpdateSetsStep.PREPARE_BATCHES,
+                    totalProgress = 0.5f
+                )
+            ),
             onAction = {}
         )
     }
