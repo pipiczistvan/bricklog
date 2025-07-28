@@ -32,12 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_arriving_sets
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_greetings
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_releases
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_sets
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_items
-import bricklog.composeapp.generated.resources.feature_set_dashboard_title_retiring_sets
 import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
@@ -58,11 +53,10 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigati
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBar
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarAction
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.SetSearchBarState
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.arrivingSetsFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestReleasesFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.latestSetsFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.filter
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.stringResource
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.tag
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
@@ -350,46 +344,24 @@ private fun FeaturedSets(
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
     ) {
-        DashboardFeaturedSetsRow(
-            modifier = Modifier.testTag("dashboard:latest_sets_row"),
-            title = stringResource(Res.string.feature_set_dashboard_title_latest_sets),
-            sets = state.latestSets,
-            filterOverrides = latestSetsFilter,
-            sharedElementPrefix = "latest_sets",
-            onAction = onAction
-        )
-
-        DashboardFeaturedSetsRow(
-            title = stringResource(Res.string.feature_set_dashboard_title_latest_releases),
-            sets = state.latestReleases,
-            filterOverrides = latestReleasesFilter,
-            sharedElementPrefix = "latest_releases",
-            onAction = onAction,
-        )
-
-        DashboardFeaturedSetsRow(
-            title = stringResource(Res.string.feature_set_dashboard_title_arriving_sets),
-            sets = state.arrivingSets,
-            filterOverrides = arrivingSetsFilter,
-            sharedElementPrefix = "arriving_sets",
-            onAction = onAction,
-        )
-
-        DashboardFeaturedSetsRow(
-            title = stringResource(Res.string.feature_set_dashboard_title_retiring_sets),
-            sets = state.retiringSets,
-            filterOverrides = retiringSetsFilter,
-            sharedElementPrefix = "retiring_sets",
-            onAction = onAction,
-        )
-
-        DashboardFeaturedSetsRow(
-            title = stringResource(Res.string.feature_set_dashboard_title_new_items),
-            sets = state.newItems,
-            filterOverrides = newItemsFilter,
-            sharedElementPrefix = "new_items",
-            onAction = onAction,
-        )
+        for (type in FeaturedSetType.entries) {
+            if (state.userPreferences.hiddenFeaturedSets.none { it == type }) {
+                DashboardFeaturedSetsRow(
+                    modifier = Modifier.testTag(type.tag),
+                    title = stringResource(type.stringResource),
+                    sets = when (type) {
+                        FeaturedSetType.LATEST_SETS -> state.latestSets
+                        FeaturedSetType.LATEST_RELEASES -> state.latestReleases
+                        FeaturedSetType.ARRIVING_SETS -> state.arrivingSets
+                        FeaturedSetType.RETIRING_SETS -> state.retiringSets
+                        FeaturedSetType.NEW_ITEMS -> state.newItems
+                    },
+                    filterOverrides = type.filter,
+                    sharedElementPrefix = type.name,
+                    onAction = onAction,
+                )
+            }
+        }
     }
 }
 

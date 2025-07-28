@@ -65,13 +65,13 @@ private fun MacrobenchmarkScope.scrollFeaturedThemes() {
 }
 
 private fun MacrobenchmarkScope.openLatestSetsList() {
-    val latestSetsFeaturedSetsRow = waitUntilObject("dashboard:latest_sets_row")
+    val latestSetsFeaturedSetsRow = waitUntilObject("featured_sets:latest_sets")
     val featuredSetsTitle = latestSetsFeaturedSetsRow.waitUntilObject("featured_sets_row:title")
     featuredSetsTitle.waitAndClick()
 }
 
 private fun MacrobenchmarkScope.openFirstLatestSet() {
-    val latestSetsFeaturedSetsRow = waitUntilObject("dashboard:latest_sets_row")
+    val latestSetsFeaturedSetsRow = waitUntilObject("featured_sets:latest_sets")
     val cards = latestSetsFeaturedSetsRow.waitUntilObjects("set_card")
     cards[0].waitAndClick()
 }

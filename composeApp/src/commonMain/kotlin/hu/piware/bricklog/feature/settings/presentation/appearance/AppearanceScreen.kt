@@ -34,18 +34,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title
+import bricklog.composeapp.generated.resources.feature_settings_appearance_title_dashboard
+import bricklog.composeapp.generated.resources.feature_settings_appearance_title_featured_sets
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_greetings
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_theme
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.stringResource
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
-import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.feature.user.presentation.components.NameField
 import hu.piware.bricklog.feature.user.presentation.util.isValidName
+import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
@@ -111,29 +116,22 @@ private fun AppearanceScreen(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
                 ) {
-                    if (state.currentUser.isAuthenticated) {
-                        GreetingsSettings(
-                            userPreferences = state.userPreferences,
-                            onUserPreferencesChange = { preferences, showLoading ->
-                                onAction(
-                                    AppearanceAction.OnUserPreferencesChange(
-                                        preferences,
-                                        showLoading
-                                    )
-                                )
-                            }
-                        )
+                    DashboardSettings(
+                        state = state,
+                        onAction = onAction
+                    )
 
-                        HorizontalDivider(
-                            modifier = Modifier.padding(vertical = Dimens.SmallPadding.size)
-                        )
+                    Column(
+                        modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        HorizontalDivider()
+                        HorizontalDivider()
                     }
 
                     ThemeSettings(
-                        theme = state.themeOption,
-                        onThemeChange = {
-                            onAction(AppearanceAction.OnThemeOptionChange(it))
-                        }
+                        state = state,
+                        onAction = onAction
                     )
                 }
             }
@@ -142,89 +140,204 @@ private fun AppearanceScreen(
 }
 
 @Composable
-private fun GreetingsSettings(
-    userPreferences: UserPreferences,
-    onUserPreferencesChange: (UserPreferences, Boolean) -> Unit,
+private fun DashboardSettings(
+    state: AppearanceState,
+    onAction: (AppearanceAction) -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.MediumPadding.size),
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
     ) {
         Text(
-            text = stringResource(Res.string.feature_settings_appearance_title_greetings),
-            style = MaterialTheme.typography.titleLarge
+            text = stringResource(Res.string.feature_settings_appearance_title_dashboard),
+            style = MaterialTheme.typography.headlineMedium
         )
 
-        Switch(
-            checked = !userPreferences.hideGreetings,
-            onCheckedChange = {
-                onUserPreferencesChange(userPreferences.copy(hideGreetings = !it), false)
+        FeaturedSetsSettings(
+            hiddenFeaturedSets = state.userPreferences.hiddenFeaturedSets,
+            onHiddenFeaturedSetsChange = { hiddenFeaturedSets ->
+                onAction(
+                    AppearanceAction.OnUserPreferencesChange(
+                        state.userPreferences.copy(hiddenFeaturedSets = hiddenFeaturedSets),
+                        false
+                    )
+                )
             }
         )
-    }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val focusManager = LocalFocusManager.current
+        if (state.currentUser.isAuthenticated) {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = Dimens.SmallPadding.size)
+            )
 
-        var displayName by remember { mutableStateOf("") }
-        var isDisplayNameValid by remember { mutableStateOf(true) }
-        NameField(
-            modifier = Modifier.weight(1f),
-            value = displayName,
-            onValueChange = { displayName = it },
-            labelValue = userPreferences.displayName?.ifEmpty { null },
-            onValidate = { isDisplayNameValid = it },
-        )
-
-        FilledIconButton(
-            onClick = {
-                focusManager.clearFocus()
-                if (isValidName(displayName)) {
-                    onUserPreferencesChange(userPreferences.copy(displayName = displayName), true)
+            GreetingsSettings(
+                hideGreetings = state.userPreferences.hideGreetings,
+                onHideGreetingsChange = { hideGreetings ->
+                    onAction(
+                        AppearanceAction.OnUserPreferencesChange(
+                            state.userPreferences.copy(hideGreetings = hideGreetings),
+                            true
+                        )
+                    )
+                },
+                displayName = state.userPreferences.displayName,
+                onDisplayNameChange = { displayName ->
+                    onAction(
+                        AppearanceAction.OnUserPreferencesChange(
+                            state.userPreferences.copy(displayName = displayName),
+                            true
+                        )
+                    )
                 }
-            },
-            enabled = isDisplayNameValid
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Save,
-                contentDescription = null
             )
         }
     }
 }
 
 @Composable
-private fun ThemeSettings(
-    theme: ThemeOption,
-    onThemeChange: (ThemeOption) -> Unit,
+private fun FeaturedSetsSettings(
+    hiddenFeaturedSets: List<FeaturedSetType>,
+    onHiddenFeaturedSetsChange: (List<FeaturedSetType>) -> Unit,
 ) {
-    Text(
-        text = stringResource(Res.string.feature_settings_appearance_title_theme),
-        style = MaterialTheme.typography.titleLarge
-    )
-
-    val choices = ThemeOption.entries.toTypedArray()
-    SingleChoiceSegmentedButtonRow(
-        modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.SmallPadding.size),
+        verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
     ) {
-        choices.forEachIndexed { index, themeOption ->
-            SegmentedButton(
-                modifier = Modifier.testTag("theme_settings:theme_option"),
-                selected = theme == themeOption,
-                onClick = {
-                    onThemeChange(themeOption)
-                },
-                shape = SegmentedButtonDefaults.itemShape(
-                    index = index,
-                    count = choices.count()
-                )
+        Text(
+            text = stringResource(Res.string.feature_settings_appearance_title_featured_sets),
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        for (type in FeaturedSetType.entries) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(themeOption.titleRes))
+                Text(
+                    text = stringResource(type.stringResource),
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Switch(
+                    checked = !hiddenFeaturedSets.contains(type),
+                    onCheckedChange = {
+                        onHiddenFeaturedSetsChange(
+                            if (it) {
+                                hiddenFeaturedSets - type
+                            } else {
+                                hiddenFeaturedSets + type
+                            }
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GreetingsSettings(
+    hideGreetings: Boolean,
+    onHideGreetingsChange: (Boolean) -> Unit,
+    displayName: String?,
+    onDisplayNameChange: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_settings_appearance_title_greetings),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Switch(
+                checked = !hideGreetings,
+                onCheckedChange = {
+                    onHideGreetingsChange(!it)
+                }
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val focusManager = LocalFocusManager.current
+
+            var name by remember { mutableStateOf("") }
+            var isNameValid by remember { mutableStateOf(true) }
+            NameField(
+                modifier = Modifier.weight(1f),
+                value = name,
+                onValueChange = { name = it },
+                labelValue = displayName?.ifEmpty { null },
+                onValidate = { isNameValid = it },
+            )
+
+            FilledIconButton(
+                onClick = {
+                    focusManager.clearFocus()
+                    if (isValidName(name)) {
+                        onDisplayNameChange(name)
+                    }
+                },
+                enabled = isNameValid
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Save,
+                    contentDescription = null
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemeSettings(
+    state: AppearanceState,
+    onAction: (AppearanceAction) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.MediumPadding.size),
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+    ) {
+        Text(
+            text = stringResource(Res.string.feature_settings_appearance_title_theme),
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        val choices = ThemeOption.entries.toTypedArray()
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            choices.forEachIndexed { index, themeOption ->
+                SegmentedButton(
+                    modifier = Modifier.testTag("theme_settings:theme_option"),
+                    selected = state.themeOption == themeOption,
+                    onClick = {
+                        onAction(AppearanceAction.OnThemeOptionChange(themeOption))
+                    },
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = choices.count()
+                    )
+                ) {
+                    Text(stringResource(themeOption.titleRes))
+                }
             }
         }
     }
@@ -235,7 +348,9 @@ private fun ThemeSettings(
 private fun AppearanceScreenPreview() {
     BricklogTheme {
         AppearanceScreen(
-            state = AppearanceState(),
+            state = AppearanceState(
+                currentUser = PreviewData.user,
+            ),
             onAction = {}
         )
     }

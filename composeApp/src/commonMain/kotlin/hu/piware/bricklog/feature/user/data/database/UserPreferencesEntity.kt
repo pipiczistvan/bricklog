@@ -15,4 +15,5 @@ data class UserPreferencesEntity(
     val hideGreetings: Boolean,
     val displayName: String?,
     val collectionOrder: List<CollectionId>,
+    val hiddenFeaturedSets: List<String>,
 )

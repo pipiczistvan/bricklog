@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.user.data.database
 
+import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 
@@ -8,6 +9,9 @@ fun UserPreferencesEntity.toDomainModel(): UserPreferences {
         hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
+        hiddenFeaturedSets = hiddenFeaturedSets
+            .filter { it.isNotBlank() }
+            .map { FeaturedSetType.valueOf(it) },
     )
 }
 
@@ -17,5 +21,6 @@ fun UserPreferences.toEntity(userId: UserId): UserPreferencesEntity {
         hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
+        hiddenFeaturedSets = hiddenFeaturedSets.map { it.name },
     )
 }

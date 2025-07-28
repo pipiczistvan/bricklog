@@ -182,6 +182,8 @@
     <string name="feature_settings_appearance_language_label_hungarian">Hungarian</string>
     <string name="feature_settings_appearance_language_label_system">System</string>
     <string name="feature_settings_appearance_title">Appearance</string>
+    <string name="feature_settings_appearance_title_dashboard">Dashboard</string>
+    <string name="feature_settings_appearance_title_featured_sets">Featured Sets</string>
     <string name="feature_settings_appearance_title_greetings">Greetings</string>
     <string name="feature_settings_appearance_title_theme">Theme</string>
     <string name="feature_settings_license_title">License</string>

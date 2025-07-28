@@ -7,6 +7,7 @@ fun UserPreferencesDocument.toDomainModel(): UserPreferences {
         hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
+        hiddenFeaturedSets = hiddenFeaturedSets,
     )
 }
 
@@ -15,5 +16,6 @@ fun UserPreferences.toDocument(): UserPreferencesDocument {
         hideGreetings = hideGreetings,
         displayName = displayName?.ifEmpty { null },
         collectionOrder = collectionOrder,
+        hiddenFeaturedSets = hiddenFeaturedSets,
     )
 }
