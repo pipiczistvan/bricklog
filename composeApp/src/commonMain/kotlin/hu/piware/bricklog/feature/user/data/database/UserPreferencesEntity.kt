@@ -12,7 +12,7 @@ import hu.piware.bricklog.feature.user.domain.model.UserId
 )
 data class UserPreferencesEntity(
     val userId: UserId,
-    val showGreetings: Boolean,
+    val hideGreetings: Boolean,
     val displayName: String?,
     val collectionOrder: List<CollectionId>,
 )

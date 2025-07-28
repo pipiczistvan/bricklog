@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferences(
-    val showGreetings: Boolean = false,
+    val hideGreetings: Boolean = false,
     val displayName: String? = null,
     val collectionOrder: List<CollectionId> = emptyList(),
 )

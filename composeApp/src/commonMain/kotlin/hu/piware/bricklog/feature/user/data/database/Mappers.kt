@@ -5,7 +5,7 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 
 fun UserPreferencesEntity.toDomainModel(): UserPreferences {
     return UserPreferences(
-        showGreetings = showGreetings,
+        hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
     )
@@ -14,7 +14,7 @@ fun UserPreferencesEntity.toDomainModel(): UserPreferences {
 fun UserPreferences.toEntity(userId: UserId): UserPreferencesEntity {
     return UserPreferencesEntity(
         userId = userId,
-        showGreetings = showGreetings,
+        hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
     )

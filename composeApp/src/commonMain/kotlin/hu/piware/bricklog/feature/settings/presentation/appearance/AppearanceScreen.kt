@@ -157,9 +157,9 @@ private fun GreetingsSettings(
         )
 
         Switch(
-            checked = userPreferences.showGreetings,
+            checked = !userPreferences.hideGreetings,
             onCheckedChange = {
-                onUserPreferencesChange(userPreferences.copy(showGreetings = it), false)
+                onUserPreferencesChange(userPreferences.copy(hideGreetings = !it), false)
             }
         )
     }

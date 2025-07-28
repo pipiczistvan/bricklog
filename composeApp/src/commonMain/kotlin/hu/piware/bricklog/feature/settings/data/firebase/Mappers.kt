@@ -4,7 +4,7 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 
 fun UserPreferencesDocument.toDomainModel(): UserPreferences {
     return UserPreferences(
-        showGreetings = showGreetings,
+        hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
     )
@@ -12,7 +12,7 @@ fun UserPreferencesDocument.toDomainModel(): UserPreferences {
 
 fun UserPreferences.toDocument(): UserPreferencesDocument {
     return UserPreferencesDocument(
-        showGreetings = showGreetings,
+        hideGreetings = hideGreetings,
         displayName = displayName?.ifEmpty { null },
         collectionOrder = collectionOrder,
     )

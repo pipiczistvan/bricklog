@@ -65,6 +65,7 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilte
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -236,12 +237,14 @@ private fun DashboardScreen(
                             bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
                         )
                     ) {
-                        if (state.userPreferences.showGreetings) {
-                            Greetings(
-                                modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
-                                displayName = state.userPreferences.displayName
-                                    ?: state.currentUser.displayName?.split(" ")?.firstOrNull()
-                            )
+                        if (state.currentUser.isAuthenticated) {
+                            if (!state.userPreferences.hideGreetings) {
+                                Greetings(
+                                    modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
+                                    displayName = state.userPreferences.displayName
+                                        ?: state.currentUser.displayName?.split(" ")?.firstOrNull()
+                                )
+                            }
                         }
 
                         FeaturedThemesCarousel(
