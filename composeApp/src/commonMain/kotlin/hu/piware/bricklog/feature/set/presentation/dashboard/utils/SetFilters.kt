@@ -7,43 +7,51 @@ import hu.piware.bricklog.feature.set.domain.model.SetStatus
 
 val latestSetsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
-    statuses = emptySet(),
     launchDate = DateFilter.AnyTime,
+    themes = emptySet(),
+    packagingTypes = setOf("Box"),
+    statuses = emptySet(),
+    showIncomplete = false,
     collectionIds = emptySet(),
-    showIncomplete = false
 )
 
 val latestReleasesFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
-    statuses = setOf(SetStatus.ACTIVE),
     launchDate = DateFilter.AnyTime,
+    themes = emptySet(),
+    packagingTypes = setOf("Box"),
+    statuses = setOf(SetStatus.ACTIVE),
+    showIncomplete = false,
     collectionIds = emptySet(),
-    showIncomplete = false
 )
 
 val arrivingSetsFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
-    statuses = setOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
     launchDate = DateFilter.AnyTime,
+    themes = emptySet(),
+    packagingTypes = setOf("Box"),
+    statuses = setOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
+    showIncomplete = false,
     collectionIds = emptySet(),
-    showIncomplete = false
 )
 
 val retiringSetsFilter = SetFilter(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
-    statuses = setOf(SetStatus.RETIRED_SOON),
     launchDate = DateFilter.AnyTime,
+    themes = emptySet(),
+    packagingTypes = setOf("Box"),
+    statuses = setOf(SetStatus.RETIRED_SOON),
+    showIncomplete = false,
     collectionIds = emptySet(),
-    showIncomplete = false
 )
 
 val newItemsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
-    statuses = emptySet(),
     launchDate = DateFilter.AnyTime,
-    appearanceDate = DateFilter.AnyTime,
     themes = emptySet(),
     packagingTypes = emptySet(),
+    statuses = emptySet(),
+    appearanceDate = DateFilter.AnyTime,
+    showIncomplete = false,
     collectionIds = emptySet(),
-    showIncomplete = false
 )
