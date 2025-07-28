@@ -16,9 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardAction
-import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
@@ -27,10 +24,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun FeaturedSetsRow(
     title: String,
-    onDashboardAction: (DashboardAction) -> Unit,
     sets: List<SetDetails>,
-    filterOverrides: SetFilter,
     sharedElementPrefix: String,
+    onShowMoreClick: () -> Unit,
+    onSetClick: (SetDetails) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -42,25 +39,13 @@ fun FeaturedSetsRow(
                 .testTag("featured_sets_row:title")
                 .padding(start = Dimens.MediumPadding.size),
             title = title,
-            onClick = {
-                onDashboardAction(
-                    DashboardAction.OnSearchSets(
-                        SetListArguments(
-                            filterOverrides = filterOverrides,
-                            title = title
-                        )
-                    )
-                )
-            }
+            onClick = onShowMoreClick
         )
         SetCardRow(
             sets = sets,
-            onSetClick = {
-                onDashboardAction(
-                    DashboardAction.OnSetClick(it)
-                )
-            },
-            sharedElementPrefix = sharedElementPrefix
+            onSetClick = onSetClick,
+            sharedElementPrefix = sharedElementPrefix,
+            onShowMoreClick = onShowMoreClick
         )
     }
 }
@@ -99,10 +84,10 @@ private fun FeaturedSetsRowPreview() {
         ) {
             FeaturedSetsRow(
                 title = "Featured Sets",
-                onDashboardAction = {},
                 sets = PreviewData.sets,
-                filterOverrides = SetFilter(),
-                sharedElementPrefix = "featured_set_"
+                sharedElementPrefix = "featured_set_",
+                onSetClick = {},
+                onShowMoreClick = {}
             )
         }
     }

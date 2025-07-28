@@ -24,6 +24,7 @@
     <string name="feature_set_dashboard_changelog_bottom_sheet_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title_build_version">%1$s (build %2$s)</string>
+    <string name="feature_set_dashboard_label_show_more">Show more</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_about">About</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_appearance">Appearance</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_login">Log In</string>

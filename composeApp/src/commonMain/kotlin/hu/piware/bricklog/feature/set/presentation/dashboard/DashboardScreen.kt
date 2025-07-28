@@ -43,7 +43,9 @@ import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationDialog
@@ -345,47 +347,84 @@ private fun FeaturedSets(
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
     ) {
-        FeaturedSetsRow(
+        DashboardFeaturedSetsRow(
             modifier = Modifier.testTag("dashboard:latest_sets_row"),
             title = stringResource(Res.string.feature_set_dashboard_title_latest_sets),
-            onDashboardAction = onAction,
             sets = state.latestSets,
             filterOverrides = latestSetsFilter,
-            sharedElementPrefix = "latest_sets"
+            sharedElementPrefix = "latest_sets",
+            onAction = onAction
         )
 
-        FeaturedSetsRow(
+        DashboardFeaturedSetsRow(
             title = stringResource(Res.string.feature_set_dashboard_title_latest_releases),
-            onDashboardAction = onAction,
             sets = state.latestReleases,
             filterOverrides = latestReleasesFilter,
-            sharedElementPrefix = "latest_releases"
+            sharedElementPrefix = "latest_releases",
+            onAction = onAction,
         )
 
-        FeaturedSetsRow(
+        DashboardFeaturedSetsRow(
             title = stringResource(Res.string.feature_set_dashboard_title_arriving_sets),
-            onDashboardAction = onAction,
             sets = state.arrivingSets,
             filterOverrides = arrivingSetsFilter,
-            sharedElementPrefix = "arriving_sets"
+            sharedElementPrefix = "arriving_sets",
+            onAction = onAction,
         )
 
-        FeaturedSetsRow(
+        DashboardFeaturedSetsRow(
             title = stringResource(Res.string.feature_set_dashboard_title_retiring_sets),
-            onDashboardAction = onAction,
             sets = state.retiringSets,
             filterOverrides = retiringSetsFilter,
-            sharedElementPrefix = "retiring_sets"
+            sharedElementPrefix = "retiring_sets",
+            onAction = onAction,
         )
 
-        FeaturedSetsRow(
+        DashboardFeaturedSetsRow(
             title = stringResource(Res.string.feature_set_dashboard_title_new_items),
-            onDashboardAction = onAction,
             sets = state.newItems,
             filterOverrides = newItemsFilter,
-            sharedElementPrefix = "new_items"
+            sharedElementPrefix = "new_items",
+            onAction = onAction,
         )
     }
+}
+
+@Composable
+private fun DashboardFeaturedSetsRow(
+    title: String,
+    filterOverrides: SetFilter,
+    sharedElementPrefix: String,
+    sets: List<SetDetails>,
+    onAction: (DashboardAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FeaturedSetsRow(
+        modifier = modifier,
+        title = title,
+        sets = sets,
+        sharedElementPrefix = sharedElementPrefix,
+        onShowMoreClick = {
+            onAction(
+                DashboardAction.OnSearchSets(
+                    SetListArguments(
+                        filterOverrides = filterOverrides,
+                        title = title
+                    )
+                )
+            )
+        },
+        onSetClick = { set ->
+            onAction(
+                DashboardAction.OnSetClick(
+                    SetDetailArguments(
+                        set.setID,
+                        sharedElementPrefix
+                    )
+                )
+            )
+        }
+    )
 }
 
 @Preview

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,11 +13,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -25,22 +30,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_label_show_more
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
-import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
+import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel.Companion.FEATURED_SETS_ROW_LIMIT
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SetCardRow(
     sets: List<SetDetails>,
-    onSetClick: (SetDetailArguments) -> Unit,
+    onShowMoreClick: () -> Unit,
+    onSetClick: (SetDetails) -> Unit,
     sharedElementPrefix: String,
 ) {
     LazyRow(
@@ -58,23 +67,22 @@ fun SetCardRow(
                         .testTag("set_card")
                         .sharedElement("$sharedElementPrefix/image/${set.setID}"),
                     setDetails = set,
-                    onClick = {
-                        onSetClick(
-                            SetDetailArguments(
-                                set.setID,
-                                sharedElementPrefix
-                            )
-                        )
-                    }
+                    onClick = { onSetClick(set) }
                 )
 
             }
         } else {
-            repeat(12) {
+            repeat(FEATURED_SETS_ROW_LIMIT) {
                 item {
                     SetCardPlaceholder()
                 }
             }
+        }
+
+        item {
+            SetCardShowMore(
+                onClick = onShowMoreClick
+            )
         }
 
         item {
@@ -165,6 +173,52 @@ private fun SetCardPlaceholder(
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleSmall
         )
+    }
+}
+
+@Composable
+private fun SetCardShowMore(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        shape = Shapes.large,
+        modifier = modifier
+            .clip(Shapes.large)
+            .clickable(onClick = onClick)
+            .width(160.dp),
+        elevation = CardDefaults.outlinedCardElevation()
+    ) {
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .size(160.dp)
+                ) {
+                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    text = "",
+                    minLines = 2,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(stringResource(Res.string.feature_set_dashboard_label_show_more))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null
+                )
+            }
+        }
     }
 }
 

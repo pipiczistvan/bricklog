@@ -247,35 +247,35 @@ class DashboardViewModel(
     }
 
     private fun observeLatestSets() {
-        watchSetDetails(filterOverrides = latestSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = latestSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeLatestReleases() {
-        watchSetDetails(filterOverrides = latestReleasesFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = latestReleasesFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(latestReleases = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeArrivingSets() {
-        watchSetDetails(filterOverrides = arrivingSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = arrivingSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
-        watchSetDetails(filterOverrides = retiringSetsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = retiringSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeNewItems() {
-        watchSetDetails(filterOverrides = newItemsFilter.copy(limit = 12))
+        watchSetDetails(filterOverrides = newItemsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(newItems = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
@@ -336,11 +336,11 @@ class DashboardViewModel(
                 }
                 logger.i { "Notification permission granted." }
             } catch (e: DeniedAlwaysException) {
-                logger.w { "Notification permission denied always." }
+                logger.w(e) { "Notification permission denied always." }
             } catch (e: DeniedException) {
-                logger.w { "Notification permission denied." }
+                logger.w(e) { "Notification permission denied." }
             } catch (e: RequestCanceledException) {
-                logger.w { "Notification permission canceled." }
+                logger.w(e) { "Notification permission canceled." }
             }
         }
     }
@@ -350,5 +350,9 @@ class DashboardViewModel(
             resetSets(date)
                 .showSnackbarOnError()
         }
+    }
+
+    companion object {
+        const val FEATURED_SETS_ROW_LIMIT = 9
     }
 }
