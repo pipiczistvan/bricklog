@@ -4,8 +4,6 @@ package hu.piware.bricklog.feature.set.presentation.set_image
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.navigation_go_back
+import hu.piware.bricklog.feature.core.presentation.components.InfiniteHorizontalPager
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -86,12 +85,9 @@ private fun SetImagePager(
     images: List<Image>,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState { images.size }
-
-    HorizontalPager(
+    InfiniteHorizontalPager(
         modifier = modifier,
-        state = pagerState,
-        beyondViewportPageCount = 1
+        items = images
     ) {
         SetImage(
             modifier = Modifier
