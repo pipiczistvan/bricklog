@@ -1,6 +1,56 @@
 {
   "releases": [
     {
+      "version": "1.3.0",
+      "build": 25073001,
+      "changes": [
+        {
+          "description": "Added option to hide featured sets",
+          "type": "feat"
+        },
+        {
+          "description": "Swipe images on set image screen in both directions",
+          "type": "refactor"
+        },
+        {
+          "description": "Fixed set data parsing error",
+          "type": "fix"
+        },
+        {
+          "description": "Improve initial set loading experience",
+          "type": "refactor"
+        },
+        {
+          "description": "Fix status bar theming issue",
+          "type": "fix"
+        },
+        {
+          "description": "Updated splash logo",
+          "type": "refactor"
+        },
+        {
+          "description": "Added user greeting",
+          "type": "feat"
+        },
+        {
+          "description": "Set query optimizations",
+          "type": "refactor"
+        },
+        {
+          "description": "Support detecting minifigures by scanning selected CMF box codes",
+          "type": "feat"
+        },
+        {
+          "description": "User authentication and data sync",
+          "type": "feat"
+        },
+        {
+          "description": "Updated libraries",
+          "type": "refactor"
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "build": 25070501,
       "changes": [
