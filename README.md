@@ -42,6 +42,7 @@ Supports light mode, dark mode.
 # Features
 
 - **Offline access:** After the initial download, the whole lego database is available offline.
+- **Data sync:** Sync user settings across devices.
 - **Notifications:** Get notifications when a new set is available in the database.
 - **Favourite sets:** Mark a set as favourite to access it in the favourites list.
 - **Set details:** View various details about each set.
