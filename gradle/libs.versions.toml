@@ -1,5 +1,11 @@
+# NOTE
+# Android Studio KMP testing plugin only works correctly with kotlin version 2.1.20
+# https://youtrack.jetbrains.com/issue/KTIJ-34994/commonTest-running-on-iOS-simulator-runtime-by-default-since-2.2.0
+# Needed to downgrade some versions until fixed:
+# kotlin, kotlinxSerializationCsv, ksp, ktor, uri-kmp, zoomable
+
 [versions]
-agp = "8.11.1"                                   # https://developer.android.com/build/releases/gradle-plugin
+agp = "8.11.1"                                  # https://developer.android.com/build/releases/gradle-plugin
 android-compileSdk = "36"
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -35,16 +41,18 @@ kmpnotifier = "1.5.1"                           # https://github.com/mirzemehdi/
 koin-annotations = "2.1.0"                      # https://github.com/InsertKoinIO/koin-annotations
 koin-bom = "4.1.0"                              # https://github.com/InsertKoinIO/koin
 korlibsIo = "6.0.2"                             # https://github.com/korlibs/korlibs-io
-kotlin = "2.2.0"                                # https://kotlinlang.org/docs/releases.html
+kotlin = "2.1.20"                               # https://kotlinlang.org/docs/releases.html
 kotlinx-datetime = "0.6.2"                      # https://github.com/Kotlin/kotlinx-datetime
-kotlinxSerializationCsv = "0.0.22"              # https://github.com/hfhbd/kotlinx-serialization-csv
-ksp = "2.2.0-2.0.2"                             # https://github.com/google/ksp
-ktor = "3.2.1"                                  # https://github.com/ktorio/ktor
+kotlinxSerializationCsv = "0.0.20"              # https://github.com/hfhbd/kotlinx-serialization-csv
+ksp = "2.1.20-2.0.1"                            # https://github.com/google/ksp
+ktor = "3.1.3"                                  # https://github.com/ktorio/ktor
 mlkit-barcode-scanning = "17.3.0"               # https://developers.google.com/ml-kit/vision/barcode-scanning/android
 moko = "0.19.1"                                 # https://github.com/icerockdev/moko-permissions
 qrose = "1.0.1"                                 # https://github.com/alexzhirkevich/qrose
-uri-kmp = "0.0.20"                              # https://github.com/eygraber/uri-kmp
-zoomable = "2.8.1"                              # https://github.com/usuiat/Zoomable
+uri-kmp = "0.0.19"                              # https://github.com/eygraber/uri-kmp
+zoomable = "2.7.0"                              # https://github.com/usuiat/Zoomable
+kotlinx-coroutines-test = "1.10.2"              # https://github.com/Kotlin/kotlinx.coroutines/tree/master
+kover = "0.9.1"                                 # https://github.com/Kotlin/kotlinx-kover
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -106,6 +114,10 @@ androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomato
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmarkMacroJunit4" }
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "androidx-profileinstaller" }
 
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+koin-test = { module = "io.insert-koin:koin-test" }
+
 uri-kmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 
 kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmpnotifier" }
@@ -140,6 +152,7 @@ android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineprofile" }
 firebaseAppdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppdistribution" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 [bundles]
 ktor = [

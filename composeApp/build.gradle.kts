@@ -20,6 +20,7 @@ plugins {
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.baselineprofile)
     alias(libs.plugins.firebaseAppdistribution)
+    alias(libs.plugins.kover)
 }
 
 loadLocalProperties()
@@ -116,6 +117,11 @@ kotlin {
             implementation(libs.kmpauth.google)
             implementation(libs.kmpauth.firebase)
             implementation(libs.kmpauth.uihelper)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.koin.test)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -360,7 +366,7 @@ data class SigningConfig(
     val keystorePath: String,
     val keystorePassword: String,
     val keyAlias: String,
-    val keyPassword: String
+    val keyPassword: String,
 )
 
 private fun createDebugSigningConfig() = SigningConfig(
@@ -378,3 +384,17 @@ private fun createReleaseSigningConfig() = SigningConfig(
     keyPassword = properties["BRICKLOG_RELEASE_KEY_PWD"]?.toString()
         ?: throw IllegalArgumentException("BRICKLOG_RELEASE_KEY_PWD not set")
 )
+
+kover {
+    reports {
+        filters {
+            excludes {
+                annotatedBy("androidx.compose.runtime.Composable")
+                packages("bricklog.composeapp.generated.resources")
+                packages("hu.piware.bricklog.di")
+                packages("hu.piware.bricklog.mock")
+                packages("org.koin.ksp.generated")
+            }
+        }
+    }
+}

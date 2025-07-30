@@ -16,4 +16,5 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.baselineprofile) apply false
     alias(libs.plugins.firebaseAppdistribution) apply false
+    alias(libs.plugins.kover) apply false
 }

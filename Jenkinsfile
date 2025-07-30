@@ -1,3 +1,6 @@
+def runTests = false
+def runBuild = false
+def distribute = false
 def tagName = ""
 
 pipeline {
@@ -9,6 +12,7 @@ pipeline {
     }
 
     parameters {
+        choice(name: 'ACTION', choices: ['test', 'build', 'distribute'], description: 'Select the action')
         choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select the environment')
         choice(name: 'MODE', choices: ['release', 'debug'], description: 'Select the mode')
         choice(name: 'DEV_LEVEL', choices: ['0', '1', '2', '3'], description: 'Select the development level. Available options are:\n0 - production mode\n1 - development mode\n2 - mock mode\n3 - benchmark mode')
@@ -19,6 +23,9 @@ pipeline {
         stage('Init') {
             steps {
                 script {
+                    runTests = params.ACTION == 'test'
+                    runBuild = params.ACTION == 'build' || params.ACTION == 'distribute'
+                    distribute = params.ACTION == 'distribute'
                     tagName = "firebase-distribution-${params.ENVIRONMENT.toLowerCase()}"
                 }
             }
@@ -77,15 +84,34 @@ pipeline {
             }
         }
 
-        stage('Build AAB') {
+        stage('Run tests') {
+            when {
+                expression { runTests }
+            }
             steps {
-                sh "./gradlew clean bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
+                script {
+                    echo 'Running tests with coverage report'
+                    sh "./gradlew koverHtmlReport${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}"
+                }
+                script {
+                    echo 'Compressing test coverage report'
+                    zip zipFile: 'composeApp/build/reports/kover/coverage.zip', dir: "composeApp/build/reports/kover/html${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}"
+                }
+            }
+        }
+
+        stage('Build AAB') {
+            when {
+                expression { runBuild }
+            }
+            steps {
+                sh "./gradlew bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
             }
         }
 
         stage('Distribute to Firebase') {
             when {
-                expression { params.DISTRIBUTE == true }
+                expression { distribute }
             }
             steps {
                 script {
@@ -138,13 +164,21 @@ pipeline {
         stage('Archive') {
             steps {
                 script {
-                    def artifactsToArchive = """
-                        composeApp/build/outputs/bundle/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/*.aab,
-                        composeApp/build/outputs/apk/${params.ENVIRONMENT.toLowerCase()}/${params.MODE.toLowerCase()}/*.apk
-                    """
+                    def artifactsToArchive = ""
 
-                    if (params.MODE == 'release') {
-                        artifactsToArchive += ",composeApp/build/outputs/mapping/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/mapping.txt"
+                    if (runTests) {
+                        artifactsToArchive = "composeApp/build/reports/kover/coverage.zip"
+                    }
+
+                    if (runBuild) {
+                        artifactsToArchive = """
+                            composeApp/build/outputs/bundle/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/*.aab,
+                            composeApp/build/outputs/apk/${params.ENVIRONMENT.toLowerCase()}/${params.MODE.toLowerCase()}/*.apk
+                        """
+
+                        if (params.MODE == 'release') {
+                            artifactsToArchive += ",composeApp/build/outputs/mapping/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/mapping.txt"
+                        }
                     }
 
                     archiveArtifacts fingerprint: true, onlyIfSuccessful: true, artifacts: artifactsToArchive
