@@ -53,6 +53,10 @@ object AppInitializer : KoinComponent {
         }
     }
 
+    fun shouldInitializeFirebase(): Boolean {
+        return BuildKonfig.DEV_LEVEL < DevLevels.MOCK
+    }
+
     private fun scheduleSyncSetsBackgroundTask() {
         val scheduler = getKoin().get<SyncSetsPeriodicBackgroundTaskScheduler>()
         scheduler.schedule()

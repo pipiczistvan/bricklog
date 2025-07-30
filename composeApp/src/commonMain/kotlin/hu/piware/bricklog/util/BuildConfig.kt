@@ -1,35 +1,13 @@
 package hu.piware.bricklog.util
 
-import hu.piware.bricklog.BuildKonfig
-
 expect object BuildConfig {
     val VERSION_NAME: String
     val VERSION_CODE: String
 }
 
-val BuildConfig.RELEASE_VERSION: Int
-    get() = BuildKonfig.RELEASE_VERSION
-
-enum class Flavor {
-    DEVELOPMENT,
-    MOCK,
-    BENCHMARK,
-    PRODUCTION
+object DevLevels {
+    const val PRODUCTION = 0
+    const val DEVELOPMENT = 1
+    const val MOCK = 2
+    const val BENCHMARK = 3
 }
-
-val BuildConfig.flavor: Flavor
-    get() = when (BuildKonfig.FLAVOR) {
-        "DEV" -> Flavor.DEVELOPMENT
-        "MOCK" -> Flavor.MOCK
-        "BENCHMARK" -> Flavor.BENCHMARK
-        else -> Flavor.PRODUCTION
-    }
-
-val BuildConfig.isDebugFlavor: Boolean
-    get() = BuildConfig.flavor == Flavor.DEVELOPMENT || isMockFlavor
-
-val BuildConfig.isMockFlavor: Boolean
-    get() = BuildConfig.flavor == Flavor.MOCK || BuildConfig.flavor == Flavor.BENCHMARK
-
-val BuildConfig.isBenchmarkFlavor: Boolean
-    get() = BuildConfig.flavor == Flavor.BENCHMARK

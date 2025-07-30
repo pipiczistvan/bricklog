@@ -30,7 +30,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "LOW-BATTERY"
+        testInstrumentationRunnerArguments["androidx.benchmark.suppresssErrors"] = "LOW-BATTERY"
+
+        missingDimensionStrategy("environment", "prod")
     }
 
     targetProjectPath = ":composeApp"

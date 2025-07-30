@@ -61,50 +61,61 @@ Supports light mode, dark mode.
 
 ## Environment setup
 
-Configure build flavor in [local.properties](local.properties) like this: `buildkonfig.flavor=mock`
+### Gradle properties
 
-### Available flavors
+Configure the following properties in [local.properties](local.properties) or via gradle build
+arguments.
 
-| 	                           | prod (default) 	 | dev 	 | mock 	 | benchmark |
-|-----------------------------|------------------|-------|--------|-----------|
-| Requires Firebase setup   	 | yes            	 | yes 	 | no   	 | no   	    |
-| Requires Brickset API key 	 | yes            	 | yes 	 | no   	 | no   	    |
-| Developer options enabled 	 | no             	 | yes 	 | yes  	 | yes  	    |
+Note: To test the app use `DEV_LEVEL=2` and you can skip setting the other variables.
 
-### Brickset API key
-
-You can obtain a brickset api key [here](https://brickset.com/tools/webservices/requestkey) and
-include `BRICKSET_API_KEY=<API_KEY>` in [local.properties](local.properties)
-
-### Firebase setup
-
-Create a Web OAuth Client in Google Cloud Platform and include
-`GOOGLE_AUTH_WEB_CLIENT_ID=<CLIENT_ID>`
-in [local.properties](local.properties)
-Also create android and iOS clients.
+| variable name                 | optional | description                                                                                                                         |
+|-------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------|
+| BRICKSET_API_KEY              | no       | api key can be obtained [here](https://brickset.com/tools/webservices/requestkey)                                                   |
+| BRICKLOG_RELEASE_KEYSTORE_PWD | no       | release keystore password                                                                                                           |
+| BRICKLOG_RELEASE_KEY_PWD      | no       | release key password                                                                                                                |
+| GOOGLE_AUTH_WEB_CLIENT_ID     | no       | necessary for google authentication - available at Firebase or Google Cloud Platform                                                |
+| DEV_LEVEL                     | yes      | a level which determines some app behaviours:<br>0 - production mode<br>1 - development mode<br>2 - mock mode<br>3 - benchmark mode |
 
 #### Android
 
-Download a `google-services.json` from Firebase and place in `composeApp` folder
+1. Select the build variant. For example `devDebug`.
+   There are build variants for the environments: `prod` and `dev`
+2. Build the app.
+
+To use Firebase, download the appropriate `google-services.json` from Firebase and place in
+`composeApp` or
+`composeApp/src/<environment>` folder.
 
 #### iOS
 
 1. Build the project in Android Studio to generate necessary files.
 2. Open the iosApp.xcworkspace file in Xcode
-3. Download a `GoogleService-Info.plist` and place in `iosApp/iosApp`
-4. Include `GOOGLE_AUTH_IOS_CLIENT_ID_REVERSED=<CLIENT_ID>` in
-   `iosApp/Configuration/Secrets.xcconfig`
+3. Build the app
+
+To use Firebase, ownload the appropriate `GoogleService-Info.plist` and place in `iosApp/iosApp`
+
+To use Google Auth, add `GOOGLE_AUTH_IOS_CLIENT_ID_REVERSED=<CLIENT_ID>` to
+`iosApp/Configuration/ProdSecrets.xcconfig` or `iosApp/Configuration/DevSecrets.xcconfig`
 
 ## Baseline Profile (android)
 
 Generate baseline profile using BaselineProfileGenerator on a rooted emulator.
 Run benchmarks on real device.
 
-1. Execute ./gradlew generateReleaseBaselineProfile -Pbuildkonfig.flavor=benchmark
+1. Execute ./gradlew generateReleaseBaselineProfile -PDEV_LEVEL=3
 2. Test with benchmarks on real device
-3. Copy baseline-prof.txt and startup-prof.txt to composeApp/src/androidMain folder
+3. Copy baseline-prof.txt and startup-prof.txt to `composeApp/src/androidMain` folder
 
 ## Troubleshoot
+
+### Android
+
+- If the build variants does not show up, you may need to refresh the project.
+
+- If the build fails due to missing `google-services.json` you can mock Firebase using the
+  `DEV_LEVEL=2` gradle property.
+
+### iOS
 
 - On iOS JDK 17 is necessary to build. It can be specified manually
   in [gradle.properties](gradle.properties) via `org.gradle.java.home`.

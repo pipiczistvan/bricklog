@@ -15,6 +15,7 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
+import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.core.presentation.SnackbarAction
@@ -46,8 +47,7 @@ import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchUserPreferences
-import hu.piware.bricklog.util.BuildConfig
-import hu.piware.bricklog.util.isBenchmarkFlavor
+import hu.piware.bricklog.util.DevLevels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -101,7 +101,7 @@ class DashboardViewModel(
             observeNewChangelog()
             observeCurrentUser()
             observeUserPreferences()
-            if (!BuildConfig.isBenchmarkFlavor) {
+            if (BuildKonfig.DEV_LEVEL < DevLevels.BENCHMARK) {
                 askNotificationPermission()
             }
         }

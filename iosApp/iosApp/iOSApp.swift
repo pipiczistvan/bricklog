@@ -7,15 +7,17 @@ import GoogleSignIn
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FirebaseApp.configure()
+        if (AppInitializer.shared.shouldInitializeFirebase()) {
+            FirebaseApp.configure()
 
-        // Google Sign-In setup
-        guard let clientID = FirebaseApp.app()?.options.clientID else {
-            return false
+            // Google Sign-In setup
+            guard let clientID = FirebaseApp.app()?.options.clientID else {
+                return false
+            }
+            let config = GIDConfiguration(clientID: clientID)
+            GIDSignIn.sharedInstance.configuration = config
         }
-        let config = GIDConfiguration(clientID: clientID)
-        GIDSignIn.sharedInstance.configuration = config
-        
+
         //By default showPushNotification value is true.
         //When set showPushNotification to false foreground push  notification will not be shown.
         //You can still get notification content using #onPushNotification listener method.

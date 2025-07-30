@@ -68,6 +68,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
+import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.core.presentation.util.formatDateTime
@@ -77,8 +78,7 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.OverpassMonoTypography
-import hu.piware.bricklog.util.BuildConfig
-import hu.piware.bricklog.util.isDebugFlavor
+import hu.piware.bricklog.util.DevLevels
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -118,7 +118,7 @@ fun DashboardNavigationDrawerSheet(
             onAction = onAction
         )
 
-        if (BuildConfig.isDebugFlavor) {
+        if (BuildKonfig.DEV_LEVEL >= DevLevels.DEVELOPMENT) {
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
             )

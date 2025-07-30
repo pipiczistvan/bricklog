@@ -17,32 +17,31 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.sp
-import hu.piware.bricklog.util.BuildConfig
-import hu.piware.bricklog.util.Flavor
-import hu.piware.bricklog.util.flavor
+import hu.piware.bricklog.BuildKonfig
+import hu.piware.bricklog.util.DevLevels
 import kotlin.math.sqrt
 
-fun Modifier.drawFlavorRibbon() = composed(
+fun Modifier.drawDevLevelRibbon() = composed(
     factory = {
         Modifier
             .let {
-                when (BuildConfig.flavor) {
-                    Flavor.DEVELOPMENT -> it.drawDiagonalLabel(
+                when (BuildKonfig.DEV_LEVEL) {
+                    DevLevels.DEVELOPMENT -> it.drawDiagonalLabel(
                         text = "DEV",
                         color = Color.Blue.copy(alpha = 0.5f)
                     )
 
-                    Flavor.MOCK -> it.drawDiagonalLabel(
+                    DevLevels.MOCK -> it.drawDiagonalLabel(
                         text = "MOCK",
                         color = Color.Red.copy(alpha = 0.5f)
                     )
 
-                    Flavor.BENCHMARK -> it.drawDiagonalLabel(
+                    DevLevels.BENCHMARK -> it.drawDiagonalLabel(
                         text = "BENCHMARK",
                         color = Color.Green.copy(alpha = 0.5f)
                     )
 
-                    Flavor.PRODUCTION -> it
+                    else -> it
                 }
             }
     }

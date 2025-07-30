@@ -1,3 +1,5 @@
+def tagName = ""
+
 pipeline {
     agent any
 
@@ -7,17 +9,27 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'FLAVOR', choices: ['prod', 'dev', 'mock', 'benchmark'], description: 'Select the flavor')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select the environment')
         choice(name: 'MODE', choices: ['release', 'debug'], description: 'Select the mode')
+        choice(name: 'DEV_LEVEL', choices: ['0', '1', '2', '3'], description: 'Select the development level. Available options are:\n0 - production mode\n1 - development mode\n2 - mock mode\n3 - benchmark mode')
         booleanParam(name: 'DISTRIBUTE', defaultValue: false, description: 'Enable to distribute to Firebase')
     }
 
     stages {
-        stage('Clean Workspace') {
+        stage('Init') {
+            steps {
+                script {
+                    tagName = "firebase-distribution-${params.ENVIRONMENT.toLowerCase()}"
+                }
+            }
+        }
+
+        stage('Pre Clean Workspace') {
             steps {
                 deleteDir()
             }
         }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -28,15 +40,38 @@ pipeline {
              }
         }
 
-        stage('Decrypt necessary files') {
+        stage('Prepare config files') {
             steps {
                 script {
-                    echo 'Decrypting release files'
+                    echo 'Decrypting files'
                     withCredentials([string(credentialsId: 'GPG_PASSPHRASE', variable: 'GPG_PASSPHRASE')]) {
-                        sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/google-services.json.gpg > composeApp/google-services.json'
-                        sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/local.properties.gpg > local.properties'
                         sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/app-release.jks.gpg > release/app-release.jks'
-                        sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/google-services-credentials.json.gpg > release/google-services-credentials.json'
+
+                        if (params.ENVIRONMENT == 'dev') {
+                            sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/dev.zip.gpg > release/dev.zip'
+                        } else if (params.ENVIRONMENT == 'prod') {
+                            sh 'gpg -d --passphrase "$GPG_PASSPHRASE" release/prod.zip.gpg > release/prod.zip'
+                        }
+                    }
+                }
+                script {
+                    echo 'Unzipping files'
+
+                    if (params.ENVIRONMENT == 'dev') {
+                        unzip zipFile: 'release/dev.zip', dir: 'release'
+                    } else if (params.ENVIRONMENT == 'prod') {
+                        unzip zipFile: 'release/prod.zip', dir: 'release'
+                    }
+                }
+                script {
+                    echo 'Moving files to appropriate location'
+
+                    if (params.ENVIRONMENT == 'dev') {
+                        sh 'mv release/dev/google-services.json composeApp/'
+                        sh 'mv release/dev/local.properties ./'
+                    } else if (params.ENVIRONMENT == 'prod') {
+                        sh 'mv release/prod/google-services.json composeApp/'
+                        sh 'mv release/prod/local.properties ./'
                     }
                 }
             }
@@ -44,7 +79,7 @@ pipeline {
 
         stage('Build AAB') {
             steps {
-                sh "./gradlew clean bundle${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -Pbuildkonfig.flavor=${params.FLAVOR}"
+                sh "./gradlew clean bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
             }
         }
 
@@ -54,25 +89,40 @@ pipeline {
             }
             steps {
                 script {
-                    def tagName = 'firebase-distribution'
                     def releaseNotes = ''
 
                     sh 'git fetch --tags'
-                    // Fetch commits from the tag to HEAD (exclusive)
-                    // This command lists commit messages after the tag up to the current commit
-                    def commits = sh(
-                        script: "git log ${tagName}..HEAD --pretty=format:'- %s'",
-                        returnStdout: true
-                    ).trim()
 
-                    if (commits) {
-                        releaseNotes = commits + "\n"
+                    def tagExists = sh(
+                        script: "git rev-parse -q --verify refs/tags/${tagName}",
+                        returnStatus: true
+                    ) == 0
+
+                    if (tagExists) {
+                        // Fetch commits from the tag to HEAD (exclusive)
+                        // This command lists commit messages after the tag up to the current commit
+                        def commits = sh(
+                            script: "git log ${tagName}..HEAD --pretty=format:'- %s'",
+                            returnStdout: true
+                        ).trim()
+
+                        if (commits) {
+                            releaseNotes = commits + "\n"
+                        } else {
+                            releaseNotes = "No changes since tag ${tagName}.\n"
+                        }
                     } else {
-                        releaseNotes = "No changes since tag ${tagName}.\n"
+                        releaseNotes = "Initial release.\n"
                     }
 
                     writeFile file: 'release_notes.txt', text: releaseNotes
+                }
+                script {
+                    echo 'Distributing app to Firebase'
 
+                    sh "./gradlew appDistributionUpload${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}"
+                }
+                script {
                     // Move the tag to the current commit (force move)
                     sh "git tag -f ${tagName} HEAD"
 
@@ -82,11 +132,6 @@ pipeline {
                         sh "git push -f origin ${tagName}"
                     }
                 }
-                script {
-                    echo 'Distributing app to Firebase'
-
-                    sh './gradlew appDistributionUploadRelease'
-                }
             }
         }
 
@@ -94,16 +139,22 @@ pipeline {
             steps {
                 script {
                     def artifactsToArchive = """
-                        composeApp/build/outputs/bundle/${params.MODE.toLowerCase()}/*.aab,
-                        composeApp/build/outputs/apk/${params.MODE.toLowerCase()}/*.apk
+                        composeApp/build/outputs/bundle/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/*.aab,
+                        composeApp/build/outputs/apk/${params.ENVIRONMENT.toLowerCase()}/${params.MODE.toLowerCase()}/*.apk
                     """
 
                     if (params.MODE == 'release') {
-                        artifactsToArchive += ",composeApp/build/outputs/mapping/release/mapping.txt"
+                        artifactsToArchive += ",composeApp/build/outputs/mapping/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/mapping.txt"
                     }
 
                     archiveArtifacts fingerprint: true, onlyIfSuccessful: true, artifacts: artifactsToArchive
                 }
+            }
+        }
+
+        stage('Post Clean Workspace') {
+            steps {
+                deleteDir()
             }
         }
     }

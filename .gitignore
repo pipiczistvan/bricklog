@@ -17,9 +17,9 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-AppSecrets.plist
-GoogleService-Info.plist
 google-services.json
-google-services-credentials.json
+google-credentials.json
 app-release.jks
-Secrets.xcconfig
+GoogleService-Info.plist
+ProdSecrets.xcconfig
+DevSecrets.xcconfig

@@ -23,7 +23,7 @@ plugins {
 }
 
 loadLocalProperties()
-
+configureGoogleServices()
 val archiveName = createArchiveName()
 
 kotlin {
@@ -182,12 +182,6 @@ android {
             ndk {
                 debugSymbolLevel = "FULL"
             }
-            firebaseAppDistribution {
-                artifactType = "APK"
-                groups = "testers"
-                serviceCredentialsFile = "release/google-services-credentials.json"
-                releaseNotesFile = "release_notes.txt"
-            }
         }
     }
     compileOptions {
@@ -196,6 +190,27 @@ android {
     }
     buildFeatures {
         buildConfig = true
+    }
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Bricklog Dev")
+            firebaseAppDistribution {
+                artifactType = "APK"
+                groups = "testers"
+                serviceCredentialsFile = "release/dev/google-credentials.json"
+                releaseNotesFile = "release_notes.txt"
+            }
+        }
+        create("prod") {
+            firebaseAppDistribution {
+                artifactType = "APK"
+                groups = "testers"
+                serviceCredentialsFile = "release/prod/google-credentials.json"
+                releaseNotesFile = "release_notes.txt"
+            }
+        }
     }
 }
 
@@ -206,25 +221,18 @@ room {
 buildkonfig {
     packageName = "hu.piware.bricklog"
 
-    val bricksetApiKey: String = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
-    val googleAuthWebClientId: String =
+    val bricksetApiKey = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
+    val googleAuthWebClientId =
         properties["GOOGLE_AUTH_WEB_CLIENT_ID"]?.toString() ?: "<GOOGLE_AUTH_WEB_CLIENT_ID>"
+    val revision = properties["REVISION"]?.toString() ?: ""
+    val devLevel = properties["DEV_LEVEL"]?.toString() ?: "0"
 
     defaultConfigs {
-        buildConfigField(STRING, "FLAVOR", "PROD")
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
         buildConfigField(STRING, "GOOGLE_AUTH_WEB_CLIENT_ID", googleAuthWebClientId)
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
-        buildConfigField(STRING, "REVISION", properties["REVISION"]?.toString() ?: "")
-    }
-    defaultConfigs("mock") {
-        buildConfigField(STRING, "FLAVOR", "MOCK")
-    }
-    defaultConfigs("benchmark") {
-        buildConfigField(STRING, "FLAVOR", "BENCHMARK")
-    }
-    defaultConfigs("dev") {
-        buildConfigField(STRING, "FLAVOR", "DEV")
+        buildConfigField(STRING, "REVISION", revision)
+        buildConfigField(INT, "DEV_LEVEL", devLevel)
     }
 
     tasks.build.dependsOn("generateBuildKonfig")
@@ -261,11 +269,6 @@ ksp {
     useKsp2 = false // Had to disable to 'Trigger Common Metadata Generation from Native tasks' work
 }
 
-if (file("google-services.json").exists()) {
-    apply(plugin = libs.plugins.google.services.get().pluginId)
-    apply(plugin = libs.plugins.crashlytics.get().pluginId)
-}
-
 private fun loadLocalProperties() {
     val localProperties = Properties()
     val localPropertiesFile = rootDir.resolve("local.properties")
@@ -281,31 +284,40 @@ private fun loadLocalProperties() {
     }
 }
 
+private fun configureGoogleServices() {
+    val devLevel = properties["DEV_LEVEL"]?.toString()?.toIntOrNull() ?: 0
+    if (devLevel < 2) {
+        apply(plugin = libs.plugins.google.services.get().pluginId)
+        apply(plugin = libs.plugins.crashlytics.get().pluginId)
+    }
+}
+
 private fun createArchiveName(): String {
     val versionCode = libs.versions.app.release.get().toInt()
     val versionName = libs.versions.app.version.get()
-    val flavor = properties["buildkonfig.flavor"] ?: "prod"
-    val revision = properties["REVISION"]?.toString()
-    return "bricklog-$versionName-$versionCode${revision?.let { "-$it" }}-$flavor"
+    return "bricklog-$versionName-$versionCode"
 }
 
-private fun Project.configureBundleApkTask(buildType: String) {
+private fun Project.configureBundleApkTask(environment: String, buildType: String) {
+    val capitalizedEnvironment = environment.capitalize()
     val capitalizedBuildType = buildType.capitalize()
 
-    tasks.register("bundle${capitalizedBuildType}Apk") {
+    tasks.register("bundle${capitalizedEnvironment}${capitalizedBuildType}Apk") {
         group = "bundle"
-        description = "Generate universal APK from the $buildType AAB"
+        description =
+            "Generate universal APK from the ${capitalizedEnvironment}${capitalizedBuildType} AAB"
 
         val aab =
-            layout.buildDirectory.file("outputs/bundle/$buildType/$archiveName-$buildType.aab")
-        val apks = layout.buildDirectory.file("outputs/bundle/$buildType/app-$buildType.apks")
+            layout.buildDirectory.file("outputs/bundle/$environment$capitalizedBuildType/$archiveName-$environment-$buildType.aab")
+        val apks =
+            layout.buildDirectory.file("outputs/bundle/$environment$capitalizedBuildType/$archiveName-$environment-$buildType.apks")
         val apkOutput =
-            layout.buildDirectory.file("outputs/apk/$buildType/$archiveName-$buildType.apk")
+            layout.buildDirectory.file("outputs/apk/$environment/$buildType/$archiveName-$environment-$buildType.apk")
 
         inputs.file(aab)
         outputs.file(apkOutput)
 
-        dependsOn("bundle${capitalizedBuildType}")
+        dependsOn("bundle${capitalizedEnvironment}${capitalizedBuildType}")
 
         doLast {
             val signingConfig =
@@ -339,8 +351,10 @@ private fun Project.configureBundleApkTask(buildType: String) {
         notCompatibleWithConfigurationCache("Gradle's configuration cache doesn't allow serializing script object references")
     }
 }
-configureBundleApkTask("release")
-configureBundleApkTask("debug")
+configureBundleApkTask("prod", "release")
+configureBundleApkTask("prod", "debug")
+configureBundleApkTask("dev", "release")
+configureBundleApkTask("dev", "debug")
 
 data class SigningConfig(
     val keystorePath: String,

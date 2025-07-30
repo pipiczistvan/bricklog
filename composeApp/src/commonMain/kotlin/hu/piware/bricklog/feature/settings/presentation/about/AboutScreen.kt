@@ -64,7 +64,6 @@ import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.OverpassMonoTypography
 import hu.piware.bricklog.ui.theme.Shapes
 import hu.piware.bricklog.util.BuildConfig
-import hu.piware.bricklog.util.RELEASE_VERSION
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -295,7 +294,7 @@ private fun AppProfile(
                 text = stringResource(
                     Res.string.feature_settings_about_label_build_version,
                     BuildConfig.VERSION_NAME,
-                    BuildConfig.RELEASE_VERSION,
+                    BuildKonfig.RELEASE_VERSION,
                     BuildKonfig.REVISION
                 ),
                 style = OverpassMonoTypography().bodySmall
