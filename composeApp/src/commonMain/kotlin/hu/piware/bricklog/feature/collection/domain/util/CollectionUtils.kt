@@ -8,6 +8,6 @@ val defaultCollections = listOf(
     Collection(
         name = "Favourite Sets",
         icon = CollectionIcon.FAVOURITE,
-        type = CollectionType.FAVOURITE
-    )
+        type = CollectionType.FAVOURITE,
+    ),
 )

@@ -147,7 +147,7 @@ class DashboardViewModel(
                 _searchBarState.update {
                     it.copy(
                         typedQuery = "",
-                        searchQuery = ""
+                        searchQuery = "",
                     )
                 }
             }
@@ -162,13 +162,13 @@ class DashboardViewModel(
 
             DashboardNavigationDrawerAction.OnLogoutClick -> _uiState.update {
                 it.copy(
-                    showLogoutConfirm = true
+                    showLogoutConfirm = true,
                 )
             }
 
             DashboardNavigationDrawerAction.OnLogoutDismiss -> _uiState.update {
                 it.copy(
-                    showLogoutConfirm = false
+                    showLogoutConfirm = false,
                 )
             }
 
@@ -178,16 +178,15 @@ class DashboardViewModel(
                     .showSnackbarOnError()
             }
 
-
             DashboardNavigationDrawerAction.OnDeleteUserClick -> _uiState.update {
                 it.copy(
-                    showDeleteUserConfirm = true
+                    showDeleteUserConfirm = true,
                 )
             }
 
             DashboardNavigationDrawerAction.OnDeleteUserDismiss -> _uiState.update {
                 it.copy(
-                    showDeleteUserConfirm = false
+                    showDeleteUserConfirm = false,
                 )
             }
 
@@ -202,7 +201,7 @@ class DashboardViewModel(
                                     viewModelScope.launch {
                                         _eventChannel.send(DashboardEvent.LoginProposed)
                                     }
-                                }
+                                },
                             )
                         } else {
                             null
@@ -238,7 +237,7 @@ class DashboardViewModel(
             .flatMapLatest { query ->
                 watchSetDetails(
                     filterOverrides = SetFilter(limit = 10),
-                    query = query
+                    query = query,
                 )
             }
             .onEach { sets -> _searchBarState.update { it.copy(searchResults = sets) } }

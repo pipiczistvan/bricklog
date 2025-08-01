@@ -29,7 +29,7 @@ class SendNewSetNotification(
                 payloadData = mapOf(
                     "type" to NOTIFICATION_EVENT_NEW_SETS,
                     "minAppearanceDate" to newSets.minOf { it.set.infoCompleteDate!! }
-                        .toEpochMilliseconds().toString()
+                        .toEpochMilliseconds().toString(),
                 )
             }
         }
@@ -40,5 +40,5 @@ private fun List<SetDetails>.buildNotificationMessage(): String {
     val latestSets = take(2)
     val latestSetNameList = latestSets.map { it.set.name }.joinToString()
     val messagePostfix = if (latestSets.size < size) " and more." else "."
-    return "$size new items! ${latestSetNameList}${messagePostfix}"
+    return "$size new items! ${latestSetNameList}$messagePostfix"
 }

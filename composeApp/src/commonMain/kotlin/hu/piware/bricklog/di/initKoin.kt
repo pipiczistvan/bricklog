@@ -12,11 +12,11 @@ fun initKoin(config: KoinAppDeclaration?) = startKoin {
     modules(
         viewModelModule,
         useCaseModule,
-        AppModule().module
+        AppModule().module,
     )
     if (BuildKonfig.DEV_LEVEL >= DevLevels.MOCK) {
         modules(
-            mockModule
+            mockModule,
         )
     }
 }

@@ -43,7 +43,7 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
             firestore.document("user-data/$userId")
                 .set(
                     data = userPreferences.toDocument(),
-                    merge = true
+                    merge = true,
                 )
 
             Result.Success(Unit)

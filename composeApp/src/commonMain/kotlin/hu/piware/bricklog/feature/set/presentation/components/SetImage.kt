@@ -23,7 +23,8 @@ import net.engawapg.lib.zoomable.zoomable
 import org.jetbrains.compose.resources.painterResource
 
 enum class ImageSize {
-    SMALL, REGULAR
+    SMALL,
+    REGULAR,
 }
 
 @Composable
@@ -39,7 +40,7 @@ fun SetImage(
             .data(image.thumbnailURL)
             .crossfade(true)
             .build(),
-        error = painterResource(Res.drawable.lego_brick_2x3)
+        error = painterResource(Res.drawable.lego_brick_2x3),
     )
 
     val painter = when (size) {
@@ -50,7 +51,7 @@ fun SetImage(
                     .data(image.imageURL)
                     .build(),
                 placeholder = thumbnailPainter,
-                error = thumbnailPainter
+                error = thumbnailPainter,
             )
         }
     }
@@ -67,13 +68,17 @@ fun SetImage(
     Image(
         modifier = modifier
             .let {
-                if (zoomable) it.zoomable(
-                    zoomState = zoomState,
-                    scrollGesturePropagation = ScrollGesturePropagation.NotZoomed
-                ) else it
+                if (zoomable) {
+                    it.zoomable(
+                        zoomState = zoomState,
+                        scrollGesturePropagation = ScrollGesturePropagation.NotZoomed,
+                    )
+                } else {
+                    it
+                }
             },
         painter = painter,
         contentDescription = null,
-        contentScale = contentScale
+        contentScale = contentScale,
     )
 }

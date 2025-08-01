@@ -77,9 +77,15 @@ pipeline {
             }
         }
 
+        stage('Code Linting') {
+            steps {
+                sh "./gradlew ktlintCommonMainSourceSetCheck"
+            }
+        }
+
         stage('Build AAB') {
             steps {
-                sh "./gradlew clean bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
+                sh "./gradlew bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
             }
         }
 

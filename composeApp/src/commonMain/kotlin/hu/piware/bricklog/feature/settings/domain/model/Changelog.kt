@@ -30,5 +30,5 @@ enum class ChangeType {
     BUGFIX,
 
     @SerialName("refactor")
-    REFACTOR
+    REFACTOR,
 }

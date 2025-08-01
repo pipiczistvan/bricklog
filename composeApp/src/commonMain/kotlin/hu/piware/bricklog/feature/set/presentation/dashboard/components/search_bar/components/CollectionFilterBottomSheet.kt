@@ -56,7 +56,7 @@ fun CollectionFilterBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:collection_filter_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         CollectionFilterSheetContent(
             availableOptions = availableOptions,
@@ -64,7 +64,7 @@ fun CollectionFilterBottomSheet(
             onSelectionChange = onSelectionChange,
             sheetState = sheetState,
             onReset = { showResetFilterDialog = true },
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 
@@ -76,7 +76,7 @@ fun CollectionFilterBottomSheet(
             },
             onDismiss = {
                 showResetFilterDialog = false
-            }
+            },
         )
     }
 }
@@ -92,21 +92,21 @@ private fun CollectionFilterSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_search_collection_filter_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss,
             primaryActionIcon = Icons.Default.Replay,
-            onPrimaryActionClick = onReset
+            onPrimaryActionClick = onReset,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(availableOptions) { option ->
                 CollectionFilterSheetOption(
@@ -118,7 +118,7 @@ private fun CollectionFilterSheetContent(
                         } else {
                             onSelectionChange(selected + option.id)
                         }
-                    }
+                    },
                 )
             }
         }
@@ -132,35 +132,36 @@ private fun CollectionFilterSheetOption(
     onClick: () -> Unit,
 ) {
     BottomSheetOption(
-        selected = selected, onClick = onClick
+        selected = selected,
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.SmallPadding.size),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
             ) {
                 Icon(
                     imageVector = collection.icon.outlinedIcon,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = collection.name,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
             Icon(
                 modifier = Modifier.alpha(if (selected) 1f else 0f),
                 imageVector = Icons.Default.Check,
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -177,7 +178,7 @@ private fun CollectionFilterBottomSheetPreview() {
             onSelectionChange = {},
             sheetState = rememberModalBottomSheetState(),
             onReset = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

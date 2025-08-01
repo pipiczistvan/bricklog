@@ -7,8 +7,8 @@ import hu.piware.bricklog.feature.user.domain.model.UserId
 @Entity(
     tableName = "user_preferences",
     primaryKeys = [
-        "userId"
-    ]
+        "userId",
+    ],
 )
 data class UserPreferencesEntity(
     val userId: UserId,

@@ -57,14 +57,14 @@ fun SetScannerScreenRoot(
                 is SetScannerAction.OnSetClick -> onSetClick(
                     SetDetailArguments(
                         action.id,
-                        "set_scanner"
-                    )
+                        "set_scanner",
+                    ),
                 )
 
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -83,7 +83,7 @@ private fun SetScannerScreen(
                     IconButton(onClick = { onAction(SetScannerAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -91,17 +91,17 @@ private fun SetScannerScreen(
                     IconButton(onClick = { onAction(SetScannerAction.OnManualClick) }) {
                         Icon(
                             imageVector = Icons.Outlined.Info,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     navigationIconContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                )
+                    actionIconContentColor = Color.White,
+                ),
             )
-        }
+        },
     ) {
         BarcodeScannerWithPermission(
             permissionsController = koinInject<PermissionsController>(),
@@ -117,7 +117,7 @@ private fun SetScannerScreen(
                     detection = detection,
                     onClick = { set ->
                         onAction(SetScannerAction.OnSetClick(set.setID))
-                    }
+                    },
                 )
             }
         }
@@ -126,7 +126,7 @@ private fun SetScannerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.BottomCenter,
         ) {
             if (state.setDetails?.set?.name != null) {
                 Button(
@@ -134,15 +134,15 @@ private fun SetScannerScreen(
                         .padding(16.dp),
                     onClick = {
                         onAction(SetScannerAction.OnSetClick(state.setDetails.setID))
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Text(
                         text = state.setDetails.set.name,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                 }
             }
@@ -156,7 +156,7 @@ private fun SetScannerScreenPreview() {
     BricklogTheme {
         SetScannerScreen(
             state = SetScannerState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

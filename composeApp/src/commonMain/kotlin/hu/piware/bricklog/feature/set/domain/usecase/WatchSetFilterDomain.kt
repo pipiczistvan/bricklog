@@ -20,12 +20,12 @@ class WatchSetFilterDomain(
         return combine(
             themesFlow,
             packagingTypesFlow,
-            collectionsFlow
+            collectionsFlow,
         ) { themes, packagingTypes, collections ->
             SetFilterDomain(
                 themes = themes,
                 packagingTypes = packagingTypes,
-                collections = collections
+                collections = collections,
             )
         }
     }

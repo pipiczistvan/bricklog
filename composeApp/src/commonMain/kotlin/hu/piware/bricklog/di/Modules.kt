@@ -39,7 +39,7 @@ val useCaseModule = module {
         ManagerModule::class,
         UseCaseModule::class,
         ViewModelModule::class,
-    ]
+    ],
 )
 class AppModule
 
@@ -52,20 +52,28 @@ class DataModule {
 
     @Single
     @DownloadHttpClient
-    fun downloadClient(@Provided engine: HttpClientEngine) =
+    fun downloadClient(
+        @Provided engine: HttpClientEngine,
+    ) =
         HttpClientFactory.createDownloadClient(engine)
 
     @Single
     @BricksetHttpClient
-    fun bricksetClient(@Provided engine: HttpClientEngine) =
+    fun bricksetClient(
+        @Provided engine: HttpClientEngine,
+    ) =
         HttpClientFactory.createBricksetClient(engine)
 
     @Single
-    fun bricklogDatabase(@Provided factory: DatabaseFactory) =
+    fun bricklogDatabase(
+        @Provided factory: DatabaseFactory,
+    ) =
         factory.create().setDriver(BundledSQLiteDriver()).build()
 
     @Single
-    fun preferencesDatastore(@Provided factory: DatastoreFactory) = factory.create()
+    fun preferencesDatastore(
+        @Provided factory: DatastoreFactory,
+    ) = factory.create()
 }
 
 @Module

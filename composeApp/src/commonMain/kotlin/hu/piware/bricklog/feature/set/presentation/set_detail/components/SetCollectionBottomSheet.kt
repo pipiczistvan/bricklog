@@ -49,14 +49,14 @@ fun SetCollectionBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("set_details:set_collection_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         SetCollectionSheetContent(
             availableOptions = availableOptions,
             selected = selected,
             onToggleCollection = onToggleCollection,
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -71,19 +71,19 @@ private fun SetCollectionSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_detail_collections_sheet_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(availableOptions) { option ->
                 SetCollectionSheetOption(
@@ -91,7 +91,7 @@ private fun SetCollectionSheetContent(
                     selected = selected.contains(option.id),
                     onClick = {
                         onToggleCollection(option.id)
-                    }
+                    },
                 )
             }
         }
@@ -105,35 +105,36 @@ private fun SetCollectionSheetOption(
     onClick: () -> Unit,
 ) {
     BottomSheetOption(
-        selected = selected, onClick = onClick
+        selected = selected,
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.SmallPadding.size),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
             ) {
                 Icon(
                     imageVector = collection.icon.outlinedIcon,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = collection.name,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
             Icon(
                 modifier = Modifier.alpha(if (selected) 1f else 0f),
                 imageVector = Icons.Default.Check,
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -149,7 +150,7 @@ private fun SetCollectionSheetContentPreview() {
             selected = emptySet(),
             onToggleCollection = {},
             sheetState = rememberModalBottomSheetState(),
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

@@ -25,7 +25,7 @@ class WatchNewChangelog(
 
         return combine(changelogFlow, readVersionFlow) { changelog, readVersion ->
             changelog.copy(
-                releases = changelog.releases.filter { it.build > readVersion }
+                releases = changelog.releases.filter { it.build > readVersion },
             )
         }
     }

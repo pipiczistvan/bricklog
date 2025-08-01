@@ -50,7 +50,7 @@ fun DataFetchScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -70,11 +70,11 @@ private fun DataFetchScreen(
             Scaffold {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Dimens.LargePadding.size)
+                        verticalArrangement = Arrangement.spacedBy(Dimens.LargePadding.size),
                     ) {
                         LoadingIndicator(state.progress.totalProgress)
                         Text(state.progress.step.toUiText().asString())
@@ -88,10 +88,10 @@ private fun DataFetchScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
-                    onClick = { onAction(DataFetchAction.OnRetryClick) }
+                    onClick = { onAction(DataFetchAction.OnRetryClick) },
                 ) {
                     Text(stringResource(Res.string.feature_set_onboarding_data_fetch_btn_retry))
                 }
@@ -103,16 +103,16 @@ private fun DataFetchScreen(
 @Composable
 private fun LoadingIndicator(progress: Float) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         val animatedProgress by animateFloatAsState(
             targetValue = progress,
             animationSpec = tween(durationMillis = 500),
-            label = "Set update progress"
+            label = "Set update progress",
         )
         ContainedLoadingIndicator(
             modifier = Modifier
-                .size(100.dp)
+                .size(100.dp),
         )
         CircularProgressIndicator(
             modifier = Modifier
@@ -132,10 +132,10 @@ private fun DataFetchScreenPreview() {
                 UpdateSetsProgress(
                     stepProgress = 0.5f,
                     step = UpdateSetsStep.PREPARE_BATCHES,
-                    totalProgress = 0.5f
-                )
+                    totalProgress = 0.5f,
+                ),
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

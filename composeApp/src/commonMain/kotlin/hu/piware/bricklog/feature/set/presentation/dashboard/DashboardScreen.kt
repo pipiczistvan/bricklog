@@ -101,9 +101,9 @@ fun DashboardScreenRoot(
             viewModel.onAction(
                 SetSearchBarAction.OnFilterChange(
                     searchBarState.filterPreferences.copy(
-                        themes = selectedThemes
-                    )
-                )
+                        themes = selectedThemes,
+                    ),
+                ),
             )
         }
     }
@@ -113,9 +113,9 @@ fun DashboardScreenRoot(
             viewModel.onAction(
                 SetSearchBarAction.OnFilterChange(
                     searchBarState.filterPreferences.copy(
-                        packagingTypes = selectedPackagingTypes
-                    )
-                )
+                        packagingTypes = selectedPackagingTypes,
+                    ),
+                ),
             )
         }
     }
@@ -150,7 +150,7 @@ fun DashboardScreenRoot(
                 is DashboardNavigationDrawerAction.OnAboutClick -> onAboutClick()
                 is DashboardNavigationDrawerAction.OnAppearanceClick -> onAppearanceClick()
                 is DashboardNavigationDrawerAction.OnCollectionEditClick -> onCollectionEditClick(
-                    action.id
+                    action.id,
                 )
 
                 is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
@@ -158,7 +158,7 @@ fun DashboardScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -181,16 +181,16 @@ private fun DashboardScreen(
             DashboardNavigationDrawerSheet(
                 drawerState = drawerState,
                 state = navigationDrawerState,
-                onAction = onNavigationDrawerAction
+                onAction = onNavigationDrawerAction,
             )
         },
-        drawerState = drawerState
+        drawerState = drawerState,
     ) {
         Scaffold(
             topBar = {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     SetSearchBar(
                         modifier = Modifier
@@ -205,7 +205,7 @@ private fun DashboardScreen(
                         },
                     )
                 }
-            }
+            },
         ) { padding ->
             Surface(
                 modifier = Modifier
@@ -215,8 +215,8 @@ private fun DashboardScreen(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(
                     topStart = 32.dp,
-                    topEnd = 32.dp
-                )
+                    topEnd = 32.dp,
+                ),
             ) {
                 PullToRefreshColumn(
                     isRefreshing = state.areSetsRefreshing,
@@ -228,15 +228,15 @@ private fun DashboardScreen(
                             .fillMaxSize(),
                         contentPadding = PaddingValues(
                             top = Dimens.MediumPadding.size,
-                            bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding()
-                        )
+                            bottom = Dimens.MediumPadding.size + padding.calculateBottomPadding(),
+                        ),
                     ) {
                         if (state.currentUser.isAuthenticated) {
                             if (!state.userPreferences.hideGreetings) {
                                 Greetings(
                                     modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
                                     displayName = state.userPreferences.displayName
-                                        ?: state.currentUser.displayName?.split(" ")?.firstOrNull()
+                                        ?: state.currentUser.displayName?.split(" ")?.firstOrNull(),
                                 )
                             }
                         }
@@ -251,38 +251,38 @@ private fun DashboardScreen(
                                     val title =
                                         getString(
                                             Res.string.feature_set_detail_title_by_theme,
-                                            themeName
+                                            themeName,
                                         )
 
                                     onAction(
                                         DashboardAction.OnSearchSets(
                                             arguments = SetListArguments(
                                                 filterOverrides = SetFilter(
-                                                    themes = setOf(item.theme)
+                                                    themes = setOf(item.theme),
                                                 ),
-                                                title = title
-                                            )
-                                        )
+                                                title = title,
+                                            ),
+                                        ),
                                     )
                                 }
-                            }
+                            },
                         )
 
                         TextButton(
                             modifier = Modifier
                                 .padding(
                                     top = Dimens.SmallPadding.size,
-                                    end = Dimens.SmallPadding.size
+                                    end = Dimens.SmallPadding.size,
                                 )
                                 .align(Alignment.End),
-                            onClick = { onAction(DashboardAction.OnThemeListClick) }
+                            onClick = { onAction(DashboardAction.OnThemeListClick) },
                         ) {
                             Text("Show all themes")
                         }
 
                         FeaturedSets(
                             state = state,
-                            onAction = onAction
+                            onAction = onAction,
                         )
                     }
                 }
@@ -300,14 +300,14 @@ private fun DashboardScreen(
     if (state.showLogoutConfirm) {
         LogoutConfirmationBottomSheet(
             onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutDismiss) },
-            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutConfirm) }
+            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutConfirm) },
         )
     }
 
     if (state.showDeleteUserConfirm) {
         DeleteUserConfirmationDialog(
             onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserDismiss) },
-            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserConfirm) }
+            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserConfirm) },
         )
     }
 }
@@ -318,19 +318,19 @@ private fun Greetings(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.padding(Dimens.MediumPadding.size)
+        modifier = modifier.padding(Dimens.MediumPadding.size),
     ) {
         Text(
             text = stringResource(Res.string.feature_set_dashboard_title_greetings),
             style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         if (displayName != null) {
             Text(
                 text = " $displayName",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -342,7 +342,7 @@ private fun FeaturedSets(
     onAction: (DashboardAction) -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
     ) {
         for (type in FeaturedSetType.entries) {
             if (state.userPreferences.hiddenFeaturedSets.none { it == type }) {
@@ -384,9 +384,9 @@ private fun DashboardFeaturedSetsRow(
                 DashboardAction.OnSearchSets(
                     SetListArguments(
                         filterOverrides = filterOverrides,
-                        title = title
-                    )
-                )
+                        title = title,
+                    ),
+                ),
             )
         },
         onSetClick = { set ->
@@ -394,11 +394,11 @@ private fun DashboardFeaturedSetsRow(
                 DashboardAction.OnSetClick(
                     SetDetailArguments(
                         set.setID,
-                        sharedElementPrefix
-                    )
-                )
+                        sharedElementPrefix,
+                    ),
+                ),
             )
-        }
+        },
     )
 }
 
@@ -408,13 +408,13 @@ private fun DashboardScreenPreview() {
     BricklogTheme {
         DashboardScreen(
             state = DashboardState(
-                currentUser = PreviewData.user
+                currentUser = PreviewData.user,
             ),
             onAction = {},
             searchBarState = SetSearchBarState(),
             onSearchBarAction = {},
             navigationDrawerState = DashboardNavigationDrawerState(),
-            onNavigationDrawerAction = {}
+            onNavigationDrawerAction = {},
         )
     }
 }

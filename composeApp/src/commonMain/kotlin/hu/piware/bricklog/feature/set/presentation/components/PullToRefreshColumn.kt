@@ -28,7 +28,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_ref
 import bricklog.composeapp.generated.resources.feature_set_dashboard_pull_to_refresh_label_release
 import org.jetbrains.compose.resources.StringResource
 
-private const val maxHeight = 100
+private const val MAX_HEIGHT = 100
 
 @Composable
 fun PullToRefreshColumn(
@@ -45,7 +45,7 @@ fun PullToRefreshColumn(
                 state.distanceFraction >= 1f -> RefreshIndicatorState.ReachedThreshold
                 state.distanceFraction > 0f -> RefreshIndicatorState.PullingDown
                 else -> RefreshIndicatorState.Default
-            }
+            },
         )
     }
 
@@ -54,16 +54,15 @@ fun PullToRefreshColumn(
             .pullToRefresh(
                 state = state,
                 isRefreshing = isRefreshing,
-                onRefresh = onRefresh
+                onRefresh = onRefresh,
             ),
     ) {
         Box(
             modifier = modifier
-                .height((state.distanceFraction * maxHeight).dp)
+                .height((state.distanceFraction * MAX_HEIGHT).dp),
         )
         content()
     }
-
 
     PullToRefreshIndicator(
         indicatorState = indicatorState,
@@ -83,15 +82,15 @@ private fun PullToRefreshIndicator(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(maxHeight.dp)
-                .offset(y = (-maxHeight + pullToRefreshProgress * maxHeight).dp),
+                .height(MAX_HEIGHT.dp)
+                .offset(y = (-MAX_HEIGHT + pullToRefreshProgress * MAX_HEIGHT).dp),
             contentAlignment = Alignment.Center,
         ) {
             if (indicatorState == RefreshIndicatorState.Refreshing) {
                 ContainedLoadingIndicator()
             } else {
                 ContainedLoadingIndicator(
-                    progress = { pullToRefreshProgress / 2f }
+                    progress = { pullToRefreshProgress / 2f },
                 )
             }
         }
@@ -102,5 +101,5 @@ private enum class RefreshIndicatorState(val messageRes: StringResource) {
     Default(Res.string.feature_set_dashboard_pull_to_refresh_label_complete),
     PullingDown(Res.string.feature_set_dashboard_pull_to_refresh_label_pull),
     ReachedThreshold(Res.string.feature_set_dashboard_pull_to_refresh_label_release),
-    Refreshing(Res.string.feature_set_dashboard_pull_to_refresh_label_loading)
+    Refreshing(Res.string.feature_set_dashboard_pull_to_refresh_label_loading),
 }

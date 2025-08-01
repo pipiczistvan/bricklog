@@ -120,7 +120,7 @@ class OfflineFirstCollectionRepository(
             remoteDataSource.removeSetFromCollections(
                 sessionManager.currentUserId,
                 setId,
-                collectionIds
+                collectionIds,
             )
                 .onError { return it }
         }

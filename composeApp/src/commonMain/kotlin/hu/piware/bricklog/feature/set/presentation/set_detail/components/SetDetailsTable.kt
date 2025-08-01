@@ -32,12 +32,12 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
     val (oddBackgroundColor, evenBackgroundColor) = when (swapColors) {
         false -> Pair(
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
         )
 
         true -> Pair(
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
         )
     }
 
@@ -45,14 +45,14 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(oddBackgroundColor)
+                .background(oddBackgroundColor),
         ) {
             columns.forEach { column ->
                 Box(
                     modifier = Modifier
                         .weight(columnWeight)
                         .padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     when (column) {
                         is TableColumn.DrawableTableColumn ->
@@ -60,7 +60,7 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
                                 modifier = Modifier
                                     .size(22.dp),
                                 painter = painterResource(column.drawableRes),
-                                contentDescription = stringResource(column.titleRes)
+                                contentDescription = stringResource(column.titleRes),
                             )
 
                         is TableColumn.ImageVectorTableColumn ->
@@ -68,10 +68,9 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
                                 modifier = Modifier
                                     .size(22.dp),
                                 imageVector = column.icon,
-                                contentDescription = stringResource(column.titleRes)
+                                contentDescription = stringResource(column.titleRes),
                             )
                     }
-
                 }
             }
         }
@@ -79,20 +78,20 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(evenBackgroundColor)
+                .background(evenBackgroundColor),
         ) {
             columns.forEach { column ->
                 Box(
                     modifier = Modifier
                         .weight(columnWeight)
                         .padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = stringResource(column.titleRes),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -101,19 +100,19 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(oddBackgroundColor)
+                .background(oddBackgroundColor),
         ) {
             columns.forEach { column ->
                 Box(
                     modifier = Modifier
                         .weight(columnWeight)
                         .padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = column.data ?: "-",
                         style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -126,11 +125,11 @@ fun SetDetailsTable(columns: List<TableColumn>, swapColors: Boolean) {
 private fun SetDetailsTablePreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetDetailsTable(
                 columns = createFirstSetDetailTableColumns(PreviewData.sets[0]),
-                swapColors = false
+                swapColors = false,
             )
         }
     }

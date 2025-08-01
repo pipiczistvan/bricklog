@@ -62,28 +62,28 @@ fun SetFilterRow(
     Row(
         modifier = modifier
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Spacer(Modifier.size(Dimens.SmallPadding.size))
         StatusChip(
             enabled = filterOverrides?.statuses == null,
             selectedStatuses = mergedFilter.statuses,
-            onClick = { showStatusFilterSheet = true }
+            onClick = { showStatusFilterSheet = true },
         )
         ReleaseDateChip(
             enabled = filterOverrides?.launchDate == null,
             dateFilter = mergedFilter.launchDate,
-            onClick = { showReleaseDateFilterSheet = true }
+            onClick = { showReleaseDateFilterSheet = true },
         )
         ThemeChip(
             enabled = filterOverrides?.themes == null,
             selectedThemes = mergedFilter.themes,
-            onClick = { showThemeFilterSheet = true }
+            onClick = { showThemeFilterSheet = true },
         )
         PackagingTypeChip(
             enabled = filterOverrides?.packagingTypes == null,
             selectedPackagingTypes = mergedFilter.packagingTypes,
-            onClick = { showPackagingTypeFilterSheet = true }
+            onClick = { showPackagingTypeFilterSheet = true },
         )
         CollectionChip(
             enabled = filterOverrides?.collectionIds == null,
@@ -91,12 +91,12 @@ fun SetFilterRow(
                 .mapNotNull { collectionId ->
                     filterDomain.collections.firstOrNull { it.id == collectionId }
                 },
-            onClick = { showCollectionFilterSheet = true }
+            onClick = { showCollectionFilterSheet = true },
         )
         ShowIncompleteChip(
             enabled = filterOverrides?.showIncomplete == null,
             show = mergedFilter.showIncomplete,
-            onClick = { onFilterPreferencesChange(filterPreferences.copy(showIncomplete = it)) }
+            onClick = { onFilterPreferencesChange(filterPreferences.copy(showIncomplete = it)) },
         )
         Spacer(Modifier.size(Dimens.SmallPadding.size))
     }
@@ -105,7 +105,7 @@ fun SetFilterRow(
         DateFilterBottomSheet(
             selected = filterPreferences.launchDate,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(launchDate = it)) },
-            onDismiss = { showReleaseDateFilterSheet = false }
+            onDismiss = { showReleaseDateFilterSheet = false },
         )
     }
 
@@ -114,7 +114,7 @@ fun SetFilterRow(
             availableOptions = SetStatus.entries,
             selected = filterPreferences.statuses,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(statuses = it)) },
-            onDismiss = { showStatusFilterSheet = false }
+            onDismiss = { showStatusFilterSheet = false },
         )
     }
 
@@ -123,7 +123,7 @@ fun SetFilterRow(
             availableOptions = filterDomain.themes,
             selected = filterPreferences.themes,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(themes = it)) },
-            onDismiss = { showThemeFilterSheet = false }
+            onDismiss = { showThemeFilterSheet = false },
         )
     }
 
@@ -132,7 +132,7 @@ fun SetFilterRow(
             availableOptions = filterDomain.packagingTypes,
             selected = filterPreferences.packagingTypes,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(packagingTypes = it)) },
-            onDismiss = { showPackagingTypeFilterSheet = false }
+            onDismiss = { showPackagingTypeFilterSheet = false },
         )
     }
 
@@ -141,7 +141,7 @@ fun SetFilterRow(
             availableOptions = filterDomain.collections,
             selected = filterPreferences.collectionIds,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(collectionIds = it)) },
-            onDismiss = { showCollectionFilterSheet = false }
+            onDismiss = { showCollectionFilterSheet = false },
         )
     }
 }
@@ -159,13 +159,13 @@ private fun ReleaseDateChip(
             is DateFilter.Custom -> dateFilter.format()
 
             is DateFilter.OneWeek, DateFilter.OneMonth, DateFilter.OneYear -> stringResource(
-                dateFilter.option.titleRes
+                dateFilter.option.titleRes,
             )
         },
         isDefaultSelected = dateFilter is DateFilter.AnyTime,
         showTrailingIcon = true,
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -189,7 +189,7 @@ private fun ThemeChip(
         isDefaultSelected = selectedThemes.isEmpty(),
         showTrailingIcon = true,
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -209,7 +209,7 @@ private fun PackagingTypeChip(
         isDefaultSelected = selectedPackagingTypes.isEmpty(),
         showTrailingIcon = true,
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -229,7 +229,7 @@ private fun StatusChip(
         isDefaultSelected = selectedStatuses.isEmpty(),
         showTrailingIcon = true,
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -249,7 +249,7 @@ private fun CollectionChip(
         isDefaultSelected = selectedCollections.isEmpty(),
         showTrailingIcon = true,
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -264,7 +264,7 @@ private fun ShowIncompleteChip(
         title = stringResource(Res.string.feature_set_search_chip_show_incomplete),
         isDefaultSelected = !show,
         enabled = enabled,
-        onClick = { onClick(!show) }
+        onClick = { onClick(!show) },
     )
 }
 
@@ -276,7 +276,7 @@ private fun SetFilterPreferences.mergeWithFilter(filter: SetFilter?): SetFilterP
         packagingTypes = filter?.packagingTypes ?: packagingTypes,
         statuses = filter?.statuses ?: statuses,
         showIncomplete = filter?.showIncomplete ?: showIncomplete,
-        collectionIds = filter?.collectionIds ?: collectionIds
+        collectionIds = filter?.collectionIds ?: collectionIds,
     )
 }
 
@@ -285,7 +285,7 @@ private fun SetFilterPreferences.mergeWithFilter(filter: SetFilter?): SetFilterP
 private fun SetFilterRowPreview() {
     MaterialTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetFilterRow(
                 filterPreferences = SetFilterPreferences(),

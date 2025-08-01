@@ -25,7 +25,7 @@ class KtorRemoteSetInstructionDataSource(
 
     override suspend fun getInstructions(setId: Int): Result<List<Instruction>, DataError.Remote> {
         return safeCall<BricksetInstructionsDto>(
-            transform = { it.decodeBody() }
+            transform = { it.decodeBody() },
         ) {
             httpClient.get(BASE_URL) {
                 parameter("apiKey", BuildKonfig.BRICKSET_API_KEY)

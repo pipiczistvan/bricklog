@@ -84,7 +84,7 @@ fun AboutScreenRoot(
                 AboutAction.OnChangelogClick -> onChangelogClick()
                 AboutAction.OnLicenseClick -> onLicenseClick()
             }
-        }
+        },
     )
 }
 
@@ -102,12 +102,12 @@ private fun AboutScreen(
                     IconButton(onClick = { onAction(AboutAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         ContentColumn(
             modifier = Modifier
@@ -116,24 +116,24 @@ private fun AboutScreen(
             verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
             contentPadding = PaddingValues(
                 top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding()
-            )
+                bottom = padding.calculateBottomPadding(),
+            ),
         ) {
             AppProfile(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(24.dp),
             )
             ActionsTable(
                 onAction = onAction,
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(12.dp),
             )
             HorizontalDivider()
             DevelopmentTeamSection(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(12.dp),
             )
             HorizontalDivider()
             ToolsSection(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(12.dp),
             )
         }
     }
@@ -149,18 +149,18 @@ private fun ToolsSection(
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
             text = stringResource(Res.string.feature_settings_about_title_tools),
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 InfoCard(
                     modifier = Modifier.weight(1f),
@@ -170,7 +170,7 @@ private fun ToolsSection(
                         scope.launch {
                             uriHandler.openUri(getString(Res.string.feature_settings_about_link_brickset))
                         }
-                    }
+                    },
                 )
                 InfoCard(
                     modifier = Modifier.weight(1f),
@@ -180,7 +180,7 @@ private fun ToolsSection(
                         scope.launch {
                             uriHandler.openUri(getString(Res.string.feature_settings_about_link_kmp))
                         }
-                    }
+                    },
                 )
             }
         }
@@ -194,12 +194,12 @@ private fun DevelopmentTeamSection(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         InfoCard(
             title = stringResource(Res.string.feature_settings_about_title_developed_by),
             description = stringResource(Res.string.feature_settings_about_label_developer),
-            onClick = {}
+            onClick = {},
         )
         Text(
             text = stringResource(Res.string.feature_settings_about_label_made_in),
@@ -219,7 +219,7 @@ private fun ActionsTable(
     Column(
         modifier = modifier
             .clip(Shapes.large)
-            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
+            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)),
     ) {
         ActionRow(
             title = stringResource(Res.string.feature_settings_about_btn_source_code),
@@ -232,10 +232,10 @@ private fun ActionsTable(
                 Icon(
                     painter = painterResource(Res.drawable.github_logo),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground,
                 )
             },
-            navigationType = ActionNavigationType.LINK
+            navigationType = ActionNavigationType.LINK,
         )
         HorizontalDivider()
         ActionRow(
@@ -247,10 +247,10 @@ private fun ActionsTable(
             startIcon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Notes,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             },
-            navigationType = ActionNavigationType.IN_APP
+            navigationType = ActionNavigationType.IN_APP,
         )
         HorizontalDivider()
         ActionRow(
@@ -265,7 +265,7 @@ private fun ActionsTable(
                     contentDescription = null,
                 )
             },
-            navigationType = ActionNavigationType.IN_APP
+            navigationType = ActionNavigationType.IN_APP,
         )
     }
 }
@@ -276,28 +276,28 @@ private fun AppProfile(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             modifier = Modifier.width(100.dp),
             painter = painterResource(Res.drawable.app_logo),
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Column {
             Text(
                 text = stringResource(Res.string.app_name),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = stringResource(
                     Res.string.feature_settings_about_label_build_version,
                     BuildConfig.VERSION_NAME,
                     BuildKonfig.RELEASE_VERSION,
-                    BuildKonfig.REVISION
+                    BuildKonfig.REVISION,
                 ),
-                style = OverpassMonoTypography().bodySmall
+                style = OverpassMonoTypography().bodySmall,
             )
         }
     }
@@ -308,7 +308,7 @@ private fun AppProfile(
 private fun AboutScreenPreview() {
     BricklogTheme {
         AboutScreen(
-            onAction = {}
+            onAction = {},
         )
     }
 }

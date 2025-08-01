@@ -45,6 +45,7 @@ moko = "0.19.1"                                 # https://github.com/icerockdev/
 qrose = "1.0.1"                                 # https://github.com/alexzhirkevich/qrose
 uri-kmp = "0.0.20"                              # https://github.com/eygraber/uri-kmp
 zoomable = "2.8.1"                              # https://github.com/usuiat/Zoomable
+ktlint = "13.0.0"                               # https://github.com/JLLeitschuh/ktlint-gradle
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -140,6 +141,7 @@ android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineprofile" }
 firebaseAppdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppdistribution" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 [bundles]
 ktor = [

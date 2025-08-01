@@ -23,7 +23,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ActionNavigationType {
     IN_APP,
-    LINK
+    LINK,
 }
 
 @Composable
@@ -36,7 +36,7 @@ fun ActionRow(
 ) {
     Box(
         modifier = modifier
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
     ) {
         Row(
             modifier = Modifier
@@ -47,7 +47,7 @@ fun ActionRow(
             startIcon()
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = title
+                text = title,
             )
             if (navigationType != null) {
                 Spacer(modifier = Modifier.weight(1f))
@@ -57,7 +57,7 @@ fun ActionRow(
                         ActionNavigationType.LINK -> Icons.AutoMirrored.Filled.OpenInNew
                     },
                     contentDescription = null,
-                    tint = LocalContentColor.current.copy(alpha = 0.6f)
+                    tint = LocalContentColor.current.copy(alpha = 0.6f),
                 )
             }
         }
@@ -69,7 +69,7 @@ fun ActionRow(
 private fun ActionRowPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             ActionRow(
                 title = "Test",

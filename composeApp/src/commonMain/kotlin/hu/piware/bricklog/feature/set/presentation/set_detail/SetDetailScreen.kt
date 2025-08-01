@@ -89,13 +89,13 @@ fun SetDetailScreenRoot(
             when (action) {
                 is SetDetailAction.OnBackClick -> onBackClick()
                 is SetDetailAction.OnImageClick -> onImageClick(
-                    SetImageArguments(action.setId, state.sharedElementPrefix)
+                    SetImageArguments(action.setId, state.sharedElementPrefix),
                 )
 
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -118,14 +118,14 @@ private fun SetDetailScreen(
                     FilledIconButton(
                         onClick = { onAction(SetDetailAction.OnBackClick) },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
-                            containerColor = Color.White
+                            containerColor = Color.White,
                         ),
-                        shapes = IconButtonDefaults.shapes()
+                        shapes = IconButtonDefaults.shapes(),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.navigation_go_back),
-                            tint = Color.Black
+                            tint = Color.Black,
                         )
                     }
                 },
@@ -134,29 +134,29 @@ private fun SetDetailScreen(
                         modifier = Modifier.testTag("set_detail:favourite_btn"),
                         onClick = {
                             onAction(
-                                SetDetailAction.OnToggleFavourite(state.setDetails.setID)
+                                SetDetailAction.OnToggleFavourite(state.setDetails.setID),
                             )
                         },
                         colors = IconButtonDefaults.filledIconButtonColors().copy(
-                            containerColor = Color.White
+                            containerColor = Color.White,
                         ),
-                        shapes = IconButtonDefaults.shapes()
+                        shapes = IconButtonDefaults.shapes(),
                     ) {
                         Icon(
                             imageVector = if (state.setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
                             contentDescription = stringResource(Res.string.navigation_go_back),
-                            tint = Color.Black
+                            tint = Color.Black,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors()
-                    .copy(containerColor = Color.Transparent)
+                    .copy(containerColor = Color.Transparent),
             )
-        }
+        },
     ) { padding ->
         BlurredImageBackground(
             modifier = Modifier.fillMaxSize(),
-            image = state.setDetails.set.image
+            image = state.setDetails.set.image,
         )
 
         Content(
@@ -166,7 +166,7 @@ private fun SetDetailScreen(
             availableCollections = state.availableCollections,
             sharedElementPrefix = state.sharedElementPrefix,
             onAction = onAction,
-            paddingValues = padding
+            paddingValues = padding,
         )
     }
 }
@@ -187,10 +187,10 @@ private fun Content(
             .padding(horizontal = Dimens.MediumPadding.size),
         contentPadding = PaddingValues(
             top = paddingValues.calculateTopPadding(),
-            bottom = Dimens.MediumPadding.size + paddingValues.calculateBottomPadding()
+            bottom = Dimens.MediumPadding.size + paddingValues.calculateBottomPadding(),
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
     ) {
         Spacer(modifier = Modifier.height(50.dp))
 
@@ -199,20 +199,20 @@ private fun Content(
             sharedElementPrefix = sharedElementPrefix,
             onClick = {
                 onAction(SetDetailAction.OnImageClick(setDetails.setID))
-            }
+            },
         )
 
         Text(
             text = setDetails.set.name ?: "",
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         SetDetails(
             setDetails = setDetails,
             instructions = instructions,
             availableCollections = availableCollections,
-            onAction = onAction
+            onAction = onAction,
         )
     }
 }
@@ -227,11 +227,11 @@ private fun SetHeaderImage(
         modifier = Modifier
             .height(250.dp)
             .aspectRatio(1f)
-            .sharedElement("${sharedElementPrefix}/image/${setDetails.setID}"),
+            .sharedElement("$sharedElementPrefix/image/${setDetails.setID}"),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 15.dp
-        )
+            defaultElevation = 15.dp,
+        ),
     ) {
         val interactionSource = remember { MutableInteractionSource() }
 
@@ -244,8 +244,8 @@ private fun SetHeaderImage(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = onClick
-                )
+                    onClick = onClick,
+                ),
         )
     }
 }
@@ -261,10 +261,10 @@ private fun SetDetails(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Column(
-            modifier = Modifier.clip(Shapes.medium)
+            modifier = Modifier.clip(Shapes.medium),
         ) {
             SetDetailsTable(createFirstSetDetailTableColumns(setDetails), swapColors = false)
             SetDetailsTable(createSecondSetDetailTableColumns(setDetails), swapColors = true)
@@ -273,7 +273,7 @@ private fun SetDetails(
 
         SetInstructionsTable(
             modifier = Modifier.clip(Shapes.medium),
-            instructions = instructions
+            instructions = instructions,
         )
 
         SetCollectionsTable(
@@ -282,16 +282,16 @@ private fun SetDetails(
             availableCollections = availableCollections,
             onToggleCollection = {
                 onAction(SetDetailAction.OnToggleCollection(setDetails.setID, it))
-            }
+            },
         )
 
         setDetails.set.barcodeEAN?.let {
             TitledSetDetail(
-                title = stringResource(Res.string.feature_set_detail_label_barcode_ean)
+                title = stringResource(Res.string.feature_set_detail_label_barcode_ean),
             ) {
                 SetBarcode(
                     barcode = it,
-                    format = BarcodeType.EAN13
+                    format = BarcodeType.EAN13,
                 )
             }
 
@@ -302,11 +302,11 @@ private fun SetDetails(
 
         setDetails.set.barcodeUPC?.let {
             TitledSetDetail(
-                title = stringResource(Res.string.feature_set_detail_label_barcode_upc)
+                title = stringResource(Res.string.feature_set_detail_label_barcode_upc),
             ) {
                 SetBarcode(
                     barcode = it,
-                    format = BarcodeType.UPCA
+                    format = BarcodeType.UPCA,
                 )
             }
         }
@@ -319,11 +319,11 @@ private fun TitledSetDetail(title: String, content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
 
         content()
@@ -336,9 +336,9 @@ private fun SetDetailScreenPreview() {
     BricklogTheme {
         SetDetailScreen(
             state = SetDetailState(
-                setDetails = PreviewData.sets[0]
+                setDetails = PreviewData.sets[0],
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

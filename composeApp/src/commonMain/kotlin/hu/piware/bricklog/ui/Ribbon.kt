@@ -28,23 +28,23 @@ fun Modifier.drawDevLevelRibbon() = composed(
                 when (BuildKonfig.DEV_LEVEL) {
                     DevLevels.DEVELOPMENT -> it.drawDiagonalLabel(
                         text = "DEV",
-                        color = Color.Blue.copy(alpha = 0.5f)
+                        color = Color.Blue.copy(alpha = 0.5f),
                     )
 
                     DevLevels.MOCK -> it.drawDiagonalLabel(
                         text = "MOCK",
-                        color = Color.Red.copy(alpha = 0.5f)
+                        color = Color.Red.copy(alpha = 0.5f),
                     )
 
                     DevLevels.BENCHMARK -> it.drawDiagonalLabel(
                         text = "BENCHMARK",
-                        color = Color.Green.copy(alpha = 0.5f)
+                        color = Color.Green.copy(alpha = 0.5f),
                     )
 
                     else -> it
                 }
             }
-    }
+    },
 )
 
 // https://stackoverflow.com/a/78153809
@@ -59,13 +59,12 @@ fun Modifier.drawDiagonalLabel(
         val currentStyle: TextStyle = style ?: TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            color = Color.White,
         )
 
         val textLayoutResult: TextLayoutResult = remember {
             textMeasurer.measure(text = AnnotatedString(text), style = currentStyle)
         }
-
 
         Modifier
             .clipToBounds()
@@ -81,7 +80,7 @@ fun Modifier.drawDiagonalLabel(
 
                 val rect = Rect(
                     offset = Offset(canvasWidth - rectWidth, 0f),
-                    size = Size(rectWidth, rectHeight)
+                    size = Size(rectWidth, rectHeight),
                 )
 
                 val sqrt = sqrt(rectWidth / 2f)
@@ -94,15 +93,15 @@ fun Modifier.drawDiagonalLabel(
                             degrees = 45f,
                             pivot = Offset(
                                 canvasWidth - rectWidth / 2,
-                                translatePos
-                            )
+                                translatePos,
+                            ),
                         )
-                    }
+                    },
                 ) {
                     drawRect(
                         color = color,
                         topLeft = rect.topLeft,
-                        size = rect.size
+                        size = rect.size,
                     )
                     drawText(
                         textMeasurer = textMeasurer,
@@ -110,11 +109,10 @@ fun Modifier.drawDiagonalLabel(
                         style = currentStyle,
                         topLeft = Offset(
                             rect.left + (rectWidth - textWidth) / 2f,
-                            rect.top + (rect.bottom - textHeight) / 2f
-                        )
+                            rect.top + (rect.bottom - textHeight) / 2f,
+                        ),
                     )
                 }
-
             }
-    }
+    },
 )

@@ -25,7 +25,7 @@ fun CollectionDeleteConfirmDialog(
         icon = {
             Icon(
                 imageVector = Icons.Outlined.DeleteOutline,
-                contentDescription = null
+                contentDescription = null,
             )
         },
         title = {
@@ -37,18 +37,18 @@ fun CollectionDeleteConfirmDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = onConfirmation
+                onClick = onConfirmation,
             ) {
                 Text(stringResource(Res.string.feature_collection_delete_confirm_dialog_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onDismiss
+                onClick = onDismiss,
             ) {
                 Text(stringResource(Res.string.feature_collection_delete_confirm_dialog_btn_cancel))
             }
-        }
+        },
     )
 }
 
@@ -58,7 +58,7 @@ private fun CollectionDeleteConfirmDialogPreview() {
     BricklogTheme {
         CollectionDeleteConfirmDialog(
             onConfirmation = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

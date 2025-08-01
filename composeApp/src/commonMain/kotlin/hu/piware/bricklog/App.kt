@@ -68,7 +68,7 @@ fun App(
     val themeOption by koinInject<WatchThemeOption>()().collectAsStateWithLifecycle(ThemeOption.SYSTEM)
 
     BricklogTheme(
-        themeOption = themeOption
+        themeOption = themeOption,
     ) {
         LocalizedApp {
             val navController = rememberNavController()
@@ -82,9 +82,9 @@ fun App(
                     .drawDevLevelRibbon(),
                 snackbarHost = {
                     SnackbarHost(
-                        hostState = snackbarHostState
+                        hostState = snackbarHostState,
                     )
-                }
+                },
             ) {
                 SharedTransitionLayout {
                     CompositionLocalProvider(LocalSharedTransitionScope provides this) {
@@ -102,7 +102,7 @@ fun App(
                             },
                             popExitTransition = {
                                 scaleOutOfContainer()
-                            }
+                            },
                         ) {
                             rootGraph(navController)
                         }
@@ -126,7 +126,7 @@ private fun observeSnackbarEvents(
             val result = snackbarHostState.showSnackbar(
                 message = event.message.getAsString(),
                 actionLabel = event.action?.name?.getAsString(),
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Long,
             )
 
             if (result == SnackbarResult.ActionPerformed) {
@@ -154,12 +154,12 @@ private fun observeNotificationEvents(
                                 title = getString(Res.string.feature_set_dashboard_title_new_items),
                                 filterOverrides = newItemsFilter.copy(
                                     appearanceDate = DateFilter.Custom(
-                                        startDate = event.startDate
+                                        startDate = event.startDate,
                                     ),
                                 ),
-                                showFilterBar = false
-                            )
-                        )
+                                showFilterBar = false,
+                            ),
+                        ),
                     ) {
                         launchSingleTop = true
                     }

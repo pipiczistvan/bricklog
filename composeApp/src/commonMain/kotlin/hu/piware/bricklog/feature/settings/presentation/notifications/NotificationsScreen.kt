@@ -64,7 +64,7 @@ fun NotificationsScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -83,33 +83,33 @@ private fun NotificationsScreen(
                     IconButton(onClick = { onAction(NotificationsAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
                 ),
             )
-        }
+        },
     ) { padding ->
         ContentColumn(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = Dimens.MediumPadding.size)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+            verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
         ) {
             if (!state.notificationPermissionGranted) {
                 NotificationSettingsCard(
-                    onButtonClick = { onAction(NotificationsAction.OpenSettings) }
+                    onButtonClick = { onAction(NotificationsAction.OpenSettings) },
                 )
             }
 
             GeneralNotificationPreferences(
                 preferences = state.notificationPreferences,
                 enabled = state.notificationPermissionGranted,
-                onChange = { onAction(NotificationsAction.OnNotificationPreferenceChange(it)) }
+                onChange = { onAction(NotificationsAction.OnNotificationPreferenceChange(it)) },
             )
         }
     }
@@ -125,7 +125,7 @@ private fun GeneralNotificationPreferences(
         val generalState = preferences.generalState()
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             TriStateCheckbox(
                 enabled = enabled,
@@ -136,22 +136,22 @@ private fun GeneralNotificationPreferences(
                         ToggleableState.Off -> onChange(NotificationPreferences.allEnabled())
                         ToggleableState.Indeterminate -> onChange(NotificationPreferences.allEnabled())
                     }
-                }
+                },
             )
             Text(text = stringResource(Res.string.feature_settings_notifications_title_general))
         }
 
         Column(
             modifier = Modifier
-                .padding(start = Dimens.LargePadding.size)
+                .padding(start = Dimens.LargePadding.size),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Checkbox(
                     enabled = enabled,
                     checked = preferences.newSets,
-                    onCheckedChange = { onChange(preferences.copy(newSets = it)) }
+                    onCheckedChange = { onChange(preferences.copy(newSets = it)) },
                 )
                 Text(text = stringResource(Res.string.feature_settings_notifications_title_new_items))
             }
@@ -167,19 +167,19 @@ private fun NotificationSettingsCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
         ) {
             Text(
                 text = stringResource(Res.string.feature_settings_notifications_title_permission),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
-                text = stringResource(Res.string.feature_settings_notifications_label_permission)
+                text = stringResource(Res.string.feature_settings_notifications_label_permission),
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onButtonClick
+                onClick = onButtonClick,
             ) {
                 Text(stringResource(Res.string.feature_settings_notifications_btn_settings))
             }
@@ -193,7 +193,7 @@ private fun NotificationsScreenPreview() {
     BricklogTheme {
         NotificationsScreen(
             state = NotificationsState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

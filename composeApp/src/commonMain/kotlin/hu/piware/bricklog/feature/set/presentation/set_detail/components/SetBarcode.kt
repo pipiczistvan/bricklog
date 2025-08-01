@@ -32,12 +32,12 @@ fun SetBarcode(
             .background(Color.White)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         val barCodePainter = rememberBarcodePainter(
             data = barcode,
             type = format,
-            brush = SolidColor(Color.Black)
+            brush = SolidColor(Color.Black),
         )
         Image(
             painter = barCodePainter,
@@ -45,13 +45,13 @@ fun SetBarcode(
             modifier = Modifier
                 .widthIn(max = 250.dp)
                 .fillMaxWidth()
-                .heightIn(max = 100.dp)
+                .heightIn(max = 100.dp),
         )
 
         Text(
             text = barcode,
             style = MaterialTheme.typography.labelMedium,
-            color = Color.Black
+            color = Color.Black,
         )
     }
 }

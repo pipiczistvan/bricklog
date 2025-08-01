@@ -16,6 +16,6 @@ fun <T> MutableStateFlow<T>.asStateFlowIn(
         .stateIn(
             scope,
             SharingStarted.WhileSubscribed(5000L),
-            value
+            value,
         )
 }

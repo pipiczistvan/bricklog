@@ -46,16 +46,16 @@ fun SearchBarInputField(
         targetValue = if (expanded) 0f else 1f,
         animationSpec = tween(
             durationMillis = 200,
-            easing = FastOutSlowInEasing
+            easing = FastOutSlowInEasing,
         ),
-        label = "iconAngleProgress"
+        label = "iconAngleProgress",
     )
 
     CompositionLocalProvider(
         LocalTextSelectionColors provides TextSelectionColors(
             handleColor = MaterialTheme.colorScheme.primaryContainer,
-            backgroundColor = MaterialTheme.colorScheme.primaryContainer
-        )
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         SearchBarDefaults.InputField(
             modifier = modifier,
@@ -72,12 +72,12 @@ fun SearchBarInputField(
                 if (!expanded) {
                     IconButton(
                         modifier = Modifier.testTag("search_bar_input_field:drawer_button"),
-                        onClick = onDrawerClick
+                        onClick = onDrawerClick,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = null,
-                            modifier = Modifier.rotate((1f - iconAngleProgress) * 270f)
+                            modifier = Modifier.rotate((1f - iconAngleProgress) * 270f),
                         )
                     }
                 } else {
@@ -86,12 +86,12 @@ fun SearchBarInputField(
                             .testTag("search_bar:back_button"),
                         onClick = {
                             onExpandedChange(false)
-                        }
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
-                            modifier = Modifier.rotate(iconAngleProgress * -270f)
+                            modifier = Modifier.rotate(iconAngleProgress * -270f),
                         )
                     }
                 }
@@ -101,26 +101,26 @@ fun SearchBarInputField(
                     IconButton(
                         modifier = Modifier
                             .testTag("search_bar:scan_button"),
-                        onClick = onScanClick
+                        onClick = onScanClick,
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_barcode_scanner),
                             contentDescription = null,
-                            modifier = Modifier.rotate((1f - iconAngleProgress) * -270f)
+                            modifier = Modifier.rotate((1f - iconAngleProgress) * -270f),
                         )
                     }
                 } else {
                     IconButton(
-                        onClick = onClearClick
+                        onClick = onClearClick,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = null,
-                            modifier = Modifier.rotate(iconAngleProgress * 270f)
+                            modifier = Modifier.rotate(iconAngleProgress * 270f),
                         )
                     }
                 }
-            }
+            },
         )
     }
 }
@@ -137,7 +137,7 @@ private fun SearchBarInputFieldPreview() {
             onClearClick = {},
             onSearch = {},
             query = "",
-            onQueryChange = {}
+            onQueryChange = {},
         )
     }
 }

@@ -83,7 +83,7 @@ fun SetListScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -107,7 +107,7 @@ private fun SetListScreen(
                     IconButton(onClick = { onAction(SetListAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -121,10 +121,10 @@ private fun SetListScreen(
                                         SetListDisplayMode.COLUMN -> SetListDisplayMode.GRID
                                         SetListDisplayMode.GRID -> SetListDisplayMode.GRID_LARGE
                                         SetListDisplayMode.GRID_LARGE -> SetListDisplayMode.COLUMN
-                                    }
-                                )
+                                    },
+                                ),
                             )
-                        }
+                        },
                     ) {
                         Icon(
                             imageVector = when (state.displayMode) {
@@ -132,7 +132,7 @@ private fun SetListScreen(
                                 SetListDisplayMode.GRID -> Icons.Outlined.GridOn
                                 SetListDisplayMode.GRID_LARGE -> Icons.Outlined.Window
                             },
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
 
@@ -140,34 +140,34 @@ private fun SetListScreen(
                         enabled = state.filterOverrides?.sortOption == null,
                         onClick = {
                             showSortingBottomSheet = true
-                        }
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(top = padding.calculateTopPadding())
+                .padding(top = padding.calculateTopPadding()),
         ) {
             if (state.showFilterBar) {
                 SetFilterRow(
                     filterPreferences = state.filterPreferences,
                     filterOverrides = state.filterOverrides,
                     onFilterPreferencesChange = { onAction(SetListAction.OnFilterChange(it)) },
-                    filterDomain = state.filterDomain
+                    filterDomain = state.filterDomain,
                 )
             }
 
             if (sets.loadState.isIdle && sets.itemCount == 0) {
                 EmptySetList(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 )
             } else {
                 PagedSetList(
@@ -181,7 +181,7 @@ private fun SetListScreen(
                     onFavouriteClick = {
                         onAction(SetListAction.OnFavouriteClick(it.setID))
                     },
-                    displayMode = state.displayMode
+                    displayMode = state.displayMode,
                 )
             }
         }
@@ -193,7 +193,7 @@ private fun SetListScreen(
             onOptionClick = {
                 onAction(SetListAction.OnFilterChange(state.filterPreferences.copy(sortOption = it)))
             },
-            onDismiss = { showSortingBottomSheet = false }
+            onDismiss = { showSortingBottomSheet = false },
         )
     }
 }
@@ -205,21 +205,21 @@ private fun EmptySetList(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
         Image(
             modifier = Modifier.size(100.dp),
             painter = painterResource(Res.drawable.lego_brick_2x3),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.height(Dimens.MediumPadding.size))
         Text(
             modifier = Modifier
                 .padding(Dimens.MediumPadding.size),
             text = stringResource(Res.string.feature_set_list_empty),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -238,10 +238,10 @@ private fun SetListScreenPreview() {
                             refresh = LoadState.NotLoading(false),
                             append = LoadState.NotLoading(false),
                             prepend = LoadState.NotLoading(false),
-                        )
-                )
+                        ),
+                ),
             ).collectAsLazyPagingItems(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

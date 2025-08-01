@@ -30,7 +30,7 @@ sealed interface SettingsRoute {
 fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     composable<SettingsRoute.NotificationsScreen> {
         NotificationsScreenRoot(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
         )
     }
 
@@ -46,25 +46,25 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 navController.navigate(SettingsRoute.LicenseScreen) {
                     launchSingleTop = true
                 }
-            }
+            },
         )
     }
 
     composable<SettingsRoute.ChangelogScreen> {
         ChangelogScreenRoot(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
         )
     }
 
     composable<SettingsRoute.LicenseScreen> {
         LicenseScreenRoot(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
         )
     }
 
     composable<SettingsRoute.AppearanceScreen> {
         AppearanceScreenRoot(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
         )
     }
 }

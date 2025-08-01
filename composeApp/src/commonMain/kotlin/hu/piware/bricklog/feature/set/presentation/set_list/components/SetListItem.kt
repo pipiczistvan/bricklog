@@ -58,11 +58,11 @@ fun SetListItem(
         modifier = modifier
             .clip(Shapes.large)
             .border(3.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), Shapes.large)
-            .clickable(onClick = { onClick(setDetails) })
+            .clickable(onClick = { onClick(setDetails) }),
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Row(
                 modifier =
@@ -71,36 +71,36 @@ fun SetListItem(
                         .fillMaxWidth()
                         .height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Box(
                     modifier = Modifier
                         .clip(Shapes.medium)
                         .background(Color.White)
                         .height(100.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     SetImage(
                         image = setDetails.set.image,
                         modifier = Modifier
                             .aspectRatio(
                                 ratio = 1f,
-                                matchHeightConstraintsFirst = true
+                                matchHeightConstraintsFirst = true,
                             )
                             .padding(Dimens.SmallPadding.size),
-                        size = ImageSize.SMALL
+                        size = ImageSize.SMALL,
                     )
                 }
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(1f)
+                        .weight(1f),
                 ) {
                     Text(
                         text = setDetails.set.theme ?: "",
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         text = setDetails.set.name ?: "",
@@ -108,42 +108,41 @@ fun SetListItem(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Spacer(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         SetAttributeChip(
                             text = "# ${setDetails.setNumberWithVariant}",
-                            size = ChipSize.SMALL
+                            size = ChipSize.SMALL,
                         )
                         if (setDetails.status != SetStatus.UNKNOWN) {
                             SetAttributeChip(
                                 text = stringResource(setDetails.status.statusRes),
                                 size = ChipSize.SMALL,
                                 color = setDetails.status.containerColor,
-                                textColor = setDetails.status.textColor
+                                textColor = setDetails.status.textColor,
                             )
                         }
                     }
                 }
             }
 
-
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.TopEnd,
             ) {
                 IconButton(
-                    onClick = { onFavouriteClick(setDetails) }
+                    onClick = { onFavouriteClick(setDetails) },
                 ) {
                     Icon(
                         imageVector = if (setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -158,7 +157,7 @@ private fun SetListItemPreview() {
         SetListItem(
             setDetails = PreviewData.sets[0],
             onClick = {},
-            onFavouriteClick = {}
+            onFavouriteClick = {},
         )
     }
 }

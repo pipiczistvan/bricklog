@@ -73,7 +73,7 @@ fun AppearanceScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -84,7 +84,7 @@ private fun AppearanceScreen(
     modifier: Modifier = Modifier,
 ) {
     LoadingOverlay(
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
     ) {
         Scaffold(
             modifier = modifier,
@@ -97,12 +97,12 @@ private fun AppearanceScreen(
                         IconButton(onClick = { onAction(AppearanceAction.OnBackClick) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { padding ->
             ContentColumn(
                 modifier = Modifier
@@ -110,20 +110,20 @@ private fun AppearanceScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
-                )
+                    bottom = padding.calculateBottomPadding(),
+                ),
             ) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+                    verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
                 ) {
                     DashboardSettings(
                         state = state,
-                        onAction = onAction
+                        onAction = onAction,
                     )
 
                     Column(
                         modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         HorizontalDivider()
                         HorizontalDivider()
@@ -131,7 +131,7 @@ private fun AppearanceScreen(
 
                     ThemeSettings(
                         state = state,
-                        onAction = onAction
+                        onAction = onAction,
                     )
                 }
             }
@@ -148,11 +148,11 @@ private fun DashboardSettings(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Dimens.MediumPadding.size),
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Text(
             text = stringResource(Res.string.feature_settings_appearance_title_dashboard),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
 
         FeaturedSetsSettings(
@@ -161,15 +161,15 @@ private fun DashboardSettings(
                 onAction(
                     AppearanceAction.OnUserPreferencesChange(
                         state.userPreferences.copy(hiddenFeaturedSets = hiddenFeaturedSets),
-                        false
-                    )
+                        false,
+                    ),
                 )
-            }
+            },
         )
 
         if (state.currentUser.isAuthenticated) {
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = Dimens.SmallPadding.size)
+                modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
             )
 
             GreetingsSettings(
@@ -178,8 +178,8 @@ private fun DashboardSettings(
                     onAction(
                         AppearanceAction.OnUserPreferencesChange(
                             state.userPreferences.copy(hideGreetings = hideGreetings),
-                            true
-                        )
+                            true,
+                        ),
                     )
                 },
                 displayName = state.userPreferences.displayName,
@@ -187,10 +187,10 @@ private fun DashboardSettings(
                     onAction(
                         AppearanceAction.OnUserPreferencesChange(
                             state.userPreferences.copy(displayName = displayName),
-                            true
-                        )
+                            true,
+                        ),
                     )
-                }
+                },
             )
         }
     }
@@ -205,22 +205,22 @@ private fun FeaturedSetsSettings(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Dimens.SmallPadding.size),
-        verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
     ) {
         Text(
             text = stringResource(Res.string.feature_settings_appearance_title_featured_sets),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
 
         for (type in FeaturedSetType.entries) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(type.stringResource),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
 
                 Switch(
@@ -231,9 +231,9 @@ private fun FeaturedSetsSettings(
                                 hiddenFeaturedSets - type
                             } else {
                                 hiddenFeaturedSets + type
-                            }
+                            },
                         )
-                    }
+                    },
                 )
             }
         }
@@ -249,30 +249,30 @@ private fun GreetingsSettings(
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(Res.string.feature_settings_appearance_title_greetings),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
 
             Switch(
                 checked = !hideGreetings,
                 onCheckedChange = {
                     onHideGreetingsChange(!it)
-                }
+                },
             )
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             val focusManager = LocalFocusManager.current
 
@@ -293,11 +293,11 @@ private fun GreetingsSettings(
                         onDisplayNameChange(name)
                     }
                 },
-                enabled = isNameValid
+                enabled = isNameValid,
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Save,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -313,16 +313,16 @@ private fun ThemeSettings(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Dimens.MediumPadding.size),
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Text(
             text = stringResource(Res.string.feature_settings_appearance_title_theme),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
 
         val choices = ThemeOption.entries.toTypedArray()
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             choices.forEachIndexed { index, themeOption ->
                 SegmentedButton(
@@ -333,8 +333,8 @@ private fun ThemeSettings(
                     },
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,
-                        count = choices.count()
-                    )
+                        count = choices.count(),
+                    ),
                 ) {
                     Text(stringResource(themeOption.titleRes))
                 }
@@ -351,7 +351,7 @@ private fun AppearanceScreenPreview() {
             state = AppearanceState(
                 currentUser = PreviewData.user,
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

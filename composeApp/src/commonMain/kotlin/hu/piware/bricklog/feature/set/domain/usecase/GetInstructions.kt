@@ -47,8 +47,8 @@ class GetInstructions(
                 UpdateInfo(
                     dataType = DataType.INSTRUCTIONS,
                     setId = setId,
-                    lastUpdated = Clock.System.now()
-                )
+                    lastUpdated = Clock.System.now(),
+                ),
             ).onError { return it }
         }
 

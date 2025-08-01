@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class ExportInfoDocument(
     val id: Int? = null,
     val fileUploads: List<FileUploadResultDocument> = emptyList(),
-    val lastUpdated: Timestamp? = null
+    val lastUpdated: Timestamp? = null,
 )

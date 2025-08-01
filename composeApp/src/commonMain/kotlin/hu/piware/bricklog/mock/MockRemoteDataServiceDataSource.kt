@@ -30,14 +30,16 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
                         fileUploads = listOf(
                             FileUploadResult(
                                 serviceId = "dropbox",
-                                url = "https://www.dropbox.com/scl/fi/iapqpnz0ckubj26doyyxo/bricklog-data-export-mock.csv.gz?rlkey=kvfvy1dcxxny75y75knth4yse&dl=1",
+                                url = "https://www.dropbox.com/scl/fi/iapqpnz0ckubj26doyyxo/" +
+                                        "bricklog-data-export-mock.csv.gz?" +
+                                        "rlkey=kvfvy1dcxxny75y75knth4yse&dl=1",
                                 fileId = "bricklog-data-export-mock.csv.gz",
-                                priority = 1
-                            )
-                        )
-                    )
-                )
-            )
+                                priority = 1,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         )
     }
 

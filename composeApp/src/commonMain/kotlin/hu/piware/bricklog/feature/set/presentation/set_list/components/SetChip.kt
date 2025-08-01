@@ -26,7 +26,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ChipSize {
-    SMALL, REGULAR
+    SMALL,
+    REGULAR,
 }
 
 @Composable
@@ -42,15 +43,15 @@ fun SetChip(
                 min = when (size) {
                     ChipSize.SMALL -> 50.dp
                     ChipSize.REGULAR -> 80.dp
-                }
+                },
             )
             .clip(RoundedCornerShape(8.dp))
             .background(color)
             .padding(
                 vertical = 4.dp,
-                horizontal = 6.dp
+                horizontal = 6.dp,
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -71,7 +72,7 @@ fun SetAttributeChip(
 ) {
     SetChip(
         size = size,
-        color = color
+        color = color,
     ) {
         drawableResource?.let { res ->
             Image(
@@ -80,11 +81,11 @@ fun SetAttributeChip(
                         height = when (size) {
                             ChipSize.SMALL -> 14.dp
                             ChipSize.REGULAR -> 18.dp
-                        }
+                        },
                     )
                     .aspectRatio(1f, matchHeightConstraintsFirst = true),
                 painter = painterResource(res),
-                contentDescription = null
+                contentDescription = null,
             )
         }
         Text(
@@ -94,7 +95,7 @@ fun SetAttributeChip(
                 ChipSize.SMALL -> 12.sp
                 ChipSize.REGULAR -> 16.sp
             },
-            color = textColor
+            color = textColor,
         )
     }
 }
@@ -104,7 +105,7 @@ fun SetAttributeChip(
 private fun SetChipPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetChip {
                 Text("OK")
@@ -118,10 +119,10 @@ private fun SetChipPreview() {
 private fun SetAttributeChipPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetAttributeChip(
-                text = "OK"
+                text = "OK",
             )
         }
     }

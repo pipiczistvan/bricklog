@@ -13,7 +13,7 @@ fun ExportInfoDocument.toDomainModel(): ExportInfo {
     return ExportInfo(
         id = id!!,
         fileUploads = fileUploads.map { it.toDomainModel() },
-        lastUpdated = Instant.fromEpochMilliseconds(lastUpdated!!.toMilliseconds().toLong())
+        lastUpdated = Instant.fromEpochMilliseconds(lastUpdated!!.toMilliseconds().toLong()),
     )
 }
 
@@ -22,13 +22,13 @@ fun FileUploadResultDocument.toDomainModel(): FileUploadResult {
         serviceId = serviceId!!,
         url = url!!,
         fileId = fileId!!,
-        priority = priority!!
+        priority = priority!!,
     )
 }
 
 fun BatchExportInfoDocument.toDomainModel(): BatchExportInfo {
     return BatchExportInfo(
-        batches = batches.map { it.toDomainModel() }
+        batches = batches.map { it.toDomainModel() },
     )
 }
 
@@ -44,7 +44,7 @@ fun ExportBatchDocument.toDomainModel(): ExportBatch {
 fun CodeListDocument.toDomainModel(): CodeList {
     return CodeList(
         r = r,
-        s = s
+        s = s,
     )
 }
 
@@ -53,6 +53,6 @@ fun CollectibleDocument.toDomainModel(id: String): Collectible {
         setNumber = id,
         setId = setId,
         name = name,
-        codes = codes.mapValues { it.value.toDomainModel() }
+        codes = codes.mapValues { it.value.toDomainModel() },
     )
 }

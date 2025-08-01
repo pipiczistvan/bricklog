@@ -68,7 +68,7 @@ fun CollectionEditScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -88,17 +88,18 @@ private fun CollectionEditScreen(
             TopAppBar(
                 title = {
                     Text(
-                        if (state.collection == null)
+                        if (state.collection == null) {
                             stringResource(Res.string.feature_collection_edit_title_create)
-                        else
+                        } else {
                             stringResource(Res.string.feature_collection_edit_title_modify)
+                        },
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(CollectionEditAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -107,11 +108,11 @@ private fun CollectionEditScreen(
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     }
-                }
+                },
             )
         },
         floatingActionButton = {
@@ -122,14 +123,14 @@ private fun CollectionEditScreen(
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.Save,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 },
                 text = {
                     Text("Save")
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         ContentColumn(
             modifier = Modifier
@@ -137,8 +138,8 @@ private fun CollectionEditScreen(
                 .fillMaxSize(),
             contentPadding = PaddingValues(
                 top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding()
-            )
+                bottom = padding.calculateBottomPadding(),
+            ),
         ) {
             val focusManager = LocalFocusManager.current
 
@@ -151,31 +152,31 @@ private fun CollectionEditScreen(
                 placeholder = { Text("Enter a name") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
                         focusManager.clearFocus()
-                    }
+                    },
                 ),
                 leadingIcon = {
                     IconButton(
-                        onClick = { showIconBottomSheet = true }
+                        onClick = { showIconBottomSheet = true },
                     ) {
                         Icon(
                             imageVector = state.icon.outlinedIcon,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
                 trailingIcon = {
                     Text("${state.name.length}/${ValidateCollectionName.MAX_LENGTH}")
-                }
+                },
             )
             if (state.nameError != null) {
                 Text(
                     text = state.nameError.asString(),
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         }
@@ -189,7 +190,7 @@ private fun CollectionEditScreen(
             },
             onDismiss = {
                 showIconBottomSheet = false
-            }
+            },
         )
     }
 
@@ -201,7 +202,7 @@ private fun CollectionEditScreen(
             },
             onDismiss = {
                 showDeleteConfirmDialog = false
-            }
+            },
         )
     }
 }
@@ -212,7 +213,7 @@ private fun CollectionEditScreenPreview() {
     BricklogTheme {
         CollectionEditScreen(
             state = CollectionEditState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

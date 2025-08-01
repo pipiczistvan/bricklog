@@ -32,8 +32,8 @@ class SyncSets(
         logger.i { "Retrieving last info complete set" }
         val lastInfoCompleteSet = getSetDetails(
             newItemsFilter.copy(
-                limit = 1
-            )
+                limit = 1,
+            ),
         ).onError {
             logger.w { "Retrieving last info complete set failed" }
             inProgress = false
@@ -51,8 +51,8 @@ class SyncSets(
         logger.i { "Retrieving new info complete sets" }
         val newSets = getSetDetails(
             newItemsFilter.copy(
-                appearanceDate = lastInfoCompleteSet?.set.createAppearanceDateFilter()
-            )
+                appearanceDate = lastInfoCompleteSet?.set.createAppearanceDateFilter(),
+            ),
         ).onError {
             logger.w { "Retrieving new info complete sets failed" }
             inProgress = false
@@ -72,5 +72,5 @@ private fun Set?.createAppearanceDateFilter() = DateFilter.Custom(
     startDate = this
         ?.infoCompleteDate
         ?.toEpochMilliseconds()
-        ?.plus(1)
+        ?.plus(1),
 )

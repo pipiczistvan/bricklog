@@ -42,14 +42,14 @@ fun StatusFilterBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         StatusFilterSheetContent(
             availableOptions = availableOptions,
             selected = selected,
             onSelectionChange = onSelectionChange,
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -64,19 +64,19 @@ private fun StatusFilterSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_search_status_filter_sheet_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(availableOptions) { option ->
                 StatusFilterSheetOption(
@@ -88,7 +88,7 @@ private fun StatusFilterSheetContent(
                         } else {
                             onSelectionChange(selected + option)
                         }
-                    }
+                    },
                 )
             }
         }
@@ -103,7 +103,7 @@ private fun StatusFilterSheetOption(
 ) {
     BottomSheetOption(
         selected = selected,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
@@ -111,7 +111,7 @@ private fun StatusFilterSheetOption(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -125,6 +125,6 @@ private fun StatusFilterSheetContentPreview() {
         selected = emptySet(),
         onSelectionChange = {},
         sheetState = rememberModalBottomSheetState(),
-        onDismiss = {}
+        onDismiss = {},
     )
 }

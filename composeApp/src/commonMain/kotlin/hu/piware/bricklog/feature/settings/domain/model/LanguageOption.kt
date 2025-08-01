@@ -18,18 +18,18 @@ enum class LanguageOption(
         titleRes = Res.string.feature_settings_appearance_language_label_system,
         emoji = "⚙\uFE0F",
         intValue = 0,
-        isoFormat = ""
+        isoFormat = "",
     ),
     ENGLISH(
         titleRes = Res.string.feature_settings_appearance_language_label_english,
         emoji = "\uD83C\uDDEC\uD83C\uDDE7",
         intValue = 1,
-        isoFormat = "en"
+        isoFormat = "en",
     ),
     HUNGARIAN(
         titleRes = Res.string.feature_settings_appearance_language_label_hungarian,
         emoji = "\uD83C\uDDED\uD83C\uDDFA",
         intValue = 2,
-        isoFormat = "hu"
-    )
+        isoFormat = "hu",
+    ),
 }

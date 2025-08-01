@@ -6,13 +6,13 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 fun ImageDto.toDomainModel(): Image {
     return Image(
         thumbnailURL = thumbnailURL,
-        imageURL = imageURL
+        imageURL = imageURL,
     )
 }
 
 fun InstructionDto.toDomainModel(): Instruction {
     return Instruction(
         URL = URL,
-        description = description
+        description = description,
     )
 }

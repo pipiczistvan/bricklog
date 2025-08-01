@@ -42,12 +42,12 @@ fun LogoutConfirmationBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("dashboard:logout_confirmation_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         LogoutConfirmationContent(
             sheetState = sheetState,
             onDismiss = onDismiss,
-            onConfirm = onConfirm
+            onConfirm = onConfirm,
         )
     }
 }
@@ -60,12 +60,12 @@ private fun LogoutConfirmationContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         Column(
@@ -73,14 +73,14 @@ private fun LogoutConfirmationContent(
             verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             Text(text = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_label))
 
             BottomSheetButton(
                 onClick = onDismiss,
                 title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_btn_cancel),
-                icon = Icons.Outlined.Close
+                icon = Icons.Outlined.Close,
             )
 
             BottomSheetButton(
@@ -90,7 +90,7 @@ private fun LogoutConfirmationContent(
                 },
                 title = stringResource(Res.string.feature_user_logout_confirm_bottom_sheet_btn_confirm),
                 icon = Icons.AutoMirrored.Outlined.Logout,
-                color = MaterialTheme.colorScheme.error.copy(0.6f)
+                color = MaterialTheme.colorScheme.error.copy(0.6f),
             )
         }
     }
@@ -104,7 +104,7 @@ private fun LogoutConfirmationContentPreview() {
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
-            onConfirm = {}
+            onConfirm = {},
         )
     }
 }

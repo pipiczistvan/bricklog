@@ -12,7 +12,7 @@ import androidx.room.DatabaseView
         FROM sets
         GROUP BY themeGroup, theme
         ORDER BY themeGroup ASC, theme ASC
-    """
+    """,
 )
 data class ThemeGroupView(
     val themeGroup: String,

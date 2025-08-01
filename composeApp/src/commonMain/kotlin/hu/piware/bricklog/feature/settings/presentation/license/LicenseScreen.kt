@@ -44,7 +44,7 @@ fun LicenseScreenRoot(
             when (action) {
                 LicenseAction.OnBackClick -> onBackClick()
             }
-        }
+        },
     )
 }
 
@@ -65,12 +65,12 @@ private fun LicenseScreen(
                     IconButton(onClick = { onAction(LicenseAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         CompositionLocalProvider {
             ProvideTextStyle(value = OverpassMonoTypography().bodyMedium) {
@@ -82,8 +82,8 @@ private fun LicenseScreen(
                             .fillMaxSize(),
                         contentPadding = PaddingValues(
                             top = padding.calculateTopPadding(),
-                            bottom = padding.calculateBottomPadding()
-                        )
+                            bottom = padding.calculateBottomPadding(),
+                        ),
                     ) {
                         Text(state.license)
                     }
@@ -99,9 +99,9 @@ private fun LicenseScreenPreview() {
     BricklogTheme {
         LicenseScreen(
             state = LicenseState(
-                license = "LICENSE"
+                license = "LICENSE",
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

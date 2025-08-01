@@ -19,7 +19,7 @@ fun <T> InfiniteHorizontalPager(
         HorizontalPager(
             modifier = modifier,
             state = pagerState,
-            beyondViewportPageCount = 1
+            beyondViewportPageCount = 1,
         ) { page ->
             val itemIndex = page % items.size // Loop back using modulo
             pageContent(itemIndex)

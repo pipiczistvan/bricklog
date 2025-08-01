@@ -32,20 +32,20 @@ fun ReleaseItem(
     release: Release,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Text(
             text = stringResource(
                 Res.string.feature_set_dashboard_changelog_title_build_version,
                 release.version,
-                release.build
+                release.build,
             ),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
         release.changes.forEach { change ->
             ChangeRow(
                 modifier = Modifier.padding(start = 8.dp),
-                change = change
+                change = change,
             )
         }
     }
@@ -58,7 +58,7 @@ private fun ChangeRow(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         Icon(
             imageVector = when (change.type) {
@@ -66,7 +66,7 @@ private fun ChangeRow(
                 ChangeType.BUGFIX -> Icons.Outlined.BugReport
                 ChangeType.REFACTOR -> Icons.Outlined.Build
             },
-            contentDescription = null
+            contentDescription = null,
         )
         Text(text = change.description)
     }
@@ -77,10 +77,10 @@ private fun ChangeRow(
 private fun ReleaseItemPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             ReleaseItem(
-                release = PreviewData.releases[0]
+                release = PreviewData.releases[0],
             )
         }
     }

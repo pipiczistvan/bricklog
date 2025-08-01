@@ -33,8 +33,8 @@ class SaveCollections(
 
         saveUserPreferences(
             userPreferences.copy(
-                collectionOrder = userPreferences.collectionOrder.mergeWith(savedCollections)
-            )
+                collectionOrder = userPreferences.collectionOrder.mergeWith(savedCollections),
+            ),
         ).onError { return it }
 
         return Result.Success(savedCollections)

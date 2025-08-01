@@ -43,7 +43,7 @@ fun SetImageScreenRoot(
             when (action) {
                 SetImageAction.OnBackClick -> onBackClick()
             }
-        }
+        },
     )
 }
 
@@ -60,22 +60,22 @@ private fun SetImageScreen(
                 title = { },
                 navigationIcon = {
                     IconButton(
-                        onClick = { onAction(SetImageAction.OnBackClick) }
+                        onClick = { onAction(SetImageAction.OnBackClick) },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = stringResource(Res.string.navigation_go_back)
+                            contentDescription = stringResource(Res.string.navigation_go_back),
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors().copy(
-                    containerColor = Color.Transparent
-                )
+                    containerColor = Color.Transparent,
+                ),
             )
-        }
+        },
     ) {
         SetImagePager(
-            images = state.images
+            images = state.images,
         )
     }
 }
@@ -87,13 +87,13 @@ private fun SetImagePager(
 ) {
     InfiniteHorizontalPager(
         modifier = modifier,
-        items = images
+        items = images,
     ) {
         SetImage(
             modifier = Modifier
                 .fillMaxSize(),
             image = images[it],
-            zoomable = true
+            zoomable = true,
         )
     }
 }
@@ -104,9 +104,9 @@ private fun SetImageScreenPreview() {
     BricklogTheme {
         SetImageScreen(
             state = SetImageState(
-                setId = 1
+                setId = 1,
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

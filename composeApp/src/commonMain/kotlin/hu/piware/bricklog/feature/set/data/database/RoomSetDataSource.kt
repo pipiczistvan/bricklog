@@ -70,7 +70,7 @@ class RoomSetDataSource(
                     .map { (group, items) ->
                         SetThemeGroup(
                             name = group,
-                            themes = items.map { SetTheme(it.theme, it.setCount) }
+                            themes = items.map { SetTheme(it.theme, it.setCount) },
                         )
                     }
             }
@@ -100,8 +100,8 @@ class RoomSetDataSource(
             PagingConfig(
                 pageSize = 10,
                 prefetchDistance = 5,
-                enablePlaceholders = true
-            )
+                enablePlaceholders = true,
+            ),
         ) {
             val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
             setDetailsDao.pagingSource(query)

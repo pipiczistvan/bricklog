@@ -41,13 +41,13 @@ fun SetSortBottomSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         SetSortSheetContent(
             selectedOption = selectedOption,
             onOptionClick = onOptionClick,
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -61,19 +61,19 @@ private fun SetSortSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_search_sort_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(SetSortOption.entries.toTypedArray()) { option ->
                 SetSortSheetOption(
@@ -81,7 +81,7 @@ private fun SetSortSheetContent(
                     selected = option == selectedOption,
                     onClick = {
                         onOptionClick(option)
-                    }
+                    },
                 )
             }
         }
@@ -96,7 +96,7 @@ private fun SetSortSheetOption(
 ) {
     BottomSheetOption(
         selected = selected,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
@@ -104,7 +104,7 @@ private fun SetSortSheetOption(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -118,7 +118,7 @@ private fun SetSortSheetContentPreview() {
             selectedOption = SetSortOption.LAUNCH_DATE_ASCENDING,
             onOptionClick = {},
             sheetState = rememberModalBottomSheetState(),
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

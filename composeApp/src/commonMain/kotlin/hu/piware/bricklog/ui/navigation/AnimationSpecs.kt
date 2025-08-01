@@ -9,7 +9,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 
 enum class ScaleTransitionDirection {
-    INWARDS, OUTWARDS
+    INWARDS,
+    OUTWARDS,
 }
 
 fun scaleIntoContainer(
@@ -18,7 +19,7 @@ fun scaleIntoContainer(
 ): EnterTransition {
     return scaleIn(
         animationSpec = tween(220, delayMillis = 90),
-        initialScale = initialScale
+        initialScale = initialScale,
     ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
 }
 
@@ -29,7 +30,8 @@ fun scaleOutOfContainer(
     return scaleOut(
         animationSpec = tween(
             durationMillis = 220,
-            delayMillis = 90
-        ), targetScale = targetScale
+            delayMillis = 90,
+        ),
+        targetScale = targetScale,
     ) + fadeOut(tween(delayMillis = 90))
 }

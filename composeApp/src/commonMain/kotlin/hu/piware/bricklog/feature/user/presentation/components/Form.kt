@@ -61,7 +61,7 @@ fun EmailPasswordForm(
     validatePassword: (String) -> Boolean = ::isValidPassword,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
     ) {
         // Email field
         var email by remember { mutableStateOf("") }
@@ -72,7 +72,7 @@ fun EmailPasswordForm(
             value = email,
             onValueChange = { email = it },
             validate = validateEmail,
-            onValidate = { isEmailValid = it }
+            onValidate = { isEmailValid = it },
         )
 
         // Password field
@@ -86,13 +86,13 @@ fun EmailPasswordForm(
                 supportText = stringResource(Res.string.feature_user_form_field_password_invalid),
                 onValueChange = { password = it },
                 validate = validatePassword,
-                onValidate = { isPasswordValid = it }
+                onValidate = { isPasswordValid = it },
             )
 
             if (onPasswordResetClick != null) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
+                    contentAlignment = Alignment.CenterEnd,
                 ) {
                     TextButton(onClick = onPasswordResetClick) {
                         Text(text = stringResource(Res.string.feature_user_login_label_forgot_password))
@@ -115,7 +115,7 @@ fun EmailPasswordForm(
                     onSubmit(email, password)
                 }
             },
-            enabled = isFormValid
+            enabled = isFormValid,
         ) {
             Text(text = stringResource(Res.string.feature_user_login_form_btn_submit))
         }
@@ -157,19 +157,19 @@ fun EmailField(
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         ),
         keyboardActions = KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Next)
-            }
+            },
         ),
         supportingText = {
             if (!isValid) {
                 Text(text = stringResource(Res.string.feature_user_form_field_email_invalid))
             }
         },
-        isError = !isValid
+        isError = !isValid,
     )
 }
 
@@ -210,23 +210,23 @@ fun PasswordField(
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
         ),
         keyboardActions = KeyboardActions(
             onDone = {
                 focusManager.clearFocus()
-            }
+            },
         ),
         visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             IconButton(
                 onClick = {
                     visibility = !visibility
-                }
+                },
             ) {
                 Icon(
                     imageVector = if (visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -235,7 +235,7 @@ fun PasswordField(
                 Text(text = supportText)
             }
         },
-        isError = !isValid
+        isError = !isValid,
     )
 }
 
@@ -274,25 +274,25 @@ fun NameField(
         placeholder = { placeholderName?.let { Text(it) } },
         label = {
             Text(
-                text = labelValue ?: stringResource(Res.string.feature_user_form_field_name_title)
+                text = labelValue ?: stringResource(Res.string.feature_user_form_field_name_title),
             )
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
         ),
         keyboardActions = KeyboardActions(
             onDone = {
                 focusManager.clearFocus()
-            }
+            },
         ),
         supportingText = {
             if (!isValid) {
                 Text(text = stringResource(Res.string.feature_user_form_field_name_invalid))
             }
         },
-        isError = !isValid
+        isError = !isValid,
     )
 }
 
@@ -301,10 +301,10 @@ fun NameField(
 private fun EmailPasswordFormPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             EmailPasswordForm(
-                onSubmit = { _, _ -> }
+                onSubmit = { _, _ -> },
             )
         }
     }

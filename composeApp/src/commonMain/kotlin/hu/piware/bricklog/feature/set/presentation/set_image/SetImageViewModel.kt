@@ -24,16 +24,16 @@ class SetImageViewModel(
     private val getAdditionalImages: GetAdditionalImages,
 ) : ViewModel() {
 
-    private val _arguments = savedStateHandle.toRoute<SetRoute.SetImage>(
-        typeMap = mapOf(typeOf<SetImageArguments>() to CustomNavType.SetImageArgumentsType)
+    private val arguments = savedStateHandle.toRoute<SetRoute.SetImage>(
+        typeMap = mapOf(typeOf<SetImageArguments>() to CustomNavType.SetImageArgumentsType),
     ).arguments
 
     private var _uiState =
-        MutableStateFlow(SetImageState(_arguments.setId, _arguments.sharedElementPrefix))
+        MutableStateFlow(SetImageState(arguments.setId, arguments.sharedElementPrefix))
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
-            loadSet(_arguments.setId)
-            loadAdditionalImages(_arguments.setId)
+            loadSet(arguments.setId)
+            loadAdditionalImages(arguments.setId)
         }
 
     private fun loadSet(id: Int) {
@@ -44,7 +44,7 @@ class SetImageViewModel(
                     _uiState.update {
                         it.copy(
                             setId = setDetails.set.setID,
-                            images = listOf(setDetails.set.image) + it.images
+                            images = listOf(setDetails.set.image) + it.images,
                         )
                     }
                 }
@@ -60,7 +60,7 @@ class SetImageViewModel(
 
             _uiState.update {
                 it.copy(
-                    images = it.images + additionalImages
+                    images = it.images + additionalImages,
                 )
             }
         }

@@ -44,12 +44,12 @@ fun FeaturedThemesCarousel(
         state = carouselState,
         preferredItemWidth = 200.dp,
         itemSpacing = 12.dp,
-        flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(state = carouselState)
+        flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(state = carouselState),
     ) { i ->
         val item = FEATURED_THEMES[i]
 
         Box(
-            contentAlignment = Alignment.BottomStart
+            contentAlignment = Alignment.BottomStart,
         ) {
             Image(
                 bitmap = imageResource(item.imageResId),
@@ -61,7 +61,7 @@ fun FeaturedThemesCarousel(
                     .clickable { onItemClick(item) },
                 contentDescription = stringResource(item.contentDescriptionResId),
                 contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter
+                alignment = Alignment.TopCenter,
             )
 
             Text(
@@ -74,16 +74,15 @@ fun FeaturedThemesCarousel(
                             max(
                                 size.width - (carouselItemDrawInfo.maxSize) +
                                         carouselItemDrawInfo.size,
-                                0f
-                            ) / size.width
+                                0f,
+                            ) / size.width,
                         )
                         translationX = carouselItemDrawInfo.maskRect.left + 8.dp.toPx()
-
                     },
                 text = stringResource(item.contentDescriptionResId),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = Color.White,
             )
         }
     }
@@ -94,7 +93,7 @@ fun FeaturedThemesCarousel(
 private fun FeaturedThemesCarouselPreview() {
     BricklogTheme {
         FeaturedThemesCarousel(
-            onItemClick = {}
+            onItemClick = {},
         )
     }
 }

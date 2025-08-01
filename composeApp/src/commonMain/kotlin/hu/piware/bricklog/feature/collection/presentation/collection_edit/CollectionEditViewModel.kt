@@ -75,8 +75,8 @@ class CollectionEditViewModel(
                     id = uiState.value.collection?.id ?: "",
                     name = uiState.value.name,
                     icon = uiState.value.icon,
-                    type = uiState.value.collection?.type ?: CollectionType.USER_DEFINED
-                )
+                    type = uiState.value.collection?.type ?: CollectionType.USER_DEFINED,
+                ),
             )
                 .showSnackbarOnError()
                 .onSuccess {

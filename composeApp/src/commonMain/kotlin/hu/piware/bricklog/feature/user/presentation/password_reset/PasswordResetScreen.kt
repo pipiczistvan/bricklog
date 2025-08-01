@@ -63,7 +63,7 @@ fun PasswordResetScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -74,7 +74,7 @@ private fun PasswordResetScreen(
     modifier: Modifier = Modifier,
 ) {
     LoadingOverlay(
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
     ) {
         Scaffold(
             modifier = modifier,
@@ -85,12 +85,12 @@ private fun PasswordResetScreen(
                         IconButton(onClick = { onAction(PasswordResetAction.OnBackClick) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { padding ->
             ContentColumn(
                 modifier = Modifier
@@ -98,13 +98,13 @@ private fun PasswordResetScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
+                    bottom = padding.calculateBottomPadding(),
                 ),
-                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
             ) {
                 Text(text = stringResource(Res.string.feature_user_password_reset_label_instructions))
                 PasswordResetForm(
-                    onSubmit = { onAction(PasswordResetAction.OnResetClick(it)) }
+                    onSubmit = { onAction(PasswordResetAction.OnResetClick(it)) },
                 )
             }
         }
@@ -122,7 +122,7 @@ private fun PasswordResetForm(
     EmailField(
         value = email,
         onValueChange = { email = it },
-        onValidate = { isEmailValid = it }
+        onValidate = { isEmailValid = it },
     )
 
     // Submit button
@@ -137,7 +137,7 @@ private fun PasswordResetForm(
                 onSubmit(email)
             }
         },
-        enabled = isFormValid
+        enabled = isFormValid,
     ) {
         Text(text = stringResource(Res.string.feature_user_password_reset_btn_submit))
     }
@@ -149,7 +149,7 @@ private fun PasswordResetScreenPreview() {
     BricklogTheme {
         PasswordResetScreen(
             state = PasswordResetState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

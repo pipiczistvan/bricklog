@@ -30,8 +30,8 @@ class GetSetDetails(
             buildSetQueryOptions(
                 filter = filterOverrides,
                 preferences = filterPreferences,
-                queries = parsedQueries
-            )
+                queries = parsedQueries,
+            ),
         ).asResultOrDefault { emptyList() }
     }
 }

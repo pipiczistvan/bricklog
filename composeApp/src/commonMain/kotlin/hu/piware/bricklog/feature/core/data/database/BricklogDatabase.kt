@@ -32,14 +32,14 @@ import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
         SetInstructionEntity::class,
         CollectionEntity::class,
         SetCollectionEntity::class,
-        UserPreferencesEntity::class
+        UserPreferencesEntity::class,
     ],
     views = [
         SetDetailsView::class,
-        ThemeGroupView::class
+        ThemeGroupView::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 @TypeConverters(
     InstantConverter::class,

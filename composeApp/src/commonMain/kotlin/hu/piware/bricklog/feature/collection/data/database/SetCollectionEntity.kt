@@ -12,19 +12,19 @@ import hu.piware.bricklog.feature.user.domain.model.UserId
     primaryKeys = [
         "setId",
         "collectionId",
-        "userId"
+        "userId",
     ],
     foreignKeys = [
         ForeignKey(
             entity = CollectionEntity::class,
             parentColumns = ["id", "userId"],
             childColumns = ["collectionId", "userId"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
     indices = [
-        Index("collectionId", "userId")
-    ]
+        Index("collectionId", "userId"),
+    ],
 )
 data class SetCollectionEntity(
     val setId: SetId,

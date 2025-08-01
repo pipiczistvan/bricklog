@@ -43,7 +43,7 @@ fun PagedSetList(
         start = 12.dp,
         end = 12.dp,
         bottom = 12.dp + WindowInsets.navigationBars.asPaddingValues()
-            .calculateBottomPadding()
+            .calculateBottomPadding(),
     ),
     displayMode: SetListDisplayMode = SetListDisplayMode.COLUMN,
     modifier: Modifier = Modifier,
@@ -55,11 +55,11 @@ fun PagedSetList(
                 state = scrollState,
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             ) {
                 items(
                     count = sets.itemCount,
-                    key = sets.itemKey { it.setID }
+                    key = sets.itemKey { it.setID },
                 ) { index ->
                     sets[index]?.let { set ->
                         SetListItem(
@@ -69,7 +69,7 @@ fun PagedSetList(
                                 .widthIn(max = 700.dp)
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onFavouriteClick = onFavouriteClick
+                            onFavouriteClick = onFavouriteClick,
                         )
                     }
                 }
@@ -82,11 +82,11 @@ fun PagedSetList(
                 columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
                 verticalItemSpacing = 12.dp,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             ) {
                 items(
                     count = sets.itemCount,
-                    key = sets.itemKey { it.setID }
+                    key = sets.itemKey { it.setID },
                 ) { index ->
                     sets[index]?.let { set ->
                         SetGridItem(
@@ -96,7 +96,7 @@ fun PagedSetList(
                                 .fillMaxWidth(),
                             onClick = onSetClick,
                             onFavouriteClick = onFavouriteClick,
-                            imageSize = ImageSize.SMALL
+                            imageSize = ImageSize.SMALL,
                         )
                     }
                 }
@@ -109,11 +109,11 @@ fun PagedSetList(
                 columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
                 verticalItemSpacing = 12.dp,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             ) {
                 items(
                     count = sets.itemCount,
-                    key = sets.itemKey { it.setID }
+                    key = sets.itemKey { it.setID },
                 ) { index ->
                     sets[index]?.let { set ->
                         SetGridItem(
@@ -122,7 +122,7 @@ fun PagedSetList(
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onFavouriteClick = onFavouriteClick
+                            onFavouriteClick = onFavouriteClick,
                         )
                     }
                 }
@@ -144,11 +144,11 @@ private fun PagedSetListPreview() {
                             refresh = LoadState.NotLoading(false),
                             append = LoadState.NotLoading(false),
                             prepend = LoadState.NotLoading(false),
-                        )
-                )
+                        ),
+                ),
             ).collectAsLazyPagingItems(),
             onSetClick = {},
-            onFavouriteClick = {}
+            onFavouriteClick = {},
         )
     }
 }

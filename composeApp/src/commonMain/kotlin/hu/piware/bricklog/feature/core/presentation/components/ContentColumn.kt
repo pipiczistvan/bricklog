@@ -32,7 +32,7 @@ fun ContentColumn(
         modifier = modifier
             .padding(
                 start = contentPadding.calculateStartPadding(layoutDirection),
-                end = contentPadding.calculateEndPadding(layoutDirection)
+                end = contentPadding.calculateEndPadding(layoutDirection),
             )
             .verticalScroll(rememberScrollState()),
     ) {
@@ -40,7 +40,7 @@ fun ContentColumn(
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = verticalArrangement,
-            horizontalAlignment = horizontalAlignment
+            horizontalAlignment = horizontalAlignment,
         ) {
             content()
         }

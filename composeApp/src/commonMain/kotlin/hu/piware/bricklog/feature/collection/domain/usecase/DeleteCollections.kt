@@ -33,8 +33,8 @@ class DeleteCollections(
         return saveUserPreferences(
             userPreferences.copy(
                 collectionOrder = userPreferences.collectionOrder - collectionIds
-                    .filter { it in userPreferences.collectionOrder }
-            )
+                    .filter { it in userPreferences.collectionOrder },
+            ),
         )
     }
 }

@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 enum class SetListDisplayMode {
     COLUMN,
     GRID,
-    GRID_LARGE
+    GRID_LARGE,
 }

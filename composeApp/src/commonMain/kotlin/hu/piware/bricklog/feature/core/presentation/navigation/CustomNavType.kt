@@ -22,10 +22,14 @@ object CustomNavType {
 
         override fun get(bundle: SavedState, key: String): T? {
             return bundle.read {
-                if (!contains(key) || isNull(key)) null else json.decodeFromString(
-                    serializer,
-                    getString(key)
-                )
+                if (!contains(key) || isNull(key)) {
+                    null
+                } else {
+                    json.decodeFromString(
+                        serializer,
+                        getString(key),
+                    )
+                }
             }
         }
 

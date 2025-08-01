@@ -33,26 +33,26 @@ class SetDetailViewModel(
     private val watchCollections: WatchCollections,
 ) : ViewModel() {
 
-    private val _arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(
-        typeMap = mapOf(typeOf<SetDetailArguments>() to CustomNavType.SetDetailArgumentsType)
+    private val arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(
+        typeMap = mapOf(typeOf<SetDetailArguments>() to CustomNavType.SetDetailArgumentsType),
     ).arguments
 
     private var _uiState = MutableStateFlow(
-        SetDetailState(sharedElementPrefix = _arguments.sharedElementPrefix)
+        SetDetailState(sharedElementPrefix = arguments.sharedElementPrefix),
     )
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
             observeSet()
             observeAvailableCollections()
-            loadInstructions(_arguments.setId)
+            loadInstructions(arguments.setId)
         }
 
     fun onAction(action: SetDetailAction) {
         when (action) {
             is SetDetailAction.OnToggleCollection -> toggleCollection(
                 action.setId,
-                action.collectionId
+                action.collectionId,
             )
 
             is SetDetailAction.OnToggleFavourite -> toggleFavourite(action.setId)
@@ -70,14 +70,14 @@ class SetDetailViewModel(
 
             _uiState.update {
                 it.copy(
-                    instructions = instructions
+                    instructions = instructions,
                 )
             }
         }
     }
 
     private fun observeSet() {
-        watchSetDetailsById(_arguments.setId)
+        watchSetDetailsById(arguments.setId)
             .onEach { setDetails ->
                 _uiState.update { it.copy(setDetails = setDetails) }
             }.launchIn(viewModelScope)

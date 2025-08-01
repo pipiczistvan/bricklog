@@ -74,15 +74,15 @@ fun LoginScreenRoot(
             GoogleButtonUiContainer(
                 onGoogleSignInResult = {
                     onAction(LoginAction.OnAuthenticate(AuthenticationMethod.GoogleSignIn(it)))
-                }
+                },
             ) {
                 GoogleSignInButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(Res.string.feature_user_login_btn_google_sign_in),
-                    onClick = ::onClick
+                    onClick = ::onClick,
                 )
             }
-        }
+        },
     )
 }
 
@@ -94,7 +94,7 @@ private fun LoginScreen(
     modifier: Modifier = Modifier,
 ) {
     LoadingOverlay(
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
     ) {
         Scaffold(
             modifier = modifier,
@@ -105,7 +105,7 @@ private fun LoginScreen(
                         IconButton(onClick = { onAction(LoginAction.OnBackClick) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     },
@@ -113,9 +113,9 @@ private fun LoginScreen(
                         TextButton(onClick = { onAction(LoginAction.OnRegisterClick) }) {
                             Text(text = stringResource(Res.string.feature_user_login_btn_register))
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { padding ->
             ContentColumn(
                 modifier = Modifier
@@ -123,20 +123,20 @@ private fun LoginScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
+                    bottom = padding.calculateBottomPadding(),
                 ),
-                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
             ) {
                 EmailPasswordForm(
                     onSubmit = { email, password ->
                         onAction(
                             LoginAction.OnAuthenticate(
-                                AuthenticationMethod.EmailPassword(email, password)
-                            )
+                                AuthenticationMethod.EmailPassword(email, password),
+                            ),
                         )
                     },
                     onPasswordResetClick = { onAction(LoginAction.OnPasswordResetClick) },
-                    validatePassword = { it.isNotBlank() }
+                    validatePassword = { it.isNotBlank() },
                 )
                 LoginOptionSeparator()
                 googleSignInButton(onAction)
@@ -149,17 +149,17 @@ private fun LoginScreen(
 private fun LoginOptionSeparator() {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         HorizontalDivider(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             modifier = Modifier.padding(horizontal = Dimens.MediumPadding.size),
-            text = stringResource(Res.string.feature_user_login_label_or)
+            text = stringResource(Res.string.feature_user_login_label_or),
         )
         HorizontalDivider(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -175,9 +175,9 @@ private fun LoginScreenPreview() {
                 GoogleSignInButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(Res.string.feature_user_login_btn_google_sign_in),
-                    onClick = {}
+                    onClick = {},
                 )
-            }
+            },
         )
     }
 }

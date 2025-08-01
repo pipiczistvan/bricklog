@@ -1,3 +1,5 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times
     // in each subproject's classloader
@@ -16,4 +18,20 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.baselineprofile) apply false
     alias(libs.plugins.firebaseAppdistribution) apply false
+    alias(libs.plugins.ktlint) apply false
+}
+
+subprojects {
+    if (path != ":thirdparty:androidx:paging:compose") {
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
+        configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+            debug = true
+            ignoreFailures = false
+            reporters {
+                reporter(ReporterType.PLAIN)       // Console output
+                reporter(ReporterType.CHECKSTYLE)  // XML for CI
+                reporter(ReporterType.SARIF)       // SARIF for GitHub Code Scanning
+            }
+        }
+    }
 }

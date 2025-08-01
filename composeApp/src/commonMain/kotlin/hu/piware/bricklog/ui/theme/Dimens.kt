@@ -10,5 +10,5 @@ enum class Dimens(val size: Dp) {
     UpperMediumPadding(20.dp),
     LargePadding(32.dp),
     ExtraLargePadding(64.dp),
-    M3BottomNavMinHeight(80.dp)
+    M3BottomNavMinHeight(80.dp),
 }

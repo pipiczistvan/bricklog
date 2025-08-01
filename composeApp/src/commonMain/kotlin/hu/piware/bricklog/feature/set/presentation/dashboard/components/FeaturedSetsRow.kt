@@ -32,20 +32,20 @@ fun FeaturedSetsRow(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
     ) {
         SectionTitle(
             modifier = Modifier
                 .testTag("featured_sets_row:title")
                 .padding(start = Dimens.MediumPadding.size),
             title = title,
-            onClick = onShowMoreClick
+            onClick = onShowMoreClick,
         )
         SetCardRow(
             sets = sets,
             onSetClick = onSetClick,
             sharedElementPrefix = sharedElementPrefix,
-            onShowMoreClick = onShowMoreClick
+            onShowMoreClick = onShowMoreClick,
         )
     }
 }
@@ -57,7 +57,7 @@ private fun SectionTitle(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier
@@ -65,11 +65,11 @@ private fun SectionTitle(
                 .clickable(onClick = onClick)
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
             )
         }
     }
@@ -80,14 +80,14 @@ private fun SectionTitle(
 private fun FeaturedSetsRowPreview() {
     MaterialTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             FeaturedSetsRow(
                 title = "Featured Sets",
                 sets = PreviewData.sets,
                 sharedElementPrefix = "featured_set_",
                 onSetClick = {},
-                onShowMoreClick = {}
+                onShowMoreClick = {},
             )
         }
     }

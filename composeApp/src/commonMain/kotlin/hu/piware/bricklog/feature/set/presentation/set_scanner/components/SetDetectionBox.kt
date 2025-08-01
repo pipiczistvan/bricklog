@@ -56,19 +56,19 @@ fun SetDetectionBox(
             .clip(Shapes.large)
             .background(
                 color = Color.White,
-                shape = Shapes.large
+                shape = Shapes.large,
             )
             .border(
                 width = Dimens.ExtraSmallPadding.size,
                 color = Color.Black,
-                shape = Shapes.large
+                shape = Shapes.large,
             )
             .clickable {
                 if (detection.set != null) {
                     onClick(detection.set)
                 }
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Image(
             modifier = Modifier
@@ -76,7 +76,7 @@ fun SetDetectionBox(
                 .padding(Dimens.ExtraSmallPadding.size),
             contentScale = ContentScale.Fit,
             painter = imagePainter,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

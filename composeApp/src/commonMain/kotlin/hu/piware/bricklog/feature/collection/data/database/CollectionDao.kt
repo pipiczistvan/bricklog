@@ -21,7 +21,7 @@ interface CollectionDao {
         WHERE userId = :userId 
         AND (:type IS NULL OR type = :type)
         AND (:setId IS NULL OR id IN (SELECT collectionId FROM set_collections WHERE setId = :setId))
-"""
+""",
     )
     fun watchCollections(
         userId: UserId,

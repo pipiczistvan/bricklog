@@ -22,8 +22,8 @@ class WatchCollectibleSetDetails(
             setRepository.watchSetDetails(
                 SetQueryOptions(
                     setIds = collectibles.map { it.setId }.toSet(),
-                    sortOption = SetSortOption.APPEARANCE_DATE_ASCENDING
-                )
+                    sortOption = SetSortOption.APPEARANCE_DATE_ASCENDING,
+                ),
             )
         }
     }

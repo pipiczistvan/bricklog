@@ -19,10 +19,12 @@ fun Modifier.sharedElement(
         with(sharedTransitionScope) {
             sharedElement(
                 sharedContentState = rememberSharedContentState(key = key),
-                animatedVisibilityScope = animatedVisibilityScope
+                animatedVisibilityScope = animatedVisibilityScope,
             )
         }
-    } else Modifier
+    } else {
+        Modifier
+    }
 
     return this.then(modifier)
 }

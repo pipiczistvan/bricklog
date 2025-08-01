@@ -50,7 +50,7 @@ fun LoadingOverlay(
 
     BlurOverlay(
         isOverlayActive = isLoading,
-        content = content
+        content = content,
     ) {
         ContainedLoadingIndicator()
     }
@@ -63,13 +63,13 @@ fun BlurOverlay(
     overlayContent: @Composable () -> Unit,
 ) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = Modifier.blur(
                 radius = if (isOverlayActive) 10.dp else 0.dp,
-                edgeTreatment = BlurredEdgeTreatment.Unbounded
-            )
+                edgeTreatment = BlurredEdgeTreatment.Unbounded,
+            ),
         ) {
             content()
         }
@@ -81,8 +81,8 @@ fun BlurOverlay(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = {}
-                    )
+                        onClick = {},
+                    ),
             )
             overlayContent()
         }

@@ -19,7 +19,7 @@ sealed interface RootRoute {
 
 fun NavGraphBuilder.rootGraph(navController: NavHostController) {
     navigation<RootRoute.Graph>(
-        startDestination = OnboardingRoute.Graph
+        startDestination = OnboardingRoute.Graph,
     ) {
         onboardingGraph(navController)
         setGraph(navController)

@@ -41,12 +41,12 @@ fun ChangelogBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:status_filter_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         ChangelogSheetContent(
             changelog = changelog,
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -61,12 +61,12 @@ private fun ChangelogSheetContent(
     CompositionLocalProvider {
         ProvideTextStyle(value = OverpassMonoTypography().bodyMedium) {
             Column(
-                modifier = modifier
+                modifier = modifier,
             ) {
                 BottomSheetHeader(
                     title = stringResource(Res.string.feature_set_dashboard_changelog_bottom_sheet_title),
                     sheetState = sheetState,
-                    onDismiss = onDismiss
+                    onDismiss = onDismiss,
                 )
 
                 LazyColumn(
@@ -74,7 +74,7 @@ private fun ChangelogSheetContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(Dimens.MediumPadding.size),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                    verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
                 ) {
                     changelog.releases.forEach { release ->
                         item {
@@ -95,7 +95,7 @@ private fun ChangelogSheetContentPreview() {
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             changelog = PreviewData.changelog,
             sheetState = rememberModalBottomSheetState(),
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

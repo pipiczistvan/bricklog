@@ -59,7 +59,7 @@ fun RegisterScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -70,7 +70,7 @@ private fun RegisterScreen(
     modifier: Modifier = Modifier,
 ) {
     LoadingOverlay(
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
     ) {
         Scaffold(
             modifier = modifier,
@@ -81,7 +81,7 @@ private fun RegisterScreen(
                         IconButton(onClick = { onAction(RegisterAction.OnBackClick) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     },
@@ -89,9 +89,9 @@ private fun RegisterScreen(
                         TextButton(onClick = { onAction(RegisterAction.OnLoginClick) }) {
                             Text(text = stringResource(Res.string.feature_user_register_btn_login))
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { padding ->
             ContentColumn(
                 modifier = Modifier
@@ -99,18 +99,18 @@ private fun RegisterScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
+                    bottom = padding.calculateBottomPadding(),
                 ),
-                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
             ) {
                 EmailPasswordForm(
                     onSubmit = { email, password ->
                         onAction(
                             RegisterAction.OnAuthenticate(
-                                AuthenticationMethod.EmailPassword(email, password)
-                            )
+                                AuthenticationMethod.EmailPassword(email, password),
+                            ),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -123,7 +123,7 @@ private fun RegisterScreenPreview() {
     BricklogTheme {
         RegisterScreen(
             state = RegisterState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

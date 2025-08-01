@@ -49,13 +49,13 @@ fun BottomSheetHeader(
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
-    
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.SmallPadding.size)
+            .padding(horizontal = Dimens.SmallPadding.size),
     ) {
         IconButton(onClick = {
             scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -67,7 +67,7 @@ fun BottomSheetHeader(
             Icon(
                 imageVector = Icons.Outlined.Close,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = MaterialTheme.colorScheme.onBackground,
             )
         }
 
@@ -77,16 +77,16 @@ fun BottomSheetHeader(
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
 
         if (primaryActionIcon != null && onPrimaryActionClick != null) {
             IconButton(
-                onClick = onPrimaryActionClick
+                onClick = onPrimaryActionClick,
             ) {
                 Icon(
                     imageVector = primaryActionIcon,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         } else {
@@ -106,11 +106,14 @@ fun BottomSheetOption(
         targetValue = if (selected) {
             MaterialTheme.colorScheme.primary
                 .copy(alpha = .2f)
-        } else Color.Transparent,
+        } else {
+            Color.Transparent
+        },
         animationSpec = tween(
             durationMillis = 400,
-            easing = LinearOutSlowInEasing
-        ), label = "backgroundColor"
+            easing = LinearOutSlowInEasing,
+        ),
+        label = "backgroundColor",
     )
 
     Box(
@@ -118,16 +121,16 @@ fun BottomSheetOption(
             .clip(Shapes.large)
             .background(
                 color = backgroundColor,
-                shape = Shapes.large
+                shape = Shapes.large,
             )
-            .clickable { onClick() }
+            .clickable { onClick() },
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             content()
         }
@@ -147,21 +150,21 @@ fun BottomSheetButton(
             .clip(Shapes.large)
             .background(
                 color = color,
-                shape = Shapes.large
+                shape = Shapes.large,
             )
-            .clickable { onClick() }
+            .clickable { onClick() },
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = MaterialTheme.colorScheme.onBackground,
             )
             Spacer(modifier = Modifier.width(Dimens.SmallPadding.size))
             Text(
@@ -169,7 +172,7 @@ fun BottomSheetButton(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -180,11 +183,11 @@ private fun PlaceHolderIconButton() {
     IconButton(
         onClick = { },
         enabled = false,
-        modifier = Modifier.alpha(0f)
+        modifier = Modifier.alpha(0f),
     ) {
         Icon(
             imageVector = Icons.Outlined.Close,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
@@ -194,7 +197,7 @@ private fun PlaceHolderIconButton() {
 private fun BottomSheetOptionPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             BottomSheetOption(
                 selected = false,
@@ -211,12 +214,12 @@ private fun BottomSheetOptionPreview() {
 private fun BottomSheetButtonPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             BottomSheetButton(
                 title = "OK",
                 icon = Icons.Outlined.Close,
-                onClick = { }
+                onClick = { },
             )
         }
     }

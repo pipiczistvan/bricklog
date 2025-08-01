@@ -39,13 +39,13 @@ fun CollectionIconBottomSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         CollectionIconSheetContent(
             selectedIcon = selectedIcon,
             onSelectedIconChange = onSelectedIconChange,
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -59,12 +59,12 @@ private fun CollectionIconSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_collection_edit_icon_sheet_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         LazyVerticalGrid(
@@ -72,7 +72,7 @@ private fun CollectionIconSheetContent(
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size),
             columns = GridCells.Adaptive(50.dp),
-            contentPadding = PaddingValues(Dimens.MediumPadding.size)
+            contentPadding = PaddingValues(Dimens.MediumPadding.size),
         ) {
             items(CollectionIcon.entries.toTypedArray()) { icon ->
                 CollectionIconSheetOption(
@@ -80,7 +80,7 @@ private fun CollectionIconSheetContent(
                     selected = icon == selectedIcon,
                     onClick = {
                         onSelectedIconChange(icon)
-                    }
+                    },
                 )
             }
         }
@@ -95,11 +95,11 @@ private fun CollectionIconSheetOption(
 ) {
     BottomSheetOption(
         selected = selected,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Icon(
             imageVector = if (selected) option.filledIcon else option.outlinedIcon,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
@@ -113,7 +113,7 @@ private fun CollectionIconSheetContentPreview() {
             selectedIcon = CollectionIcon.PAYMENTS,
             onSelectedIconChange = {},
             sheetState = rememberModalBottomSheetState(),
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

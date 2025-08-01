@@ -51,28 +51,28 @@ private fun Flow<List<SetThemeGroup>>.fixEmptyNamedThemeGroup() = map { themeGro
 private fun SetThemeGroup.toMutable(): MutableSetThemeGroup {
     return MutableSetThemeGroup(
         name = name,
-        themes = themes.map { it.toMutable() }.toMutableList()
+        themes = themes.map { it.toMutable() }.toMutableList(),
     )
 }
 
 private fun MutableSetThemeGroup.toImmutable(): SetThemeGroup {
     return SetThemeGroup(
         name = name,
-        themes = themes.map { it.toImmutable() }.toList()
+        themes = themes.map { it.toImmutable() }.toList(),
     )
 }
 
 private fun SetTheme.toMutable(): MutableSetTheme {
     return MutableSetTheme(
         name = name,
-        setCount = setCount
+        setCount = setCount,
     )
 }
 
 private fun MutableSetTheme.toImmutable(): SetTheme {
     return SetTheme(
         name = name,
-        setCount = setCount
+        setCount = setCount,
     )
 }
 

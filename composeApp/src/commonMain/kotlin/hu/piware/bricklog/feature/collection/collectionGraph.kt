@@ -18,13 +18,13 @@ sealed interface CollectionRoute {
 
 fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
     navigation<CollectionRoute.Graph>(
-        startDestination = CollectionRoute.CollectionEditScreen(null)
+        startDestination = CollectionRoute.CollectionEditScreen(null),
     ) {
         composable<CollectionRoute.CollectionEditScreen> {
             CollectionEditScreenRoot(
                 onBackClick = {
                     navController.navigateUp()
-                }
+                },
             )
         }
     }

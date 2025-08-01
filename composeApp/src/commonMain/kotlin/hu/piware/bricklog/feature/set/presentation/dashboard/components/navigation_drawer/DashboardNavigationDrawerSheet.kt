@@ -99,45 +99,48 @@ fun DashboardNavigationDrawerSheet(
         modifier = modifier
             .testTag("navigation_drawer")
             .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.statusBarsPadding())
         Spacer(modifier = Modifier.height(24.dp))
 
         CollectionsSection(
-            drawerState = drawerState, collections = state.collections, onAction = onAction
+            drawerState = drawerState,
+            collections = state.collections,
+            onAction = onAction,
         )
 
         HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
         )
 
         SettingsSection(
             drawerState = drawerState,
             currentUser = state.currentUser,
-            onAction = onAction
+            onAction = onAction,
         )
 
         if (BuildKonfig.DEV_LEVEL >= DevLevels.DEVELOPMENT) {
             HorizontalDivider(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
             )
 
             DeveloperSection(
-                drawerState = drawerState, onAction = onAction
+                drawerState = drawerState,
+                onAction = onAction,
             )
         }
 
         Spacer(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
         )
 
         SetUpdateInfoSection(
-            updateInfo = state.setUpdateInfo
+            updateInfo = state.setUpdateInfo,
         )
 
         Spacer(modifier = Modifier.navigationBarsPadding())
@@ -154,12 +157,15 @@ private fun CollectionsSection(
         title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_collections),
         trailingIcon = {
             IconButton(
-                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(null)) }) {
+                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(null)) },
+            ) {
                 Icon(
-                    imageVector = Icons.Outlined.Add, contentDescription = null
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = null,
                 )
             }
-        }) {
+        },
+    ) {
         collections.map {
             NavigationSectionButton(
                 modifier = Modifier.testTag("navigation_drawer:collection_btn"),
@@ -170,10 +176,11 @@ private fun CollectionsSection(
                         DashboardNavigationDrawerAction.OnSearchSets(
                             SetListArguments(
                                 filterOverrides = SetFilter(
-                                    collectionIds = setOf(it.id)
-                                ), title = it.name
-                            )
-                        )
+                                    collectionIds = setOf(it.id),
+                                ),
+                                title = it.name,
+                            ),
+                        ),
                     )
                 },
                 icon = it.icon.outlinedIcon,
@@ -183,16 +190,18 @@ private fun CollectionsSection(
                         onClick = {
                             onAction(
                                 DashboardNavigationDrawerAction.OnCollectionEditClick(
-                                    it.id
-                                )
+                                    it.id,
+                                ),
                             )
-                        }) {
+                        },
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                })
+                },
+            )
         }
     }
 }
@@ -204,28 +213,33 @@ private fun SettingsSection(
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
-        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_settings)
+        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_settings),
     ) {
         val isLoggedIn = currentUser.isAuthenticated
         NavigationSectionButton(
             modifier = Modifier.testTag("navigation_drawer:login_btn"),
             state = drawerState,
-            title = if (isLoggedIn)
+            title = if (isLoggedIn) {
                 stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_logout)
-            else
-                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login),
-            onClick = { onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick) },
+            } else {
+                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login)
+            },
+            onClick = {
+                onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick)
+            },
             icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
             trailingIcon = {
                 if (isLoggedIn) {
                     IconButton(onClick = { onAction(DashboardNavigationDrawerAction.OnDeleteUserClick) }) {
                         Icon(
                             imageVector = Icons.Outlined.DeleteOutline,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                } else Unit
-            }
+                } else {
+                    Unit
+                }
+            },
         )
         NavigationSectionButton(
             modifier = Modifier.testTag("navigation_drawer:notifications_btn"),
@@ -257,11 +271,11 @@ private fun DeveloperSection(
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
-        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_developer_tools)
+        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_developer_tools),
     ) {
         val yesterday = remember { Clock.System.now() - 1.days }
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = yesterday.toEpochMilliseconds()
+            initialSelectedDateMillis = yesterday.toEpochMilliseconds(),
         )
         val selectedDate by derivedStateOf {
             datePickerState.selectedDateMillis?.let { Instant.fromEpochMilliseconds(it) }
@@ -269,36 +283,47 @@ private fun DeveloperSection(
         var showDatePicker by remember { mutableStateOf(false) }
 
         NavigationSectionButton(
-            state = drawerState, title = stringResource(
+            state = drawerState,
+            title = stringResource(
                 Res.string.feature_set_dashboard_navigation_drawer_btn_reset_sets,
-                if (selectedDate != null) formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
-                else "?"
-            ), onClick = {
+                if (selectedDate != null) {
+                    formatDate(selectedDate!!.toLocalDateTime(TimeZone.currentSystemDefault()))
+                } else {
+                    "?"
+                },
+            ),
+            onClick = {
                 if (selectedDate != null) {
                     onAction(DashboardNavigationDrawerAction.OnResetSets(selectedDate!!))
                 }
-            }, icon = Icons.Outlined.Restore, trailingIcon = {
+            },
+            icon = Icons.Outlined.Restore,
+            trailingIcon = {
                 IconButton(
-                    onClick = { showDatePicker = true }) {
+                    onClick = { showDatePicker = true },
+                ) {
                     Icon(
-                        imageVector = Icons.Outlined.CalendarMonth, contentDescription = null
+                        imageVector = Icons.Outlined.CalendarMonth,
+                        contentDescription = null,
                     )
                 }
-            })
+            },
+        )
 
         if (showDatePicker) {
             DatePickerDialog(onDismissRequest = {
-
             }, confirmButton = {
                 TextButton(
                     onClick = {
                         showDatePicker = false
-                    }) {
+                    },
+                ) {
                     Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_confirm))
                 }
             }) {
                 DatePicker(
-                    state = datePickerState, showModeToggle = false
+                    state = datePickerState,
+                    showModeToggle = false,
                 )
             }
         }
@@ -313,7 +338,8 @@ private fun NavigationSection(
 ) {
     Column {
         NavigationSectionHeader(
-            title = title, action = trailingIcon
+            title = title,
+            action = trailingIcon,
         )
         content()
     }
@@ -327,12 +353,12 @@ private fun NavigationSectionHeader(
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             text = title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
         action()
     }
@@ -361,10 +387,11 @@ private fun NavigationSectionButton(
         },
         icon = {
             Icon(
-                imageVector = icon, contentDescription = title
+                imageVector = icon,
+                contentDescription = title,
             )
         },
-        badge = trailingIcon
+        badge = trailingIcon,
     )
 }
 
@@ -378,7 +405,7 @@ private fun SetUpdateInfoSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(stringResource(Res.string.feature_set_dashboard_navigation_drawer_label_set_update_info))
                 if (updateInfo != null) {
@@ -398,7 +425,7 @@ private fun DashboardNavigationDrawerSheetPreview() {
         DashboardNavigationDrawerSheet(
             drawerState = DrawerState(DrawerValue.Open),
             state = DashboardNavigationDrawerState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

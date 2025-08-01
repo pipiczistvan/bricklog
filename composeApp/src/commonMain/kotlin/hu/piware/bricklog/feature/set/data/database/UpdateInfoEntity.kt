@@ -9,8 +9,8 @@ import kotlinx.datetime.Instant
 @Entity(
     tableName = "update_info",
     indices = [
-        Index(value = ["setId"])
-    ]
+        Index(value = ["setId"]),
+    ],
 )
 data class UpdateInfoEntity(
     @PrimaryKey(autoGenerate = false) val dataType: DataType,

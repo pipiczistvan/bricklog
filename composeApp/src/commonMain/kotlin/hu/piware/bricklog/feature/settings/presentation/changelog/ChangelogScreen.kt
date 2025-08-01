@@ -48,7 +48,7 @@ fun ChangelogScreenRoot(
             when (action) {
                 ChangelogAction.OnBackClick -> onBackClick()
             }
-        }
+        },
     )
 }
 
@@ -69,12 +69,12 @@ private fun ChangelogScreen(
                     IconButton(onClick = { onAction(ChangelogAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         CompositionLocalProvider {
             ProvideTextStyle(value = OverpassMonoTypography().bodyMedium) {
@@ -86,13 +86,13 @@ private fun ChangelogScreen(
                             .fillMaxSize(),
                         contentPadding = PaddingValues(
                             top = padding.calculateTopPadding(),
-                            bottom = padding.calculateBottomPadding()
+                            bottom = padding.calculateBottomPadding(),
                         ),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size)
+                        verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
                     ) {
                         state.changelog.releases.forEach { release ->
                             ReleaseItem(
-                                release = release
+                                release = release,
                             )
                             if (release != state.changelog.releases.last()) {
                                 HorizontalDivider()
@@ -111,9 +111,9 @@ private fun ChangelogScreenPreview() {
     BricklogTheme {
         ChangelogScreen(
             state = ChangelogState(
-                changelog = PreviewData.changelog
+                changelog = PreviewData.changelog,
             ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

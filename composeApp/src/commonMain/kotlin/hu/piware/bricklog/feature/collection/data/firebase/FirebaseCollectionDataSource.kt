@@ -72,7 +72,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                                 .document(collection.id)
                                 .set(
                                     data = collection.toDocument(),
-                                    merge = true
+                                    merge = true,
                                 )
                             logger.d { "Collection updated successfully" }
                         }
@@ -100,9 +100,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                             .document(collectionId)
                             .set(
                                 data = mapOf(
-                                    "setIds" to FieldValue.arrayUnion(setId)
+                                    "setIds" to FieldValue.arrayUnion(setId),
                                 ),
-                                merge = true
+                                merge = true,
                             )
                     }
                     commit()
@@ -149,9 +149,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                             .document(id)
                             .set(
                                 data = mapOf(
-                                    "setIds" to FieldValue.arrayRemove(setId)
+                                    "setIds" to FieldValue.arrayRemove(setId),
                                 ),
-                                merge = true
+                                merge = true,
                             )
                     }
                     commit()

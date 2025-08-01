@@ -70,7 +70,7 @@ fun ThemeListScreenRoot(
                 is ThemeListAction.OnSearchSets -> onSearchSets(action.arguments)
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -91,12 +91,12 @@ private fun ThemeListScreen(
                     IconButton(onClick = { onAction(ThemeListAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -104,12 +104,12 @@ private fun ThemeListScreen(
                 .fillMaxSize(),
             contentPadding = PaddingValues(
                 top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding()
-            )
+                bottom = padding.calculateBottomPadding(),
+            ),
         ) {
             items(state.themeGroups) { themeGroup ->
                 ThemeGroupToggleableRow(
-                    themeGroup = themeGroup
+                    themeGroup = themeGroup,
                 ) {
                     themeGroup.themes.forEach { theme ->
                         ThemeRow(
@@ -119,13 +119,13 @@ private fun ThemeListScreen(
                                     ThemeListAction.OnSearchSets(
                                         arguments = SetListArguments(
                                             filterOverrides = SetFilter(
-                                                themes = setOf(theme.name)
+                                                themes = setOf(theme.name),
                                             ),
-                                            title = theme.name
-                                        )
-                                    )
+                                            title = theme.name,
+                                        ),
+                                    ),
                                 )
-                            }
+                            },
                         )
                     }
                 }
@@ -149,26 +149,26 @@ private fun ThemeGroupToggleableRow(
                 .clickable { showContent = !showContent }
                 .padding(Dimens.SmallPadding.size),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = themeGroup.name,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
 
             val iconAngleProgress: Float by animateFloatAsState(
                 targetValue = if (showContent) 1f else 0f,
                 animationSpec = tween(
                     durationMillis = 200,
-                    easing = FastOutSlowInEasing
+                    easing = FastOutSlowInEasing,
                 ),
-                label = "iconAngleProgress"
+                label = "iconAngleProgress",
             )
 
             Icon(
                 modifier = Modifier.rotate(iconAngleProgress * 180f),
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -176,15 +176,15 @@ private fun ThemeGroupToggleableRow(
             visible = showContent,
             enter = fadeIn() + expandIn(
                 expandFrom = Alignment.BottomCenter,
-                initialSize = { IntSize(it.width, 0) }
+                initialSize = { IntSize(it.width, 0) },
             ),
             exit = fadeOut() + shrinkOut(
                 shrinkTowards = Alignment.BottomCenter,
-                targetSize = { IntSize(it.width, 0) }
-            )
+                targetSize = { IntSize(it.width, 0) },
+            ),
         ) {
             Column(
-                modifier = Modifier.padding(horizontal = Dimens.MediumPadding.size)
+                modifier = Modifier.padding(horizontal = Dimens.MediumPadding.size),
             ) {
                 content()
             }
@@ -202,11 +202,11 @@ private fun ThemeRow(
             .fillMaxWidth()
             .clip(Shapes.large)
             .clickable(onClick = onClick)
-            .padding(Dimens.SmallPadding.size)
+            .padding(Dimens.SmallPadding.size),
     ) {
         Text(
             text = "${theme.name} (${theme.setCount})",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -217,7 +217,7 @@ private fun ThemeListScreenPreview() {
     BricklogTheme {
         ThemeListScreen(
             state = ThemeListState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

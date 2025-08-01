@@ -56,8 +56,7 @@ fun BarcodeScannerWithPermission(
         BarcodeScanner(
             onScanResult = onScanResult,
             formats = formats,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
-

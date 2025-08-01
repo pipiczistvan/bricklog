@@ -31,7 +31,7 @@ fun DeleteUserConfirmationDialog(
         icon = {
             Icon(
                 imageVector = Icons.Outlined.DeleteOutline,
-                contentDescription = null
+                contentDescription = null,
             )
         },
         title = {
@@ -46,18 +46,18 @@ fun DeleteUserConfirmationDialog(
                 onClick = {
                     onConfirm()
                     onDismiss()
-                }
+                },
             ) {
                 Text(stringResource(Res.string.feature_user_delete_user_data_confirm_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onDismiss
+                onClick = onDismiss,
             ) {
                 Text(stringResource(Res.string.feature_user_delete_user_data_confirm_btn_cancel))
             }
-        }
+        },
     )
 }
 
@@ -67,7 +67,7 @@ private fun DeleteUserConfirmationDialogPreview() {
     BricklogTheme {
         DeleteUserConfirmationDialog(
             onDismiss = {},
-            onConfirm = {}
+            onConfirm = {},
         )
     }
 }

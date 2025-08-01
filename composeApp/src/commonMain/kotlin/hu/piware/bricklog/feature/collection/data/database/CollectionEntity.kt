@@ -11,11 +11,11 @@ import hu.piware.bricklog.feature.user.domain.model.UserId
     tableName = "collections",
     primaryKeys = [
         "id",
-        "userId"
+        "userId",
     ],
     indices = [
-        Index("userId")
-    ]
+        Index("userId"),
+    ],
 )
 data class CollectionEntity(
     val id: CollectionId,

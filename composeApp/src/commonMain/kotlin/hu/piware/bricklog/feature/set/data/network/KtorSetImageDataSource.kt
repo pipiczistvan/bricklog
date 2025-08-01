@@ -25,7 +25,7 @@ class KtorRemoteSetImageDataSource(
 
     override suspend fun getAdditionalImages(setId: Int): Result<List<Image>, DataError.Remote> {
         return safeCall<BricksetAdditionalImagesDto>(
-            transform = { it.decodeBody() }
+            transform = { it.decodeBody() },
         ) {
             httpClient.get(BASE_URL) {
                 parameter("apiKey", BuildKonfig.BRICKSET_API_KEY)

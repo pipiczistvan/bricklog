@@ -23,7 +23,7 @@ fun OverpassFontFamily() = FontFamily(
     Font(Res.font.Overpass_Regular, weight = FontWeight.Normal),
     Font(Res.font.Overpass_Medium, weight = FontWeight.Medium),
     Font(Res.font.Overpass_SemiBold, weight = FontWeight.SemiBold),
-    Font(Res.font.Overpass_Bold, weight = FontWeight.Bold)
+    Font(Res.font.Overpass_Bold, weight = FontWeight.Bold),
 )
 
 @Composable
@@ -32,7 +32,7 @@ fun OverpassMonoFontFamily() = FontFamily(
     Font(Res.font.OverpassMono_Regular, weight = FontWeight.Normal),
     Font(Res.font.OverpassMono_Medium, weight = FontWeight.Medium),
     Font(Res.font.OverpassMono_SemiBold, weight = FontWeight.SemiBold),
-    Font(Res.font.OverpassMono_Bold, weight = FontWeight.Bold)
+    Font(Res.font.OverpassMono_Bold, weight = FontWeight.Bold),
 )
 
 @Composable
@@ -57,6 +57,6 @@ private fun typography(fontFamily: FontFamily) = Typography().run {
         bodySmall = bodySmall.copy(fontFamily = fontFamily),
         labelLarge = labelLarge.copy(fontFamily = fontFamily),
         labelMedium = labelMedium.copy(fontFamily = fontFamily),
-        labelSmall = labelSmall.copy(fontFamily = fontFamily)
+        labelSmall = labelSmall.copy(fontFamily = fontFamily),
     )
 }

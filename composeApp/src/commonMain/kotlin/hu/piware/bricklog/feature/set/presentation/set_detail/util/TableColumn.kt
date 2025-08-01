@@ -59,23 +59,23 @@ fun createFirstSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> 
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_number,
             data = setDetails.setNumberWithVariant,
-            icon = Icons.Default.Tag
+            icon = Icons.Default.Tag,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_year,
             data = setDetails.set.year?.toString(),
-            icon = Icons.Default.CalendarToday
+            icon = Icons.Default.CalendarToday,
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_pieces,
             data = setDetails.set.pieces?.toString(),
-            drawableRes = Res.drawable.lego_brick_1x1
+            drawableRes = Res.drawable.lego_brick_1x1,
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_minifigures,
             data = setDetails.set.minifigs?.toString(),
-            drawableRes = Res.drawable.lego_figure_head
-        )
+            drawableRes = Res.drawable.lego_figure_head,
+        ),
     )
 }
 
@@ -84,23 +84,23 @@ fun createSecondSetDetailTableColumns(setDetails: SetDetails): List<TableColumn>
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_width,
             data = setDetails.set.width?.let { "${round(it * 10) / 10.0} cm" },
-            drawableRes = Res.drawable.arrow_range
+            drawableRes = Res.drawable.arrow_range,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_height,
             data = setDetails.set.height?.let { "${round(it * 10) / 10.0} cm" },
-            icon = Icons.Default.Height
+            icon = Icons.Default.Height,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_depth,
             data = setDetails.set.depth?.let { "${round(it * 10) / 10.0} cm" },
-            icon = Icons.Default.OpenInFull
+            icon = Icons.Default.OpenInFull,
         ),
         TableColumn.DrawableTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_weight,
             data = setDetails.set.weight?.let { "${round(it * 10) / 10.0} kg" },
-            drawableRes = Res.drawable.weight
-        )
+            drawableRes = Res.drawable.weight,
+        ),
     )
 }
 
@@ -109,22 +109,22 @@ fun createThirdSetDetailTableColumns(setDetails: SetDetails): List<TableColumn> 
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_launch_date,
             data = setDetails.localLaunchDate?.let { formatDate(it) },
-            icon = Icons.Default.EventAvailable
+            icon = Icons.Default.EventAvailable,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_exit_date,
             data = setDetails.localExitDate?.let { formatDate(it) },
-            icon = Icons.Default.EventBusy
+            icon = Icons.Default.EventBusy,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_price_eu,
             data = setDetails.EUPrice?.let { "€ ${round(it * 100) / 100}" },
-            icon = Icons.Default.EuroSymbol
+            icon = Icons.Default.EuroSymbol,
         ),
         TableColumn.ImageVectorTableColumn(
             titleRes = Res.string.feature_set_detail_table_label_price_us,
             data = setDetails.set.USPrice?.let { "$ ${round(it * 100) / 100}" },
-            icon = Icons.Default.AttachMoney
-        )
+            icon = Icons.Default.AttachMoney,
+        ),
     )
 }

@@ -25,7 +25,7 @@ fun BlurredImageBackground(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(
             modifier = Modifier
@@ -39,26 +39,26 @@ fun BlurredImageBackground(
                             colors = listOf(
                                 Color.Black,
                                 Color.Transparent,
-                            )
+                            ),
                         ),
-                        blendMode = BlendMode.DstIn
+                        blendMode = BlendMode.DstIn,
                     )
                 }
-                .blur(15.dp)
+                .blur(15.dp),
         ) {
             SetImage(
                 modifier = Modifier
                     .fillMaxSize(),
                 image = image,
                 size = ImageSize.SMALL,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         }
 
         Box(
             modifier = Modifier
                 .weight(0.55f)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
     }
 }

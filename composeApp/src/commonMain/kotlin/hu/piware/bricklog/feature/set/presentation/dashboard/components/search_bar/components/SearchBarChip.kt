@@ -44,7 +44,7 @@ fun SearchBarChip(
             }
         },
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -53,13 +53,13 @@ fun SearchBarChip(
 private fun SearchBarChipPreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SearchBarChip(
                 title = "Search",
                 isDefaultSelected = true,
                 showTrailingIcon = true,
-                onClick = {}
+                onClick = {},
             )
         }
     }

@@ -33,27 +33,27 @@ fun SettingsEntryButton(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit = { },
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     SettingsEntry(
         modifier = modifier
             .clip(Shapes.large)
             .background(color = MaterialTheme.colorScheme.surface)
-            .clickable { onClick() }
+            .clickable { onClick() },
     ) {
         Column(
             modifier = Modifier.padding(
                 horizontal = Dimens.UpperMediumPadding.size,
-                vertical = Dimens.MediumPadding.size
+                vertical = Dimens.MediumPadding.size,
             ),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -69,22 +69,22 @@ fun SettingsEntrySwitch(
     title: String,
     subTitle: String,
     checked: Boolean,
-    onCheckedChange: ((Boolean) -> Unit)?
+    onCheckedChange: ((Boolean) -> Unit)?,
 ) {
     SettingsEntry(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier
                 .padding(
                     horizontal = Dimens.UpperMediumPadding.size,
-                    vertical = Dimens.MediumPadding.size
+                    vertical = Dimens.MediumPadding.size,
                 )
                 .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = title,
@@ -94,21 +94,21 @@ fun SettingsEntrySwitch(
                 Text(
                     text = subTitle,
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
             HorizontalDivider(
                 modifier = Modifier
                     .padding(
                         horizontal = Dimens.MediumPadding.size,
-                        vertical = Dimens.SmallPadding.size
+                        vertical = Dimens.SmallPadding.size,
                     )
                     .width(DividerDefaults.Thickness)
-                    .fillMaxHeight()
+                    .fillMaxHeight(),
             )
             Switch(
                 checked = checked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = onCheckedChange,
             )
         }
     }
@@ -117,12 +117,12 @@ fun SettingsEntrySwitch(
 @Composable
 fun SettingsEntry(
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         content()
     }

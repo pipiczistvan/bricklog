@@ -460,7 +460,10 @@ data class ColorFamily(
 )
 
 val unspecified_scheme = ColorFamily(
-    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
+    Color.Unspecified,
+    Color.Unspecified,
+    Color.Unspecified,
+    Color.Unspecified,
 )
 
 @Composable
@@ -486,7 +489,7 @@ fun BricklogTheme(
             colorScheme = colorScheme,
             motionScheme = MotionScheme.expressive(),
             typography = OverpassTypography(),
-            content = content
+            content = content,
         )
     }
 }

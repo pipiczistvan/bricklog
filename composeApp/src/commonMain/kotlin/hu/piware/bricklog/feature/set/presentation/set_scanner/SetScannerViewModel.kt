@@ -33,8 +33,8 @@ class SetScannerViewModel(
     private val logger = Logger.withTag("SetScannerViewModel")
 
     private val _uiState = MutableStateFlow(SetScannerState())
-    private val _detections = MutableStateFlow(emptyList<BarcodeDetection>())
-    private val _setBarcodeCache = mutableMapOf<String, SetDetails?>()
+    private val detections = MutableStateFlow(emptyList<BarcodeDetection>())
+    private val setBarcodeCache = mutableMapOf<String, SetDetails?>()
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
@@ -44,7 +44,7 @@ class SetScannerViewModel(
     fun onAction(action: SetScannerAction) {
         when (action) {
             is SetScannerAction.OnBarcodeDetected -> {
-                _detections.update { action.detections }
+                detections.update { action.detections }
             }
 
             else -> Unit
@@ -52,12 +52,12 @@ class SetScannerViewModel(
     }
 
     private fun observeScannedCode() {
-        _detections
+        detections
             .onEach { detections ->
                 _uiState.update { it ->
                     it.copy(
                         detections = detections.mapNotNull { detection ->
-                            _setBarcodeCache.getOrPutNullable(detection.data) {
+                            setBarcodeCache.getOrPutNullable(detection.data) {
                                 logger.i { "barcode not found in cache: ${detection.data}" }
                                 findSetByScannedCode(detection.data)
                             }.also { set ->
@@ -70,10 +70,10 @@ class SetScannerViewModel(
                                 SetBarcodeDetection(
                                     set = set,
                                     barcode = detection.data,
-                                    bounds = detection.bounds
+                                    bounds = detection.bounds,
                                 )
                             }
-                        }
+                        },
                     )
                 }
             }

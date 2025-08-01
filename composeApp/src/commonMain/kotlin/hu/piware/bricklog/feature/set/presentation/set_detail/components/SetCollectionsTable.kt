@@ -47,30 +47,30 @@ fun SetCollectionsTable(
     var showCollectionSheet by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .weight(1f),
                 text = stringResource(Res.string.feature_set_detail_collections_title),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             IconButton(
                 onClick = {
                     showCollectionSheet = true
-                }
+                },
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -89,9 +89,9 @@ fun SetCollectionsTable(
                         startIcon = {
                             Icon(
                                 imageVector = it.icon.filledIcon,
-                                contentDescription = null
+                                contentDescription = null,
                             )
-                        }
+                        },
                     )
                     if (it != setCollections.last()) {
                         HorizontalDivider()
@@ -101,7 +101,7 @@ fun SetCollectionsTable(
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
-                    text = stringResource(Res.string.feature_set_detail_collections_empty)
+                    text = stringResource(Res.string.feature_set_detail_collections_empty),
                 )
             }
         }
@@ -112,7 +112,7 @@ fun SetCollectionsTable(
             availableOptions = availableCollections,
             selected = setCollections.map { it.id }.toSet(),
             onToggleCollection = onToggleCollection,
-            onDismiss = { showCollectionSheet = false }
+            onDismiss = { showCollectionSheet = false },
         )
     }
 }
@@ -122,12 +122,12 @@ fun SetCollectionsTable(
 private fun SetCollectionsTablePreview() {
     BricklogTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetCollectionsTable(
                 setCollections = PreviewData.collections,
                 availableCollections = PreviewData.collections,
-                onToggleCollection = {}
+                onToggleCollection = {},
             )
         }
     }

@@ -48,8 +48,8 @@ class KtorSetDataSource(
                                     emitProgress(
                                         UpdateSetsProgress(
                                             progress,
-                                            UpdateSetsStep.DOWNLOAD_FILE
-                                        )
+                                            UpdateSetsStep.DOWNLOAD_FILE,
+                                        ),
                                     )
                                 }
                             }

@@ -25,7 +25,7 @@ fun ResetFilterConfirmDialog(
         icon = {
             Icon(
                 imageVector = Icons.Default.Replay,
-                contentDescription = null
+                contentDescription = null,
             )
         },
         title = {
@@ -37,18 +37,18 @@ fun ResetFilterConfirmDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = onConfirmation
+                onClick = onConfirmation,
             ) {
                 Text(stringResource(Res.string.feature_set_search_reset_filter_confirm_dialog_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onDismiss
+                onClick = onDismiss,
             ) {
                 Text(stringResource(Res.string.feature_set_search_reset_filter_confirm_dialog_btn_cancel))
             }
-        }
+        },
     )
 }
 

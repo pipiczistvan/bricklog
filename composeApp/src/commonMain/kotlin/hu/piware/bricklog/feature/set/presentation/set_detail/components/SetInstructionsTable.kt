@@ -57,30 +57,30 @@ fun SetInstructionsTable(
     var showInfoDialog by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .weight(1f),
                 text = stringResource(Res.string.feature_set_detail_instructions_title),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             IconButton(
                 onClick = {
                     showInfoDialog = true
-                }
+                },
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = stringResource(Res.string.feature_set_detail_instructions_btn_info)
+                    contentDescription = stringResource(Res.string.feature_set_detail_instructions_btn_info),
                 )
             }
         }
@@ -93,11 +93,11 @@ fun SetInstructionsTable(
             if (instructions == null) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     ContainedLoadingIndicator(
                         modifier = Modifier
-                            .padding(12.dp)
+                            .padding(12.dp),
                     )
                 }
             } else {
@@ -113,7 +113,7 @@ fun SetInstructionsTable(
                             onClick = {
                                 uriHandler.openUri(it.URL!!)
                             },
-                            navigationType = ActionNavigationType.LINK
+                            navigationType = ActionNavigationType.LINK,
                         )
                         if (it != filteredInstructions.last()) {
                             HorizontalDivider()
@@ -123,7 +123,7 @@ fun SetInstructionsTable(
                     Text(
                         modifier = Modifier
                             .padding(8.dp),
-                        text = stringResource(Res.string.feature_set_detail_instructions_empty)
+                        text = stringResource(Res.string.feature_set_detail_instructions_empty),
                     )
                 }
             }
@@ -134,27 +134,27 @@ fun SetInstructionsTable(
         BasicAlertDialog(
             onDismissRequest = {
                 showInfoDialog = false
-            }
+            },
         ) {
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()
                     .wrapContentHeight(),
                 shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = stringResource(Res.string.feature_set_detail_instructions_info_dialog_label)
+                        text = stringResource(Res.string.feature_set_detail_instructions_info_dialog_label),
                     )
                     Spacer(
-                        modifier = Modifier.height(24.dp)
+                        modifier = Modifier.height(24.dp),
                     )
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
                         onClick = {
                             showInfoDialog = false
-                        }
+                        },
                     ) {
                         Text(stringResource(Res.string.feature_set_detail_instructions_info_dialog_btn_cancel))
                     }
@@ -169,10 +169,10 @@ fun SetInstructionsTable(
 private fun SetInstructionsTablePreview() {
     MaterialTheme {
         Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetInstructionsTable(
-                instructions = null
+                instructions = null,
             )
         }
     }

@@ -35,17 +35,17 @@ suspend inline fun <reified T> safeCall(
 }
 
 suspend inline fun <reified T> safeCall(
-    execute: () -> HttpResponse
+    execute: () -> HttpResponse,
 ): Result<T, DataError.Remote> {
     return safeCall(
         transform = { it.body() },
-        execute = execute
+        execute = execute,
     )
 }
 
 inline fun <reified T> responseToResult(
     response: HttpResponse,
-    transform: (HttpResponse) -> T
+    transform: (HttpResponse) -> T,
 ): Result<T, DataError.Remote> {
     return when (response.status.value) {
         in 200..299 -> {

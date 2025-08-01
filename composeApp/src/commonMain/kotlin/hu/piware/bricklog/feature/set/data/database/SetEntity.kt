@@ -19,7 +19,7 @@ import kotlinx.datetime.Instant
         Index("launchDate"),
         Index("exitDate"),
         Index("infoCompleteDate"),
-    ]
+    ],
 )
 data class SetEntity(
     @PrimaryKey(autoGenerate = false) val id: Int,

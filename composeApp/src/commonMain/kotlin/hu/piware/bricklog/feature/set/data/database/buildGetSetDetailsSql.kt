@@ -27,7 +27,7 @@ fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
         buildStatusSelect(queryOptions.statuses),
         buildShowIncompleteSelect(queryOptions.showIncomplete),
         buildBarcodeSelect(queryOptions.barcode),
-        buildCollectionIdSelect(queryOptions.collectionIds)
+        buildCollectionIdSelect(queryOptions.collectionIds),
     ).joinToString(separator = " AND ") { "($it)" }
 
     val orderBy = buildOrderBy(queryOptions.sortOption)
@@ -49,7 +49,7 @@ private fun buildQuerySelect(queries: List<String>): String? {
     if (queries.isEmpty()) return null
 
     return queries.joinToString(
-        separator = " OR "
+        separator = " OR ",
     ) {
         "name LIKE '%$it%' OR number LIKE '%$it%'"
     }
@@ -81,7 +81,7 @@ private fun buildDateFilterSelect(
         DateFilter.OneYear -> Pair(now - 365.days, now)
         is DateFilter.Custom -> Pair(
             instantConverter.toInstant(dateFilter.startDate),
-            instantConverter.toInstant(dateFilter.endDate)
+            instantConverter.toInstant(dateFilter.endDate),
         )
     }
 
@@ -109,10 +109,11 @@ private fun buildStatusSelect(statuses: Set<SetStatus>): String? {
 }
 
 private fun buildShowIncompleteSelect(showIncomplete: Boolean): String? {
-    return if (!showIncomplete)
+    return if (!showIncomplete) {
         "infoCompleteDate IS NOT NULL"
-    else
+    } else {
         null
+    }
 }
 
 private fun buildBarcodeSelect(barcode: String?): String? {

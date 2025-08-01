@@ -18,7 +18,7 @@ fun SetRow.toDomainModel(): Set {
         minifigs = minifigs,
         image = Image(
             thumbnailURL = thumbnailURL?.let { "https://images.brickset.com/sets/small/$it" },
-            imageURL = imageURL?.let { "https://images.brickset.com/sets/images/$it" }
+            imageURL = imageURL?.let { "https://images.brickset.com/sets/images/$it" },
         ),
         bricksetURL = bricksetURL?.let { "https://brickset.com/sets/$it" },
         USPrice = USPrice,
@@ -36,6 +36,6 @@ fun SetRow.toDomainModel(): Set {
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
         lastUpdated = lastUpdated,
-        infoCompleteDate = infoCompleteDate
+        infoCompleteDate = infoCompleteDate,
     )
 }

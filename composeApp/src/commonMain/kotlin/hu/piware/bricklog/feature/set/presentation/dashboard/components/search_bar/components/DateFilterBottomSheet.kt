@@ -53,7 +53,7 @@ fun DateFilterBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:date_filter_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         DateFilterSheetContent(
             selected = selected,
@@ -62,7 +62,7 @@ fun DateFilterBottomSheet(
                 customDateRangePickerVisible = true
             },
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 
@@ -73,7 +73,7 @@ fun DateFilterBottomSheet(
         }
         val dateRangePickerState = rememberDateRangePickerState(
             customDateRangeFilter?.startDate,
-            customDateRangeFilter?.endDate
+            customDateRangeFilter?.endDate,
         )
 
         DateRangePickerModalDialog(
@@ -89,7 +89,7 @@ fun DateFilterBottomSheet(
             },
             onDismiss = {
                 customDateRangePickerVisible = false
-            }
+            },
         )
     }
 }
@@ -106,19 +106,19 @@ private fun DateFilterSheetContent(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_search_date_filter_sheet_title),
             sheetState = sheetState,
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(DateFilterOption.entries.toTypedArray()) { option ->
                 DateFilterSheetOption(
@@ -144,7 +144,7 @@ private fun DateFilterSheetContent(
                                 }
                             }
                         }
-                    }
+                    },
                 )
             }
         }
@@ -159,7 +159,7 @@ private fun DateFilterSheetOption(
 ) {
     BottomSheetOption(
         selected = selected,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
@@ -167,7 +167,7 @@ private fun DateFilterSheetOption(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -182,7 +182,7 @@ private fun DateFilterSheetContentPreview() {
             onSelectionChange = {},
             onCustomDateSelected = {},
             sheetState = rememberModalBottomSheetState(),
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

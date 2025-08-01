@@ -88,8 +88,8 @@ class UpdateSetsWithProgress(
             val saveResult = updateInfoRepository.saveUpdateInfo(
                 UpdateInfo(
                     dataType = DataType.SET_DATA,
-                    lastUpdated = Clock.System.now()
-                )
+                    lastUpdated = Clock.System.now(),
+                ),
             )
             emitProgress(UpdateSetsProgress(1f, UpdateSetsStep.SAVE_UPDATE_INFO))
             saveResult

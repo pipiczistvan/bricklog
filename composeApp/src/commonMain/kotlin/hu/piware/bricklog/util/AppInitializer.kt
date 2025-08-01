@@ -69,7 +69,7 @@ private fun PayloadData.toNotificationEvent(): NotificationEvent {
 
         if (minAppearanceDate != null) {
             return NotificationEvent.NewSets(
-                startDate = minAppearanceDate
+                startDate = minAppearanceDate,
             )
         }
     }

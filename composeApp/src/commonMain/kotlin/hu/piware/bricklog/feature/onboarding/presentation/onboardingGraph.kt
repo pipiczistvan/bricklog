@@ -27,7 +27,7 @@ sealed interface OnboardingRoute {
 
 fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
     navigation<OnboardingRoute.Graph>(
-        startDestination = OnboardingRoute.DispatcherScreen
+        startDestination = OnboardingRoute.DispatcherScreen,
     ) {
         composable<OnboardingRoute.DispatcherScreen> {
             DispatcherScreenRoot(
@@ -46,7 +46,7 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                         }
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
         composable<OnboardingRoute.DataFetchScreen> {
@@ -60,7 +60,7 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                         }
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
     }

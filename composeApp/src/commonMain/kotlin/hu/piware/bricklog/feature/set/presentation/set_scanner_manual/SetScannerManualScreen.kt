@@ -81,7 +81,7 @@ fun SetScannerManualScreenRoot(
             when (action) {
                 SetScannerManualAction.OnBackClick -> onBackClick()
             }
-        }
+        },
     )
 }
 
@@ -102,12 +102,12 @@ private fun SetScannerManualScreen(
                     IconButton(onClick = { onAction(SetScannerManualAction.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         ContentColumn(
             modifier = Modifier
@@ -118,20 +118,20 @@ private fun SetScannerManualScreen(
                 top = padding.calculateTopPadding(),
                 bottom = padding.calculateBottomPadding(),
                 start = Dimens.MediumPadding.size,
-                end = Dimens.MediumPadding.size
-            )
+                end = Dimens.MediumPadding.size,
+            ),
         ) {
             Text(stringResource(Res.string.feature_set_scanner_manual_label))
 
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = Dimens.SmallPadding.size)
+                    .padding(vertical = Dimens.SmallPadding.size),
             )
 
             Text(
                 text = stringResource(Res.string.feature_set_scanner_manual_title_barcode_scanning),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
 
             Text(
@@ -141,7 +141,7 @@ private fun SetScannerManualScreen(
                         append(stringResource(Res.string.feature_set_scanner_manual_label_barcode_scanning_2))
                     }
                     append(stringResource(Res.string.feature_set_scanner_manual_label_barcode_scanning_3))
-                }
+                },
             )
 
             Image(
@@ -157,24 +157,24 @@ private fun SetScannerManualScreen(
 
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Text(
                     modifier = Modifier
                         .padding(Dimens.SmallPadding.size),
-                    text = stringResource(Res.string.feature_set_scanner_manual_label_barcode_scanning_warning)
+                    text = stringResource(Res.string.feature_set_scanner_manual_label_barcode_scanning_warning),
                 )
             }
 
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = Dimens.SmallPadding.size)
+                    .padding(vertical = Dimens.SmallPadding.size),
             )
 
             Text(
                 text = stringResource(Res.string.feature_set_scanner_manual_title_data_matrix_scanning),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
 
             Text(
@@ -184,23 +184,23 @@ private fun SetScannerManualScreen(
                         append(stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_2))
                     }
                     append(stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_3))
-                }
+                },
             )
 
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Text(
                     modifier = Modifier
                         .padding(Dimens.SmallPadding.size),
-                    text = stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_info)
+                    text = stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_info),
                 )
             }
 
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Text(
                     modifier = Modifier
@@ -211,18 +211,18 @@ private fun SetScannerManualScreen(
                             append(stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_warning_2))
                         }
                         append(stringResource(Res.string.feature_set_scanner_manual_label_data_matrix_scanning_warning_3))
-                    }
+                    },
                 )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(Dimens.SmallPadding.size),
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size)
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f),
                     ) {
                         Image(
                             modifier = Modifier
@@ -230,7 +230,7 @@ private fun SetScannerManualScreen(
                                 .clip(Shapes.large),
                             contentScale = ContentScale.FillWidth,
                             painter = painterResource(Res.drawable.example_data_matrix_small),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                         Icon(
                             modifier = Modifier
@@ -238,12 +238,12 @@ private fun SetScannerManualScreen(
                                 .size(Dimens.ExtraLargePadding.size),
                             imageVector = Icons.Default.Close,
                             contentDescription = null,
-                            tint = Color.Red
+                            tint = Color.Red,
                         )
                     }
                     Box(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f),
                     ) {
                         Image(
                             modifier = Modifier
@@ -251,7 +251,7 @@ private fun SetScannerManualScreen(
                                 .clip(Shapes.large),
                             contentScale = ContentScale.FillWidth,
                             painter = painterResource(Res.drawable.example_data_matrix_large),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                         Icon(
                             modifier = Modifier
@@ -259,7 +259,7 @@ private fun SetScannerManualScreen(
                                 .size(Dimens.ExtraLargePadding.size),
                             imageVector = Icons.Default.Check,
                             contentDescription = null,
-                            tint = Color.Green
+                            tint = Color.Green,
                         )
                     }
                 }
@@ -267,7 +267,7 @@ private fun SetScannerManualScreen(
 
             Text(
                 text = stringResource(Res.string.feature_set_scanner_manual_title_data_matrix_scanning_supported_boxes),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
 
             state.collectibleSetDetails.mapNotNull { it.set.name }.forEach { setName ->
@@ -283,7 +283,7 @@ private fun SetScannerManualScreenPreview() {
     BricklogTheme {
         SetScannerManualScreen(
             state = SetScannerManualState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

@@ -31,7 +31,7 @@ fun LocalizedApp(content: @Composable () -> Unit) {
 
     CompositionLocalProvider(
         LocalLocalization provides language,
-        content = content
+        content = content,
     )
 }
 

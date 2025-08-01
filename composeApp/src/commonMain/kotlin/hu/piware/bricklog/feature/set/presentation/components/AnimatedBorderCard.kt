@@ -47,16 +47,16 @@ fun AnimatedBorderCard(
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = animationDuration, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Restart,
         ),
-        label = "Infinite Colors"
+        label = "Infinite Colors",
     )
 
     Surface(
         modifier = modifier
             .clip(shape),
         color = Color.Transparent,
-        shape = shape
+        shape = shape,
     ) {
         Surface(
             modifier = Modifier
@@ -75,7 +75,7 @@ fun AnimatedBorderCard(
                     drawContent()
                 },
             color = Color.Transparent,
-            shape = shape
+            shape = shape,
         ) {
             Box(Modifier.clickable(onClick = onCardClick)) {
                 content()
@@ -90,13 +90,13 @@ private fun AnimatedBorderCardPreview() {
     BricklogTheme {
         AnimatedBorderCard(
             active = true,
-            onCardClick = {}
+            onCardClick = {},
         ) {
             Box(
                 modifier = Modifier
                     .height(100.dp)
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(MaterialTheme.colorScheme.primary),
             )
         }
     }

@@ -37,12 +37,12 @@ fun DateRangePickerModalDialog(
                     onDateRangeSelected(
                         Pair(
                             state.selectedStartDateMillis!!,
-                            state.selectedEndDateMillis!!
-                        )
+                            state.selectedEndDateMillis!!,
+                        ),
                     )
                     onDismiss()
                 },
-                enabled = state.selectedStartDateMillis != null && state.selectedEndDateMillis != null
+                enabled = state.selectedStartDateMillis != null && state.selectedEndDateMillis != null,
             ) {
                 Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_confirm))
             }
@@ -51,7 +51,7 @@ fun DateRangePickerModalDialog(
             TextButton(onClick = onDismiss) {
                 Text(stringResource(Res.string.feature_set_search_date_filter_sheet_btn_dismiss))
             }
-        }
+        },
     ) {
         DateRangePicker(
             state = state,
@@ -62,7 +62,7 @@ fun DateRangePickerModalDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(500.dp)
-                .padding(16.dp)
+                .padding(16.dp),
         )
     }
 }
@@ -73,7 +73,7 @@ private fun DateRangePickerModalDialogPreview() {
     MaterialTheme {
         DateRangePickerModalDialog(
             onDateRangeSelected = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

@@ -79,7 +79,7 @@ class RoomCollectionDataSource(
                     SetCollectionEntity(
                         setId = setId,
                         userId = userId,
-                        collectionId = collectionId
+                        collectionId = collectionId,
                     )
                 }
             }
@@ -105,9 +105,9 @@ class RoomCollectionDataSource(
                     SetCollectionEntity(
                         setId = setId,
                         userId = userId,
-                        collectionId = collectionId
+                        collectionId = collectionId,
                     )
-                }
+                },
             )
             Result.Success(Unit)
         } catch (e: SQLiteException) {
@@ -145,7 +145,7 @@ class RoomCollectionDataSource(
                     SetCollectionEntity(
                         setId = setId,
                         userId = userId,
-                        collectionId = collectionId
+                        collectionId = collectionId,
                     )
                 }
             }
@@ -171,9 +171,9 @@ class RoomCollectionDataSource(
                     SetCollectionEntity(
                         setId = setId,
                         userId = userId,
-                        collectionId = collectionId
+                        collectionId = collectionId,
                     )
-                }
+                },
             )
             Result.Success(Unit)
         } catch (e: Exception) {

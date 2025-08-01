@@ -39,7 +39,7 @@ fun Set.toEntity(): SetEntity {
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
         lastUpdated = lastUpdated,
-        infoCompleteDate = infoCompleteDate
+        infoCompleteDate = infoCompleteDate,
     )
 }
 
@@ -58,7 +58,7 @@ fun SetEntity.toDomainModel(): Set {
         minifigs = minifigs,
         image = Image(
             thumbnailURL = thumbnailURL,
-            imageURL = imageURL
+            imageURL = imageURL,
         ),
         bricksetURL = bricksetURL,
         USPrice = USPrice,
@@ -76,7 +76,7 @@ fun SetEntity.toDomainModel(): Set {
         barcodeEAN = barcodeEAN,
         barcodeUPC = barcodeUPC,
         lastUpdated = lastUpdated,
-        infoCompleteDate = infoCompleteDate
+        infoCompleteDate = infoCompleteDate,
     )
 }
 
@@ -84,7 +84,7 @@ fun SetDetailsView.toDomainModel(userId: UserId): SetDetails {
     return SetDetails(
         set = legoSet.toDomainModel(),
         collections = collections.filter { it.userId == userId }.map { it.toDomainModel() },
-        status = status
+        status = status,
     )
 }
 
@@ -92,7 +92,7 @@ fun UpdateInfoEntity.toDomainModel(): UpdateInfo {
     return UpdateInfo(
         dataType = dataType,
         setId = setId,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
     )
 }
 
@@ -100,14 +100,14 @@ fun UpdateInfo.toEntity(): UpdateInfoEntity {
     return UpdateInfoEntity(
         dataType = dataType,
         setId = setId,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
     )
 }
 
 fun SetImageEntity.toDomainModel(): Image {
     return Image(
         thumbnailURL = thumbnailURL,
-        imageURL = imageURL
+        imageURL = imageURL,
     )
 }
 
@@ -115,14 +115,14 @@ fun Image.toEntity(setId: Int): SetImageEntity {
     return SetImageEntity(
         setId = setId,
         thumbnailURL = thumbnailURL,
-        imageURL = imageURL
+        imageURL = imageURL,
     )
 }
 
 fun SetInstructionEntity.toDomainModel(): Instruction {
     return Instruction(
         URL = URL,
-        description = description
+        description = description,
     )
 }
 
@@ -130,6 +130,6 @@ fun Instruction.toEntity(setId: Int): SetInstructionEntity {
     return SetInstructionEntity(
         setId = setId,
         URL = URL,
-        description = description
+        description = description,
     )
 }

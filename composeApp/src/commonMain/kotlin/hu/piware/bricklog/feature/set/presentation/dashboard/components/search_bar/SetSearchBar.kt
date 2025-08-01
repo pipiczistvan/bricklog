@@ -67,20 +67,20 @@ fun SetSearchBar(
                 },
                 query = state.typedQuery,
                 onQueryChange = { onAction(SetSearchBarAction.OnQueryChange(it)) },
-                onClearClick = { onAction(SetSearchBarAction.OnClearClick) }
+                onClearClick = { onAction(SetSearchBarAction.OnClearClick) },
             )
         },
         expanded = expanded,
         onExpandedChange = { expanded = it },
         colors = SearchBarDefaults.colors(
-            dividerColor = Color.Transparent
-        )
+            dividerColor = Color.Transparent,
+        ),
     ) {
         Content(
             state = state,
             onAction = { action ->
                 onAction(action)
-            }
+            },
         )
     }
 }
@@ -93,12 +93,12 @@ private fun Content(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.testTag("search_bar:content")
+        modifier = Modifier.testTag("search_bar:content"),
     ) {
         SetFilterRow(
             filterPreferences = state.filterPreferences,
             onFilterPreferencesChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
-            filterDomain = state.filterDomain
+            filterDomain = state.filterDomain,
         )
 
         if (state.searchResults.isNotEmpty()) {
@@ -107,11 +107,11 @@ private fun Content(
                     .fillMaxWidth()
                     .padding(start = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_set_search_title_results),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 TextButton(
                     modifier = Modifier
@@ -122,19 +122,19 @@ private fun Content(
                                 SetSearchBarAction.OnShowAllClick(
                                     SetListArguments(
                                         title = getString(Res.string.feature_set_search_title_results),
-                                        searchQuery = state.typedQuery
-                                    )
-                                )
+                                        searchQuery = state.typedQuery,
+                                    ),
+                                ),
                             )
                         }
-                    }
+                    },
                 ) {
                     Text(stringResource(Res.string.feature_set_search_btn_show_all))
                 }
             }
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 items(state.searchResults) { setDetails ->
                     Row(
@@ -145,20 +145,20 @@ private fun Content(
                                     SetSearchBarAction.OnSetClick(
                                         SetDetailArguments(
                                             setId = setDetails.setID,
-                                            sharedElementPrefix = "search_bar"
-                                        )
-                                    )
+                                            sharedElementPrefix = "search_bar",
+                                        ),
+                                    ),
                                 )
-                            }
+                            },
                     ) {
                         Text(
                             modifier = Modifier
                                 .padding(
                                     horizontal = Dimens.MediumPadding.size,
-                                    vertical = Dimens.SmallPadding.size
+                                    vertical = Dimens.SmallPadding.size,
                                 ),
                             text = setDetails.set.name ?: "",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     }
                 }
@@ -177,7 +177,7 @@ private fun SetSearchBarPreview() {
     MaterialTheme {
         SetSearchBar(
             state = SetSearchBarState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

@@ -33,7 +33,7 @@ const val FUTURE_MILLISECONDS = FUTURE_DAYS_COUNT * 24 * 60 * 60 * 1000L
                 ELSE 'UNKNOWN'
             END AS status
         FROM sets
-        """
+        """,
 )
 data class SetDetailsView(
     @Embedded val legoSet: SetEntity,
@@ -43,8 +43,8 @@ data class SetDetailsView(
         associateBy = Junction(
             value = SetCollectionEntity::class,
             parentColumn = "setId",
-            entityColumn = "collectionId"
-        )
+            entityColumn = "collectionId",
+        ),
     )
     val collections: List<CollectionEntity>,
     val status: SetStatus,

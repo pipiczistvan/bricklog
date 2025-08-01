@@ -40,7 +40,7 @@ class FirebaseUserDataSource : RemoteUserDataSource {
             is AuthenticationMethod.GoogleSignIn -> {
                 GoogleAuthProvider.credential(
                     method.googleUser?.idToken,
-                    method.googleUser?.accessToken
+                    method.googleUser?.accessToken,
                 )
             }
         }

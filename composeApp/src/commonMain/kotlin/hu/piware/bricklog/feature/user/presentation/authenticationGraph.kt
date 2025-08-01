@@ -25,7 +25,7 @@ sealed interface AuthenticationRoute {
 
 fun NavGraphBuilder.authenticationGraph(navController: NavController) {
     navigation<AuthenticationRoute.Graph>(
-        startDestination = AuthenticationRoute.LoginScreen
+        startDestination = AuthenticationRoute.LoginScreen,
     ) {
         composable<AuthenticationRoute.LoginScreen> {
             LoginScreenRoot(
@@ -45,7 +45,7 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
                 onUserLoggedIn = {
                     navController.popBackStack<AuthenticationRoute.Graph>(inclusive = true)
                 },
-                onBackClick = navController::navigateUp
+                onBackClick = navController::navigateUp,
             )
         }
         composable<AuthenticationRoute.RegisterScreen> {
@@ -61,7 +61,7 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
                 onUserRegistered = {
                     navController.popBackStack<AuthenticationRoute.Graph>(inclusive = true)
                 },
-                onBackClick = navController::navigateUp
+                onBackClick = navController::navigateUp,
             )
         }
         composable<AuthenticationRoute.PasswordResetScreen> {
@@ -74,7 +74,7 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
                         }
                     }
                 },
-                onBackClick = navController::navigateUp
+                onBackClick = navController::navigateUp,
             )
         }
     }

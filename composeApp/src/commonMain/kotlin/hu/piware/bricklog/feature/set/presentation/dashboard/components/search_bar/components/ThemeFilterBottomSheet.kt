@@ -54,7 +54,7 @@ fun ThemeFilterBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.testTag("search_bar:theme_filter_bottom_sheet"),
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         ThemeFilterSheetContent(
             availableOptions = availableOptions,
@@ -64,7 +64,7 @@ fun ThemeFilterBottomSheet(
             onReset = {
                 showResetFilterDialog = true
             },
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 
@@ -76,7 +76,7 @@ fun ThemeFilterBottomSheet(
             },
             onDismiss = {
                 showResetFilterDialog = false
-            }
+            },
         )
     }
 }
@@ -92,21 +92,21 @@ private fun ThemeFilterSheetContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         BottomSheetHeader(
             title = stringResource(Res.string.feature_set_search_theme_filter_sheet_title),
             sheetState = sheetState,
             onDismiss = onDismiss,
             primaryActionIcon = Icons.Default.Replay,
-            onPrimaryActionClick = onReset
+            onPrimaryActionClick = onReset,
         )
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.MediumPadding.size)
+                .padding(Dimens.MediumPadding.size),
         ) {
             items(availableOptions) { option ->
                 ThemeFilterSheetOption(
@@ -118,7 +118,7 @@ private fun ThemeFilterSheetContent(
                         } else {
                             onSelectionChange(selected + option)
                         }
-                    }
+                    },
                 )
             }
         }
@@ -132,26 +132,27 @@ private fun ThemeFilterSheetOption(
     onClick: () -> Unit,
 ) {
     BottomSheetOption(
-        selected = selected, onClick = onClick
+        selected = selected,
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.MediumPadding.size),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = theme,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Icon(
                 modifier = Modifier.alpha(if (selected) 1f else 0f),
                 imageVector = Icons.Default.Check,
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -168,7 +169,7 @@ private fun ThemeFilterSheetContentPreview() {
             onSelectionChange = {},
             sheetState = rememberModalBottomSheetState(),
             onReset = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

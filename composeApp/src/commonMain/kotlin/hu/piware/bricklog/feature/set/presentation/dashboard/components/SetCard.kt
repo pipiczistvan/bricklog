@@ -55,7 +55,7 @@ fun SetCardRow(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
             Spacer(modifier = Modifier.width(12.dp))
@@ -67,9 +67,8 @@ fun SetCardRow(
                         .testTag("set_card")
                         .sharedElement("$sharedElementPrefix/image/${set.setID}"),
                     setDetails = set,
-                    onClick = { onSetClick(set) }
+                    onClick = { onSetClick(set) },
                 )
-
             }
         } else {
             repeat(FEATURED_SETS_ROW_LIMIT) {
@@ -81,7 +80,7 @@ fun SetCardRow(
 
         item {
             SetCardShowMore(
-                onClick = onShowMoreClick
+                onClick = onShowMoreClick,
             )
         }
 
@@ -100,7 +99,7 @@ private val rainbowBrush = Brush.linearGradient(
         Color(0xffff3399),
         Color(0xffff9966),
         Color(0xffccff66),
-    )
+    ),
 )
 
 @Composable
@@ -115,13 +114,13 @@ fun SetCard(
             .clip(Shapes.large)
             .clickable(onClick = onClick)
             .width(160.dp),
-        elevation = CardDefaults.outlinedCardElevation()
+        elevation = CardDefaults.outlinedCardElevation(),
     ) {
         Box(
             modifier = Modifier
                 .clip(Shapes.large)
                 .size(160.dp)
-                .background(Color.White)
+                .background(Color.White),
         ) {
             SetImage(
                 modifier = Modifier
@@ -129,7 +128,7 @@ fun SetCard(
                     .padding(Dimens.SmallPadding.size),
                 size = ImageSize.SMALL,
                 image = setDetails.set.image,
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
             )
         }
         Text(
@@ -140,7 +139,7 @@ fun SetCard(
             minLines = 2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
     }
 }
@@ -154,13 +153,13 @@ private fun SetCardPlaceholder(
         modifier = modifier
             .clip(Shapes.large)
             .width(160.dp),
-        elevation = CardDefaults.outlinedCardElevation()
+        elevation = CardDefaults.outlinedCardElevation(),
     ) {
         Box(
             modifier = Modifier
                 .clip(Shapes.large)
                 .size(160.dp)
-                .background(Color.White)
+                .background(Color.White),
         ) {
         }
         Text(
@@ -171,7 +170,7 @@ private fun SetCardPlaceholder(
             minLines = 2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
     }
 }
@@ -187,15 +186,15 @@ private fun SetCardShowMore(
             .clip(Shapes.large)
             .clickable(onClick = onClick)
             .width(160.dp),
-        elevation = CardDefaults.outlinedCardElevation()
+        elevation = CardDefaults.outlinedCardElevation(),
     ) {
         Box(
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column {
                 Box(
                     modifier = Modifier
-                        .size(160.dp)
+                        .size(160.dp),
                 ) {
                 }
                 Text(
@@ -206,7 +205,7 @@ private fun SetCardShowMore(
                     minLines = 2,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
             }
             Column(
@@ -215,7 +214,7 @@ private fun SetCardShowMore(
                 Text(stringResource(Res.string.feature_set_dashboard_label_show_more))
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -228,7 +227,7 @@ private fun SetCardPreview() {
     BricklogTheme {
         SetCard(
             setDetails = PreviewData.sets[0],
-            onClick = {}
+            onClick = {},
         )
     }
 }

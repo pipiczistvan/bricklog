@@ -12,12 +12,12 @@ enum class ThemeOption(
     val titleRes: StringResource,
 ) {
     SYSTEM(
-        titleRes = Res.string.feature_settings_appearance_label_theme_system
+        titleRes = Res.string.feature_settings_appearance_label_theme_system,
     ),
     LIGHT(
-        titleRes = Res.string.feature_settings_appearance_label_theme_light
+        titleRes = Res.string.feature_settings_appearance_label_theme_light,
     ),
     DARK(
-        titleRes = Res.string.feature_settings_appearance_label_theme_dark
-    )
+        titleRes = Res.string.feature_settings_appearance_label_theme_dark,
+    ),
 }

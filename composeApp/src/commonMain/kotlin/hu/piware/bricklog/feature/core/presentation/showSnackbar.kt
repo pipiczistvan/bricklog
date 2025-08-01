@@ -13,8 +13,8 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnError(
         SnackbarController.sendEvent(
             SnackbarEvent(
                 message = result.error.toUiText(),
-                action = action(result.error)
-            )
+                action = action(result.error),
+            ),
         )
     }
 }
@@ -23,8 +23,8 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnSuccess(res: StringResourc
     return onSuccess {
         SnackbarController.sendEvent(
             SnackbarEvent(
-                message = UiText.StringResourceId(res)
-            )
+                message = UiText.StringResourceId(res),
+            ),
         )
     }
 }

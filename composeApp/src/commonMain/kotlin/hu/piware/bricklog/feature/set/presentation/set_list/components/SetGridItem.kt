@@ -55,65 +55,65 @@ fun SetGridItem(
         modifier = modifier
             .clip(Shapes.large)
             .border(3.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), Shapes.large)
-            .clickable(onClick = { onClick(setDetails) })
+            .clickable(onClick = { onClick(setDetails) }),
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Column(
                 modifier =
                     Modifier.padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
                 Box(
                     modifier = Modifier
                         .clip(Shapes.medium)
                         .background(Color.White)
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     SetImage(
                         image = setDetails.set.image,
                         modifier = Modifier
                             .aspectRatio(
                                 ratio = 1f,
-                                matchHeightConstraintsFirst = true
+                                matchHeightConstraintsFirst = true,
                             )
                             .padding(Dimens.SmallPadding.size),
-                        size = imageSize
+                        size = imageSize,
                     )
                 }
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
+                    verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
                 ) {
                     Text(
                         text = setDetails.set.theme ?: "",
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         text = setDetails.set.name ?: "",
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size)
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
                     ) {
                         SetAttributeChip(
                             text = "# ${setDetails.setNumberWithVariant}",
-                            size = ChipSize.SMALL
+                            size = ChipSize.SMALL,
                         )
                         if (setDetails.status != SetStatus.UNKNOWN) {
                             SetAttributeChip(
                                 text = stringResource(setDetails.status.statusRes),
                                 size = ChipSize.SMALL,
                                 color = setDetails.status.containerColor,
-                                textColor = setDetails.status.textColor
+                                textColor = setDetails.status.textColor,
                             )
                         }
                     }
@@ -123,15 +123,15 @@ fun SetGridItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.TopEnd,
             ) {
                 IconButton(
-                    onClick = { onFavouriteClick(setDetails) }
+                    onClick = { onFavouriteClick(setDetails) },
                 ) {
                     Icon(
                         imageVector = if (setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
                         contentDescription = null,
-                        tint = Color.Black
+                        tint = Color.Black,
                     )
                 }
             }
@@ -146,7 +146,7 @@ private fun SetGridItemPreview() {
         SetGridItem(
             setDetails = PreviewData.sets[0],
             onClick = {},
-            onFavouriteClick = {}
+            onFavouriteClick = {},
         )
     }
 }

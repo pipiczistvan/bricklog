@@ -19,7 +19,7 @@ object PreviewData {
 
     val user = User(
         uid = "mock",
-        displayName = "Mock"
+        displayName = "Mock",
     )
 
     val sets = (1..100).map {
@@ -29,7 +29,7 @@ object PreviewData {
             theme = "Theme",
             image = Image(
                 thumbnailURL = "https://test.com",
-                imageURL = "https://test.com"
+                imageURL = "https://test.com",
             ),
             pieces = it * 10,
             barcodeEAN = "1234567890123",
@@ -51,14 +51,14 @@ object PreviewData {
         SetDetails(
             set = set,
             collections = defaultCollections,
-            status = SetStatus.ACTIVE
+            status = SetStatus.ACTIVE,
         )
     }
 
     val changes = (1..20).map {
         Change(
             description = "Change $it",
-            type = ChangeType.entries[it % ChangeType.entries.size]
+            type = ChangeType.entries[it % ChangeType.entries.size],
         )
     }
 
@@ -66,12 +66,12 @@ object PreviewData {
         Release(
             version = "v$it",
             build = it,
-            changes = changes
+            changes = changes,
         )
     }
 
     val changelog = Changelog(
-        releases = releases
+        releases = releases,
     )
 
     val collections = (1..10).map {
@@ -79,7 +79,7 @@ object PreviewData {
             id = "$it",
             name = "Collection $it",
             icon = CollectionIcon.entries[it % CollectionIcon.entries.size],
-            type = CollectionType.USER_DEFINED
+            type = CollectionType.USER_DEFINED,
         )
     }
 

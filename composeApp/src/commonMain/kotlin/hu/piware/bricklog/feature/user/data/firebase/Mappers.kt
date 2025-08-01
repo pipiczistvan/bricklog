@@ -6,6 +6,6 @@ import hu.piware.bricklog.feature.user.domain.model.User
 fun FirebaseUser.toUser(): User {
     return User(
         uid = uid,
-        displayName = displayName
+        displayName = displayName,
     )
 }

@@ -35,7 +35,7 @@ class NotificationsViewModel(
         when (action) {
             NotificationsAction.OpenSettings -> permissionsController.openAppSettings()
             is NotificationsAction.OnNotificationPreferenceChange -> onNotificationPreferenceChange(
-                action.preferences
+                action.preferences,
             )
 
             else -> Unit
@@ -52,8 +52,8 @@ class NotificationsViewModel(
         _uiState.update {
             it.copy(
                 notificationPermissionGranted = permissionsController.isPermissionGranted(
-                    Permission.REMOTE_NOTIFICATION
-                )
+                    Permission.REMOTE_NOTIFICATION,
+                ),
             )
         }
     }

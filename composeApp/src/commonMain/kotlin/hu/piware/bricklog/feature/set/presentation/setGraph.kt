@@ -51,7 +51,7 @@ sealed interface SetRoute {
 
 fun NavGraphBuilder.setGraph(navController: NavHostController) {
     navigation<SetRoute.Graph>(
-        startDestination = SetRoute.DashboardScreen
+        startDestination = SetRoute.DashboardScreen,
     ) {
         composable<SetRoute.DashboardScreen> { entry ->
             val selectedThemes = entry.savedStateHandle.get<Set<String>>("selected_themes")
@@ -106,14 +106,14 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                         }
                     },
                     selectedThemes = selectedThemes,
-                    selectedPackagingTypes = selectedPackagingTypes
+                    selectedPackagingTypes = selectedPackagingTypes,
                 )
             }
         }
         composable<SetRoute.SetDetails>(
             typeMap = mapOf(
-                typeOf<SetDetailArguments>() to CustomNavType.SetDetailArgumentsType
-            )
+                typeOf<SetDetailArguments>() to CustomNavType.SetDetailArgumentsType,
+            ),
         ) {
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 SetDetailScreenRoot(
@@ -122,14 +122,14 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                         navController.navigate(SetRoute.SetImage(arguments)) {
                             launchSingleTop = true
                         }
-                    }
+                    },
                 )
             }
         }
         composable<SetRoute.SetImage>(
             typeMap = mapOf(
-                typeOf<SetImageArguments>() to CustomNavType.SetImageArgumentsType
-            )
+                typeOf<SetImageArguments>() to CustomNavType.SetImageArgumentsType,
+            ),
         ) {
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 SetImageScreenRoot(
@@ -139,8 +139,8 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
         }
         composable<SetRoute.SetListScreen>(
             typeMap = mapOf(
-                typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType
-            )
+                typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType,
+            ),
         ) {
             SetListScreenRoot(
                 onBackClick = navController::navigateUp,
@@ -148,7 +148,7 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     navController.navigate(SetRoute.SetDetails(arguments)) {
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
         composable<SetRoute.SetScannerScreen> {
@@ -163,12 +163,12 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     navController.navigate(SetRoute.SetDetails(arguments)) {
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
         composable<SetRoute.SetScannerManualScreen> {
             SetScannerManualScreenRoot(
-                onBackClick = navController::navigateUp
+                onBackClick = navController::navigateUp,
             )
         }
         composable<SetRoute.ThemeListScreen> {

@@ -47,16 +47,16 @@ class SetListViewModel(
     private val watchCollection: WatchCollection,
 ) : ViewModel() {
 
-    private val _arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
-        typeMap = mapOf(typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType)
+    private val arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
+        typeMap = mapOf(typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType),
     ).arguments
 
     private val _uiState = MutableStateFlow(
         SetListState(
-            title = _arguments.title,
-            filterOverrides = _arguments.filterOverrides,
-            showFilterBar = _arguments.showFilterBar
-        )
+            title = arguments.title,
+            filterOverrides = arguments.filterOverrides,
+            showFilterBar = arguments.showFilterBar,
+        ),
     )
 
     val uiState = _uiState
@@ -65,20 +65,20 @@ class SetListViewModel(
             observeFilterPreferences()
             observeFilterDomain()
 
-            if (_arguments.filterOverrides?.collectionIds?.count() == 1) {
-                observeCollection(_arguments.filterOverrides.collectionIds.first())
+            if (arguments.filterOverrides?.collectionIds?.count() == 1) {
+                observeCollection(arguments.filterOverrides.collectionIds.first())
             }
         }
 
-    private val _filterOverrides = _uiState
+    private val filterOverrides = _uiState
         .map { it.filterOverrides }
         .distinctUntilChanged()
 
-    val pagingData = _filterOverrides
+    val pagingData = filterOverrides
         .flatMapLatest { filterOverrides ->
             watchSetDetailsPaged(
                 filterOverrides,
-                _arguments.searchQuery
+                arguments.searchQuery,
             )
         }
         .flowOn(Dispatchers.Default)

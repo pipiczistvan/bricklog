@@ -8,7 +8,7 @@ fun CollectionDocument.toDomainModel(id: CollectionId): Collection {
         id = id,
         name = name,
         icon = icon,
-        type = type
+        type = type,
     )
 }
 
