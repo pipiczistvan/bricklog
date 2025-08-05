@@ -7,3 +7,9 @@ annotation class DownloadHttpClient
 
 @Named
 annotation class BricksetHttpClient
+
+@Named
+annotation class SetListCsvParser
+
+@Named
+annotation class CurrencyRateCsvParser

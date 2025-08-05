@@ -1,6 +1,8 @@
 package hu.piware.bricklog.feature.currency.data.repository
 
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.di.CurrencyRateCsvParser
+import hu.piware.bricklog.feature.core.data.csv.CsvParser
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.await
@@ -8,7 +10,7 @@ import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.core.domain.onError
-import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateListCsvParser
+import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateRow
 import hu.piware.bricklog.feature.currency.domain.datasource.LocalCurrencyDataSource
 import hu.piware.bricklog.feature.currency.domain.datasource.RemoteCurrencyDataSource
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRate
@@ -28,7 +30,8 @@ import kotlin.time.measureTimedValue
 class OfflineFirstCurrencyRepository(
     private val remoteDataSource: RemoteCurrencyDataSource,
     private val localDataSource: LocalCurrencyDataSource,
-    private val csvParser: CurrencyRateListCsvParser,
+    @param:CurrencyRateCsvParser
+    private val csvParser: CsvParser<CurrencyRateRow, CurrencyRate>,
 ) : CurrencyRepository {
 
     private val logger = Logger.withTag("OfflineFirstCurrencyRepository")

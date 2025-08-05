@@ -4,6 +4,8 @@ package hu.piware.bricklog.feature.set.data.repository
 
 import androidx.paging.PagingData
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.di.SetListCsvParser
+import hu.piware.bricklog.feature.core.data.csv.CsvParser
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
@@ -12,7 +14,7 @@ import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.core.domain.onError
-import hu.piware.bricklog.feature.set.data.csv.SetListCsvParser
+import hu.piware.bricklog.feature.set.data.csv.SetRow
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
@@ -41,7 +43,8 @@ class OfflineFirstSetRepository(
     private val remoteDataSource: RemoteSetDataSource,
     private val localDataSource: LocalSetDataSource,
     private val sessionManager: SessionManager,
-    private val csvParser: SetListCsvParser,
+    @param:SetListCsvParser
+    private val csvParser: CsvParser<SetRow, Set>,
 ) : SetRepository {
 
     private val logger = Logger.withTag("OfflineFirstSetRepository")
