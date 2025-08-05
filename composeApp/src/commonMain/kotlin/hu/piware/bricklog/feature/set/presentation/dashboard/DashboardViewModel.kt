@@ -29,7 +29,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsByPreferences
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetUpdateInfo
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.navigation_drawer.DashboardNavigationDrawerAction
@@ -67,7 +67,7 @@ import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class DashboardViewModel(
-    private val watchSetDetails: WatchSetDetails,
+    private val watchSetDetailsByPreferences: WatchSetDetailsByPreferences,
     private val updateData: UpdateData,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     @Provided private val permissionsController: PermissionsController,
@@ -235,7 +235,7 @@ class DashboardViewModel(
             .mapNotNull { it.searchQuery }
             .distinctUntilChanged()
             .flatMapLatest { query ->
-                watchSetDetails(
+                watchSetDetailsByPreferences(
                     filterOverrides = SetFilter(limit = 10),
                     query = query,
                 )
@@ -246,35 +246,35 @@ class DashboardViewModel(
     }
 
     private fun observeLatestSets() {
-        watchSetDetails(filterOverrides = latestSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = latestSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeLatestReleases() {
-        watchSetDetails(filterOverrides = latestReleasesFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = latestReleasesFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(latestReleases = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeArrivingSets() {
-        watchSetDetails(filterOverrides = arrivingSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = arrivingSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
-        watchSetDetails(filterOverrides = retiringSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = retiringSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeNewItems() {
-        watchSetDetails(filterOverrides = newItemsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = newItemsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
             .onEach { sets -> _uiState.update { it.copy(newItems = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)

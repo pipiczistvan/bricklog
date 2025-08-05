@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
 
 @Single
-class WatchSetDetails(
+class WatchSetDetailsByPreferences(
     private val setRepository: SetRepository,
     private val settingsRepository: SettingsRepository,
 ) {

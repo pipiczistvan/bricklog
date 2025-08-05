@@ -8,14 +8,14 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.Set
-import hu.piware.bricklog.feature.set.domain.usecase.GetSetDetails
+import hu.piware.bricklog.feature.set.domain.usecase.GetSetDetailsByPreferences
 import hu.piware.bricklog.feature.set.domain.usecase.SendNewSetNotification
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
 import org.koin.core.annotation.Single
 
 @Single
 class SyncData(
-    private val getSetDetails: GetSetDetails,
+    private val getSetDetailsByPreferences: GetSetDetailsByPreferences,
     private val updateData: UpdateData,
     private val sendNewSetNotification: SendNewSetNotification,
 ) {
@@ -32,7 +32,7 @@ class SyncData(
         }
 
         logger.i { "Retrieving last info complete set" }
-        val lastInfoCompleteSet = getSetDetails(
+        val lastInfoCompleteSet = getSetDetailsByPreferences(
             newItemsFilter.copy(
                 limit = 1,
             ),
@@ -51,7 +51,7 @@ class SyncData(
             }
 
         logger.i { "Retrieving new info complete sets" }
-        val newSets = getSetDetails(
+        val newSets = getSetDetailsByPreferences(
             newItemsFilter.copy(
                 appearanceDate = lastInfoCompleteSet?.set.createAppearanceDateFilter(),
             ),

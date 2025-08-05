@@ -11,7 +11,7 @@ import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.FindCollectibleSet
-import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsByPreferences
 import hu.piware.bricklog.feature.set.presentation.set_scanner.util.SetBarcodeDetection
 import hu.piware.bricklog.feature.set.presentation.set_scanner.util.parseCmfBoxDataMatrix
 import hu.piware.bricklog.util.getOrPutNullable
@@ -26,7 +26,7 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class SetScannerViewModel(
-    private val watchSetDetails: WatchSetDetails,
+    private val watchSetDetailsByPreferences: WatchSetDetailsByPreferences,
     private val findCollectibleSet: FindCollectibleSet,
 ) : ViewModel() {
 
@@ -92,7 +92,7 @@ class SetScannerViewModel(
                 .onError { return null }
                 .data()
         } else {
-            watchSetDetails(SetFilter(limit = 1, barcode = barcode))
+            watchSetDetailsByPreferences(SetFilter(limit = 1, barcode = barcode))
                 .firstOrNull()
                 ?.firstOrNull()
         }
