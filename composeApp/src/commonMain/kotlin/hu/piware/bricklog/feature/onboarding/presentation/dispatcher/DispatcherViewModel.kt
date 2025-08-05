@@ -39,7 +39,7 @@ class DispatcherViewModel(
                         AppEventController.sendEvent(AppEvent.StartSync)
                         _uiState.update { DispatcherState.NavigateToHome }
                     } else {
-                        _uiState.update { DispatcherState.NavigateToDataFetch }
+                        _uiState.update { DispatcherState.NavigateToPreload }
                     }
                 }
         }

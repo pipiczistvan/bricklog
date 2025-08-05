@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.onboarding.presentation.data_fetch
+package hu.piware.bricklog.feature.onboarding.presentation.preload
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,21 +16,21 @@ import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
-class DataFetchViewModel(
+class PreloadViewModel(
     private val updateDataWithProgress: UpdateDataWithProgress,
 ) : ViewModel() {
 
-    private val logger = Logger.withTag("DataFetchViewModel")
+    private val logger = Logger.withTag("PreloadViewModel")
 
-    private var _uiState = MutableStateFlow<DataFetchState>(DataFetchState.Initial)
+    private var _uiState = MutableStateFlow<PreloadState>(PreloadState.Initial)
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
             fetchData()
         }
 
-    fun onAction(action: DataFetchAction) {
+    fun onAction(action: PreloadAction) {
         when (action) {
-            is DataFetchAction.OnRetryClick -> fetchData()
+            is PreloadAction.OnRetryClick -> fetchData()
             else -> Unit
         }
     }
@@ -40,13 +40,13 @@ class DataFetchViewModel(
             updateDataWithProgress()
                 .collectForValue { progress ->
                     logger.d { "Progress: $progress" }
-                    _uiState.update { DataFetchState.Loading(progress) }
+                    _uiState.update { PreloadState.Loading(progress) }
                 }
                 .showSnackbarOnError()
-                .onError { _uiState.update { DataFetchState.Error } }
+                .onError { _uiState.update { PreloadState.Error } }
                 .onSuccess {
                     delay(500) // Slight delay to display 100% progress
-                    _uiState.update { DataFetchState.Success }
+                    _uiState.update { PreloadState.Success }
                 }
         }
     }

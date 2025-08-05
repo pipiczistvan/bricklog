@@ -149,7 +149,7 @@ In order to reduce 3rd party api usage, and make the data availability robust I 
 bricklog-data-service kotlin application which scrapes the lego data every day and uploads to a
 fileserver as a compressed csv.
 
-If there was any modification since the last data fetch, it follows these steps:
+If there was any modification since the last data update, it follows these steps:
 
 1. Store modifications in local db.
 2. Export db as compressed csv file.

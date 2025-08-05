@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
-package hu.piware.bricklog.feature.onboarding.presentation.data_fetch
+package hu.piware.bricklog.feature.onboarding.presentation.preload
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_set_onboarding_data_fetch_btn_retry
+import bricklog.composeapp.generated.resources.feature_set_preload_fetch_btn_retry
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.core.presentation.UiTextUpdateProgress
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
@@ -34,19 +34,19 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DataFetchScreenRoot(
-    viewModel: DataFetchViewModel = koinViewModel(),
+fun PreloadScreenRoot(
+    viewModel: PreloadViewModel = koinViewModel(),
     onNavigateToDispatcher: () -> Unit,
 ) {
     App.firstScreenLoaded = true
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DataFetchScreen(
+    PreloadScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                DataFetchAction.OnContinueClick -> onNavigateToDispatcher()
+                PreloadAction.OnContinueClick -> onNavigateToDispatcher()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -55,18 +55,18 @@ fun DataFetchScreenRoot(
 }
 
 @Composable
-private fun DataFetchScreen(
-    state: DataFetchState,
-    onAction: (DataFetchAction) -> Unit,
+private fun PreloadScreen(
+    state: PreloadState,
+    onAction: (PreloadAction) -> Unit,
 ) {
     when (state) {
-        is DataFetchState.Initial -> Unit
+        is PreloadState.Initial -> Unit
 
-        is DataFetchState.Success -> {
-            onAction(DataFetchAction.OnContinueClick)
+        is PreloadState.Success -> {
+            onAction(PreloadAction.OnContinueClick)
         }
 
-        is DataFetchState.Loading -> {
+        is PreloadState.Loading -> {
             Scaffold {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -83,7 +83,7 @@ private fun DataFetchScreen(
             }
         }
 
-        is DataFetchState.Error -> {
+        is PreloadState.Error -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -91,9 +91,9 @@ private fun DataFetchScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
-                    onClick = { onAction(DataFetchAction.OnRetryClick) },
+                    onClick = { onAction(PreloadAction.OnRetryClick) },
                 ) {
-                    Text(stringResource(Res.string.feature_set_onboarding_data_fetch_btn_retry))
+                    Text(stringResource(Res.string.feature_set_preload_fetch_btn_retry))
                 }
             }
         }
@@ -125,10 +125,10 @@ private fun LoadingIndicator(progress: Float) {
 
 @Preview
 @Composable
-private fun DataFetchScreenPreview() {
+private fun PreloadScreenPreview() {
     MaterialTheme {
-        DataFetchScreen(
-            state = DataFetchState.Loading(
+        PreloadScreen(
+            state = PreloadState.Loading(
                 UiTextUpdateProgress(
                     stepProgress = 0.5f,
                     step = UpdateSetsStep.PREPARE_BATCHES.toUiText(),

@@ -8,8 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import hu.piware.bricklog.feature.onboarding.presentation.data_fetch.DataFetchScreenRoot
 import hu.piware.bricklog.feature.onboarding.presentation.dispatcher.DispatcherScreenRoot
+import hu.piware.bricklog.feature.onboarding.presentation.preload.PreloadScreenRoot
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import kotlinx.serialization.Serializable
 
@@ -22,7 +22,7 @@ sealed interface OnboardingRoute {
     data object DispatcherScreen : OnboardingRoute
 
     @Serializable
-    data object DataFetchScreen : OnboardingRoute
+    data object PreloadScreen : OnboardingRoute
 }
 
 fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
@@ -39,8 +39,8 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                         launchSingleTop = true
                     }
                 },
-                onNavigateToDataFetch = {
-                    navController.navigate(OnboardingRoute.DataFetchScreen) {
+                onNavigateToPreload = {
+                    navController.navigate(OnboardingRoute.PreloadScreen) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
@@ -49,13 +49,13 @@ fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
                 },
             )
         }
-        composable<OnboardingRoute.DataFetchScreen> {
+        composable<OnboardingRoute.PreloadScreen> {
             BackHandler {}
 
-            DataFetchScreenRoot(
+            PreloadScreenRoot(
                 onNavigateToDispatcher = {
                     navController.navigate(OnboardingRoute.DispatcherScreen) {
-                        popUpTo<OnboardingRoute.DataFetchScreen> {
+                        popUpTo<OnboardingRoute.PreloadScreen> {
                             inclusive = true
                         }
                         launchSingleTop = true

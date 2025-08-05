@@ -9,7 +9,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DispatcherScreenRoot(
     onNavigateToDashboard: () -> Unit,
-    onNavigateToDataFetch: () -> Unit,
+    onNavigateToPreload: () -> Unit,
     viewModel: DispatcherViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -19,7 +19,7 @@ fun DispatcherScreenRoot(
 
         when (currentState) {
             DispatcherState.Loading -> {}
-            DispatcherState.NavigateToDataFetch -> onNavigateToDataFetch()
+            DispatcherState.NavigateToPreload -> onNavigateToPreload()
             DispatcherState.NavigateToHome -> {
                 onNavigateToDashboard()
             }
