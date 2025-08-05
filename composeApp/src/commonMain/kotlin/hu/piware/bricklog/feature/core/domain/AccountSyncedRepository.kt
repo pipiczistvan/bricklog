@@ -2,7 +2,7 @@ package hu.piware.bricklog.feature.core.domain
 
 import kotlinx.coroutines.CoroutineScope
 
-interface SyncedRepository {
+interface AccountSyncedRepository {
     fun startSync(scope: CoroutineScope)
-    suspend fun clearLocal(): EmptyResult<DataError>
+    suspend fun clearLocalData(): EmptyResult<DataError>
 }

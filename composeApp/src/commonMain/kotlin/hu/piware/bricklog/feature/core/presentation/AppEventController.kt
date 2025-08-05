@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import hu.piware.bricklog.feature.collection.domain.usecase.InitializeDefaultCollections
+import hu.piware.bricklog.feature.core.domain.AccountSyncedRepository
 import hu.piware.bricklog.feature.core.domain.AppEvent
-import hu.piware.bricklog.feature.core.domain.SyncedRepository
 import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogReadVersion
 import hu.piware.bricklog.feature.user.domain.usecase.InitializeSession
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +26,7 @@ object AppEventController {
 fun AppEventHandler() {
     val scope = rememberCoroutineScope()
     val koinScope = LocalKoinScope.current
-    val syncedRepositories = remember { koinScope.getAll<SyncedRepository>() }
+    val syncedRepositories = remember { koinScope.getAll<AccountSyncedRepository>() }
     val initializeSession = remember { koinScope.get<InitializeSession>() }
     val initializeChangelogReadVersion =
         remember { koinScope.get<InitializeChangelogReadVersion>() }

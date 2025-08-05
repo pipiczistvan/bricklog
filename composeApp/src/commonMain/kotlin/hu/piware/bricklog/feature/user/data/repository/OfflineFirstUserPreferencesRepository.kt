@@ -3,10 +3,10 @@
 package hu.piware.bricklog.feature.user.data.repository
 
 import co.touchlab.kermit.Logger
+import hu.piware.bricklog.feature.core.domain.AccountSyncedRepository
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
-import hu.piware.bricklog.feature.core.domain.SyncedRepository
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.user.domain.datasource.LocalUserPreferencesDataSource
 import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserPreferencesDataSource
@@ -30,7 +30,7 @@ class OfflineFirstUserPreferencesRepository(
     private val localDataSource: LocalUserPreferencesDataSource,
     private val remoteDataSource: RemoteUserPreferencesDataSource,
     private val sessionManager: SessionManager,
-) : UserPreferencesRepository, SyncedRepository {
+) : UserPreferencesRepository, AccountSyncedRepository {
 
     private val logger = Logger.withTag("OfflineFirstUserPreferencesRepository")
 
@@ -47,7 +47,7 @@ class OfflineFirstUserPreferencesRepository(
             .launchIn(scope)
     }
 
-    override suspend fun clearLocal(): EmptyResult<DataError> {
+    override suspend fun clearLocalData(): EmptyResult<DataError> {
         return localDataSource.deleteUserPreferences(sessionManager.currentUserId)
     }
 
