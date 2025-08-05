@@ -1,8 +1,9 @@
 package hu.piware.bricklog.feature.user.domain.manager
 
+import hu.piware.bricklog.feature.settings.data.firebase.UserPreferencesDocument
+import hu.piware.bricklog.feature.settings.data.firebase.toDomainModel
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.model.UserId
-import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +34,7 @@ class SessionManager {
     companion object {
         const val USER_ID_GUEST = "guest"
         val GUEST_USER = User(USER_ID_GUEST, null)
-        val GUEST_PREFERENCES = UserPreferences()
+        val GUEST_PREFERENCES = UserPreferencesDocument().toDomainModel()
     }
 }
 

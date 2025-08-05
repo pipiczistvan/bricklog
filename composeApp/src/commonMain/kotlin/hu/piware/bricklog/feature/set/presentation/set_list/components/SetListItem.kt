@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.set.domain.model.SetPriceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.domain.model.containerColor
 import hu.piware.bricklog.feature.set.domain.model.isFavourite
@@ -40,6 +42,7 @@ import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.feature.set.presentation.components.formattedPrice
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -50,6 +53,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SetListItem(
     setDetails: SetDetails,
+    setPriceDetails: SetPriceDetails?,
     onClick: (SetDetails) -> Unit,
     onFavouriteClick: (SetDetails) -> Unit,
     modifier: Modifier = Modifier,
@@ -113,8 +117,9 @@ fun SetListItem(
                     Spacer(
                         modifier = Modifier.weight(1f),
                     )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
                     ) {
                         SetAttributeChip(
                             text = "# ${setDetails.setNumberWithVariant}",
@@ -126,6 +131,12 @@ fun SetListItem(
                                 size = ChipSize.SMALL,
                                 color = setDetails.status.containerColor,
                                 textColor = setDetails.status.textColor,
+                            )
+                        }
+                        if (setPriceDetails != null) {
+                            SetAttributeChip(
+                                text = formattedPrice(setPriceDetails),
+                                size = ChipSize.SMALL,
                             )
                         }
                     }
@@ -156,6 +167,7 @@ private fun SetListItemPreview() {
     BricklogTheme {
         SetListItem(
             setDetails = PreviewData.sets[0],
+            setPriceDetails = null,
             onClick = {},
             onFavouriteClick = {},
         )

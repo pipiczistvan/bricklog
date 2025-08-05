@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UpdateInfoRepository {
 
-    fun watchUpdateInfo(type: DataType, setId: Int?): Flow<UpdateInfo?>
+    fun watchUpdateInfo(type: DataType, setId: Int? = null): Flow<UpdateInfo?>
 
     suspend fun saveUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError>
 }

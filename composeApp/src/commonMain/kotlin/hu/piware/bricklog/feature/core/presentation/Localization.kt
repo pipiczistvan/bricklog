@@ -37,4 +37,5 @@ fun LocalizedApp(content: @Composable () -> Unit) {
 
 expect class LocaleManager {
     fun changeLanguage(language: LanguageOption)
+    fun getCurrentLocale(): String
 }

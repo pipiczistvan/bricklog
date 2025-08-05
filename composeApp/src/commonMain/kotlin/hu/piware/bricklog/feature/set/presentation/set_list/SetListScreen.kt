@@ -175,6 +175,7 @@ private fun SetListScreen(
                         .testTag("set_list:sets")
                         .fillMaxSize(),
                     sets = sets,
+                    currencyDetails = state.currencyPreferenceDetails,
                     onSetClick = {
                         onAction(SetListAction.OnSetClick(SetDetailArguments(it.setID, "set_list")))
                     },

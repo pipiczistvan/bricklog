@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.onboarding.domain.usecase
+package hu.piware.bricklog.feature.set.domain.usecase
 
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result

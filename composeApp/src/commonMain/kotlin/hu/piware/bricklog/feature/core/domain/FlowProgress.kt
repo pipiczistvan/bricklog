@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.single
 
@@ -38,6 +39,15 @@ suspend inline fun <V, P> FlowForValue<V, P>.collectForValue(crossinline action:
     return onEach {
         if (it is ValueOrProgress.Progress<V, P>) action(it.progress)
     }.filterIsInstance<ValueOrProgress.Value<V, P>>().single().value
+}
+
+fun <V, P, Q> FlowForValue<V, P>.mapProgress(transform: (P) -> Q): FlowForValue<V, Q> {
+    return map {
+        when (it) {
+            is ValueOrProgress.Value<V, P> -> ValueOrProgress.Value(it.value)
+            is ValueOrProgress.Progress<V, P> -> ValueOrProgress.Progress(transform(it.progress))
+        }
+    }
 }
 
 suspend inline fun <V, P> FlowForValue<V, P>.collectDistinctForValue(

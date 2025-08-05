@@ -5,7 +5,7 @@ import dev.icerock.moko.permissions.PermissionsController
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.presentation.LocaleManager
-import hu.piware.bricklog.feature.set.domain.background_task.SyncSetsPeriodicBackgroundTaskScheduler
+import hu.piware.bricklog.feature.onboarding.domain.background_task.SyncDataPeriodicBackgroundTaskScheduler
 import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
@@ -29,6 +29,6 @@ actual class PlatformModule {
     fun localeManager(context: Context) = LocaleManager(context)
 
     @Single
-    fun syncSetsPeriodicBackgroundTaskScheduler(context: Context) =
-        SyncSetsPeriodicBackgroundTaskScheduler(context)
+    fun syncDataPeriodicBackgroundTaskScheduler(context: Context) =
+        SyncDataPeriodicBackgroundTaskScheduler(context)
 }

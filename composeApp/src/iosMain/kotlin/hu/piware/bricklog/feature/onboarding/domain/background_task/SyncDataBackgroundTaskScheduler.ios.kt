@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
-package hu.piware.bricklog.feature.set.domain.background_task
+package hu.piware.bricklog.feature.onboarding.domain.background_task
 
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.onError
-import hu.piware.bricklog.feature.set.domain.usecase.SyncSets
+import hu.piware.bricklog.feature.onboarding.domain.usecase.SyncData
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -17,43 +17,43 @@ import platform.Foundation.NSOperation
 import platform.Foundation.NSOperationQueue
 import platform.Foundation.dateWithTimeIntervalSinceNow
 
-actual class SyncSetsPeriodicBackgroundTaskScheduler : KoinComponent {
+actual class SyncDataPeriodicBackgroundTaskScheduler : KoinComponent {
 
-    private val logger = Logger.withTag("SyncSetsPeriodicBackgroundTaskScheduler")
+    private val logger = Logger.withTag("SyncDataPeriodicBackgroundTaskScheduler")
 
-    private val syncSets: SyncSets by inject()
+    private val syncData: SyncData by inject()
 
     init {
         BGTaskScheduler.sharedScheduler.registerForTaskWithIdentifier(
-            identifier = TASK_SYNC_SETS_IDENTIFIER,
+            identifier = TASK_SYNC_DATA_IDENTIFIER,
             usingQueue = null,
             launchHandler = { task ->
-                handleUpdateSets(task as BGAppRefreshTask)
+                handleUpdateData(task as BGAppRefreshTask)
             }
         )
     }
 
     actual fun schedule() {
-        val request = BGAppRefreshTaskRequest(identifier = TASK_SYNC_SETS_IDENTIFIER)
+        val request = BGAppRefreshTaskRequest(identifier = TASK_SYNC_DATA_IDENTIFIER)
         request.earliestBeginDate =
-            NSDate.dateWithTimeIntervalSinceNow(TASK_SYNC_SETS_REFRESH_INTERVAL_MS / 1000.0)
+            NSDate.dateWithTimeIntervalSinceNow(TASK_SYNC_DATA_REFRESH_INTERVAL_MS / 1000.0)
 
         try {
             BGTaskScheduler.sharedScheduler.submitTaskRequest(
                 taskRequest = request,
                 error = null
             )
-            logger.i { "Update sets background task scheduled" }
+            logger.i { "Update data background task scheduled" }
         } catch (e: Exception) {
-            logger.e { "Could not schedule update sets background task" }
+            logger.e { "Could not schedule update data background task" }
         }
     }
 
 
-    private fun handleUpdateSets(task: BGAppRefreshTask) {
+    private fun handleUpdateData(task: BGAppRefreshTask) {
         schedule()
 
-        val operation = SyncSetsPeriodicBackgroundTask(syncSets)
+        val operation = SyncDataPeriodicBackgroundTask(syncData)
 
         val queue = NSOperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -68,13 +68,13 @@ actual class SyncSetsPeriodicBackgroundTaskScheduler : KoinComponent {
         }
     }
 
-    class SyncSetsPeriodicBackgroundTask(
-        private val syncSets: SyncSets,
+    class SyncDataPeriodicBackgroundTask(
+        private val syncData: SyncData,
     ) : NSOperation() {
 
         override fun main() {
             runBlocking {
-                syncSets()
+                syncData()
                     .onError {
                         cancel()
                     }

@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.FlowForValue
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.core.domain.flowForValue
@@ -14,7 +15,6 @@ import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
-import hu.piware.bricklog.feature.set.domain.model.awaitInProgressRange
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
@@ -57,6 +57,10 @@ class UpdateSetsWithProgress(
         val batches = batchExportInfo.batches
             .filter { force || lastUpdatedSet == null || it.validTo > lastUpdatedSet.lastUpdated }
             .sortedBy { it.validTo }
+
+        if (batches.isEmpty()) {
+            logger.i { "No batches to update" }
+        }
 
         emitProgress(UpdateSetsProgress(1f, UpdateSetsStep.PREPARE_BATCHES))
         Result.Success(batches)

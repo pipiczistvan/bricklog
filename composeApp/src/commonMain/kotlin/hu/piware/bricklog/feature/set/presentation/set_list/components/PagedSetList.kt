@@ -23,9 +23,11 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
+import hu.piware.bricklog.feature.set.domain.util.combineSetWithCurrencyPreference
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -35,6 +37,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun PagedSetList(
     sets: LazyPagingItems<SetDetails>,
+    currencyDetails: CurrencyPreferenceDetails?,
     onSetClick: (SetDetails) -> Unit,
     onFavouriteClick: (SetDetails) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
@@ -64,6 +67,10 @@ fun PagedSetList(
                     sets[index]?.let { set ->
                         SetListItem(
                             setDetails = set,
+                            setPriceDetails = combineSetWithCurrencyPreference(
+                                set,
+                                currencyDetails,
+                            ),
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .widthIn(max = 700.dp)
@@ -91,6 +98,10 @@ fun PagedSetList(
                     sets[index]?.let { set ->
                         SetGridItem(
                             setDetails = set,
+                            setPriceDetails = combineSetWithCurrencyPreference(
+                                set,
+                                currencyDetails,
+                            ),
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
@@ -118,6 +129,10 @@ fun PagedSetList(
                     sets[index]?.let { set ->
                         SetGridItem(
                             setDetails = set,
+                            setPriceDetails = combineSetWithCurrencyPreference(
+                                set,
+                                currencyDetails,
+                            ),
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
@@ -147,6 +162,7 @@ private fun PagedSetListPreview() {
                         ),
                 ),
             ).collectAsLazyPagingItems(),
+            currencyDetails = null,
             onSetClick = {},
             onFavouriteClick = {},
         )

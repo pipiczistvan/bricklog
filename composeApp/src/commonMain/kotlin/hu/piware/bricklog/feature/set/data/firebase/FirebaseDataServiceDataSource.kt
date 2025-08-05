@@ -9,6 +9,7 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
+import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import org.koin.core.annotation.Single
@@ -20,7 +21,7 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
 
     private val firestore = Firebase.firestore
 
-    override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError> {
+    override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError.Remote> {
         try {
             logger.d { "Fetching batch export info from Firestore" }
             val batchExportInfo = firestore
@@ -49,5 +50,22 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
                     null
                 }
             }
+    }
+
+    override suspend fun getEurRateExportInfo(): Result<ExportInfo, DataError.Remote> {
+        try {
+            logger.d { "Fetching eur rate export info from Firestore" }
+            val exportInfo = firestore
+                .collection("bricklog-data-service")
+                .document("eur-rate-export-info")
+                .get()
+                .data<ExportInfoDocument>()
+                .toDomainModel()
+
+            return Result.Success(exportInfo)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while fetching eur rate export info" }
+            return Result.Error(DataError.Remote.UNKNOWN)
+        }
     }
 }

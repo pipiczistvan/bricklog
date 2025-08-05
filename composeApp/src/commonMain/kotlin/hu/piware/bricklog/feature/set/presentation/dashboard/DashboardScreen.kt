@@ -220,7 +220,7 @@ private fun DashboardScreen(
             ) {
                 PullToRefreshColumn(
                     isRefreshing = state.areSetsRefreshing,
-                    onRefresh = { onAction(DashboardAction.OnRefreshSets) },
+                    onRefresh = { onAction(DashboardAction.OnRefreshData) },
                 ) {
                     ContentColumn(
                         modifier = Modifier

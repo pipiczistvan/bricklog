@@ -14,7 +14,7 @@ import hu.piware.bricklog.feature.core.NotificationController
 import hu.piware.bricklog.feature.core.NotificationEvent
 import hu.piware.bricklog.feature.core.domain.AppEvent
 import hu.piware.bricklog.feature.core.presentation.AppEventController
-import hu.piware.bricklog.feature.set.domain.background_task.SyncSetsPeriodicBackgroundTaskScheduler
+import hu.piware.bricklog.feature.onboarding.domain.background_task.SyncDataPeriodicBackgroundTaskScheduler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
@@ -46,7 +46,7 @@ object AppInitializer : KoinComponent {
             }
         })
 
-        scheduleSyncSetsBackgroundTask()
+        scheduleSyncDataBackgroundTask()
 
         MainScope().launch {
             AppEventController.sendEvent(AppEvent.Initialize)
@@ -57,8 +57,8 @@ object AppInitializer : KoinComponent {
         return BuildKonfig.DEV_LEVEL < DevLevels.MOCK
     }
 
-    private fun scheduleSyncSetsBackgroundTask() {
-        val scheduler = getKoin().get<SyncSetsPeriodicBackgroundTaskScheduler>()
+    private fun scheduleSyncDataBackgroundTask() {
+        val scheduler = getKoin().get<SyncDataPeriodicBackgroundTaskScheduler>()
         scheduler.schedule()
     }
 }

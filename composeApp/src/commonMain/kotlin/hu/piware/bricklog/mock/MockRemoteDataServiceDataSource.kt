@@ -7,6 +7,7 @@ import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSou
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
+import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -17,7 +18,7 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
 
     private val logger = Logger.withTag("MockRemoteDataServiceDataSource")
 
-    override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError> {
+    override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError.Remote> {
         logger.w("Using mock implementation")
 
         return Result.Success(
@@ -45,5 +46,27 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
 
     override fun watchCollectibles(): Flow<List<Collectible>> {
         return emptyFlow()
+    }
+
+    override suspend fun getEurRateExportInfo(): Result<ExportInfo, DataError.Remote> {
+        logger.w("Using mock implementation")
+
+        return Result.Success(
+            ExportInfo(
+                id = 1,
+                fileUploads =
+                    listOf(
+                        FileUploadResult(
+                            serviceId = "dropbox",
+                            url = "https://www.dropbox.com/scl/fi/ujf1tdky5u4everoypmdx/" +
+                                    "eur-rates-export.csv.gz?" +
+                                    "rlkey=9zlzd29snypncal4qlnpcimz5&dl=1",
+                            fileId = "eur-rates-export.csv.gz",
+                            priority = 1,
+                        ),
+                    ),
+                lastUpdated = Clock.System.now(),
+            ),
+        )
     }
 }

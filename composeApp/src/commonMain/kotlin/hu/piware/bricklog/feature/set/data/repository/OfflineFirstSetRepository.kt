@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.await
+import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.core.domain.onError
@@ -22,7 +23,6 @@ import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
-import hu.piware.bricklog.feature.set.domain.model.awaitInProgressRange
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import korlibs.io.compression.deflate.GZIP

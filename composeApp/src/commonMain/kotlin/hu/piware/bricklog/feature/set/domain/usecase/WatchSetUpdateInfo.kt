@@ -11,6 +11,6 @@ class WatchSetUpdateInfo(
     private val updateInfoRepository: UpdateInfoRepository,
 ) {
     operator fun invoke(): Flow<UpdateInfo?> {
-        return updateInfoRepository.watchUpdateInfo(DataType.SET_DATA, null)
+        return updateInfoRepository.watchUpdateInfo(DataType.SET_DATA)
     }
 }

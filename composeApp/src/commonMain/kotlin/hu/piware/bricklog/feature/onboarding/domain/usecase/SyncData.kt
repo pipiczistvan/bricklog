@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.set.domain.usecase
+package hu.piware.bricklog.feature.onboarding.domain.usecase
 
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
@@ -8,16 +8,18 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.Set
+import hu.piware.bricklog.feature.set.domain.usecase.GetSetDetails
+import hu.piware.bricklog.feature.set.domain.usecase.SendNewSetNotification
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilter
 import org.koin.core.annotation.Single
 
 @Single
-class SyncSets(
+class SyncData(
     private val getSetDetails: GetSetDetails,
-    private val updateSets: UpdateSets,
+    private val updateData: UpdateData,
     private val sendNewSetNotification: SendNewSetNotification,
 ) {
-    private val logger = Logger.withTag("SyncSets")
+    private val logger = Logger.withTag("SyncData")
 
     private var inProgress: Boolean = false
 
@@ -40,10 +42,10 @@ class SyncSets(
             return it
         }.data().firstOrNull()
 
-        logger.i { "Updating sets" }
-        updateSets()
+        logger.i { "Updating data" }
+        updateData()
             .onError {
-                logger.w { "Updating sets failed" }
+                logger.w { "Updating data failed" }
                 inProgress = false
                 return it
             }

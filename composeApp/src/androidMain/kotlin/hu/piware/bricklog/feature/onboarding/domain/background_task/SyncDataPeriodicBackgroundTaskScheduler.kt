@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.set.domain.background_task
+package hu.piware.bricklog.feature.onboarding.domain.background_task
 
 import android.content.Context
 import androidx.work.Constraints
@@ -11,23 +11,23 @@ import androidx.work.WorkerParameters
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.onError
-import hu.piware.bricklog.feature.set.domain.usecase.SyncSets
+import hu.piware.bricklog.feature.onboarding.domain.usecase.SyncData
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
 
-actual class SyncSetsPeriodicBackgroundTaskScheduler(
+actual class SyncDataPeriodicBackgroundTaskScheduler(
     private val context: Context,
 ) : KoinComponent {
 
-    private val logger = Logger.withTag("SyncSetsPeriodicBackgroundTaskScheduler")
+    private val logger = Logger.withTag("SyncDataPeriodicBackgroundTaskScheduler")
 
     actual fun schedule() {
-        val workRequest = PeriodicWorkRequestBuilder<SyncSetsPeriodicBackgroundTask>(
-            repeatInterval = TASK_SYNC_SETS_REFRESH_INTERVAL_MS,
+        val workRequest = PeriodicWorkRequestBuilder<SyncDataPeriodicBackgroundTask>(
+            repeatInterval = TASK_SYNC_DATA_REFRESH_INTERVAL_MS,
             repeatIntervalTimeUnit = TimeUnit.MILLISECONDS
         )
-            .setInitialDelay(TASK_SYNC_SETS_REFRESH_INTERVAL_MS, TimeUnit.MILLISECONDS)
+            .setInitialDelay(TASK_SYNC_DATA_REFRESH_INTERVAL_MS, TimeUnit.MILLISECONDS)
             .setConstraints(
                 Constraints(
                     requiredNetworkType = NetworkType.UNMETERED,
@@ -39,26 +39,26 @@ actual class SyncSetsPeriodicBackgroundTaskScheduler(
             ).build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            uniqueWorkName = TASK_SYNC_SETS_IDENTIFIER,
+            uniqueWorkName = TASK_SYNC_DATA_IDENTIFIER,
             existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
             request = workRequest
         )
     }
 
-    class SyncSetsPeriodicBackgroundTask(
+    class SyncDataPeriodicBackgroundTask(
         appContext: Context,
         params: WorkerParameters,
     ) : CoroutineWorker(appContext, params), KoinComponent {
 
-        private val logger = Logger.withTag("SyncSetsPeriodicBackgroundTask")
+        private val logger = Logger.withTag("SyncDataPeriodicBackgroundTask")
 
-        private val syncSets: SyncSets by inject()
+        private val syncData: SyncData by inject()
 
         override suspend fun doWork(): Result {
-            syncSets()
+            syncData()
                 .onError {
                     if (it.error != DataError.Local.BUSY) {
-                        logger.w { "Error while syncing sets" }
+                        logger.w { "Error while syncing data" }
                         return Result.failure()
                     }
                 }

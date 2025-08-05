@@ -8,7 +8,7 @@ import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
-import hu.piware.bricklog.feature.set.domain.usecase.UpdateSetsWithProgress
+import hu.piware.bricklog.feature.onboarding.domain.usecase.UpdateDataWithProgress
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,7 +17,7 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class DataFetchViewModel(
-    private val updateSetsWithProgress: UpdateSetsWithProgress,
+    private val updateDataWithProgress: UpdateDataWithProgress,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DataFetchViewModel")
@@ -25,19 +25,19 @@ class DataFetchViewModel(
     private var _uiState = MutableStateFlow<DataFetchState>(DataFetchState.Initial)
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
-            fetchSets()
+            fetchData()
         }
 
     fun onAction(action: DataFetchAction) {
         when (action) {
-            is DataFetchAction.OnRetryClick -> fetchSets()
+            is DataFetchAction.OnRetryClick -> fetchData()
             else -> Unit
         }
     }
 
-    private fun fetchSets() {
+    private fun fetchData() {
         viewModelScope.launch {
-            updateSetsWithProgress(force = true)
+            updateDataWithProgress()
                 .collectForValue { progress ->
                     logger.d { "Progress: $progress" }
                     _uiState.update { DataFetchState.Loading(progress) }

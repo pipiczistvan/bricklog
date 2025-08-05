@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,19 +35,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_settings_appearance_label_currency_region
+import bricklog.composeapp.generated.resources.feature_settings_appearance_label_currency_target
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title
+import bricklog.composeapp.generated.resources.feature_settings_appearance_title_currency
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_dashboard
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_featured_sets
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_greetings
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_theme
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
+import hu.piware.bricklog.feature.currency.domain.model.toUiText
+import hu.piware.bricklog.feature.currency.domain.util.CURRENCY_OPTIONS
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.stringResource
 import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
+import hu.piware.bricklog.feature.settings.presentation.appearance.components.CurrencyCodeBottomSheet
+import hu.piware.bricklog.feature.settings.presentation.appearance.components.CurrencyRegionBottomSheet
+import hu.piware.bricklog.feature.settings.presentation.appearance.components.DoubleHorizontalDivider
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.feature.user.presentation.components.NameField
 import hu.piware.bricklog.feature.user.presentation.util.isValidName
@@ -121,13 +129,14 @@ private fun AppearanceScreen(
                         onAction = onAction,
                     )
 
-                    Column(
-                        modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
-                    ) {
-                        HorizontalDivider()
-                        HorizontalDivider()
-                    }
+                    DoubleHorizontalDivider()
+
+                    CurrencySettings(
+                        state = state,
+                        onAction = onAction,
+                    )
+
+                    DoubleHorizontalDivider()
 
                     ThemeSettings(
                         state = state,
@@ -301,6 +310,92 @@ private fun GreetingsSettings(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun CurrencySettings(
+    state: AppearanceState,
+    onAction: (AppearanceAction) -> Unit,
+) {
+    var showCurrencyRegionSheet by remember { mutableStateOf(false) }
+    var showCurrencyCodeSheet by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.MediumPadding.size),
+        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
+    ) {
+        Text(
+            text = stringResource(Res.string.feature_settings_appearance_title_currency),
+            style = MaterialTheme.typography.headlineMedium,
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_settings_appearance_label_currency_region),
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            FilledTonalButton(
+                onClick = { showCurrencyRegionSheet = true },
+            ) {
+                Text(state.userPreferences.currencyRegion.toUiText().asString())
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_settings_appearance_label_currency_target),
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            FilledTonalButton(
+                onClick = { showCurrencyCodeSheet = true },
+            ) {
+                Text(state.userPreferences.targetCurrencyCode)
+            }
+        }
+    }
+
+    if (showCurrencyRegionSheet) {
+        CurrencyRegionBottomSheet(
+            selected = state.userPreferences.currencyRegion,
+            onSelectionChange = {
+                onAction(
+                    AppearanceAction.OnUserPreferencesChange(
+                        preferences = state.userPreferences.copy(currencyRegion = it),
+                        showLoading = false,
+                    ),
+                )
+            },
+            onDismiss = { showCurrencyRegionSheet = false },
+        )
+    }
+
+    if (showCurrencyCodeSheet) {
+        CurrencyCodeBottomSheet(
+            availableOptions = CURRENCY_OPTIONS,
+            selected = state.userPreferences.targetCurrencyCode,
+            onSelectionChange = {
+                onAction(
+                    AppearanceAction.OnUserPreferencesChange(
+                        preferences = state.userPreferences.copy(targetCurrencyCode = it),
+                        showLoading = false,
+                    ),
+                )
+            },
+            onDismiss = { showCurrencyCodeSheet = false },
+        )
     }
 }
 

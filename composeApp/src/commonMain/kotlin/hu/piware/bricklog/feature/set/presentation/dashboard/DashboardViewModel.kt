@@ -24,10 +24,10 @@ import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnSuccess
+import hu.piware.bricklog.feature.onboarding.domain.usecase.UpdateData
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.usecase.ResetSets
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateChangelogReadVersion
-import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
 import hu.piware.bricklog.feature.set.domain.usecase.WatchNewChangelog
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetails
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
@@ -68,7 +68,7 @@ import org.koin.core.annotation.Provided
 @KoinViewModel
 class DashboardViewModel(
     private val watchSetDetails: WatchSetDetails,
-    private val updateSets: UpdateSets,
+    private val updateData: UpdateData,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     @Provided private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
@@ -124,7 +124,7 @@ class DashboardViewModel(
 
     fun onAction(action: DashboardAction) {
         when (action) {
-            is DashboardAction.OnRefreshSets -> refreshSets()
+            is DashboardAction.OnRefreshData -> refreshData()
             is DashboardAction.OnUpdateChangelogReadVersion -> viewModelScope.launch {
                 updateChangelogReadVersion()
             }
@@ -317,10 +317,10 @@ class DashboardViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun refreshSets() {
+    private fun refreshData() {
         viewModelScope.launch {
             _uiState.update { it.copy(areSetsRefreshing = true) }
-            updateSets().showSnackbarOnError()
+            updateData().showSnackbarOnError()
             _uiState.update { it.copy(areSetsRefreshing = false) }
         }
     }

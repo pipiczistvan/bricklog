@@ -12,6 +12,8 @@ fun UserPreferencesEntity.toDomainModel(): UserPreferences {
         hiddenFeaturedSets = hiddenFeaturedSets
             .filter { it.isNotBlank() }
             .map { FeaturedSetType.valueOf(it) },
+        currencyRegion = currencyRegion,
+        targetCurrencyCode = targetCurrencyCode,
     )
 }
 
@@ -22,5 +24,7 @@ fun UserPreferences.toEntity(userId: UserId): UserPreferencesEntity {
         displayName = displayName,
         collectionOrder = collectionOrder,
         hiddenFeaturedSets = hiddenFeaturedSets.map { it.name },
+        currencyRegion = currencyRegion,
+        targetCurrencyCode = targetCurrencyCode,
     )
 }

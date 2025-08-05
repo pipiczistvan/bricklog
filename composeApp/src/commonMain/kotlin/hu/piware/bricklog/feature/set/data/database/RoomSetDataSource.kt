@@ -44,6 +44,7 @@ class RoomSetDataSource(
             val count = setDao.getSetCount()
             Result.Success(count)
         } catch (e: Exception) {
+            logger.e(e) { "Error getting set count" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

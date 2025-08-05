@@ -1,12 +1,15 @@
 package hu.piware.bricklog.feature.settings.data.firebase
 
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferencesDocument(
-    val hideGreetings: Boolean = false,
+    val hideGreetings: Boolean? = null,
     val displayName: String? = null,
-    val collectionOrder: List<String> = emptyList(),
-    val hiddenFeaturedSets: List<FeaturedSetType> = emptyList(),
+    val collectionOrder: List<String>? = null,
+    val hiddenFeaturedSets: List<FeaturedSetType>? = null,
+    val currencyRegion: CurrencyRegion? = null,
+    val targetCurrencyCode: String? = null,
 )

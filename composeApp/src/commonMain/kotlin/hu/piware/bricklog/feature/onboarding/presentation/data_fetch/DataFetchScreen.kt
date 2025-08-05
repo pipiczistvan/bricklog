@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_onboarding_data_fetch_btn_retry
 import hu.piware.bricklog.App
-import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
+import hu.piware.bricklog.feature.core.presentation.UiTextUpdateProgress
 import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
 import hu.piware.bricklog.feature.set.domain.model.toUiText
 import hu.piware.bricklog.ui.theme.Dimens
@@ -77,7 +77,7 @@ private fun DataFetchScreen(
                         verticalArrangement = Arrangement.spacedBy(Dimens.LargePadding.size),
                     ) {
                         LoadingIndicator(state.progress.totalProgress)
-                        Text(state.progress.step.toUiText().asString())
+                        Text(state.progress.step.asString())
                     }
                 }
             }
@@ -129,9 +129,9 @@ private fun DataFetchScreenPreview() {
     MaterialTheme {
         DataFetchScreen(
             state = DataFetchState.Loading(
-                UpdateSetsProgress(
+                UiTextUpdateProgress(
                     stepProgress = 0.5f,
-                    step = UpdateSetsStep.PREPARE_BATCHES,
+                    step = UpdateSetsStep.PREPARE_BATCHES.toUiText(),
                     totalProgress = 0.5f,
                 ),
             ),

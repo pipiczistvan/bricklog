@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,6 +61,7 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetBarc
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetCollectionsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetDetailsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetInstructionsTable
+import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetPriceLabel
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createFirstSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createSecondSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createThirdSetDetailTableColumns
@@ -161,9 +163,7 @@ private fun SetDetailScreen(
 
         Content(
             modifier = Modifier.testTag("set_detail:body"),
-            setDetails = state.setDetails,
-            instructions = state.instructions,
-            availableCollections = state.availableCollections,
+            state = state,
             sharedElementPrefix = state.sharedElementPrefix,
             onAction = onAction,
             paddingValues = padding,
@@ -173,14 +173,16 @@ private fun SetDetailScreen(
 
 @Composable
 private fun Content(
-    setDetails: SetDetails,
-    instructions: List<Instruction>?,
-    availableCollections: List<Collection>,
+    state: SetDetailState,
+    onAction: (SetDetailAction) -> Unit,
     sharedElementPrefix: String,
     paddingValues: PaddingValues,
-    onAction: (SetDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (state.setDetails == null) {
+        return
+    }
+
     ContentColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -195,23 +197,35 @@ private fun Content(
         Spacer(modifier = Modifier.height(50.dp))
 
         SetHeaderImage(
-            setDetails = setDetails,
+            setDetails = state.setDetails,
             sharedElementPrefix = sharedElementPrefix,
             onClick = {
-                onAction(SetDetailAction.OnImageClick(setDetails.setID))
+                onAction(SetDetailAction.OnImageClick(state.setDetails.setID))
             },
         )
 
         Text(
-            text = setDetails.set.name ?: "",
+            text = state.setDetails.set.name ?: "",
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
         )
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (state.setPriceDetails != null) {
+                SetPriceLabel(
+                    priceDetails = state.setPriceDetails,
+                )
+            }
+        }
+
         SetDetails(
-            setDetails = setDetails,
-            instructions = instructions,
-            availableCollections = availableCollections,
+            setDetails = state.setDetails,
+            instructions = state.instructions,
+            availableCollections = state.availableCollections,
             onAction = onAction,
         )
     }

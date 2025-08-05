@@ -7,6 +7,7 @@ import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import hu.piware.bricklog.feature.settings.domain.model.LanguageOption
+import java.util.Locale
 
 actual class LocaleManager(
     private val context: Context,
@@ -28,5 +29,10 @@ actual class LocaleManager(
                 }
             )
         }
+    }
+
+    actual fun getCurrentLocale(): String {
+        val locale = Locale.getDefault()
+        return "${locale.language}_${locale.country}"
     }
 }

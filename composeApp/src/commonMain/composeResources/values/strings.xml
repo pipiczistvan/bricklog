@@ -21,6 +21,8 @@
     <string name="feature_collection_edit_icon_sheet_title">Collection icon</string>
     <string name="feature_collection_edit_title_create">Create collection</string>
     <string name="feature_collection_edit_title_modify">Edit collection</string>
+    <string name="feature_currency_region_name_eu">Europe</string>
+    <string name="feature_currency_region_name_us">United States</string>
     <string name="feature_set_dashboard_changelog_bottom_sheet_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title_build_version">%1$s (build %2$s)</string>
@@ -57,6 +59,8 @@
     <string name="feature_set_detail_instructions_title">Instructions</string>
     <string name="feature_set_detail_label_barcode_ean">EAN (Europe / Rest of World)</string>
     <string name="feature_set_detail_label_barcode_upc">UPC (North America)</string>
+    <string name="feature_set_detail_price_info_dialog_btn_cancel">OK</string>
+    <string name="feature_set_detail_price_info_dialog_label">This price is only an estimate, derived from the regional recommended retail price and available rates.</string>
     <string name="feature_set_detail_table_label_depth">Depth</string>
     <string name="feature_set_detail_table_label_exit_date">Exit date</string>
     <string name="feature_set_detail_table_label_height">Height</string>
@@ -73,9 +77,12 @@
     <string name="feature_set_list_empty">Oops, there aren't any sets for your search query.</string>
     <string name="feature_set_onboarding_data_fetch_btn_retry">Retry</string>
     <string name="feature_set_onboarding_data_fetch_step_download_file">Downloading batch file</string>
+    <string name="feature_set_onboarding_data_fetch_step_parse_rates">Parsing rates</string>
     <string name="feature_set_onboarding_data_fetch_step_parse_sets">Parsing sets</string>
     <string name="feature_set_onboarding_data_fetch_step_prepare_batches">Preparing download batches</string>
+    <string name="feature_set_onboarding_data_fetch_step_prepare_export_info">Preparing export info</string>
     <string name="feature_set_onboarding_data_fetch_step_save_update_info">Saving update information</string>
+    <string name="feature_set_onboarding_data_fetch_step_store_rates">Storing rates</string>
     <string name="feature_set_onboarding_data_fetch_step_store_sets">Storing sets</string>
     <string name="feature_set_onboarding_data_fetch_step_uncompress_file">Uncompressing batch file</string>
     <string name="feature_set_scanner_manual_label">Scan LEGO set boxes or select Collectible Minifigures (CMFs) to view details instantly.</string>
@@ -175,6 +182,10 @@
     <string name="feature_settings_about_title_framework">Framework</string>
     <string name="feature_settings_about_title_lego_api">Lego set data</string>
     <string name="feature_settings_about_title_tools">Tools</string>
+    <string name="feature_settings_appearance_currency_code_bottom_sheet_title">Select currency</string>
+    <string name="feature_settings_appearance_currency_region_bottom_sheet_title">Select region</string>
+    <string name="feature_settings_appearance_label_currency_region">Region</string>
+    <string name="feature_settings_appearance_label_currency_target">Preferred currency</string>
     <string name="feature_settings_appearance_label_theme_dark">Dark</string>
     <string name="feature_settings_appearance_label_theme_light">Light</string>
     <string name="feature_settings_appearance_label_theme_system">System</string>
@@ -182,6 +193,7 @@
     <string name="feature_settings_appearance_language_label_hungarian">Hungarian</string>
     <string name="feature_settings_appearance_language_label_system">System</string>
     <string name="feature_settings_appearance_title">Appearance</string>
+    <string name="feature_settings_appearance_title_currency">Currency</string>
     <string name="feature_settings_appearance_title_dashboard">Dashboard</string>
     <string name="feature_settings_appearance_title_featured_sets">Featured Sets</string>
     <string name="feature_settings_appearance_title_greetings">Greetings</string>

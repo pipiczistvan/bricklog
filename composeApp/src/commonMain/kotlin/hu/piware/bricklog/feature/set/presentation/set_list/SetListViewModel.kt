@@ -13,6 +13,7 @@ import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
+import hu.piware.bricklog.feature.currency.domain.usecase.WatchCurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
@@ -45,6 +46,7 @@ class SetListViewModel(
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val watchSetFilterDomain: WatchSetFilterDomain,
     private val watchCollection: WatchCollection,
+    private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
@@ -64,6 +66,7 @@ class SetListViewModel(
             observeSetListDisplayMode()
             observeFilterPreferences()
             observeFilterDomain()
+            observeCurrencyPreferenceDetails()
 
             if (arguments.filterOverrides?.collectionIds?.count() == 1) {
                 observeCollection(arguments.filterOverrides.collectionIds.first())
@@ -133,6 +136,12 @@ class SetListViewModel(
     private fun observeCollection(id: CollectionId) {
         watchCollection(id)
             .onEach { collection -> _uiState.update { it.copy(title = collection.name) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCurrencyPreferenceDetails() {
+        watchCurrencyPreferenceDetails()
+            .onEach { details -> _uiState.update { it.copy(currencyPreferenceDetails = details) } }
             .launchIn(viewModelScope)
     }
 }
