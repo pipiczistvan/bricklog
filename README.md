@@ -89,9 +89,10 @@ To use Firebase, download the appropriate `google-services.json` from Firebase a
 
 #### iOS
 
-1. Build the project in Android Studio to generate necessary files.
-2. Open the iosApp.xcworkspace file in Xcode
-3. Build the app
+1. Create a `DevSecrets.xcconfig` and `ProdSecrets.xcconfig` files in `iosApp/Configuration/`
+2. Build the project in Android Studio to generate necessary files.
+3. Open the iosApp.xcworkspace file in Xcode
+4. Build the app
 
 To use Firebase, ownload the appropriate `GoogleService-Info.plist` and place in `iosApp/iosApp`
 
