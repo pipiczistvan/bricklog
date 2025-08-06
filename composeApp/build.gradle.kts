@@ -127,7 +127,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.gitlive.firebase.java.sdk)
+            implementation("dev.gitlive:firebase-java-sdk") // Override implementation of KMPAuth > firebase-gitlive-auth > firebase-java-sdk
         }
     }
 
@@ -391,7 +391,7 @@ data class SigningConfig(
     val keystorePath: String,
     val keystorePassword: String,
     val keyAlias: String,
-    val keyPassword: String
+    val keyPassword: String,
 )
 
 private fun createDebugSigningConfig() = SigningConfig(

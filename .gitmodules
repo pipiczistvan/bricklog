@@ -1,0 +1,4 @@
+[submodule "thirdparty/firebase-java-sdk"]
+	path = thirdparty/firebase-java-sdk
+	url = git@github.com:pipiczistvan/firebase-java-sdk.git
+	branch = bricklog-fork

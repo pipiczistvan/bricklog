@@ -35,3 +35,7 @@ include(
     ":thirdparty:barcode-scanner",
     ":baselineprofile"
 )
+
+includeBuild(
+    "thirdparty/firebase-java-sdk",
+)
