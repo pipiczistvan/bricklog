@@ -1,10 +1,10 @@
 package hu.piware.bricklog.feature.settings.presentation.notifications
 
+//import dev.icerock.moko.permissions.Permission
+//import dev.icerock.moko.permissions.PermissionsController
+//import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.icerock.moko.permissions.Permission
-import dev.icerock.moko.permissions.PermissionsController
-import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveNotificationPreferences
@@ -15,11 +15,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class NotificationsViewModel(
-    @Provided private val permissionsController: PermissionsController,
+//    @Provided private val permissionsController: PermissionsController,
     private val watchNotificationPreferences: WatchNotificationPreferences,
     private val saveNotificationPreferences: SaveNotificationPreferences,
 ) : ViewModel() {
@@ -33,7 +32,7 @@ class NotificationsViewModel(
 
     fun onAction(action: NotificationsAction) {
         when (action) {
-            NotificationsAction.OpenSettings -> permissionsController.openAppSettings()
+//            NotificationsAction.OpenSettings -> permissionsController.openAppSettings()
             is NotificationsAction.OnNotificationPreferenceChange -> onNotificationPreferenceChange(
                 action.preferences,
             )
@@ -49,13 +48,13 @@ class NotificationsViewModel(
     }
 
     private suspend fun checkNotificationPermission() {
-        _uiState.update {
-            it.copy(
-                notificationPermissionGranted = permissionsController.isPermissionGranted(
-                    Permission.REMOTE_NOTIFICATION,
-                ),
-            )
-        }
+//        _uiState.update {
+//            it.copy(
+//                notificationPermissionGranted = permissionsController.isPermissionGranted(
+//                    Permission.REMOTE_NOTIFICATION,
+//                ),
+//            )
+//        }
     }
 
     private fun observeNotificationPreferences() {

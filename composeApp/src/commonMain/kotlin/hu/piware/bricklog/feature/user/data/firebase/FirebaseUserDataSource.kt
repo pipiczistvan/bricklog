@@ -32,6 +32,12 @@ class FirebaseUserDataSource : RemoteUserDataSource {
     }
 
     override suspend fun login(method: AuthenticationMethod): Result<User?, UserError.Login> {
+        if (method is AuthenticationMethod.EmailPassword) {
+            val result = auth.signInWithEmailAndPassword(method.email, method.password)
+            return Result.Success(result.user?.toUser())
+        }
+
+        // TODO: Fix implementation
         val credentials = when (method) {
             is AuthenticationMethod.EmailPassword -> {
                 EmailAuthProvider.credential(method.email, method.password)

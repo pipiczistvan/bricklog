@@ -3,6 +3,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.google.devtools.ksp.KspExperimental
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import java.io.FileInputStream
@@ -46,6 +47,8 @@ kotlin {
         }
     }
 
+    jvm()
+
     sourceSets {
 
         androidMain.dependencies {
@@ -85,7 +88,7 @@ kotlin {
             implementation(libs.sqlite.bundled)
 
             implementation(projects.thirdparty.androidx.paging.compose)
-            implementation(projects.thirdparty.barcodeScanner)
+            // implementation(projects.thirdparty.barcodeScanner)
             implementation(libs.qrose)
 
             implementation(project.dependencies.platform(libs.koin.bom))
@@ -96,7 +99,7 @@ kotlin {
 
             implementation(libs.gitlive.firebase.firestore)
             implementation(libs.gitlive.firebase.analytics)
-            implementation(libs.gitlive.firebase.crashlytics)
+            // implementation(libs.gitlive.firebase.crashlytics)
 
             implementation(libs.bundles.coil)
 
@@ -110,8 +113,8 @@ kotlin {
 
             api(libs.kmpnotifier)
 
-            api(libs.moko.permissions)
-            implementation(libs.moko.permissions.notifications)
+            // api(libs.moko.permissions)
+            // implementation(libs.moko.permissions.notifications)
 
             implementation(libs.kmpauth.google)
             implementation(libs.kmpauth.firebase)
@@ -119,6 +122,12 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.gitlive.firebase.java.sdk)
         }
     }
 
@@ -214,6 +223,18 @@ android {
     }
 }
 
+compose.desktop {
+    application {
+        mainClass = "hu.piware.bricklog.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "hu.piware.bricklog"
+            packageVersion = libs.versions.app.version.get()
+        }
+    }
+}
+
 room {
     schemaDirectory("$projectDir/schemas")
 }
@@ -226,13 +247,22 @@ buildkonfig {
         properties["GOOGLE_AUTH_WEB_CLIENT_ID"]?.toString() ?: "<GOOGLE_AUTH_WEB_CLIENT_ID>"
     val revision = properties["REVISION"]?.toString() ?: ""
     val devLevel = properties["DEV_LEVEL"]?.toString() ?: "0"
+    val firebaseProjectId = properties["FIREBASE_PROJECT_ID"]?.toString() ?: "<FIREBASE_PROJECT_ID>"
+    val firebaseWebAppId = properties["FIREBASE_WEB_APP_ID"]?.toString() ?: "<FIREBASE_WEB_APP_ID>"
+    val firebaseWebApiKey =
+        properties["FIREBASE_WEB_API_KEY"]?.toString() ?: "<FIREBASE_WEB_API_KEY>"
 
     defaultConfigs {
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
         buildConfigField(STRING, "GOOGLE_AUTH_WEB_CLIENT_ID", googleAuthWebClientId)
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
+        buildConfigField(INT, "VERSION_CODE", libs.versions.app.release.get())
+        buildConfigField(STRING, "VERSION_NAME", libs.versions.app.version.get())
         buildConfigField(STRING, "REVISION", revision)
         buildConfigField(INT, "DEV_LEVEL", devLevel)
+        buildConfigField(STRING, "FIREBASE_PROJECT_ID", firebaseProjectId)
+        buildConfigField(STRING, "FIREBASE_WEB_APP_ID", firebaseWebAppId)
+        buildConfigField(STRING, "FIREBASE_WEB_API_KEY", firebaseWebApiKey)
     }
 
     tasks.build.dependsOn("generateBuildKonfig")
@@ -253,6 +283,7 @@ dependencies {
     add("kspIosX64", libs.koin.ksp.compiler)
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
+    add("kspJvm", libs.koin.ksp.compiler)
 }
 
 // Trigger Common Metadata Generation from Native tasks

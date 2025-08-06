@@ -1,7 +1,5 @@
 package hu.piware.bricklog.di
 
-import android.content.Context
-// import dev.icerock.moko.permissions.PermissionsController
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.presentation.LocaleManager
@@ -14,21 +12,20 @@ import org.koin.core.annotation.Single
 actual class PlatformModule {
 
     @Single
-    fun databaseFactory(context: Context) = DatabaseFactory(context)
+    fun databaseFactory() = DatabaseFactory()
 
     @Single
     fun httpClient() = OkHttp.create()
 
     @Single
-    fun datastoreFactory(context: Context) = DatastoreFactory(context)
+    fun datastoreFactory() = DatastoreFactory()
 
 //    @Single
-//    fun permissionsController(context: Context) = PermissionsController(context)
+//    fun permissionsController(): PermissionsControllerProtocol = PermissionsController()
 
     @Single
-    fun localeManager(context: Context) = LocaleManager(context)
+    fun localeManager() = LocaleManager()
 
     @Single
-    fun syncDataPeriodicBackgroundTaskScheduler(context: Context) =
-        SyncDataPeriodicBackgroundTaskScheduler(context)
+    fun syncDataPeriodicBackgroundTaskScheduler() = SyncDataPeriodicBackgroundTaskScheduler()
 }

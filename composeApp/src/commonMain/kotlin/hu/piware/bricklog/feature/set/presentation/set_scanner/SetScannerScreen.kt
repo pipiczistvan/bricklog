@@ -2,6 +2,9 @@
 
 package hu.piware.bricklog.feature.set.presentation.set_scanner
 
+//import dev.icerock.moko.permissions.PermissionsController
+//import hu.piware.barcode_scanner.BarcodeScannerWithPermission
+//import hu.piware.bricklog.feature.set.presentation.set_scanner.util.supportedBarcodeFormats
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,15 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.icerock.moko.permissions.PermissionsController
-import hu.piware.barcode_scanner.BarcodeScannerWithPermission
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_scanner.components.SetDetectionBox
-import hu.piware.bricklog.feature.set.presentation.set_scanner.util.supportedBarcodeFormats
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -103,13 +102,13 @@ private fun SetScannerScreen(
             )
         },
     ) {
-        BarcodeScannerWithPermission(
-            permissionsController = koinInject<PermissionsController>(),
-            onScanResult = { results ->
-                onAction(SetScannerAction.OnBarcodeDetected(results))
-            },
-            formats = supportedBarcodeFormats,
-        )
+//        BarcodeScannerWithPermission(
+//            permissionsController = koinInject<PermissionsController>(),
+//            onScanResult = { results ->
+//                onAction(SetScannerAction.OnBarcodeDetected(results))
+//            },
+//            formats = supportedBarcodeFormats,
+//        )
 
         Box(Modifier.fillMaxSize()) {
             for (detection in state.detections) {

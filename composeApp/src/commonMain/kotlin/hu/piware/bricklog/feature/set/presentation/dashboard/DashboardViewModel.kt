@@ -9,12 +9,6 @@ import bricklog.composeapp.generated.resources.feature_user_delete_user_data_act
 import bricklog.composeapp.generated.resources.feature_user_delete_user_data_message_success
 import bricklog.composeapp.generated.resources.feature_user_logout_message_success
 import co.touchlab.kermit.Logger
-import dev.icerock.moko.permissions.DeniedAlwaysException
-import dev.icerock.moko.permissions.DeniedException
-import dev.icerock.moko.permissions.Permission
-import dev.icerock.moko.permissions.PermissionsController
-import dev.icerock.moko.permissions.RequestCanceledException
-import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
 import hu.piware.bricklog.feature.core.domain.UserError
@@ -70,7 +64,6 @@ class DashboardViewModel(
     private val watchSetDetails: WatchSetDetails,
     private val updateData: UpdateData,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
-    @Provided private val permissionsController: PermissionsController,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val resetSets: ResetSets,
     private val watchSetFilterDomain: WatchSetFilterDomain,
@@ -326,22 +319,23 @@ class DashboardViewModel(
     }
 
     private fun askNotificationPermission() {
-        viewModelScope.launch {
-            try {
-                val permissionGranted =
-                    permissionsController.isPermissionGranted(Permission.REMOTE_NOTIFICATION)
-                if (!permissionGranted) {
-                    permissionsController.providePermission(Permission.REMOTE_NOTIFICATION)
-                }
-                logger.i { "Notification permission granted." }
-            } catch (e: DeniedAlwaysException) {
-                logger.w(e) { "Notification permission denied always." }
-            } catch (e: DeniedException) {
-                logger.w(e) { "Notification permission denied." }
-            } catch (e: RequestCanceledException) {
-                logger.w(e) { "Notification permission canceled." }
-            }
-        }
+        // TODO: Readd
+//        viewModelScope.launch {
+//            try {
+//                val permissionGranted =
+//                    permissionsController.isPermissionGranted(Permission.REMOTE_NOTIFICATION)
+//                if (!permissionGranted) {
+//                    permissionsController.providePermission(Permission.REMOTE_NOTIFICATION)
+//                }
+//                logger.i { "Notification permission granted." }
+//            } catch (e: DeniedAlwaysException) {
+//                logger.w(e) { "Notification permission denied always." }
+//            } catch (e: DeniedException) {
+//                logger.w(e) { "Notification permission denied." }
+//            } catch (e: RequestCanceledException) {
+//                logger.w(e) { "Notification permission canceled." }
+//            }
+//        }
     }
 
     private fun resetSetsClick(date: Instant) {

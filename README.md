@@ -76,6 +76,9 @@ Note: To test the app use `DEV_LEVEL=2` and you can skip setting the other varia
 | BRICKLOG_RELEASE_KEY_PWD      | no       | release key password                                                                                                                |
 | GOOGLE_AUTH_WEB_CLIENT_ID     | no       | necessary for google authentication - available at Firebase or Google Cloud Platform                                                |
 | DEV_LEVEL                     | yes      | a level which determines some app behaviours:<br>0 - production mode<br>1 - development mode<br>2 - mock mode<br>3 - benchmark mode |
+| FIREBASE_PROJECT_ID           | yes      | required for firebase support on desktop target                                                                                     |
+| FIREBASE_WEB_APP_ID           | yes      | required for firebase support on desktop target                                                                                     |
+| FIREBASE_WEB_API_KEY          | yes      | required for firebase support on desktop target                                                                                     |
 
 #### Android
 
@@ -93,10 +96,18 @@ To use Firebase, download the appropriate `google-services.json` from Firebase a
 2. Open the iosApp.xcworkspace file in Xcode
 3. Build the app
 
-To use Firebase, ownload the appropriate `GoogleService-Info.plist` and place in `iosApp/iosApp`
+To use Firebase, download the appropriate `GoogleService-Info.plist` and place in `iosApp/iosApp`
 
 To use Google Auth, add `GOOGLE_AUTH_IOS_CLIENT_ID_REVERSED=<CLIENT_ID>` to
 `iosApp/Configuration/ProdSecrets.xcconfig` or `iosApp/Configuration/DevSecrets.xcconfig`
+
+#### Desktop
+
+1. Run the app via `./gradlew run`
+
+To user Firebase, create a web app in firebase and specify `FIREBASE_PROJECT_ID`
+`FIREBASE_WEB_APP_ID` and
+`FIREBASE_WEB_API_KEY` in [local.properties](local.properties)
 
 ## Baseline Profile (android)
 
