@@ -103,7 +103,8 @@ To use Google Auth, add `GOOGLE_AUTH_IOS_CLIENT_ID_REVERSED=<CLIENT_ID>` to
 
 #### Desktop
 
-1. Run the app via `./gradlew run`
+1. `git submodule update --init --recursive`
+2. Run the app via `./gradlew run`
 
 To user Firebase, create a web app in firebase and specify `FIREBASE_PROJECT_ID`
 `FIREBASE_WEB_APP_ID` and
