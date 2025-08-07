@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
 import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
+import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.mock.PreviewData
 import kotlinx.coroutines.flow.Flow
@@ -29,5 +30,15 @@ class FakeDataServiceRepository : DataServiceRepository {
 
     override fun watchCollectibles(): Flow<List<Collectible>> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getEurRateExportInfo(): Result<ExportInfo, DataError> {
+        return Result.Success(
+            ExportInfo(
+                id = 1,
+                fileUploads = listOf(),
+                lastUpdated = Instant.DISTANT_PAST
+            )
+        )
     }
 }

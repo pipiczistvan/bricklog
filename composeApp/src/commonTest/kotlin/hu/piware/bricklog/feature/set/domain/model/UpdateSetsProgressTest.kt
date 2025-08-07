@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.domain.model
 
+import hu.piware.bricklog.feature.core.domain.mapTotalProgress
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -7,6 +7,7 @@ import hu.piware.bricklog.feature.set.domain.model.DataType
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeUpdateInfoRepository : UpdateInfoRepository {
 
@@ -16,7 +17,7 @@ class FakeUpdateInfoRepository : UpdateInfoRepository {
         type: DataType,
         setId: Int?,
     ): Flow<UpdateInfo?> {
-        TODO("Not yet implemented")
+        return flowOf(null)
     }
 
     override suspend fun saveUpdateInfo(updateInfo: UpdateInfo): EmptyResult<DataError> {

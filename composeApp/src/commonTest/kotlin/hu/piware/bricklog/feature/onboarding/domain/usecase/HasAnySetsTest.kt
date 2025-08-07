@@ -2,13 +2,15 @@ package hu.piware.bricklog.feature.onboarding.domain.usecase
 
 import hu.piware.bricklog.di.testModule
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.currency.domain.repository.CurrencyRepository
+import hu.piware.bricklog.feature.set.data.repository.FakeCurrencyRepository
 import hu.piware.bricklog.feature.set.data.repository.FakeDataServiceRepository
 import hu.piware.bricklog.feature.set.data.repository.FakeSetRepository
 import hu.piware.bricklog.feature.set.data.repository.FakeUpdateInfoRepository
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
-import hu.piware.bricklog.feature.set.domain.usecase.UpdateSets
+import hu.piware.bricklog.feature.set.domain.usecase.HasAnySets
 import kotlinx.coroutines.test.runTest
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -28,10 +30,11 @@ class HasAnySetsTest : KoinTest {
         singleOf(::FakeSetRepository).bind<SetRepository>()
         singleOf(::FakeUpdateInfoRepository).bind<UpdateInfoRepository>()
         singleOf(::FakeDataServiceRepository).bind<DataServiceRepository>()
+        singleOf(::FakeCurrencyRepository).bind<CurrencyRepository>()
     }
 
     private val hasAnySets: HasAnySets by inject()
-    private val updateSets: UpdateSets by inject()
+    private val updateData: UpdateData by inject()
 
     @BeforeTest
     fun setup() {
@@ -42,7 +45,7 @@ class HasAnySetsTest : KoinTest {
 
     @Test
     fun `HasAnySets returns true when sets exist`() = runTest {
-        updateSets()
+        updateData()
 
         val result = hasAnySets()
         assertEquals(result, Result.Success(true))
