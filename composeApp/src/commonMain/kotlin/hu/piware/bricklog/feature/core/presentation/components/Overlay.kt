@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class)
 
 package hu.piware.bricklog.feature.core.presentation.components
 
@@ -6,8 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Button
-import androidx.compose.material3.ContainedLoadingIndicator
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -52,7 +51,7 @@ fun LoadingOverlay(
         isOverlayActive = isLoading,
         content = content,
     ) {
-        ContainedLoadingIndicator()
+        CircularProgressIndicator()
     }
 }
 

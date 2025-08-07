@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 package hu.piware.bricklog.feature.onboarding.presentation.data_fetch
 
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ContainedLoadingIndicator
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -110,7 +107,7 @@ private fun LoadingIndicator(progress: Float) {
             animationSpec = tween(durationMillis = 500),
             label = "Set update progress",
         )
-        ContainedLoadingIndicator(
+        CircularProgressIndicator(
             modifier = Modifier
                 .size(100.dp),
         )

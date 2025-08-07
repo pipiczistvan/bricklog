@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package hu.piware.bricklog.feature.set.presentation.components
 
@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -87,9 +86,9 @@ private fun PullToRefreshIndicator(
             contentAlignment = Alignment.Center,
         ) {
             if (indicatorState == RefreshIndicatorState.Refreshing) {
-                ContainedLoadingIndicator()
+                CircularProgressIndicator()
             } else {
-                ContainedLoadingIndicator(
+                CircularProgressIndicator(
                     progress = { pullToRefreshProgress / 2f },
                 )
             }

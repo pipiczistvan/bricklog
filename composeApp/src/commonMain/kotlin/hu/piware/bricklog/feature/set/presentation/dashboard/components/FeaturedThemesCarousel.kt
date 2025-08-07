@@ -72,12 +72,13 @@ fun FeaturedThemesCarousel(
                             0f,
                             1f,
                             max(
-                                size.width - (carouselItemDrawInfo.maxSize) +
-                                        carouselItemDrawInfo.size,
-                                0f,
-                            ) / size.width,
+                                size.width - (carouselItemInfo.maxSize) +
+                                        carouselItemInfo.size,
+                                0f
+                            ) / size.width
                         )
-                        translationX = carouselItemDrawInfo.maskRect.left + 8.dp.toPx()
+                        translationX = carouselItemInfo.maskRect.left + 8.dp.toPx()
+
                     },
                 text = stringResource(item.contentDescriptionResId),
                 style = MaterialTheme.typography.titleLarge,
