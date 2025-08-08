@@ -1,12 +1,11 @@
-package hu.piware.bricklog.feature.set.data.network
+package hu.piware.bricklog.feature.core.data.network
 
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.di.DownloadHttpClient
-import hu.piware.bricklog.feature.core.data.network.safeCall
+import hu.piware.bricklog.feature.core.domain.datasource.RemoteFileDataSource
 import hu.piware.bricklog.feature.core.domain.flowForResult
-import hu.piware.bricklog.feature.set.domain.datasource.RemoteSetDataSource
-import hu.piware.bricklog.feature.set.domain.model.UpdateSetsProgress
-import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
+import hu.piware.bricklog.feature.core.domain.usecase.DownloadFileProgress
+import hu.piware.bricklog.feature.core.domain.usecase.DownloadFileStep.DOWNLOAD
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.onDownload
 import io.ktor.client.request.prepareGet
@@ -17,15 +16,15 @@ import org.koin.core.annotation.Single
 import kotlin.time.measureTimedValue
 
 @Single
-class KtorSetDataSource(
+class KtorFileDataSource(
     @param:DownloadHttpClient private val httpClient: HttpClient,
-) : RemoteSetDataSource {
+) : RemoteFileDataSource {
 
-    private val logger = Logger.withTag("KtorRemoteSetDataSource")
+    private val logger = Logger.withTag("KtorFileDataSource")
 
-    override fun downloadCompressedCsv(url: String) = flowForResult {
-        logger.d { "Downloading sets zip" }
-        emitProgress(UpdateSetsProgress(0f, UpdateSetsStep.DOWNLOAD_FILE))
+    override fun downloadWithProgress(url: String) = flowForResult {
+        logger.d { "Downloading file" }
+        emitProgress(DownloadFileProgress(0f, DOWNLOAD))
         val (downloadResult, downloadTimeTaken) = measureTimedValue {
             safeCall<ByteArray> {
                 withContext(Dispatchers.IO) {
@@ -46,9 +45,9 @@ class KtorSetDataSource(
                                     lastEmittedProgress = progress
 
                                     emitProgress(
-                                        UpdateSetsProgress(
+                                        DownloadFileProgress(
                                             progress,
-                                            UpdateSetsStep.DOWNLOAD_FILE,
+                                            DOWNLOAD,
                                         ),
                                     )
                                 }
@@ -58,7 +57,7 @@ class KtorSetDataSource(
                 }
             }
         }
-        logger.d { "Downloading sets zip took $downloadTimeTaken" }
+        logger.d { "Downloading file took $downloadTimeTaken" }
         downloadResult
     }
 }

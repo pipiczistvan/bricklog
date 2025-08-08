@@ -7,9 +7,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
 
-class CsvParser<R, D>(
+abstract class CsvParser<R, D>(
+    private val serializer: KSerializer<R>,
     private val transform: (R) -> D,
 ) {
     private val csvFormat = CSVFormat.Default {
@@ -33,7 +35,7 @@ class CsvParser<R, D>(
 
     suspend fun parseInChunksAsync(
         data: ByteArray,
-        chunkSize: Int,
+        chunkSize: Int = CHUNK_SIZE,
         onChunkParsed: suspend (List<D>) -> Unit,
     ) {
         val csv = data.decodeToString()
@@ -50,6 +52,10 @@ class CsvParser<R, D>(
     }
 
     private fun List<String>.parseLines() =
-        csvFormat.decodeFromString<List<R>>(joinToString("\n"))
+        csvFormat.decodeFromString(ListSerializer(serializer), joinToString("\n"))
             .map { transform(it) }
+
+    companion object {
+        private const val CHUNK_SIZE = 3000
+    }
 }

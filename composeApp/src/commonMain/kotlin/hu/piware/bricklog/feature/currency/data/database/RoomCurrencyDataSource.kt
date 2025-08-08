@@ -21,6 +21,22 @@ class RoomCurrencyDataSource(
 
     private val currencyRateDao = database.currencyRateDao
 
+    override suspend fun getCurrencyRateCount(baseCurrencyCode: String): Result<Int, DataError.Local> {
+        return try {
+            logger.d { "Getting currency rate count" }
+            val count = currencyRateDao.getCurrencyRateCount(baseCurrencyCode)
+            Result.Success(count)
+        } catch (e: Exception) {
+            logger.e(e) { "Error getting currency rate count" }
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override fun watchCurrencyRates(baseCurrencyCode: String): Flow<List<CurrencyRate>> {
+        return currencyRateDao.watchCurrencyRates(baseCurrencyCode)
+            .map { entities -> entities.map { it.toDomainModel() } }
+    }
+
     override suspend fun upsertRates(
         baseCurrencyCode: String,
         rates: List<CurrencyRate>,
@@ -36,21 +52,5 @@ class RoomCurrencyDataSource(
             logger.e(e) { "Error upserting currency rates" }
             Result.Error(DataError.Local.UNKNOWN)
         }
-    }
-
-    override suspend fun getCurrencyRateCount(baseCurrencyCode: String): Result<Int, DataError.Local> {
-        return try {
-            logger.d { "Getting currency rate count" }
-            val count = currencyRateDao.getCurrencyRateCount(baseCurrencyCode)
-            Result.Success(count)
-        } catch (e: Exception) {
-            logger.e(e) { "Error getting currency rate count" }
-            Result.Error(DataError.Local.UNKNOWN)
-        }
-    }
-
-    override fun watchCurrencyRates(baseCurrencyCode: String): Flow<List<CurrencyRate>> {
-        return currencyRateDao.watchCurrencyRates(baseCurrencyCode)
-            .map { entities -> entities.map { it.toDomainModel() } }
     }
 }

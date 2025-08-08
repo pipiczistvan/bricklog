@@ -1,94 +1,68 @@
 package hu.piware.bricklog.feature.currency.domain.usecase
 
-import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
-import hu.piware.bricklog.feature.core.domain.FlowForValue
 import hu.piware.bricklog.feature.core.domain.Result
-import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.data
-import hu.piware.bricklog.feature.core.domain.flowForResult
-import hu.piware.bricklog.feature.core.domain.flowForValue
+import hu.piware.bricklog.feature.core.domain.map
 import hu.piware.bricklog.feature.core.domain.onError
-import hu.piware.bricklog.feature.currency.domain.model.UpdateRatesProgress
-import hu.piware.bricklog.feature.currency.domain.model.UpdateRatesStep
+import hu.piware.bricklog.feature.core.domain.usecase.DownloadFileByPriority
+import hu.piware.bricklog.feature.core.domain.usecase.UpdateDataWithProgressUseCase
+import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateCsvParser
+import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateRow
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRate
 import hu.piware.bricklog.feature.currency.domain.repository.CurrencyRepository
 import hu.piware.bricklog.feature.currency.domain.util.CURRENCY_CODE_EUR
 import hu.piware.bricklog.feature.set.domain.model.DataType
+import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
-import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import hu.piware.bricklog.util.asResultOrNull
-import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
 
 @Single
 class UpdateEurRatesWithProgress(
-    private val currencyRepository: CurrencyRepository,
     private val updateInfoRepository: UpdateInfoRepository,
+    downloadFileByPriority: DownloadFileByPriority,
+    csvParser: CurrencyRateCsvParser,
+    private val currencyRepository: CurrencyRepository,
     private val dataServiceRepository: DataServiceRepository,
+) : UpdateDataWithProgressUseCase<CurrencyRateRow, CurrencyRate>(
+    updateInfoRepository = updateInfoRepository,
+    downloadFileByPriority = downloadFileByPriority,
+    csvParser = csvParser,
 ) {
-    private val logger = Logger.withTag("UpdateCurrencyRatesWithProgress")
+    override val dataType = DataType.EUR_RATES
 
-    operator fun invoke(force: Boolean = false) = flowForResult {
-        val exportInfo = awaitInProgressRange(0f..0.1f) { prepareExportInfo(force) }
-            .onError { return@flowForResult it }
-            .data()
-
-        awaitInProgressRange(0.1f..0.9f) { updateRates(exportInfo) }
-            .onError { return@flowForResult it }
-
-        awaitInProgressRange(0.9f..1f) { saveUpdateInfo() }
+    override suspend fun getExportBatches(): Result<List<ExportBatch>, DataError> {
+        return dataServiceRepository.getEurRateExportInfo()
+            .map { listOf(it.toExportBatch()) }
     }
 
-    private fun prepareExportInfo(force: Boolean) = flowForResult {
-        emitProgress(UpdateRatesProgress(0f, UpdateRatesStep.PREPARE_EXPORT_INFO))
-        logger.i { "Getting eur rate export info" }
-        val exportInfo = dataServiceRepository.getEurRateExportInfo()
-            .onError { return@flowForResult it }
-            .data()
-
-        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.CURRENCY_RATES)
+    override suspend fun getBatchFilterMinimumDate(): Result<Instant?, DataError> {
+        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.EUR_RATES)
             .asResultOrNull()
-            .onError { return@flowForResult it }
+            .onError { it }
             .data()
 
-        emitProgress(UpdateRatesProgress(1f, UpdateRatesStep.PREPARE_EXPORT_INFO))
-
-        if (updateInfo == null || exportInfo.lastUpdated > updateInfo.lastUpdated || force) {
-            Result.Success(exportInfo)
-        } else {
-            Result.Success(null)
-        }
+        return Result.Success(updateInfo?.lastUpdated)
     }
 
-    private fun updateRates(exportInfo: ExportInfo?) = flowForResult {
-        if (exportInfo != null) {
-            awaitInProgressRange(0f..1f) {
-                currencyRepository.updateCurrencyRatesWithProgress(
-                    CURRENCY_CODE_EUR,
-                    exportInfo.fileUploads,
-                )
-            }
-        } else {
-            logger.i { "No eur rate export info, skipping update" }
-        }
-
-        Result.Success(Unit)
+    override suspend fun saveItems(
+        items: List<CurrencyRate>,
+        updateProgress: suspend (Int) -> Unit,
+    ): EmptyResult<DataError.Local> {
+        return currencyRepository.updateRates(CURRENCY_CODE_EUR, items)
     }
+}
 
-    private fun saveUpdateInfo(): FlowForValue<EmptyResult<DataError>, UpdateRatesProgress> =
-        flowForValue {
-            emitProgress(UpdateRatesProgress(0f, UpdateRatesStep.SAVE_UPDATE_INFO))
-            logger.i { "Storing update info date" }
-            val saveResult = updateInfoRepository.saveUpdateInfo(
-                UpdateInfo(
-                    dataType = DataType.CURRENCY_RATES,
-                    lastUpdated = Clock.System.now(),
-                ),
-            )
-            emitProgress(UpdateRatesProgress(1f, UpdateRatesStep.SAVE_UPDATE_INFO))
-            saveResult
-        }
+private fun ExportInfo.toExportBatch(): ExportBatch {
+    return ExportBatch(
+        validFrom = lastUpdated,
+        validTo = lastUpdated,
+        rowCount = 0,
+        fileUploads = fileUploads,
+    )
 }

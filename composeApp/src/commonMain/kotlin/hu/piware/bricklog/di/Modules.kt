@@ -2,14 +2,9 @@ package hu.piware.bricklog.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.CollectionEditViewModel
-import hu.piware.bricklog.feature.core.data.csv.CsvParser
 import hu.piware.bricklog.feature.core.data.database.DatabaseFactory
 import hu.piware.bricklog.feature.core.data.datastore.DatastoreFactory
 import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
-import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateRow
-import hu.piware.bricklog.feature.currency.data.csv.toDomainModel
-import hu.piware.bricklog.feature.set.data.csv.SetRow
-import hu.piware.bricklog.feature.set.data.csv.toDomainModel
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
@@ -79,14 +74,6 @@ class DataModule {
     fun preferencesDatastore(
         @Provided factory: DatastoreFactory,
     ) = factory.create()
-
-    @Single
-    @SetListCsvParser
-    fun setListCsvParser() = CsvParser(SetRow::toDomainModel)
-
-    @Single
-    @CurrencyRateCsvParser
-    fun currencyRateCsvParser() = CsvParser(CurrencyRateRow::toDomainModel)
 }
 
 @Module

@@ -25,9 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_preload_fetch_btn_retry
 import hu.piware.bricklog.App
-import hu.piware.bricklog.feature.core.presentation.UiTextUpdateProgress
-import hu.piware.bricklog.feature.set.domain.model.UpdateSetsStep
-import hu.piware.bricklog.feature.set.domain.model.toUiText
+import hu.piware.bricklog.feature.core.domain.usecase.UpdateDataProgress
+import hu.piware.bricklog.feature.core.domain.usecase.UpdateDataStep
+import hu.piware.bricklog.feature.core.domain.usecase.toUiText
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -77,7 +77,7 @@ private fun PreloadScreen(
                         verticalArrangement = Arrangement.spacedBy(Dimens.LargePadding.size),
                     ) {
                         LoadingIndicator(state.progress.totalProgress)
-                        Text(state.progress.step.asString())
+                        Text(state.progress.step.toUiText().asString())
                     }
                 }
             }
@@ -129,9 +129,9 @@ private fun PreloadScreenPreview() {
     MaterialTheme {
         PreloadScreen(
             state = PreloadState.Loading(
-                UiTextUpdateProgress(
+                UpdateDataProgress(
                     stepProgress = 0.5f,
-                    step = UpdateSetsStep.PREPARE_BATCHES.toUiText(),
+                    step = UpdateDataStep.PREPARE_EXPORT_INFO,
                     totalProgress = 0.5f,
                 ),
             ),
