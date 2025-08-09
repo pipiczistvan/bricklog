@@ -176,7 +176,7 @@ private fun CollectionsSection(
                         DashboardNavigationDrawerAction.OnSearchSets(
                             SetListArguments(
                                 filterOverrides = SetFilter(
-                                    collectionIds = setOf(it.id),
+                                    collectionIds = listOf(it.id),
                                 ),
                                 title = it.name,
                             ),

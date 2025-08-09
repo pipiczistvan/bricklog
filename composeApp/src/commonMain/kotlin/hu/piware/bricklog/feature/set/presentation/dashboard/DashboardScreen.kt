@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -81,8 +80,6 @@ fun DashboardScreenRoot(
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
     onLoginClick: () -> Unit,
-    selectedThemes: Set<String>?,
-    selectedPackagingTypes: Set<String>?,
 ) {
     App.firstScreenLoaded = true
 
@@ -95,30 +92,6 @@ fun DashboardScreenRoot(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
     val navigationDrawerState by viewModel.navigationDrawerState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(selectedThemes) {
-        if (selectedThemes != null) {
-            viewModel.onAction(
-                SetSearchBarAction.OnFilterChange(
-                    searchBarState.filterPreferences.copy(
-                        themes = selectedThemes,
-                    ),
-                ),
-            )
-        }
-    }
-
-    LaunchedEffect(selectedPackagingTypes) {
-        if (selectedPackagingTypes != null) {
-            viewModel.onAction(
-                SetSearchBarAction.OnFilterChange(
-                    searchBarState.filterPreferences.copy(
-                        packagingTypes = selectedPackagingTypes,
-                    ),
-                ),
-            )
-        }
-    }
 
     DashboardScreen(
         modifier = Modifier.testTag("dashboard_screen"),
@@ -258,7 +231,7 @@ private fun DashboardScreen(
                                         DashboardAction.OnSearchSets(
                                             arguments = SetListArguments(
                                                 filterOverrides = SetFilter(
-                                                    themes = setOf(item.theme),
+                                                    themes = listOf(item.theme),
                                                 ),
                                                 title = title,
                                             ),

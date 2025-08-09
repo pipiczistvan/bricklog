@@ -50,50 +50,50 @@ val FeaturedSetType.filter: SetFilter
 val latestSetsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     launchDate = DateFilter.AnyTime,
-    themes = emptySet(),
-    packagingTypes = setOf("Box"),
-    statuses = emptySet(),
+    themes = emptyList(),
+    packagingTypes = listOf("Box"),
+    statuses = emptyList(),
     showIncomplete = false,
-    collectionIds = emptySet(),
+    collectionIds = emptyList(),
 )
 
 val latestReleasesFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
     launchDate = DateFilter.AnyTime,
-    themes = emptySet(),
-    packagingTypes = setOf("Box"),
-    statuses = setOf(SetStatus.ACTIVE),
+    themes = emptyList(),
+    packagingTypes = listOf("Box"),
+    statuses = listOf(SetStatus.ACTIVE),
     showIncomplete = false,
-    collectionIds = emptySet(),
+    collectionIds = emptyList(),
 )
 
 val arrivingSetsFilter = SetFilter(
     sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
     launchDate = DateFilter.AnyTime,
-    themes = emptySet(),
-    packagingTypes = setOf("Box"),
-    statuses = setOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
+    themes = emptyList(),
+    packagingTypes = listOf("Box"),
+    statuses = listOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
     showIncomplete = false,
-    collectionIds = emptySet(),
+    collectionIds = emptyList(),
 )
 
 val retiringSetsFilter = SetFilter(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
     launchDate = DateFilter.AnyTime,
-    themes = emptySet(),
-    packagingTypes = setOf("Box"),
-    statuses = setOf(SetStatus.RETIRED_SOON),
+    themes = emptyList(),
+    packagingTypes = listOf("Box"),
+    statuses = listOf(SetStatus.RETIRED_SOON),
     showIncomplete = false,
-    collectionIds = emptySet(),
+    collectionIds = emptyList(),
 )
 
 val newItemsFilter = SetFilter(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     launchDate = DateFilter.AnyTime,
-    themes = emptySet(),
-    packagingTypes = emptySet(),
-    statuses = emptySet(),
+    themes = emptyList(),
+    packagingTypes = emptyList(),
+    statuses = emptyList(),
     appearanceDate = DateFilter.AnyTime,
     showIncomplete = false,
-    collectionIds = emptySet(),
+    collectionIds = emptyList(),
 )

@@ -26,7 +26,7 @@ class FindCollectibleSet(
             .data()
 
         val setId = collectibles.findSetId(code) ?: return Result.Success(null)
-        val setDetails = setRepository.watchSetDetails(SetQueryOptions(setIds = setOf(setId)))
+        val setDetails = setRepository.watchSetDetails(SetQueryOptions(setIds = listOf(setId)))
             .firstOrNull()?.firstOrNull()
 
         return Result.Success(setDetails)

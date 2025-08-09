@@ -119,7 +119,7 @@ private fun ThemeListScreen(
                                     ThemeListAction.OnSearchSets(
                                         arguments = SetListArguments(
                                             filterOverrides = SetFilter(
-                                                themes = setOf(theme.name),
+                                                themes = listOf(theme.name),
                                             ),
                                             title = theme.name,
                                         ),

@@ -55,7 +55,7 @@ private fun buildQuerySelect(queries: List<String>): String? {
     }
 }
 
-private fun buildSetIdSelect(setIds: Set<Int>): String? {
+private fun buildSetIdSelect(setIds: List<Int>): String? {
     if (setIds.isEmpty()) return null
 
     return "id IN (${setIds.joinToString(separator = ", ") { "$it" }})"
@@ -96,15 +96,15 @@ private fun buildDateFilterSelect(
     }
 }
 
-private fun buildThemeSelect(themes: Set<String>): String? {
+private fun buildThemeSelect(themes: List<String>): String? {
     return buildStringCollectionSelect("theme", themes)
 }
 
-private fun buildPackagingTypeSelect(packagingTypes: Set<String>): String? {
+private fun buildPackagingTypeSelect(packagingTypes: List<String>): String? {
     return buildStringCollectionSelect("packagingType", packagingTypes)
 }
 
-private fun buildStatusSelect(statuses: Set<SetStatus>): String? {
+private fun buildStatusSelect(statuses: List<SetStatus>): String? {
     return buildStringCollectionSelect("status", statuses.map { it.name })
 }
 
@@ -120,7 +120,7 @@ private fun buildBarcodeSelect(barcode: String?): String? {
     return barcode?.let { "barcodeEAN = '$it' OR barcodeUPC = '$it'" }
 }
 
-private fun buildCollectionIdSelect(collectionIds: Set<CollectionId>): String? {
+private fun buildCollectionIdSelect(collectionIds: List<CollectionId>): String? {
     if (collectionIds.isEmpty()) return null
 
     return StringBuilder()

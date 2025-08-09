@@ -21,7 +21,7 @@ class WatchCollectibleSetDetails(
         return dataServiceRepository.watchCollectibles().flatMapLatest { collectibles ->
             setRepository.watchSetDetails(
                 SetQueryOptions(
-                    setIds = collectibles.map { it.setId }.toSet(),
+                    setIds = collectibles.map { it.setId },
                     sortOption = SetSortOption.APPEARANCE_DATE_ASCENDING,
                 ),
             )

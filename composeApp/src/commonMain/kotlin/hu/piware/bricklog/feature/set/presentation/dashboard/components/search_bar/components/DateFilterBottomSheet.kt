@@ -123,7 +123,7 @@ private fun DateFilterSheetContent(
             items(DateFilterOption.entries.toTypedArray()) { option ->
                 DateFilterSheetOption(
                     option = option,
-                    selected = option == selected.option,
+                    isSelected = option == selected.option,
                     onClick = {
                         when (option) {
                             DateFilterOption.CUSTOM -> onCustomDateSelected()
@@ -154,11 +154,11 @@ private fun DateFilterSheetContent(
 @Composable
 private fun DateFilterSheetOption(
     option: DateFilterOption,
-    selected: Boolean,
+    isSelected: Boolean,
     onClick: () -> Unit,
 ) {
     BottomSheetOption(
-        selected = selected,
+        isSelected = isSelected,
         onClick = onClick,
     ) {
         Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))

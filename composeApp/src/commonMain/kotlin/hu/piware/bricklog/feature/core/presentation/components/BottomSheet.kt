@@ -9,20 +9,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +43,131 @@ import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+@Composable
+fun <T> MultiSelectBottomSheet(
+    title: String,
+    availableOptions: List<T>,
+    selectedItems: List<T>,
+    onSelectionChange: (List<T>) -> Unit,
+    onDismiss: () -> Unit,
+    skipPartiallyExpanded: Boolean = false,
+    headerPrimaryActionIcon: ImageVector? = null,
+    onHeaderPrimaryActionClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    itemContent: @Composable RowScope.(T, Boolean) -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded)
+
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+    ) {
+        Column {
+            BottomSheetHeader(
+                title = title,
+                sheetState = sheetState,
+                onDismiss = onDismiss,
+                primaryActionIcon = headerPrimaryActionIcon,
+                onPrimaryActionClick = onHeaderPrimaryActionClick,
+            )
+
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.MediumPadding.size),
+            ) {
+                items(availableOptions) { option ->
+                    SelectableSheetOption(
+                        item = option,
+                        isSelected = selectedItems.contains(option),
+                        onClick = {
+                            if (selectedItems.contains(option)) {
+                                onSelectionChange(selectedItems - option)
+                            } else {
+                                onSelectionChange(selectedItems + option)
+                            }
+                        },
+                        content = itemContent,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun <T> SingleSelectBottomSheet(
+    title: String,
+    availableOptions: List<T>,
+    selectedItem: T,
+    onSelectionChange: (T) -> Unit,
+    onDismiss: () -> Unit,
+    skipPartiallyExpanded: Boolean = false,
+    headerPrimaryActionIcon: ImageVector? = null,
+    onHeaderPrimaryActionClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    itemContent: @Composable RowScope.(T, Boolean) -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded)
+
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+    ) {
+        Column {
+            BottomSheetHeader(
+                title = title,
+                sheetState = sheetState,
+                onDismiss = onDismiss,
+                primaryActionIcon = headerPrimaryActionIcon,
+                onPrimaryActionClick = onHeaderPrimaryActionClick,
+            )
+
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.MediumPadding.size),
+            ) {
+                items(availableOptions) { option ->
+                    SelectableSheetOption(
+                        item = option,
+                        isSelected = option == selectedItem,
+                        onClick = { onSelectionChange(option) },
+                        content = itemContent,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun <T> SelectableSheetOption(
+    item: T,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    content: @Composable RowScope.(T, Boolean) -> Unit,
+) {
+    BottomSheetOption(
+        isSelected = isSelected,
+        onClick = onClick,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.MediumPadding.size),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            content(item, isSelected)
+        }
+    }
+}
 
 @Composable
 fun BottomSheetHeader(
@@ -97,13 +227,13 @@ fun BottomSheetHeader(
 
 @Composable
 fun BottomSheetOption(
-    selected: Boolean,
+    isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (selected) {
+        targetValue = if (isSelected) {
             MaterialTheme.colorScheme.primary
                 .copy(alpha = .2f)
         } else {
@@ -200,7 +330,7 @@ private fun BottomSheetOptionPreview() {
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             BottomSheetOption(
-                selected = false,
+                isSelected = false,
                 onClick = { },
             ) {
                 Text("OK")

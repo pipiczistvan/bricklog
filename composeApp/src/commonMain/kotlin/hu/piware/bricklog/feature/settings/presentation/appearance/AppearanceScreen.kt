@@ -369,7 +369,7 @@ private fun CurrencySettings(
 
     if (showCurrencyRegionSheet) {
         CurrencyRegionBottomSheet(
-            selected = state.userPreferences.currencyRegion,
+            selectedItem = state.userPreferences.currencyRegion,
             onSelectionChange = {
                 onAction(
                     AppearanceAction.OnUserPreferencesChange(
@@ -385,7 +385,7 @@ private fun CurrencySettings(
     if (showCurrencyCodeSheet) {
         CurrencyCodeBottomSheet(
             availableOptions = CURRENCY_OPTIONS,
-            selected = state.userPreferences.targetCurrencyCode,
+            selectedItem = state.userPreferences.targetCurrencyCode,
             onSelectionChange = {
                 onAction(
                     AppearanceAction.OnUserPreferencesChange(

@@ -176,7 +176,7 @@ private fun DateFilter.Custom.format(): String {
 @Composable
 private fun ThemeChip(
     enabled: Boolean,
-    selectedThemes: Set<String>,
+    selectedThemes: List<String>,
     onClick: () -> Unit,
 ) {
     SearchBarChip(
@@ -196,7 +196,7 @@ private fun ThemeChip(
 @Composable
 private fun PackagingTypeChip(
     enabled: Boolean,
-    selectedPackagingTypes: Set<String>,
+    selectedPackagingTypes: List<String>,
     onClick: () -> Unit,
 ) {
     SearchBarChip(
@@ -216,7 +216,7 @@ private fun PackagingTypeChip(
 @Composable
 private fun StatusChip(
     enabled: Boolean,
-    selectedStatuses: Set<SetStatus>,
+    selectedStatuses: List<SetStatus>,
     onClick: () -> Unit,
 ) {
     SearchBarChip(

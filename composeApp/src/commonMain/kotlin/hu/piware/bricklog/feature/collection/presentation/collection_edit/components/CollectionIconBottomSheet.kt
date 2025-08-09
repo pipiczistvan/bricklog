@@ -94,7 +94,7 @@ private fun CollectionIconSheetOption(
     onClick: () -> Unit,
 ) {
     BottomSheetOption(
-        selected = selected,
+        isSelected = selected,
         onClick = onClick,
     ) {
         Icon(

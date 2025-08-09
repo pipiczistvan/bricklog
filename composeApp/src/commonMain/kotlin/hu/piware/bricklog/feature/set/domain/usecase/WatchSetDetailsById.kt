@@ -13,7 +13,7 @@ class WatchSetDetailsById(
     private val setRepository: SetRepository,
 ) {
     operator fun invoke(setId: SetId): Flow<SetDetails> {
-        return setRepository.watchSetDetails(SetQueryOptions(setIds = setOf(setId)))
+        return setRepository.watchSetDetails(SetQueryOptions(setIds = listOf(setId)))
             .map { it.first() }
     }
 }

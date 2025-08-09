@@ -2,21 +2,20 @@ package hu.piware.bricklog.feature.set.domain.model
 
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
-import kotlin.collections.Set
 
 data class SetQueryOptions(
     val queries: List<String> = emptyList(),
     val sortOption: SetSortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     val launchDate: DateFilter = DateFilter.AnyTime,
     val appearanceDate: DateFilter = DateFilter.AnyTime,
-    val themes: Set<String> = emptySet(),
-    val packagingTypes: Set<String> = emptySet(),
-    val statuses: Set<SetStatus> = emptySet(),
+    val themes: List<String> = emptyList(),
+    val packagingTypes: List<String> = emptyList(),
+    val statuses: List<SetStatus> = emptyList(),
     val showIncomplete: Boolean = false,
     val limit: Int? = null,
     val barcode: String? = null,
-    val collectionIds: Set<CollectionId> = emptySet(),
-    val setIds: Set<SetId> = emptySet(),
+    val collectionIds: List<CollectionId> = emptyList(),
+    val setIds: List<SetId> = emptyList(),
 )
 
 fun buildSetQueryOptions(
@@ -36,6 +35,6 @@ fun buildSetQueryOptions(
         limit = filter?.limit,
         barcode = filter?.barcode,
         collectionIds = filter?.collectionIds ?: preferences.collectionIds,
-        setIds = filter?.setIds ?: emptySet(),
+        setIds = filter?.setIds ?: emptyList(),
     )
 }

@@ -54,10 +54,6 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
         startDestination = SetRoute.DashboardScreen,
     ) {
         composable<SetRoute.DashboardScreen> { entry ->
-            val selectedThemes = entry.savedStateHandle.get<Set<String>>("selected_themes")
-            val selectedPackagingTypes =
-                entry.savedStateHandle.get<Set<String>>("selected_packaging_types")
-
             CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
                 DashboardScreenRoot(
                     onSearchSets = { arguments ->
@@ -105,8 +101,6 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
-                    selectedThemes = selectedThemes,
-                    selectedPackagingTypes = selectedPackagingTypes,
                 )
             }
         }

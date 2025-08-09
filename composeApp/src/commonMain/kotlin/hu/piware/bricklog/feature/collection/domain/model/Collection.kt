@@ -44,3 +44,7 @@ enum class CollectionIcon(
 
 val Collection.isNew: Boolean
     get() = id == ""
+
+fun List<CollectionId>.toCollections(availableCollections: List<Collection>): List<Collection> {
+    return availableCollections.filter { this.contains(it.id) }
+}

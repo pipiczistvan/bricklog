@@ -110,7 +110,7 @@ fun SetCollectionsTable(
     if (showCollectionSheet) {
         SetCollectionBottomSheet(
             availableOptions = availableCollections,
-            selected = setCollections.map { it.id }.toSet(),
+            selectedItems = setCollections.map { it.id },
             onToggleCollection = onToggleCollection,
             onDismiss = { showCollectionSheet = false },
         )

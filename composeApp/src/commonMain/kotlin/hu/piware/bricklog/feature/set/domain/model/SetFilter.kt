@@ -15,21 +15,20 @@ import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
-import kotlin.collections.Set
 
 @Serializable
 data class SetFilter(
     val sortOption: SetSortOption? = null,
     val launchDate: DateFilter? = null,
     val appearanceDate: DateFilter? = null,
-    val themes: Set<String>? = null,
-    val packagingTypes: Set<String>? = null,
-    val statuses: Set<SetStatus>? = null,
+    val themes: List<String>? = null,
+    val packagingTypes: List<String>? = null,
+    val statuses: List<SetStatus>? = null,
     val showIncomplete: Boolean? = null,
     val limit: Int? = null,
     val barcode: String? = null,
-    val collectionIds: Set<CollectionId>? = null,
-    val setIds: Set<SetId>? = null,
+    val collectionIds: List<CollectionId>? = null,
+    val setIds: List<SetId>? = null,
 )
 
 @Serializable
