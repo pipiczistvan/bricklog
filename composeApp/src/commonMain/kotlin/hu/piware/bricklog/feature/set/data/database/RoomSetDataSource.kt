@@ -85,7 +85,7 @@ class RoomSetDataSource(
         userId: UserId,
         queryOptions: SetQueryOptions,
     ): Flow<List<SetDetails>> {
-        val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
+        val query = RoomRawQuery(buildGetSetDetailsSql(userId, queryOptions))
 
         return setDetailsDao.watchSetDetails(query)
             .map { entities ->
@@ -104,7 +104,7 @@ class RoomSetDataSource(
                 enablePlaceholders = true,
             ),
         ) {
-            val query = RoomRawQuery(buildGetSetDetailsSql(queryOptions))
+            val query = RoomRawQuery(buildGetSetDetailsSql(userId, queryOptions))
             setDetailsDao.pagingSource(query)
         }.flow.map { pagingData ->
             pagingData.map { it.toDomainModel(userId) }

@@ -34,11 +34,11 @@ class OfflineFirstUserPreferencesRepository(
 
     private val logger = Logger.withTag("OfflineFirstUserPreferencesRepository")
 
-    private var firestoreSyncJob: Job? = null
+    private var syncJob: Job? = null
 
     override fun startSync(scope: CoroutineScope) {
-        firestoreSyncJob?.cancel()
-        firestoreSyncJob = sessionManager.userId
+        syncJob?.cancel()
+        syncJob = sessionManager.userId
             .filterAuthenticated()
             .flatMapLatest { userId ->
                 remoteDataSource.watchUserPreferences(userId).map { Pair(userId, it) }

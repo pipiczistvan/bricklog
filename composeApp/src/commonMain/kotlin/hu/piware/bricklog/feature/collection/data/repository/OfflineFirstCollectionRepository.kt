@@ -9,6 +9,7 @@ import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
+import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.core.domain.AccountSyncedRepository
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -39,11 +40,12 @@ class OfflineFirstCollectionRepository(
 
     private val logger = Logger.withTag("OfflineFirstCollectionRepository")
 
-    private var firestoreSyncJob: Job? = null
+    private var syncJob: Job? = null
 
     override fun startSync(scope: CoroutineScope) {
-        firestoreSyncJob?.cancel()
-        firestoreSyncJob = sessionManager.userId
+        syncJob?.cancel()
+        syncJob = sessionManager.userId
+            .initializeDefaultCollections()
             .filterAuthenticated()
             .flatMapLatest { userId ->
                 remoteDataSource.watchCollections(userId).map { Pair(userId, it) }
@@ -144,9 +146,51 @@ class OfflineFirstCollectionRepository(
         return Result.Success(savedCollections.map { it.id })
     }
 
+    private fun Flow<UserId>.initializeDefaultCollections() =
+        onEach { userId ->
+            logger.d { "Initializing default collections for user $userId" }
+            val localCollections = localDataSource.watchCollections(userId)
+                .firstOrDefault { emptyList() }
+
+            val missingCollections = defaultCollections
+                .filter { defaultCollection -> localCollections.none { it.type == defaultCollection.type } }
+
+            if (missingCollections.isNotEmpty()) {
+                logger.d { "Saving ${missingCollections.size} default collections for user $userId" }
+                saveCollections(userId, missingCollections)
+            } else {
+                logger.d { "No default collections to save for user $userId" }
+            }
+        }
+
+    private fun Flow<Pair<UserId, List<Collection>>>.syncRemoteCollections() =
+        onEach { (userId, remoteCollections) ->
+            logger.d { "Syncing ${remoteCollections.size} collections for user $userId" }
+            val localCollections = localDataSource.watchCollections(userId)
+                .firstOrDefault { emptyList() }
+            val collectionsToDelete = localCollections.filter { localCollection ->
+                remoteCollections.none { remoteCollection ->
+                    remoteCollection.id == localCollection.id
+                }
+            }.map { it.id }
+            val collectionsToUpsert = remoteCollections.filter { remoteCollection ->
+                localCollections.none { localCollection ->
+                    localCollection == remoteCollection
+                }
+            }
+
+            if (collectionsToDelete.isNotEmpty()) {
+                localDataSource.deleteCollections(userId, collectionsToDelete)
+            }
+            if (collectionsToUpsert.isNotEmpty()) {
+                localDataSource.upsertCollections(userId, collectionsToUpsert)
+            }
+            logger.d { "Deleted ${collectionsToDelete.size} and upserted ${collectionsToUpsert.size} collections for user $userId" }
+        }
+
     private fun Flow<Pair<UserId, Map<SetId, List<CollectionId>>>>.syncRemoteSetCollections() =
         onEach { (userId, remoteSetCollections) ->
-            logger.d { "Syncing ${remoteSetCollections.size} set collections" }
+            logger.d { "Syncing ${remoteSetCollections.size} set collections for user $userId" }
             val localSetCollections = localDataSource.watchCollectionsBySets(userId)
                 .firstOrDefault { emptyMap() }
             val setCollectionsToDelete = localSetCollections
@@ -176,29 +220,8 @@ class OfflineFirstCollectionRepository(
             if (setCollectionsToUpsert.isNotEmpty()) {
                 localDataSource.upsertCollectionsBySets(userId, setCollectionsToUpsert)
             }
-        }
-
-    private fun Flow<Pair<UserId, List<Collection>>>.syncRemoteCollections() =
-        onEach { (userId, remoteCollections) ->
-            logger.d { "Syncing ${remoteCollections.size} collections" }
-            val localCollections = localDataSource.watchCollections(userId)
-                .firstOrDefault { emptyList() }
-            val collectionsToDelete = localCollections.filter { localCollection ->
-                remoteCollections.none { remoteCollection ->
-                    remoteCollection.id == localCollection.id
-                }
-            }.map { it.id }
-            val collectionsToUpsert = remoteCollections.filter { remoteCollection ->
-                localCollections.none { localCollection ->
-                    localCollection == remoteCollection
-                }
-            }
-
-            if (collectionsToDelete.isNotEmpty()) {
-                localDataSource.deleteCollections(userId, collectionsToDelete)
-            }
-            if (collectionsToUpsert.isNotEmpty()) {
-                localDataSource.upsertCollections(userId, collectionsToUpsert)
+            logger.d {
+                "Deleted ${setCollectionsToDelete.size} and upserted ${setCollectionsToUpsert.size} set collections for user $userId"
             }
         }
 }

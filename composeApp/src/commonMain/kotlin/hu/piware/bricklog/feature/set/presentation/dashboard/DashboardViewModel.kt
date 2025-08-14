@@ -236,7 +236,7 @@ class DashboardViewModel(
             .distinctUntilChanged()
             .flatMapLatest { query ->
                 watchSetDetailsByPreferences(
-                    filterOverrides = SetFilter(limit = 10),
+                    filterOverrides = SetFilter(limit = SEARCH_BAR_RESULT_LIMIT),
                     query = query,
                 )
             }
@@ -340,6 +340,9 @@ class DashboardViewModel(
                 logger.w(e) { "Notification permission denied." }
             } catch (e: RequestCanceledException) {
                 logger.w(e) { "Notification permission canceled." }
+            } catch (e: Exception) {
+                // https://github.com/icerockdev/moko-permissions/issues/141
+                logger.w(e) { "Notification permission error." }
             }
         }
     }
@@ -352,6 +355,7 @@ class DashboardViewModel(
     }
 
     companion object {
+        const val SEARCH_BAR_RESULT_LIMIT = 10
         const val FEATURED_SETS_ROW_LIMIT = 9
     }
 }

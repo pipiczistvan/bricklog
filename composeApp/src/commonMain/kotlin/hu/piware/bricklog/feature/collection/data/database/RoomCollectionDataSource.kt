@@ -57,12 +57,13 @@ class RoomCollectionDataSource(
         collections: List<Collection>,
     ): Result<List<Collection>, DataError.Local> {
         return try {
-            logger.d { "Upserting ${collections.size} collections" }
+            logger.d { "Upserting ${collections.size} collections for user $userId" }
             val entities = collections.map { it.toEntity(userId) }
+            logger.d { "Upserting ${entities.map { it.toString() }} collections for user $userId" }
             collectionDao.upsertCollections(entities)
             Result.Success(entities.map { it.toDomainModel() })
         } catch (e: SQLiteException) {
-            logger.e(e) { "Error upserting collections" }
+            logger.e(e) { "Error upserting collections for user $userId" }
             Result.Error(DataError.Local.DISK_FULL)
         }
     }
@@ -84,6 +85,8 @@ class RoomCollectionDataSource(
                 }
             }
 
+            logger.d { "Upserting ${entities.map { it.toString() }} set collections for user $userId" }
+
             setCollectionDao.upsertSetCollections(entities)
 
             Result.Success(Unit)
@@ -99,7 +102,7 @@ class RoomCollectionDataSource(
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Adding set $setId to collections $collectionIds" }
+            logger.d { "Adding set $setId for user $userId to collections $collectionIds" }
             setCollectionDao.upsertSetCollections(
                 collectionIds.map { collectionId ->
                     SetCollectionEntity(
@@ -111,10 +114,10 @@ class RoomCollectionDataSource(
             )
             Result.Success(Unit)
         } catch (e: SQLiteException) {
-            logger.e(e) { "Error adding set $setId to collections $collectionIds" }
+            logger.e(e) { "Error adding set $setId for user $userId to collections $collectionIds" }
             Result.Error(DataError.Local.DISK_FULL)
         } catch (e: Exception) {
-            logger.e(e) { "Error adding set $setId to collections $collectionIds" }
+            logger.e(e) { "Error adding set $setId for user $userId to collections $collectionIds" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
@@ -124,11 +127,16 @@ class RoomCollectionDataSource(
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Deleting ${collectionIds.size} collections" }
-            collectionDao.deleteCollections(userId, collectionIds)
+            if (collectionIds.isEmpty()) {
+                logger.d { "Deleting all collections for user $userId" }
+                collectionDao.deleteCollections(userId)
+            } else {
+                logger.d { "Deleting ${collectionIds.size} collections for user $userId" }
+                collectionDao.deleteCollections(userId, collectionIds)
+            }
             Result.Success(Unit)
         } catch (e: Exception) {
-            logger.e(e) { "Error deleting collections" }
+            logger.e(e) { "Error deleting collections for user $userId" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
@@ -138,7 +146,7 @@ class RoomCollectionDataSource(
         setCollections: Map<SetId, List<CollectionId>>,
     ): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Deleting set collections" }
+            logger.d { "Deleting set collections for user $userId" }
 
             val entities = setCollections.flatMap { (setId, collections) ->
                 collections.map { collectionId ->
@@ -154,7 +162,7 @@ class RoomCollectionDataSource(
 
             Result.Success(Unit)
         } catch (e: Exception) {
-            logger.e(e) { "Error deleting set collections" }
+            logger.e(e) { "Error deleting set collections for user $userId" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
@@ -165,7 +173,7 @@ class RoomCollectionDataSource(
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Removing set $setId from collections $collectionIds" }
+            logger.d { "Removing set $setId for user $userId from collections $collectionIds" }
             setCollectionDao.deleteSetCollections(
                 collectionIds.map { collectionId ->
                     SetCollectionEntity(
@@ -177,7 +185,7 @@ class RoomCollectionDataSource(
             )
             Result.Success(Unit)
         } catch (e: Exception) {
-            logger.e(e) { "Error removing set $setId from collections $collectionIds" }
+            logger.e(e) { "Error removing set $setId for user $userId from collections $collectionIds" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

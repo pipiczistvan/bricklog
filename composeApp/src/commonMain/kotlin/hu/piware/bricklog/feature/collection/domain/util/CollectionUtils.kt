@@ -6,6 +6,7 @@ import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 
 val defaultCollections = listOf(
     Collection(
+        id = "favourite_sets",
         name = "Favourite Sets",
         icon = CollectionIcon.FAVOURITE,
         type = CollectionType.FAVOURITE,
