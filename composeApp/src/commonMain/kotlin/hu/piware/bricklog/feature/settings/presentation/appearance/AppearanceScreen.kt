@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_settings_appearance_currency_region_info_dialog_label
 import bricklog.composeapp.generated.resources.feature_settings_appearance_label_currency_region
 import bricklog.composeapp.generated.resources.feature_settings_appearance_label_currency_target
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title
@@ -45,6 +46,7 @@ import bricklog.composeapp.generated.resources.feature_settings_appearance_title
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_featured_sets
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_greetings
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_theme
+import hu.piware.bricklog.feature.core.presentation.components.AlertIconButton
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.currency.domain.model.toUiText
@@ -337,10 +339,17 @@ private fun CurrencySettings(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(Res.string.feature_settings_appearance_label_currency_region),
-                style = MaterialTheme.typography.titleMedium,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_settings_appearance_label_currency_region),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                AlertIconButton {
+                    Text(stringResource(Res.string.feature_settings_appearance_currency_region_info_dialog_label))
+                }
+            }
 
             FilledTonalButton(
                 onClick = { showCurrencyRegionSheet = true },

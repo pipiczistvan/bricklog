@@ -21,6 +21,7 @@
     <string name="feature_collection_edit_icon_sheet_title">Collection icon</string>
     <string name="feature_collection_edit_title_create">Create collection</string>
     <string name="feature_collection_edit_title_modify">Edit collection</string>
+    <string name="feature_core_dialog_btn_cancel">OK</string>
     <string name="feature_core_update_data_step_download_file">Downloading file</string>
     <string name="feature_core_update_data_step_parse_items">Parsing items</string>
     <string name="feature_core_update_data_step_prepare_export_info">Preparing export info</string>
@@ -58,14 +59,11 @@
     <string name="feature_set_detail_collections_sheet_title">Collections</string>
     <string name="feature_set_detail_collections_title">Collections</string>
     <string name="feature_set_detail_instructions_btn_download">Download</string>
-    <string name="feature_set_detail_instructions_btn_info">Info</string>
     <string name="feature_set_detail_instructions_empty">No instructions found</string>
-    <string name="feature_set_detail_instructions_info_dialog_btn_cancel">OK</string>
     <string name="feature_set_detail_instructions_info_dialog_label">'NA' or 'V39' indicates the US/Canadian version, 'IN' or 'V29' the international version, 'V55' the Chinese version.</string>
     <string name="feature_set_detail_instructions_title">Instructions</string>
     <string name="feature_set_detail_label_barcode_ean">EAN (Europe / Rest of World)</string>
     <string name="feature_set_detail_label_barcode_upc">UPC (North America)</string>
-    <string name="feature_set_detail_price_info_dialog_btn_cancel">OK</string>
     <string name="feature_set_detail_price_info_dialog_label">This price is only an estimate, derived from the regional recommended retail price and available rates.</string>
     <string name="feature_set_detail_table_label_depth">Depth</string>
     <string name="feature_set_detail_table_label_exit_date">Exit date</string>
@@ -181,6 +179,7 @@
     <string name="feature_settings_about_title_tools">Tools</string>
     <string name="feature_settings_appearance_currency_code_bottom_sheet_title">Select currency</string>
     <string name="feature_settings_appearance_currency_region_bottom_sheet_title">Select region</string>
+    <string name="feature_settings_appearance_currency_region_info_dialog_label">This setting specifies which region the calculated currency is based on.\nIf it is not available for a set, the calculation will fall back to the other region.</string>
     <string name="feature_settings_appearance_label_currency_region">Region</string>
     <string name="feature_settings_appearance_label_currency_target">Preferred currency</string>
     <string name="feature_settings_appearance_label_theme_dark">Dark</string>
