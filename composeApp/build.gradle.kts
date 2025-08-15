@@ -318,7 +318,7 @@ private fun Project.configureBundleApkTask(environment: String, buildType: Strin
             val signingConfig =
                 if (buildType == "release") createReleaseSigningConfig() else createDebugSigningConfig()
 
-            providers.exec {
+            exec {
                 commandLine(
                     "java", "-jar", "../release/bundletool-all-1.18.1.jar",
                     "build-apks",
