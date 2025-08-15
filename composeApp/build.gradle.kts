@@ -35,7 +35,6 @@ kotlin {
     }
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -138,10 +137,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = libs.versions.app.release.get().toInt()
         versionName = libs.versions.app.version.get()
-        setProperty(
-            "archivesBaseName",
-            archiveName
-        )
+        base.archivesName = archiveName
     }
     packaging {
         resources {
@@ -250,7 +246,6 @@ dependencies {
 
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
     add("kspAndroid", libs.koin.ksp.compiler)
-    add("kspIosX64", libs.koin.ksp.compiler)
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
@@ -323,7 +318,7 @@ private fun Project.configureBundleApkTask(environment: String, buildType: Strin
             val signingConfig =
                 if (buildType == "release") createReleaseSigningConfig() else createDebugSigningConfig()
 
-            exec {
+            providers.exec {
                 commandLine(
                     "java", "-jar", "../release/bundletool-all-1.18.1.jar",
                     "build-apks",
