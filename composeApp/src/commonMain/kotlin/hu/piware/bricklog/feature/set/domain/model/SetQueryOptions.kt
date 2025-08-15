@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.domain.model
 
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 
 data class SetQueryOptions(
@@ -11,6 +12,8 @@ data class SetQueryOptions(
     val themes: List<String> = emptyList(),
     val packagingTypes: List<String> = emptyList(),
     val statuses: List<SetStatus> = emptyList(),
+    val currencyDetails: CurrencyPreferenceDetails,
+    val price: PriceFilter = PriceFilter.AnyPrice,
     val showIncomplete: Boolean = false,
     val limit: Int? = null,
     val barcode: String? = null,
@@ -21,6 +24,7 @@ data class SetQueryOptions(
 fun buildSetQueryOptions(
     filter: SetFilter?,
     preferences: SetFilterPreferences,
+    currencyDetails: CurrencyPreferenceDetails,
     queries: List<String>,
 ): SetQueryOptions {
     return SetQueryOptions(
@@ -31,6 +35,8 @@ fun buildSetQueryOptions(
         themes = filter?.themes ?: preferences.themes,
         packagingTypes = filter?.packagingTypes ?: preferences.packagingTypes,
         statuses = filter?.statuses ?: preferences.statuses,
+        currencyDetails = currencyDetails,
+        price = filter?.price ?: preferences.price,
         showIncomplete = filter?.showIncomplete ?: preferences.showIncomplete,
         limit = filter?.limit,
         barcode = filter?.barcode,

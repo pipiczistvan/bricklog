@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_search_chip_collections
 import bricklog.composeapp.generated.resources.feature_set_search_chip_packaging_types
+import bricklog.composeapp.generated.resources.feature_set_search_chip_price
 import bricklog.composeapp.generated.resources.feature_set_search_chip_release_date
 import bricklog.composeapp.generated.resources.feature_set_search_chip_show_incomplete
 import bricklog.composeapp.generated.resources.feature_set_search_chip_status
@@ -26,16 +27,20 @@ import bricklog.composeapp.generated.resources.feature_set_search_chip_themes
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.core.presentation.toLocalDateTime
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
+import hu.piware.bricklog.feature.set.domain.model.PriceFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.CollectionFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.DateFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.PackagingTypeFilterBottomSheet
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.PriceFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarChip
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.StatusFilterBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.ThemeFilterBottomSheet
+import hu.piware.bricklog.feature.settings.domain.model.DEFAULT_SET_FILTER_PREFERENCES
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
@@ -58,6 +63,7 @@ fun SetFilterRow(
     var showThemeFilterSheet by remember { mutableStateOf(false) }
     var showPackagingTypeFilterSheet by remember { mutableStateOf(false) }
     var showCollectionFilterSheet by remember { mutableStateOf(false) }
+    var showPriceFilterSheet by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier
@@ -93,6 +99,14 @@ fun SetFilterRow(
                 },
             onClick = { showCollectionFilterSheet = true },
         )
+        if (filterDomain.currencyDetails != null) {
+            PriceChip(
+                enabled = filterOverrides?.price == null,
+                priceFilter = mergedFilter.price,
+                currencyDetails = filterDomain.currencyDetails,
+                onClick = { showPriceFilterSheet = true },
+            )
+        }
         ShowIncompleteChip(
             enabled = filterOverrides?.showIncomplete == null,
             show = mergedFilter.showIncomplete,
@@ -144,6 +158,15 @@ fun SetFilterRow(
             onDismiss = { showCollectionFilterSheet = false },
         )
     }
+
+    if (showPriceFilterSheet && filterDomain.currencyDetails != null) {
+        PriceFilterBottomSheet(
+            currencyDetails = filterDomain.currencyDetails,
+            selected = filterPreferences.price,
+            onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(price = it)) },
+            onDismiss = { showPriceFilterSheet = false },
+        )
+    }
 }
 
 @Composable
@@ -157,12 +180,11 @@ private fun ReleaseDateChip(
         title = when (dateFilter) {
             is DateFilter.AnyTime -> stringResource(Res.string.feature_set_search_chip_release_date)
             is DateFilter.Custom -> dateFilter.format()
-
-            is DateFilter.OneWeek, DateFilter.OneMonth, DateFilter.OneYear -> stringResource(
+            else -> stringResource(
                 dateFilter.option.titleRes,
             )
         },
-        isDefaultSelected = dateFilter is DateFilter.AnyTime,
+        isDefaultSelected = dateFilter == DEFAULT_SET_FILTER_PREFERENCES.launchDate,
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick,
@@ -186,7 +208,7 @@ private fun ThemeChip(
             1 -> selectedThemes.first()
             else -> "${selectedThemes.first()} + ${selectedThemes.size - 1}"
         },
-        isDefaultSelected = selectedThemes.isEmpty(),
+        isDefaultSelected = selectedThemes == DEFAULT_SET_FILTER_PREFERENCES.themes,
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick,
@@ -206,7 +228,7 @@ private fun PackagingTypeChip(
             1 -> selectedPackagingTypes.first()
             else -> "${selectedPackagingTypes.first()} + ${selectedPackagingTypes.size - 1}"
         },
-        isDefaultSelected = selectedPackagingTypes.isEmpty(),
+        isDefaultSelected = selectedPackagingTypes == DEFAULT_SET_FILTER_PREFERENCES.packagingTypes,
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick,
@@ -226,7 +248,7 @@ private fun StatusChip(
             1 -> stringResource(selectedStatuses.first().statusRes)
             else -> "${stringResource(selectedStatuses.first().statusRes)} + ${selectedStatuses.size - 1}"
         },
-        isDefaultSelected = selectedStatuses.isEmpty(),
+        isDefaultSelected = selectedStatuses == DEFAULT_SET_FILTER_PREFERENCES.statuses,
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick,
@@ -246,7 +268,33 @@ private fun CollectionChip(
             1 -> selectedCollections.first().name
             else -> "${selectedCollections.first().name} + ${selectedCollections.size - 1}"
         },
-        isDefaultSelected = selectedCollections.isEmpty(),
+        isDefaultSelected = selectedCollections == DEFAULT_SET_FILTER_PREFERENCES.collectionIds,
+        showTrailingIcon = true,
+        enabled = enabled,
+        onClick = onClick,
+    )
+}
+
+@Composable
+private fun PriceChip(
+    enabled: Boolean,
+    priceFilter: PriceFilter,
+    currencyDetails: CurrencyPreferenceDetails,
+    onClick: () -> Unit,
+) {
+    SearchBarChip(
+        modifier = Modifier.testTag("search_bar:price_chip"),
+        title = when (priceFilter) {
+            is PriceFilter.AnyPrice -> stringResource(Res.string.feature_set_search_chip_price)
+            is PriceFilter.Custom -> formatedPriceRange(
+                priceFilter.min,
+                priceFilter.max,
+                currencyDetails,
+            )
+
+            else -> stringResource(priceFilter.option.titleRes)
+        },
+        isDefaultSelected = priceFilter == DEFAULT_SET_FILTER_PREFERENCES.price,
         showTrailingIcon = true,
         enabled = enabled,
         onClick = onClick,
@@ -262,7 +310,7 @@ private fun ShowIncompleteChip(
     SearchBarChip(
         modifier = Modifier.testTag("search_bar:show_incomplete_chip"),
         title = stringResource(Res.string.feature_set_search_chip_show_incomplete),
-        isDefaultSelected = !show,
+        isDefaultSelected = show == DEFAULT_SET_FILTER_PREFERENCES.showIncomplete,
         enabled = enabled,
         onClick = { onClick(!show) },
     )

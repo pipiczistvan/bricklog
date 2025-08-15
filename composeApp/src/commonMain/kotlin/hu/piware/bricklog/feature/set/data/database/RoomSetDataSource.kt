@@ -15,6 +15,7 @@ import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.datasource.LocalSetDataSource
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -109,6 +110,10 @@ class RoomSetDataSource(
         }.flow.map { pagingData ->
             pagingData.map { it.toDomainModel(userId) }
         }
+    }
+
+    override fun watchSetPriceMax(region: CurrencyRegion): Flow<Double?> {
+        return setDetailsDao.watchSetPriceMax(region)
     }
 
     override suspend fun upsertSets(sets: List<Set>): EmptyResult<DataError.Local> {

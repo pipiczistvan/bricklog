@@ -2,8 +2,6 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,7 +13,6 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_search_status_filter_sheet_title
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.settings.domain.model.DEFAULT_SET_FILTER_PREFERENCES
-import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -34,7 +31,6 @@ fun StatusFilterBottomSheet(
         onSelectionChange = onSelectionChange,
         onDismiss = onDismiss,
     ) { status, isSelected ->
-        Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
             text = stringResource(status.statusRes),
             style = MaterialTheme.typography.bodyLarge,

@@ -3,7 +3,10 @@ package hu.piware.bricklog.feature.set.data.database
 import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.data.database.InstantConverter
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.model.DateFilter
+import hu.piware.bricklog.feature.set.domain.model.PriceFilter
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
@@ -15,7 +18,10 @@ import kotlin.time.Duration.Companion.days
 private val instantConverter = InstantConverter()
 private val logger = Logger.withTag("buildGetSetDetailsSql")
 
-fun buildGetSetDetailsSql(userId: UserId, queryOptions: SetQueryOptions): String {
+fun buildGetSetDetailsSql(
+    userId: UserId,
+    queryOptions: SetQueryOptions,
+): String {
     val now = Clock.System.now()
 
     val conditions = listOfNotNull(
@@ -26,12 +32,13 @@ fun buildGetSetDetailsSql(userId: UserId, queryOptions: SetQueryOptions): String
         buildThemeSelect(queryOptions.themes),
         buildPackagingTypeSelect(queryOptions.packagingTypes),
         buildStatusSelect(queryOptions.statuses),
+        buildPriceSelect(queryOptions.price, queryOptions.currencyDetails),
         buildShowIncompleteSelect(queryOptions.showIncomplete),
         buildBarcodeSelect(queryOptions.barcode),
         buildCollectionIdSelect(userId, queryOptions.collectionIds),
     ).joinToString(separator = " AND ") { "($it)" }
 
-    val orderBy = buildOrderBy(queryOptions.sortOption)
+    val orderBy = buildOrderBy(queryOptions.sortOption, queryOptions.currencyDetails)
     val limit = queryOptions.limit?.let { " LIMIT $it" } ?: ""
 
     val sql = StringBuilder()
@@ -86,14 +93,8 @@ private fun buildDateFilterSelect(
         )
     }
 
-    val startDateSelect = startDate?.let { "$dateField >= ${instantConverter.fromInstant(it)}" }
-    val endDateSelect = endDate?.let { "$dateField <= ${instantConverter.fromInstant(it)}" }
-
-    return when {
-        startDateSelect != null && endDateSelect != null -> "$startDateSelect AND $endDateSelect"
-        startDateSelect != null -> startDateSelect
-        endDateSelect != null -> endDateSelect
-        else -> null
+    return buildRangeSelect(startDate, endDate, dateField) {
+        "${instantConverter.fromInstant(it)}"
     }
 }
 
@@ -107,6 +108,30 @@ private fun buildPackagingTypeSelect(packagingTypes: List<String>): String? {
 
 private fun buildStatusSelect(statuses: List<SetStatus>): String? {
     return buildStringCollectionSelect("status", statuses.map { it.name })
+}
+
+private fun buildPriceSelect(
+    priceFilter: PriceFilter,
+    currencyDetails: CurrencyPreferenceDetails,
+): String? {
+    val (minPrice, maxPrice) = when (priceFilter) {
+        PriceFilter.AnyPrice -> Pair(null, null)
+        PriceFilter.Budget,
+        PriceFilter.Affordable,
+        PriceFilter.Expensive,
+        PriceFilter.Premium,
+            -> currencyDetails.priceRanges.getOrElse(priceFilter.option) {
+            throw IllegalStateException("Price range not found for $priceFilter")
+        }
+
+        is PriceFilter.Custom -> Pair(priceFilter.min, priceFilter.max)
+    }
+
+    return buildRangeSelect(
+        minPrice,
+        maxPrice,
+        currencyDetails.preferredRegion.toColumnName(),
+    ) { "$it" }
 }
 
 private fun buildShowIncompleteSelect(showIncomplete: Boolean): String? {
@@ -135,7 +160,10 @@ private fun buildCollectionIdSelect(userId: UserId, collectionIds: List<Collecti
         .toString()
 }
 
-private fun buildOrderBy(sortOption: SetSortOption): String {
+private fun buildOrderBy(
+    sortOption: SetSortOption,
+    currencyDetails: CurrencyPreferenceDetails,
+): String {
     return when (sortOption) {
         SetSortOption.LAUNCH_DATE_ASCENDING -> "COALESCE(launchDate, year) ASC"
         SetSortOption.LAUNCH_DATE_DESCENDING -> "COALESCE(launchDate, year) DESC"
@@ -143,6 +171,8 @@ private fun buildOrderBy(sortOption: SetSortOption): String {
         SetSortOption.RETIRING_DATE_DESCENDING -> "COALESCE(exitDate, year) DESC"
         SetSortOption.APPEARANCE_DATE_ASCENDING -> "infoCompleteDate ASC"
         SetSortOption.APPEARANCE_DATE_DESCENDING -> "infoCompleteDate DESC"
+        SetSortOption.PRICE_ASCENDING -> "${currencyDetails.preferredRegion.toColumnName()} ASC"
+        SetSortOption.PRICE_DESCENDING -> "${currencyDetails.preferredRegion.toColumnName()} DESC"
     }
 }
 
@@ -155,4 +185,26 @@ private fun buildStringCollectionSelect(
     return "$columnName IN (${collection.joinToString(separator = ", ") { "'${it.sqlEscape()}'" }})"
 }
 
+private fun <T> buildRangeSelect(
+    min: T?,
+    max: T?,
+    columnName: String,
+    converter: (T) -> String,
+): String? {
+    val minSelect = min?.let { "$columnName >= ${converter(it)}" }
+    val maxSelect = max?.let { "$columnName <= ${converter(it)}" }
+
+    return when {
+        minSelect != null && maxSelect != null -> "$minSelect AND $maxSelect"
+        minSelect != null -> minSelect
+        maxSelect != null -> maxSelect
+        else -> null
+    }
+}
+
 private fun String.sqlEscape() = replace("'", "''")
+
+private fun CurrencyRegion.toColumnName() = when (this) {
+    CurrencyRegion.EU -> "DEPrice"
+    CurrencyRegion.US -> "USPrice"
+}

@@ -6,10 +6,18 @@ import bricklog.composeapp.generated.resources.feature_set_search_date_filter_bt
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_month
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_week
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_btn_one_year
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_affordable
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_any
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_budget
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_custom
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_expensive
+import bricklog.composeapp.generated.resources.feature_set_search_price_filter_btn_premium
 import bricklog.composeapp.generated.resources.feature_set_search_sort_appear_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_appear_date_descending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_launch_date_descending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_price_ascending
+import bricklog.composeapp.generated.resources.feature_set_search_sort_price_descending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_descending
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
@@ -24,6 +32,7 @@ data class SetFilter(
     val themes: List<String>? = null,
     val packagingTypes: List<String>? = null,
     val statuses: List<SetStatus>? = null,
+    val price: PriceFilter? = null,
     val showIncomplete: Boolean? = null,
     val limit: Int? = null,
     val barcode: String? = null,
@@ -52,6 +61,12 @@ enum class SetSortOption(
     ),
     APPEARANCE_DATE_DESCENDING(
         titleRes = Res.string.feature_set_search_sort_appear_date_descending,
+    ),
+    PRICE_ASCENDING(
+        titleRes = Res.string.feature_set_search_sort_price_ascending,
+    ),
+    PRICE_DESCENDING(
+        titleRes = Res.string.feature_set_search_sort_price_descending,
     ),
 }
 
@@ -93,5 +108,52 @@ enum class DateFilterOption(
     ),
     CUSTOM(
         titleRes = Res.string.feature_set_search_date_filter_btn_custom_range,
+    ),
+}
+
+@Serializable
+sealed class PriceFilter(
+    val option: PriceFilterOption,
+) {
+    @Serializable
+    data object AnyPrice : PriceFilter(PriceFilterOption.ANY_PRICE)
+
+    @Serializable
+    data object Premium : PriceFilter(PriceFilterOption.PREMIUM)
+
+    @Serializable
+    data object Expensive : PriceFilter(PriceFilterOption.EXPENSIVE)
+
+    @Serializable
+    data object Affordable : PriceFilter(PriceFilterOption.AFFORDABLE)
+
+    @Serializable
+    data object Budget : PriceFilter(PriceFilterOption.BUDGET)
+
+    @Serializable
+    data class Custom(val min: Double? = null, val max: Double? = null) :
+        PriceFilter(PriceFilterOption.CUSTOM)
+}
+
+enum class PriceFilterOption(
+    val titleRes: StringResource,
+) {
+    ANY_PRICE(
+        titleRes = Res.string.feature_set_search_price_filter_btn_any,
+    ),
+    PREMIUM(
+        titleRes = Res.string.feature_set_search_price_filter_btn_premium,
+    ),
+    EXPENSIVE(
+        titleRes = Res.string.feature_set_search_price_filter_btn_expensive,
+    ),
+    AFFORDABLE(
+        titleRes = Res.string.feature_set_search_price_filter_btn_affordable,
+    ),
+    BUDGET(
+        titleRes = Res.string.feature_set_search_price_filter_btn_budget,
+    ),
+    CUSTOM(
+        titleRes = Res.string.feature_set_search_price_filter_btn_custom,
     ),
 }

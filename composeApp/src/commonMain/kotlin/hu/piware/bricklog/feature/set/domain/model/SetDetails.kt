@@ -36,6 +36,9 @@ val SetDetails.setNumberWithVariant: String
 val SetDetails.EUPrice: Double?
     get() = set.DEPrice
 
+val SetDetails.USPrice: Double?
+    get() = set.USPrice
+
 val SetDetails.localLaunchDate: LocalDateTime?
     get() = set.launchDate?.toLocalDateTime(TimeZone.currentSystemDefault())
 

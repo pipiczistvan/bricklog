@@ -4,10 +4,8 @@ package hu.piware.bricklog.feature.set.presentation.dashboard.components.search_
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -161,7 +159,6 @@ private fun DateFilterSheetOption(
         isSelected = isSelected,
         onClick = onClick,
     ) {
-        Spacer(modifier = Modifier.width(Dimens.MediumPadding.size))
         Text(
             text = stringResource(option.titleRes),
             style = MaterialTheme.typography.bodyLarge,

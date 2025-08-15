@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
@@ -24,12 +25,17 @@ interface LocalSetDataSource {
 
     fun watchPackagingTypes(): Flow<List<String>>
 
-    fun watchSetDetails(userId: UserId, queryOptions: SetQueryOptions): Flow<List<SetDetails>>
+    fun watchSetDetails(
+        userId: UserId,
+        queryOptions: SetQueryOptions,
+    ): Flow<List<SetDetails>>
 
     fun watchSetDetailsPaged(
         userId: UserId,
         queryOptions: SetQueryOptions,
     ): Flow<PagingData<SetDetails>>
+
+    fun watchSetPriceMax(region: CurrencyRegion): Flow<Double?>
 
     suspend fun upsertSets(sets: List<Set>): EmptyResult<DataError.Local>
 

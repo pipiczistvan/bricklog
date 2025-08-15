@@ -6,10 +6,11 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_title_lates
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_latest_sets
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_new_items
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_retiring_sets
-import hu.piware.bricklog.feature.set.domain.model.DateFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
+import hu.piware.bricklog.feature.settings.domain.model.DEFAULT_SET_FILTER_PREFERENCES
+import hu.piware.bricklog.feature.settings.domain.model.toSetFilter
 import org.jetbrains.compose.resources.StringResource
 
 enum class FeaturedSetType {
@@ -47,53 +48,26 @@ val FeaturedSetType.filter: SetFilter
         FeaturedSetType.NEW_ITEMS -> newItemsFilter
     }
 
-val latestSetsFilter = SetFilter(
+val latestSetsFilter = DEFAULT_SET_FILTER_PREFERENCES.copy(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
-    launchDate = DateFilter.AnyTime,
-    themes = emptyList(),
-    packagingTypes = listOf("Box"),
-    statuses = emptyList(),
-    showIncomplete = false,
-    collectionIds = emptyList(),
-)
+).toSetFilter()
 
-val latestReleasesFilter = SetFilter(
+val latestReleasesFilter = DEFAULT_SET_FILTER_PREFERENCES.copy(
     sortOption = SetSortOption.LAUNCH_DATE_DESCENDING,
-    launchDate = DateFilter.AnyTime,
-    themes = emptyList(),
-    packagingTypes = listOf("Box"),
     statuses = listOf(SetStatus.ACTIVE),
-    showIncomplete = false,
-    collectionIds = emptyList(),
-)
+).toSetFilter()
 
-val arrivingSetsFilter = SetFilter(
+val arrivingSetsFilter = DEFAULT_SET_FILTER_PREFERENCES.copy(
     sortOption = SetSortOption.LAUNCH_DATE_ASCENDING,
-    launchDate = DateFilter.AnyTime,
-    themes = emptyList(),
-    packagingTypes = listOf("Box"),
     statuses = listOf(SetStatus.ARRIVES_SOON, SetStatus.FUTURE_RELEASE),
-    showIncomplete = false,
-    collectionIds = emptyList(),
-)
+).toSetFilter()
 
-val retiringSetsFilter = SetFilter(
+val retiringSetsFilter = DEFAULT_SET_FILTER_PREFERENCES.copy(
     sortOption = SetSortOption.RETIRING_DATE_ASCENDING,
-    launchDate = DateFilter.AnyTime,
-    themes = emptyList(),
-    packagingTypes = listOf("Box"),
     statuses = listOf(SetStatus.RETIRED_SOON),
-    showIncomplete = false,
-    collectionIds = emptyList(),
-)
+).toSetFilter()
 
-val newItemsFilter = SetFilter(
+val newItemsFilter = DEFAULT_SET_FILTER_PREFERENCES.copy(
     sortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
-    launchDate = DateFilter.AnyTime,
-    themes = emptyList(),
     packagingTypes = emptyList(),
-    statuses = emptyList(),
-    appearanceDate = DateFilter.AnyTime,
-    showIncomplete = false,
-    collectionIds = emptyList(),
-)
+).toSetFilter()

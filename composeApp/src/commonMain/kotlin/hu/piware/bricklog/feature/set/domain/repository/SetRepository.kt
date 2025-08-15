@@ -4,6 +4,8 @@ import androidx.paging.PagingData
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
+import hu.piware.bricklog.feature.set.domain.model.PriceFilterOption
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
@@ -26,6 +28,8 @@ interface SetRepository {
     fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
 
     fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
+
+    fun watchPriceRanges(region: CurrencyRegion): Flow<Map<PriceFilterOption, Pair<Double?, Double?>>>
 
     suspend fun updateSetsChunked(
         sets: List<Set>,

@@ -1,6 +1,7 @@
 package hu.piware.bricklog.feature.set.domain.usecase
 
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
+import hu.piware.bricklog.feature.currency.domain.usecase.WatchCurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import kotlinx.coroutines.flow.Flow
@@ -11,21 +12,25 @@ import org.koin.core.annotation.Single
 class WatchSetFilterDomain(
     private val setRepository: SetRepository,
     private val watchCollections: WatchCollections,
+    private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
 ) {
     operator fun invoke(): Flow<SetFilterDomain> {
         val themesFlow = setRepository.watchThemes()
         val packagingTypesFlow = setRepository.watchPackagingTypes()
         val collectionsFlow = watchCollections()
+        val currencyDetailsFlow = watchCurrencyPreferenceDetails()
 
         return combine(
             themesFlow,
             packagingTypesFlow,
             collectionsFlow,
-        ) { themes, packagingTypes, collections ->
+            currencyDetailsFlow,
+        ) { themes, packagingTypes, collections, currencyDetails ->
             SetFilterDomain(
                 themes = themes,
                 packagingTypes = packagingTypes,
                 collections = collections,
+                currencyDetails = currencyDetails,
             )
         }
     }

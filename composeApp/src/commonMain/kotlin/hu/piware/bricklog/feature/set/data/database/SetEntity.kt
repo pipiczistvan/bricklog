@@ -8,16 +8,16 @@ import kotlinx.datetime.Instant
 @Entity(
     tableName = "sets",
     indices = [
-        Index(
-            "name",
-            "number",
-            "theme",
-            "packagingType",
-            "barcodeEAN",
-            "barcodeUPC",
-        ), // composite index for buildGetSetSql
+        Index("number"),
+        Index("name"),
+        Index("theme"),
+        Index("USPrice"),
+        Index("DEPrice"),
         Index("launchDate"),
         Index("exitDate"),
+        Index("packagingType"),
+        Index("barcodeEAN"),
+        Index("barcodeUPC"),
         Index("infoCompleteDate"),
     ],
 )

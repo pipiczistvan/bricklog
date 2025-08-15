@@ -100,6 +100,7 @@
     <string name="feature_set_search_btn_show_all">Show All</string>
     <string name="feature_set_search_chip_collections">User collections</string>
     <string name="feature_set_search_chip_packaging_types">Packaging types</string>
+    <string name="feature_set_search_chip_price">Price</string>
     <string name="feature_set_search_chip_release_date">Release date</string>
     <string name="feature_set_search_chip_show_incomplete">Show incomplete sets</string>
     <string name="feature_set_search_chip_status">Status</string>
@@ -116,6 +117,19 @@
     <string name="feature_set_search_date_filter_sheet_title">Release date</string>
     <string name="feature_set_search_field_hint">Search by name or number</string>
     <string name="feature_set_search_packaging_type_filter_sheet_title">Packaging type</string>
+    <string name="feature_set_search_price_filter_btn_affordable">Affordable</string>
+    <string name="feature_set_search_price_filter_btn_any">Any price</string>
+    <string name="feature_set_search_price_filter_btn_budget">Budget</string>
+    <string name="feature_set_search_price_filter_btn_custom">Custom price</string>
+    <string name="feature_set_search_price_filter_btn_expensive">Expensive</string>
+    <string name="feature_set_search_price_filter_btn_premium">Premium</string>
+    <string name="feature_set_search_price_filter_custom_dialog_btn_cancel">Cancel</string>
+    <string name="feature_set_search_price_filter_custom_dialog_btn_confirm">Confirm</string>
+    <string name="feature_set_search_price_filter_custom_dialog_field_max_title">Maximum Price</string>
+    <string name="feature_set_search_price_filter_custom_dialog_field_min_invalid">Minimum price must be lower or equal to maximum price</string>
+    <string name="feature_set_search_price_filter_custom_dialog_field_min_title">Minimum Price</string>
+    <string name="feature_set_search_price_filter_custom_dialog_title">Custom price</string>
+    <string name="feature_set_search_price_filter_sheet_title">Price</string>
     <string name="feature_set_search_reset_filter_confirm_dialog_btn_cancel">Cancel</string>
     <string name="feature_set_search_reset_filter_confirm_dialog_btn_confirm">Confirm</string>
     <string name="feature_set_search_reset_filter_confirm_dialog_label">Are you sure you want to reset the filter?</string>
@@ -124,6 +138,8 @@
     <string name="feature_set_search_sort_appear_date_descending">Descending by appearance</string>
     <string name="feature_set_search_sort_launch_date_ascending">Ascending by launch date</string>
     <string name="feature_set_search_sort_launch_date_descending">Descending by launch date</string>
+    <string name="feature_set_search_sort_price_ascending">Ascending by price</string>
+    <string name="feature_set_search_sort_price_descending">Descending by price</string>
     <string name="feature_set_search_sort_retiring_date_ascending">Ascending by retiring date</string>
     <string name="feature_set_search_sort_retiring_date_descending">Descending by retiring date</string>
     <string name="feature_set_search_sort_title">Sorting</string>
@@ -179,7 +195,7 @@
     <string name="feature_settings_about_title_tools">Tools</string>
     <string name="feature_settings_appearance_currency_code_bottom_sheet_title">Select currency</string>
     <string name="feature_settings_appearance_currency_region_bottom_sheet_title">Select region</string>
-    <string name="feature_settings_appearance_currency_region_info_dialog_label">This setting specifies which region the calculated currency is based on.\nIf it is not available for a set, the calculation will fall back to the other region.</string>
+    <string name="feature_settings_appearance_currency_region_info_dialog_label">This setting specifies which region the calculated currency is based on.</string>
     <string name="feature_settings_appearance_label_currency_region">Region</string>
     <string name="feature_settings_appearance_label_currency_target">Preferred currency</string>
     <string name="feature_settings_appearance_label_theme_dark">Dark</string>
