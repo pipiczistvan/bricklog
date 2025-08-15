@@ -23,7 +23,7 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
     private val logger = Logger.withTag("FirebaseCollectionDataSource")
 
-    private val firestore = Firebase.firestore
+    private val firestore by lazy { Firebase.firestore }
 
     override fun watchCollections(userId: UserId): Flow<List<Collection>> {
         return firestore.collection("user-data/$userId/collections").snapshots

@@ -19,7 +19,7 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
 
     private val logger = Logger.withTag("FirebaseDataServiceDataSource")
 
-    private val firestore = Firebase.firestore
+    private val firestore by lazy { Firebase.firestore }
 
     override suspend fun getBatchExportInfo(): Result<BatchExportInfo, DataError.Remote> {
         try {

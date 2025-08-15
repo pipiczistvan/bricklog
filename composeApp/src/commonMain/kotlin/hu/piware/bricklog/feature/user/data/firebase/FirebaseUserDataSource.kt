@@ -24,8 +24,8 @@ class FirebaseUserDataSource : RemoteUserDataSource {
 
     private val logger = Logger.withTag("FirebaseUserDataSource")
 
-    private val firestore = Firebase.firestore
-    private val auth = Firebase.auth
+    private val firestore by lazy { Firebase.firestore }
+    private val auth by lazy { Firebase.auth }
 
     override suspend fun getCurrentUser(): User? {
         return auth.currentUser?.toUser()

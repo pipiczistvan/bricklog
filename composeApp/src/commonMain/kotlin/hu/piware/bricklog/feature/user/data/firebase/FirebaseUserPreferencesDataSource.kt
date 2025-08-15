@@ -21,7 +21,7 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
 
     private val logger = Logger.withTag("FirebaseUserPreferencesDataSource")
 
-    private val firestore = Firebase.firestore
+    private val firestore by lazy { Firebase.firestore }
 
     override fun watchUserPreferences(userId: UserId): Flow<UserPreferences?> {
         return firestore.document("user-data/$userId").snapshots
