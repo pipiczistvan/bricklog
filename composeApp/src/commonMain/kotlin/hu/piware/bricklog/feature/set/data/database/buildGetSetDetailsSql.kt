@@ -18,10 +18,7 @@ import kotlin.time.Duration.Companion.days
 private val instantConverter = InstantConverter()
 private val logger = Logger.withTag("buildGetSetDetailsSql")
 
-fun buildGetSetDetailsSql(
-    userId: UserId,
-    queryOptions: SetQueryOptions,
-): String {
+fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
     val now = Clock.System.now()
 
     val conditions = listOfNotNull(
@@ -35,7 +32,7 @@ fun buildGetSetDetailsSql(
         buildPriceSelect(queryOptions.price, queryOptions.currencyDetails),
         buildShowIncompleteSelect(queryOptions.showIncomplete),
         buildBarcodeSelect(queryOptions.barcode),
-        buildCollectionIdSelect(userId, queryOptions.collectionIds),
+        buildCollectionIdSelect(queryOptions.userId, queryOptions.collectionIds),
     ).joinToString(separator = " AND ") { "($it)" }
 
     val orderBy = buildOrderBy(queryOptions.sortOption, queryOptions.currencyDetails)

@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.domain.model
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,7 @@ data class SetDetails(
     val set: Set,
     val collections: List<Collection>,
     val status: SetStatus,
+    val priceCategory: SetPriceCategory,
 )
 
 val SetDetails.isFavourite: Boolean
@@ -80,4 +82,34 @@ val SetStatus.textColor: Color
         SetStatus.ACTIVE -> BricklogTheme.colorScheme.active.onColorContainer
         SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.retiredVariant.onColorContainer
         SetStatus.RETIRED -> BricklogTheme.colorScheme.retired.onColorContainer
+    }
+
+enum class SetPriceCategory {
+    BUDGET,
+    AFFORDABLE,
+    EXPENSIVE,
+    PREMIUM,
+    UNKNOWN,
+}
+
+val SetPriceCategory.containerColor: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = when (this) {
+        SetPriceCategory.UNKNOWN -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.budget.colorContainer
+        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.affordable.colorContainer
+        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.expensive.colorContainer
+        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.premium.colorContainer
+    }
+
+val SetPriceCategory.textColor: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = when (this) {
+        SetPriceCategory.UNKNOWN -> MaterialTheme.colorScheme.onBackground
+        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.budget.onColorContainer
+        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.affordable.onColorContainer
+        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.expensive.onColorContainer
+        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.premium.onColorContainer
     }

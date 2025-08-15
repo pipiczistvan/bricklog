@@ -137,6 +137,8 @@ fun SetListItem(
                             SetAttributeChip(
                                 text = formattedPrice(setPriceDetails),
                                 size = ChipSize.SMALL,
+                                color = setDetails.priceCategory.containerColor,
+                                textColor = setDetails.priceCategory.textColor,
                             )
                         }
                     }

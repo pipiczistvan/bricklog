@@ -11,6 +11,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
+import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import hu.piware.bricklog.util.asResultOrDefault
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -21,6 +22,7 @@ class FindCollectibleSet(
     private val dataServiceRepository: DataServiceRepository,
     private val setRepository: SetRepository,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
+    private val sessionManager: SessionManager,
 ) {
     suspend operator fun invoke(code: String): Result<SetDetails?, DataError> {
         val collectibles = dataServiceRepository.watchCollectibles()
@@ -28,13 +30,15 @@ class FindCollectibleSet(
             .onError { return it }
             .data()
 
+        val userId = sessionManager.userId.first()
         val setId = collectibles.findSetId(code) ?: return Result.Success(null)
         val currencyDetails = watchCurrencyPreferenceDetails().first()
 
         val setDetails = setRepository.watchSetDetails(
             SetQueryOptions(
-                setIds = listOf(setId),
+                userId = userId,
                 currencyDetails = currencyDetails,
+                setIds = listOf(setId),
             ),
         )
             .firstOrNull()?.firstOrNull()

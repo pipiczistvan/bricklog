@@ -9,7 +9,6 @@ import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
-import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
@@ -25,15 +24,9 @@ interface LocalSetDataSource {
 
     fun watchPackagingTypes(): Flow<List<String>>
 
-    fun watchSetDetails(
-        userId: UserId,
-        queryOptions: SetQueryOptions,
-    ): Flow<List<SetDetails>>
+    fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>>
 
-    fun watchSetDetailsPaged(
-        userId: UserId,
-        queryOptions: SetQueryOptions,
-    ): Flow<PagingData<SetDetails>>
+    fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>>
 
     fun watchSetPriceMax(region: CurrencyRegion): Flow<Double?>
 

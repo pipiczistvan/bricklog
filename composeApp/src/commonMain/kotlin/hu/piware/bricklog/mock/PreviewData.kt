@@ -7,6 +7,7 @@ import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.set.domain.model.SetPriceCategory
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.settings.domain.model.Change
 import hu.piware.bricklog.feature.settings.domain.model.ChangeType
@@ -52,6 +53,7 @@ object PreviewData {
             set = set,
             collections = defaultCollections,
             status = SetStatus.ACTIVE,
+            priceCategory = SetPriceCategory.UNKNOWN,
         )
     }
 

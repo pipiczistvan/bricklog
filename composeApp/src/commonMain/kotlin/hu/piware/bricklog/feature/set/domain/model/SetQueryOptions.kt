@@ -3,8 +3,11 @@ package hu.piware.bricklog.feature.set.domain.model
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
+import hu.piware.bricklog.feature.user.domain.model.UserId
 
 data class SetQueryOptions(
+    val userId: UserId,
+    val currencyDetails: CurrencyPreferenceDetails,
     val queries: List<String> = emptyList(),
     val sortOption: SetSortOption = SetSortOption.APPEARANCE_DATE_DESCENDING,
     val launchDate: DateFilter = DateFilter.AnyTime,
@@ -12,7 +15,6 @@ data class SetQueryOptions(
     val themes: List<String> = emptyList(),
     val packagingTypes: List<String> = emptyList(),
     val statuses: List<SetStatus> = emptyList(),
-    val currencyDetails: CurrencyPreferenceDetails,
     val price: PriceFilter = PriceFilter.AnyPrice,
     val showIncomplete: Boolean = false,
     val limit: Int? = null,
@@ -24,10 +26,13 @@ data class SetQueryOptions(
 fun buildSetQueryOptions(
     filter: SetFilter?,
     preferences: SetFilterPreferences,
+    userId: UserId,
     currencyDetails: CurrencyPreferenceDetails,
     queries: List<String>,
 ): SetQueryOptions {
     return SetQueryOptions(
+        userId = userId,
+        currencyDetails = currencyDetails,
         queries = queries,
         sortOption = filter?.sortOption ?: preferences.sortOption,
         launchDate = filter?.launchDate ?: preferences.launchDate,
@@ -35,7 +40,6 @@ fun buildSetQueryOptions(
         themes = filter?.themes ?: preferences.themes,
         packagingTypes = filter?.packagingTypes ?: preferences.packagingTypes,
         statuses = filter?.statuses ?: preferences.statuses,
-        currencyDetails = currencyDetails,
         price = filter?.price ?: preferences.price,
         showIncomplete = filter?.showIncomplete ?: preferences.showIncomplete,
         limit = filter?.limit,

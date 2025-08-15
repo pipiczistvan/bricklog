@@ -1,12 +1,15 @@
 package hu.piware.bricklog.feature.set.data.database
 
 import hu.piware.bricklog.feature.collection.data.database.toDomainModel
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Instruction
+import hu.piware.bricklog.feature.set.domain.model.PriceFilterOption
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.set.domain.model.SetPriceCategory
+import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
-import hu.piware.bricklog.feature.user.domain.model.UserId
 
 fun Set.toEntity(): SetEntity {
     return SetEntity(
@@ -80,12 +83,46 @@ fun SetEntity.toDomainModel(): Set {
     )
 }
 
-fun SetDetailsView.toDomainModel(userId: UserId): SetDetails {
+fun SetDetailsView.toDomainModel(queryOptions: SetQueryOptions): SetDetails {
     return SetDetails(
         set = legoSet.toDomainModel(),
-        collections = collections.filter { it.userId == userId }.map { it.toDomainModel() },
+        collections = collections.filter { it.userId == queryOptions.userId }
+            .map { it.toDomainModel() },
         status = status,
+        priceCategory = priceCategory(queryOptions),
     )
+}
+
+private fun SetDetailsView.priceCategory(queryOptions: SetQueryOptions): SetPriceCategory {
+    return with(queryOptions.currencyDetails) {
+        when (preferredRegion) {
+            CurrencyRegion.EU -> legoSet.DEPrice.priceCategory(priceRanges)
+            CurrencyRegion.US -> legoSet.USPrice.priceCategory(priceRanges)
+        } ?: SetPriceCategory.UNKNOWN
+    }
+}
+
+private fun Double?.priceCategory(priceRanges: Map<PriceFilterOption, Pair<Double?, Double?>>): SetPriceCategory? {
+    if (this == null) return null
+
+    return if (priceRanges[PriceFilterOption.BUDGET].contains(this)) {
+        SetPriceCategory.BUDGET
+    } else if (priceRanges[PriceFilterOption.AFFORDABLE].contains(this)) {
+        SetPriceCategory.AFFORDABLE
+    } else if (priceRanges[PriceFilterOption.EXPENSIVE].contains(this)) {
+        SetPriceCategory.EXPENSIVE
+    } else if (priceRanges[PriceFilterOption.PREMIUM].contains(this)) {
+        SetPriceCategory.PREMIUM
+    } else {
+        null
+    }
+}
+
+private fun Pair<Double?, Double?>?.contains(value: Double): Boolean {
+    val first = this?.first
+    val second = this?.second
+
+    return (first == null || first <= value) && (second == null || second >= value)
 }
 
 fun UpdateInfoEntity.toDomainModel(): UpdateInfo {

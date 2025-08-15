@@ -14,20 +14,16 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
-import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
 import org.koin.core.annotation.Single
-import kotlin.math.ln
 import kotlin.math.pow
 
 @Single
 class OfflineFirstSetRepository(
     private val localDataSource: LocalSetDataSource,
-    private val sessionManager: SessionManager,
 ) : SetRepository {
 
     override suspend fun getSetCount(): Result<Int, DataError> {
@@ -51,22 +47,18 @@ class OfflineFirstSetRepository(
     }
 
     override fun watchSetDetails(queryOptions: SetQueryOptions): Flow<List<SetDetails>> {
-        return sessionManager.userId.flatMapLatest { userId ->
-            localDataSource.watchSetDetails(userId, queryOptions)
-        }
+        return localDataSource.watchSetDetails(queryOptions)
     }
 
     override fun watchSetDetailsPaged(queryOptions: SetQueryOptions): Flow<PagingData<SetDetails>> {
-        return sessionManager.userId.flatMapLatest { userId ->
-            localDataSource.watchSetDetailsPaged(userId, queryOptions)
-        }
+        return localDataSource.watchSetDetailsPaged(queryOptions)
     }
 
     override fun watchPriceRanges(region: CurrencyRegion): Flow<Map<PriceFilterOption, Pair<Double?, Double?>>> {
         return localDataSource.watchSetPriceMax(region)
             .map { maxPrice -> maxPrice ?: 0.0 }
             .map { maxPrice ->
-                val ranges = getLogRanges(maxPrice, 4)
+                val ranges = getProgressiveRanges(0.0, maxPrice, 4, 2.0)
 
                 mapOf(
                     PriceFilterOption.BUDGET to Pair(null, ranges[0].endInclusive),
@@ -89,18 +81,27 @@ class OfflineFirstSetRepository(
         return localDataSource.deleteSetsUpdatedAfter(date)
     }
 
-    private fun getLogRanges(
-        maxValue: Double,
-        segments: Int,
+    private fun getProgressiveRanges(
+        min: Double,
+        max: Double,
+        segments: Int = 4,
+        growthFactor: Double = 2.0,
     ): List<ClosedFloatingPointRange<Double>> {
-        require(maxValue > 0) { "Max value must be positive" }
+        require(segments >= 1) { "segments must be >= 1" }
+        require(max > min) { "max must be > min" }
+        require(growthFactor > 1) { "growthFactor must be > 1" }
 
-        val logMax = ln(maxValue) / ln(10.0)
-        val step = (logMax) / segments
+        val total = max - min
+        val weights = (0 until segments).map { i -> growthFactor.pow(i) }
+        val sum = weights.sum()
+        val widths = weights.map { w -> total * (w / sum) }
 
-        val boundaries = (0..segments).map { i ->
-            10.0.pow(logMax - step * i)
-        }.reversed()
+        val boundaries = mutableListOf(min)
+        var current = min
+        for (w in widths) {
+            current += w
+            boundaries.add(current)
+        }
 
         return boundaries.zipWithNext { a, b -> a..b }
     }
