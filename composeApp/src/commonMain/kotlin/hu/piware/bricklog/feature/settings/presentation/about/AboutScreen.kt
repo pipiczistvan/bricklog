@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.app_logo
 import bricklog.composeapp.generated.resources.app_name
@@ -43,13 +45,18 @@ import bricklog.composeapp.generated.resources.feature_settings_about_btn_source
 import bricklog.composeapp.generated.resources.feature_settings_about_label_brickset
 import bricklog.composeapp.generated.resources.feature_settings_about_label_build_version
 import bricklog.composeapp.generated.resources.feature_settings_about_label_developer
+import bricklog.composeapp.generated.resources.feature_settings_about_label_eur_rates_api
+import bricklog.composeapp.generated.resources.feature_settings_about_label_export_date
 import bricklog.composeapp.generated.resources.feature_settings_about_label_kmp
 import bricklog.composeapp.generated.resources.feature_settings_about_label_made_in
+import bricklog.composeapp.generated.resources.feature_settings_about_label_update_date
 import bricklog.composeapp.generated.resources.feature_settings_about_link_brickset
+import bricklog.composeapp.generated.resources.feature_settings_about_link_eur_rates_api
 import bricklog.composeapp.generated.resources.feature_settings_about_link_kmp
 import bricklog.composeapp.generated.resources.feature_settings_about_link_source_code
 import bricklog.composeapp.generated.resources.feature_settings_about_title
 import bricklog.composeapp.generated.resources.feature_settings_about_title_developed_by
+import bricklog.composeapp.generated.resources.feature_settings_about_title_eur_rates_api
 import bricklog.composeapp.generated.resources.feature_settings_about_title_framework
 import bricklog.composeapp.generated.resources.feature_settings_about_title_lego_api
 import bricklog.composeapp.generated.resources.feature_settings_about_title_tools
@@ -57,7 +64,11 @@ import bricklog.composeapp.generated.resources.github_logo
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.core.presentation.components.ActionNavigationType
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
+import hu.piware.bricklog.feature.core.presentation.components.AutoResizedText
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
+import hu.piware.bricklog.feature.core.presentation.components.StaggeredVerticalGrid
+import hu.piware.bricklog.feature.settings.domain.model.formattedExportDate
+import hu.piware.bricklog.feature.settings.domain.model.formattedUpdateDate
 import hu.piware.bricklog.feature.settings.presentation.about.components.InfoCard
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -69,15 +80,20 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AboutScreenRoot(
+    viewModel: AboutViewModel = koinViewModel(),
     onBackClick: () -> Unit,
     onChangelogClick: () -> Unit,
     onLicenseClick: () -> Unit,
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     AboutScreen(
         modifier = Modifier.testTag("about_screen"),
+        state = state,
         onAction = { action ->
             when (action) {
                 AboutAction.OnBackClick -> onBackClick()
@@ -90,6 +106,7 @@ fun AboutScreenRoot(
 
 @Composable
 private fun AboutScreen(
+    state: AboutState,
     onAction: (AboutAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -134,6 +151,7 @@ private fun AboutScreen(
             HorizontalDivider()
             ToolsSection(
                 modifier = Modifier.padding(12.dp),
+                state = state,
             )
         }
     }
@@ -141,6 +159,7 @@ private fun AboutScreen(
 
 @Composable
 private fun ToolsSection(
+    state: AboutState,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -156,31 +175,63 @@ private fun ToolsSection(
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+
+        StaggeredVerticalGrid {
+            InfoCard(
+                title = stringResource(Res.string.feature_settings_about_title_lego_api),
+                description = stringResource(Res.string.feature_settings_about_label_brickset),
+                onClick = {
+                    scope.launch {
+                        uriHandler.openUri(getString(Res.string.feature_settings_about_link_brickset))
+                    }
+                },
             ) {
-                InfoCard(
-                    modifier = Modifier.weight(1f),
-                    title = stringResource(Res.string.feature_settings_about_title_lego_api),
-                    description = stringResource(Res.string.feature_settings_about_label_brickset),
-                    onClick = {
-                        scope.launch {
-                            uriHandler.openUri(getString(Res.string.feature_settings_about_link_brickset))
-                        }
-                    },
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_export_date,
+                        state.setDataSyncInfo?.formattedExportDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
                 )
-                InfoCard(
-                    modifier = Modifier.weight(1f),
-                    title = stringResource(Res.string.feature_settings_about_title_framework),
-                    description = stringResource(Res.string.feature_settings_about_label_kmp),
-                    onClick = {
-                        scope.launch {
-                            uriHandler.openUri(getString(Res.string.feature_settings_about_link_kmp))
-                        }
-                    },
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_update_date,
+                        state.setDataSyncInfo?.formattedUpdateDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            InfoCard(
+                title = stringResource(Res.string.feature_settings_about_title_framework),
+                description = stringResource(Res.string.feature_settings_about_label_kmp),
+                onClick = {
+                    scope.launch {
+                        uriHandler.openUri(getString(Res.string.feature_settings_about_link_kmp))
+                    }
+                },
+            )
+            InfoCard(
+                title = stringResource(Res.string.feature_settings_about_title_eur_rates_api),
+                description = stringResource(Res.string.feature_settings_about_label_eur_rates_api),
+                onClick = {
+                    scope.launch {
+                        uriHandler.openUri(getString(Res.string.feature_settings_about_link_eur_rates_api))
+                    }
+                },
+            ) {
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_export_date,
+                        state.eurRateDataSyncInfo?.formattedExportDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_update_date,
+                        state.eurRateDataSyncInfo?.formattedUpdateDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
@@ -308,6 +359,7 @@ private fun AppProfile(
 private fun AboutScreenPreview() {
     BricklogTheme {
         AboutScreen(
+            state = AboutState(),
             onAction = {},
         )
     }
