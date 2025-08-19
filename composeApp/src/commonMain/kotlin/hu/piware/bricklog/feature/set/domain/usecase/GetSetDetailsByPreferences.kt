@@ -8,7 +8,7 @@ import org.koin.core.annotation.Single
 class GetSetDetailsByPreferences(
     private val watchSetDetailsByPreferences: WatchSetDetailsByPreferences,
 ) {
-    suspend operator fun invoke(filterOverrides: SetFilter? = null, query: String = "") =
-        watchSetDetailsByPreferences(filterOverrides, query)
+    suspend operator fun invoke(filterOverrides: SetFilter? = null) =
+        watchSetDetailsByPreferences(filterOverrides)
             .asResultOrDefault { emptyList() }
 }

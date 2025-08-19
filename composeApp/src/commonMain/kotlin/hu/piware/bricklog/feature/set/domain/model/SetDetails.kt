@@ -12,7 +12,7 @@ import bricklog.composeapp.generated.resources.feature_set_search_status_retired
 import bricklog.composeapp.generated.resources.feature_set_search_status_retired_soon
 import bricklog.composeapp.generated.resources.feature_set_search_status_unknown
 import hu.piware.bricklog.feature.collection.domain.model.Collection
-import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -26,8 +26,9 @@ data class SetDetails(
     val priceCategory: SetPriceCategory,
 )
 
-val SetDetails.isFavourite: Boolean
-    get() = collections.any { it.type == CollectionType.FAVOURITE }
+fun SetDetails.isInCollection(collectionId: CollectionId): Boolean {
+    return collections.any { it.id == collectionId }
+}
 
 val SetDetails.setID: Int
     get() = set.setID

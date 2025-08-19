@@ -18,16 +18,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_search_collection_filter_sheet_title
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.model.toCollections
 import hu.piware.bricklog.feature.settings.domain.model.DEFAULT_SET_FILTER_PREFERENCES
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionFilterBottomSheet(
-    availableOptions: List<Collection>,
+    availableOptions: List<CollectionDetails>,
     selected: List<CollectionId>,
     onSelectionChange: (List<CollectionId>) -> Unit,
     onDismiss: () -> Unit,
@@ -36,12 +35,10 @@ fun CollectionFilterBottomSheet(
         modifier = Modifier.testTag("search_bar:collection_filter_bottom_sheet"),
         title = stringResource(Res.string.feature_set_search_collection_filter_sheet_title),
         availableOptions = availableOptions,
-        defaultSelection = DEFAULT_SET_FILTER_PREFERENCES.collectionIds.toCollections(
-            availableOptions,
-        ),
-        selectedItems = selected.toCollections(availableOptions),
+        defaultSelection = availableOptions.filter { it.collection.id in DEFAULT_SET_FILTER_PREFERENCES.collectionIds },
+        selectedItems = availableOptions.filter { it.collection.id in selected },
         onSelectionChange = { selection ->
-            onSelectionChange(selection.map { it.id })
+            onSelectionChange(selection.map { it.collection.id })
         },
         onDismiss = onDismiss,
     ) { collection, isSelected ->
@@ -50,11 +47,11 @@ fun CollectionFilterBottomSheet(
             horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
         ) {
             Icon(
-                imageVector = collection.icon.outlinedIcon,
+                imageVector = collection.collection.icon.outlinedIcon,
                 contentDescription = null,
             )
             Text(
-                text = collection.name,
+                text = collection.collection.name,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1,

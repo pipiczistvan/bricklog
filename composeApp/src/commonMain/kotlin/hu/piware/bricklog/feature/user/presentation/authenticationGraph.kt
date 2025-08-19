@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import hu.piware.bricklog.feature.user.presentation.details.UserDetailsScreenRoot
 import hu.piware.bricklog.feature.user.presentation.login.LoginScreenRoot
 import hu.piware.bricklog.feature.user.presentation.password_reset.PasswordResetScreenRoot
 import hu.piware.bricklog.feature.user.presentation.register.RegisterScreenRoot
@@ -21,6 +22,9 @@ sealed interface AuthenticationRoute {
 
     @Serializable
     data object PasswordResetScreen : AuthenticationRoute
+
+    @Serializable
+    data object UserDetailsScreen : AuthenticationRoute
 }
 
 fun NavGraphBuilder.authenticationGraph(navController: NavController) {
@@ -74,6 +78,11 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
                         }
                     }
                 },
+                onBackClick = navController::navigateUp,
+            )
+        }
+        composable<AuthenticationRoute.UserDetailsScreen> {
+            UserDetailsScreenRoot(
                 onBackClick = navController::navigateUp,
             )
         }

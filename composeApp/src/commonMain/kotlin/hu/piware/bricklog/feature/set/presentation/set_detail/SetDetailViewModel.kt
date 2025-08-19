@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.usecase.ToggleFavouriteSetCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.ToggleSetCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
+import hu.piware.bricklog.feature.collection.domain.usecase.ToggleCollectionSet
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchFavouriteCollectionDetails
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
@@ -32,10 +32,10 @@ class SetDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val watchSetDetailsById: WatchSetDetailsById,
     private val getInstructions: GetInstructions,
-    private val toggleSetCollection: ToggleSetCollection,
-    private val toggleFavouriteSetCollection: ToggleFavouriteSetCollection,
-    private val watchCollections: WatchCollections,
+    private val toggleCollectionSet: ToggleCollectionSet,
+    private val watchCollectionDetails: WatchCollectionDetails,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
+    private val watchFavouriteCollectionDetails: WatchFavouriteCollectionDetails,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(
@@ -51,17 +51,16 @@ class SetDetailViewModel(
             observeSet()
             observeAvailableCollections()
             observePreferredCurrencyPrice()
+            observeFavouriteCollection()
             loadInstructions(arguments.setId)
         }
 
     fun onAction(action: SetDetailAction) {
         when (action) {
-            is SetDetailAction.OnToggleCollection -> toggleCollection(
+            is SetDetailAction.OnCollectionToggle -> toggleCollection(
                 action.setId,
                 action.collectionId,
             )
-
-            is SetDetailAction.OnToggleFavourite -> toggleFavourite(action.setId)
 
             else -> Unit
         }
@@ -90,7 +89,7 @@ class SetDetailViewModel(
     }
 
     private fun observeAvailableCollections() {
-        watchCollections()
+        watchCollectionDetails()
             .onEach { collections ->
                 _uiState.update { it.copy(availableCollections = collections) }
             }.launchIn(viewModelScope)
@@ -107,16 +106,16 @@ class SetDetailViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
-        viewModelScope.launch {
-            toggleSetCollection(setId, collectionId)
-                .showSnackbarOnError()
-        }
+    private fun observeFavouriteCollection() {
+        watchFavouriteCollectionDetails()
+            .onEach { baseCollection ->
+                _uiState.update { it.copy(baseCollection = baseCollection) }
+            }.launchIn(viewModelScope)
     }
 
-    private fun toggleFavourite(setId: SetId) {
+    private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
         viewModelScope.launch {
-            toggleFavouriteSetCollection(setId)
+            toggleCollectionSet(setId, collectionId)
                 .showSnackbarOnError()
         }
     }

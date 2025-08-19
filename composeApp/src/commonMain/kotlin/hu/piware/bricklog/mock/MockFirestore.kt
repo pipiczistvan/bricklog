@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 object MockFirestore {
-    val userPreferences = MutableStateFlow<UserPreferences?>(null)
-    val userCollections = MutableStateFlow(mapOf<UserId, List<Collection>>())
-    val setCollections = MutableStateFlow(mapOf<UserId, Map<SetId, List<CollectionId>>>())
+    val userPreferences = MutableStateFlow(mapOf<UserId, UserPreferences>())
+    val collections = MutableStateFlow(listOf<Collection>())
+    val userSetCollections = MutableStateFlow(mapOf<UserId, Map<SetId, List<CollectionId>>>())
 
     fun clear() {
-        userPreferences.update { null }
-        userCollections.update { emptyMap() }
-        setCollections.update { emptyMap() }
+        userPreferences.update { emptyMap() }
+        collections.update { listOf() }
+        userSetCollections.update { emptyMap() }
     }
 }

@@ -23,8 +23,11 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.util.combineSetWithCurrencyPreference
@@ -38,8 +41,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun PagedSetList(
     sets: LazyPagingItems<SetDetails>,
     currencyDetails: CurrencyPreferenceDetails?,
+    baseCollection: CollectionDetails?,
     onSetClick: (SetDetails) -> Unit,
-    onFavouriteClick: (SetDetails) -> Unit,
+    onCollectionToggle: (SetId, CollectionId) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(
         top = 12.dp,
@@ -71,12 +75,13 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
+                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .widthIn(max = 700.dp)
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onFavouriteClick = onFavouriteClick,
+                            onCollectionToggle = onCollectionToggle,
                         )
                     }
                 }
@@ -102,11 +107,12 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
+                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onFavouriteClick = onFavouriteClick,
+                            onCollectionToggle = onCollectionToggle,
                             imageSize = ImageSize.SMALL,
                         )
                     }
@@ -133,11 +139,12 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
+                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onFavouriteClick = onFavouriteClick,
+                            onCollectionToggle = onCollectionToggle,
                         )
                     }
                 }
@@ -163,8 +170,9 @@ private fun PagedSetListPreview() {
                 ),
             ).collectAsLazyPagingItems(),
             currencyDetails = null,
+            baseCollection = null,
             onSetClick = {},
-            onFavouriteClick = {},
+            onCollectionToggle = { _, _ -> },
         )
     }
 }

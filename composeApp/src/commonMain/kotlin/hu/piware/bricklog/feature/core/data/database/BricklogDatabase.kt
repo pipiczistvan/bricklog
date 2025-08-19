@@ -6,9 +6,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import hu.piware.bricklog.feature.collection.data.database.CollectionDao
 import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
+import hu.piware.bricklog.feature.collection.data.database.CollectionSetDao
+import hu.piware.bricklog.feature.collection.data.database.CollectionSetEntity
+import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.CollectionWithSetIdDao
-import hu.piware.bricklog.feature.collection.data.database.SetCollectionDao
-import hu.piware.bricklog.feature.collection.data.database.SetCollectionEntity
 import hu.piware.bricklog.feature.currency.data.database.CurrencyRateDao
 import hu.piware.bricklog.feature.currency.data.database.CurrencyRateEntity
 import hu.piware.bricklog.feature.set.data.database.SetDao
@@ -33,7 +34,8 @@ import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
         SetImageEntity::class,
         SetInstructionEntity::class,
         CollectionEntity::class,
-        SetCollectionEntity::class,
+        CollectionShareEntity::class,
+        CollectionSetEntity::class,
         UserPreferencesEntity::class,
         CurrencyRateEntity::class,
     ],
@@ -57,7 +59,7 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val setInstructionsDao: SetInstructionDao
     abstract val collectionDao: CollectionDao
     abstract val collectionWithSetIdDao: CollectionWithSetIdDao
-    abstract val setCollectionDao: SetCollectionDao
+    abstract val collectionSetDao: CollectionSetDao
     abstract val themeGroupDao: ThemeGroupDao
     abstract val userPreferencesDao: UserPreferencesDao
     abstract val currencyRateDao: CurrencyRateDao

@@ -3,26 +3,50 @@
 package hu.piware.bricklog.feature.collection.data.database
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionShare
 import hu.piware.bricklog.feature.collection.domain.model.isNew
-import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-fun CollectionEntity.toDomainModel(): Collection {
+fun CollectionWithShares.toDomainModel(): Collection {
     return Collection(
-        id = id,
-        name = name,
-        icon = icon,
-        type = type,
+        id = collection.id,
+        owner = collection.owner,
+        name = collection.name,
+        icon = collection.icon,
+        type = collection.type,
+        shares = shares.associate { it.withUserId to CollectionShare(it.canWrite) },
     )
 }
 
-fun Collection.toEntity(userId: UserId): CollectionEntity {
-    return CollectionEntity(
-        id = if (isNew) Uuid.random().toString() else id,
-        userId = userId,
+fun CollectionEntity.toDomainModel(shares: List<CollectionShareEntity>): Collection {
+    return Collection(
+        id = id,
+        owner = owner,
         name = name,
         icon = icon,
         type = type,
+        shares = shares.associate { it.withUserId to CollectionShare(it.canWrite) },
+    )
+}
+
+fun Collection.toEntity(): CollectionWithShares {
+    val id = if (isNew) Uuid.random().toString() else id
+
+    return CollectionWithShares(
+        collection = CollectionEntity(
+            id = id,
+            owner = owner,
+            name = name,
+            icon = icon,
+            type = type,
+        ),
+        shares = shares.map {
+            CollectionShareEntity(
+                collectionId = id,
+                withUserId = it.key,
+                canWrite = it.value.canWrite,
+            )
+        },
     )
 }

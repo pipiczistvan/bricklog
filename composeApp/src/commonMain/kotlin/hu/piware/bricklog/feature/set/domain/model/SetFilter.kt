@@ -21,11 +21,13 @@ import bricklog.composeapp.generated.resources.feature_set_search_sort_price_des
 import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_ascending
 import bricklog.composeapp.generated.resources.feature_set_search_sort_retiring_date_descending
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 
 @Serializable
 data class SetFilter(
+    val query: String = "",
     val sortOption: SetSortOption? = null,
     val launchDate: DateFilter? = null,
     val appearanceDate: DateFilter? = null,
@@ -39,6 +41,8 @@ data class SetFilter(
     val collectionIds: List<CollectionId>? = null,
     val setIds: List<SetId>? = null,
 )
+
+fun SetFilter.parsedQueries() = query.parseQueries()
 
 @Serializable
 enum class SetSortOption(

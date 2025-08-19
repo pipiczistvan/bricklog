@@ -10,10 +10,11 @@ interface CollectionWithSetIdDao {
 
     @Query(
         """
-            SELECT collections.*, set_collections.setId FROM collections 
-            JOIN set_collections ON collections.id = set_collections.collectionId AND collections.userId = set_collections.userId 
-            WHERE collections.userId = :userId
+            SELECT collections.*, collection_sets.setId FROM collections 
+            LEFT JOIN collection_shares ON collections.id = collection_shares.collectionId AND collection_shares.withUserId = :userId
+            JOIN collection_sets ON collections.id = collection_sets.collectionId
+            WHERE collections.owner = :userId OR collection_shares.withUserId = :userId
             """,
     )
-    fun watchCollectionsWithSetIds(userId: UserId): Flow<List<CollectionWithSetId>>
+    fun watchUserAndSharedCollectionsWithSetIds(userId: UserId): Flow<List<CollectionWithSetId>>
 }

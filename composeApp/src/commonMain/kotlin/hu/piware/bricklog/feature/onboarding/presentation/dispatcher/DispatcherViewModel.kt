@@ -36,7 +36,7 @@ class DispatcherViewModel(
                 .showSnackbarOnError()
                 .onSuccess { hasData ->
                     if (hasData) {
-                        AppEventController.sendEvent(AppEvent.StartSync)
+                        AppEventController.sendEvent(AppEvent.Initialize)
                         _uiState.update { DispatcherState.NavigateToHome }
                     } else {
                         _uiState.update { DispatcherState.NavigateToPreload }

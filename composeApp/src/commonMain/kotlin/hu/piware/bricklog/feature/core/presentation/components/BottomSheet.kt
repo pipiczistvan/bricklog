@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import hu.piware.bricklog.feature.core.presentation.util.applyIf
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
@@ -50,6 +51,7 @@ fun <T> MultiSelectBottomSheet(
     availableOptions: List<T>,
     selectedItems: List<T>,
     onSelectionChange: (List<T>) -> Unit,
+    isEnabled: (T) -> Boolean = { true },
     onDismiss: () -> Unit,
     skipPartiallyExpanded: Boolean = false,
     headerPrimaryActionIcon: ImageVector? = null,
@@ -83,6 +85,7 @@ fun <T> MultiSelectBottomSheet(
                     SelectableSheetOption(
                         item = option,
                         isSelected = selectedItems.contains(option),
+                        isEnabled = isEnabled(option),
                         onClick = {
                             if (selectedItems.contains(option)) {
                                 onSelectionChange(selectedItems - option)
@@ -104,6 +107,7 @@ fun <T> SingleSelectBottomSheet(
     availableOptions: List<T>,
     selectedItem: T,
     onSelectionChange: (T) -> Unit,
+    isEnabled: (T) -> Boolean = { true },
     onDismiss: () -> Unit,
     skipPartiallyExpanded: Boolean = false,
     headerPrimaryActionIcon: ImageVector? = null,
@@ -137,6 +141,7 @@ fun <T> SingleSelectBottomSheet(
                     SelectableSheetOption(
                         item = option,
                         isSelected = option == selectedItem,
+                        isEnabled = isEnabled(option),
                         onClick = { onSelectionChange(option) },
                         content = itemContent,
                     )
@@ -150,11 +155,13 @@ fun <T> SingleSelectBottomSheet(
 private fun <T> SelectableSheetOption(
     item: T,
     isSelected: Boolean,
+    isEnabled: Boolean,
     onClick: () -> Unit,
     content: @Composable RowScope.(T, Boolean) -> Unit,
 ) {
     BottomSheetOption(
         isSelected = isSelected,
+        isEnabled = isEnabled,
         onClick = onClick,
     ) {
         Row(
@@ -228,6 +235,7 @@ fun BottomSheetHeader(
 @Composable
 fun BottomSheetOption(
     isSelected: Boolean,
+    isEnabled: Boolean = true,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
@@ -252,8 +260,11 @@ fun BottomSheetOption(
             .background(
                 color = backgroundColor,
                 shape = Shapes.large,
-            )
-            .clickable { onClick() },
+            ).applyIf(isEnabled) {
+                clickable { onClick() }
+            }.applyIf(!isEnabled) {
+                alpha(0.5f)
+            },
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -331,6 +342,7 @@ private fun BottomSheetOptionPreview() {
         ) {
             BottomSheetOption(
                 isSelected = false,
+                isEnabled = true,
                 onClick = { },
             ) {
                 Text("OK")

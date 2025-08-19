@@ -28,12 +28,11 @@ fun buildSetQueryOptions(
     preferences: SetFilterPreferences,
     userId: UserId,
     currencyDetails: CurrencyPreferenceDetails,
-    queries: List<String>,
 ): SetQueryOptions {
     return SetQueryOptions(
         userId = userId,
         currencyDetails = currencyDetails,
-        queries = queries,
+        queries = filter?.parsedQueries() ?: emptyList(),
         sortOption = filter?.sortOption ?: preferences.sortOption,
         launchDate = filter?.launchDate ?: preferences.launchDate,
         appearanceDate = filter?.appearanceDate ?: DateFilter.AnyTime,

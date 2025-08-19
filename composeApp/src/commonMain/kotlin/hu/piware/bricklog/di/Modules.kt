@@ -28,8 +28,8 @@ val viewModelModule = module {
 
 // Only necessary when injecting list of dependencies
 val useCaseModule = module {
-    single { LogOutUser(get(), getAll()) }
-    single { DeleteUserData(get(), getAll()) }
+    single { LogOutUser(get(), getAll(), get()) }
+    single { DeleteUserData(get(), getAll(), get()) }
 }
 
 @Module(

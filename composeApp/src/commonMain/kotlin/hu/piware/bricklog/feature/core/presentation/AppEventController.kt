@@ -3,9 +3,11 @@ package hu.piware.bricklog.feature.core.presentation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import hu.piware.bricklog.feature.collection.domain.usecase.InitializeDefaultCollections
 import hu.piware.bricklog.feature.core.domain.AccountSyncedRepository
 import hu.piware.bricklog.feature.core.domain.AppEvent
 import hu.piware.bricklog.feature.onboarding.domain.usecase.InitializeChangelogReadVersion
+import hu.piware.bricklog.feature.user.domain.manager.SessionManager.Companion.USER_ID_GUEST
 import hu.piware.bricklog.feature.user.domain.usecase.InitializeSession
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -29,15 +31,17 @@ fun AppEventHandler() {
     val initializeSession = remember { koinScope.get<InitializeSession>() }
     val initializeChangelogReadVersion =
         remember { koinScope.get<InitializeChangelogReadVersion>() }
+    val initializeDefaultCollections = remember { koinScope.get<InitializeDefaultCollections>() }
 
     observeAsEvents(AppEventController.events) { event ->
         when (event) {
             AppEvent.Initialize -> scope.launch {
                 initializeSession().showSnackbarOnError()
                 initializeChangelogReadVersion()
+                initializeDefaultCollections(USER_ID_GUEST).showSnackbarOnError()
             }
 
-            AppEvent.StartSync -> syncedRepositories.forEach { it.startSync(scope) }
+            AppEvent.UserChanged -> syncedRepositories.forEach { it.startSync(scope) }
         }
     }
 }

@@ -10,7 +10,6 @@ import hu.piware.bricklog.feature.set.domain.model.PriceFilter
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.SetSortOption
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
-import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.days
@@ -32,7 +31,7 @@ fun buildGetSetDetailsSql(queryOptions: SetQueryOptions): String {
         buildPriceSelect(queryOptions.price, queryOptions.currencyDetails),
         buildShowIncompleteSelect(queryOptions.showIncomplete),
         buildBarcodeSelect(queryOptions.barcode),
-        buildCollectionIdSelect(queryOptions.userId, queryOptions.collectionIds),
+        buildCollectionIdSelect(queryOptions.collectionIds),
     ).joinToString(separator = " AND ") { "($it)" }
 
     val orderBy = buildOrderBy(queryOptions.sortOption, queryOptions.currencyDetails)
@@ -143,15 +142,14 @@ private fun buildBarcodeSelect(barcode: String?): String? {
     return barcode?.let { "barcodeEAN = '$it' OR barcodeUPC = '$it'" }
 }
 
-private fun buildCollectionIdSelect(userId: UserId, collectionIds: List<CollectionId>): String? {
+private fun buildCollectionIdSelect(collectionIds: List<CollectionId>): String? {
     if (collectionIds.isEmpty()) return null
 
     return StringBuilder()
         .append("EXISTS(")
-        .append("SELECT * FROM set_collections WHERE ")
+        .append("SELECT * FROM collection_sets WHERE ")
         .append("setId = set_details_view.id ")
         .append("AND collectionId IN (${collectionIds.joinToString(separator = ", ") { "'$it'" }}) ")
-        .append("AND userId = '$userId' ")
         .append("LIMIT 1")
         .append(")")
         .toString()

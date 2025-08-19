@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_search_btn_show_all
 import bricklog.composeapp.generated.resources.feature_set_search_title_results
+import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.SearchBarInputField
@@ -120,9 +121,11 @@ private fun Content(
                         scope.launch {
                             onAction(
                                 SetSearchBarAction.OnShowAllClick(
-                                    SetListArguments(
+                                    SetListArguments.Filtered(
                                         title = getString(Res.string.feature_set_search_title_results),
-                                        searchQuery = state.typedQuery,
+                                        filterOverrides = SetFilter(
+                                            query = state.typedQuery,
+                                        ),
                                     ),
                                 ),
                             )

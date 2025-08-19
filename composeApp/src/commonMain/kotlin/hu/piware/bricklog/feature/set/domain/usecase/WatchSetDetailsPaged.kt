@@ -8,7 +8,6 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.buildSetQueryOptions
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
-import hu.piware.bricklog.feature.set.domain.util.parseQueries
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,9 +26,7 @@ class WatchSetDetailsPaged(
 ) {
     operator fun invoke(
         filterOverrides: SetFilter? = null,
-        query: String = "",
     ): Flow<PagingData<SetDetails>> {
-        val parsedQueries = query.parseQueries()
         val userIdFlow = sessionManager.userId
         val currencyDetailsFlow = watchCurrencyPreferenceDetails()
         val setFilterPreferencesFlow = watchSetFilterPreferences()
@@ -44,7 +41,6 @@ class WatchSetDetailsPaged(
                 preferences = filterPreferences,
                 userId = userId,
                 currencyDetails = currencyDetails,
-                queries = parsedQueries,
             )
         }
             .distinctUntilChanged()

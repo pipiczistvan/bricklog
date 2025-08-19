@@ -1,5 +1,7 @@
 package hu.piware.bricklog.feature.set.data.database
 
+import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
+import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.toDomainModel
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.model.Image
@@ -10,6 +12,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetPriceCategory
 import hu.piware.bricklog.feature.set.domain.model.SetQueryOptions
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
+import hu.piware.bricklog.feature.user.domain.model.UserId
 
 fun Set.toEntity(): SetEntity {
     return SetEntity(
@@ -83,14 +86,31 @@ fun SetEntity.toDomainModel(): Set {
     )
 }
 
-fun SetDetailsView.toDomainModel(queryOptions: SetQueryOptions): SetDetails {
+fun SetDetailsWithCollections.toDomainModel(queryOptions: SetQueryOptions): SetDetails {
+    val userId = queryOptions.userId
+
     return SetDetails(
-        set = legoSet.toDomainModel(),
-        collections = collections.filter { it.userId == queryOptions.userId }
-            .map { it.toDomainModel() },
-        status = status,
-        priceCategory = priceCategory(queryOptions),
+        set = detailsView.legoSet.toDomainModel(),
+        collections = collections
+            .associateWith { collectionShares.filter { share -> share.collectionId == it.id } }
+            .filter { (collection, shares) ->
+                collection.ownerIs(userId) || collection.sharedWith(userId, shares)
+            }
+            .map { (collection, shares) -> collection.toDomainModel(shares) },
+        status = detailsView.status,
+        priceCategory = detailsView.priceCategory(queryOptions),
     )
+}
+
+private fun CollectionEntity.ownerIs(userId: UserId): Boolean {
+    return owner == userId
+}
+
+private fun CollectionEntity.sharedWith(
+    userId: UserId,
+    shares: List<CollectionShareEntity>,
+): Boolean {
+    return shares.any { it.withUserId == userId && it.collectionId == id }
 }
 
 private fun SetDetailsView.priceCategory(queryOptions: SetQueryOptions): SetPriceCategory {

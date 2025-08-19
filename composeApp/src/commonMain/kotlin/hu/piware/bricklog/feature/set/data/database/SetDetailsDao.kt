@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.Flow
 interface SetDetailsDao {
 
     @Transaction
-    @RawQuery(observedEntities = [SetDetailsView::class])
-    fun watchSetDetails(query: RoomRawQuery): Flow<List<SetDetailsView>>
+    @RawQuery(observedEntities = [SetDetailsWithCollections::class])
+    fun watchSetDetails(query: RoomRawQuery): Flow<List<SetDetailsWithCollections>>
 
     @Transaction
-    @RawQuery(observedEntities = [SetDetailsView::class])
-    fun pagingSource(query: RoomRawQuery): PagingSource<Int, SetDetailsView>
+    @RawQuery(observedEntities = [SetDetailsWithCollections::class])
+    fun pagingSource(query: RoomRawQuery): PagingSource<Int, SetDetailsWithCollections>
 
     @Query("SELECT CASE :region WHEN 'US' THEN MIN(USPrice) WHEN 'EU' THEN MAX(DEPrice) END FROM sets")
     fun watchSetPriceMax(region: CurrencyRegion): Flow<Double?>

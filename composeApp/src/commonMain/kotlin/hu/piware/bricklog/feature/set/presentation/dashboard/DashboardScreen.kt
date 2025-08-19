@@ -80,6 +80,7 @@ fun DashboardScreenRoot(
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
     onLoginClick: () -> Unit,
+    onUserDetailsClick: () -> Unit,
 ) {
     App.firstScreenLoaded = true
 
@@ -127,6 +128,7 @@ fun DashboardScreenRoot(
                 )
 
                 is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
+                is DashboardNavigationDrawerAction.OnUserDetailsClick -> onUserDetailsClick()
 
                 else -> Unit
             }
@@ -229,7 +231,7 @@ private fun DashboardScreen(
 
                                     onAction(
                                         DashboardAction.OnSearchSets(
-                                            arguments = SetListArguments(
+                                            arguments = SetListArguments.Filtered(
                                                 filterOverrides = SetFilter(
                                                     themes = listOf(item.theme),
                                                 ),
@@ -355,7 +357,7 @@ private fun DashboardFeaturedSetsRow(
         onShowMoreClick = {
             onAction(
                 DashboardAction.OnSearchSets(
-                    SetListArguments(
+                    SetListArguments.Filtered(
                         filterOverrides = filterOverrides,
                         title = title,
                     ),

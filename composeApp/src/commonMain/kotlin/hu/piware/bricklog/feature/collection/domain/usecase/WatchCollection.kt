@@ -10,7 +10,7 @@ import org.koin.core.annotation.Single
 class WatchCollection(
     private val collectionRepository: CollectionRepository,
 ) {
-    operator fun invoke(id: CollectionId): Flow<Collection> {
+    operator fun invoke(id: CollectionId): Flow<Collection?> {
         return collectionRepository.watchCollection(id)
     }
 }

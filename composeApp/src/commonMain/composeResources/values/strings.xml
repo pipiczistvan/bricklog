@@ -21,6 +21,9 @@
     <string name="feature_collection_edit_icon_sheet_title">Collection icon</string>
     <string name="feature_collection_edit_title_create">Create collection</string>
     <string name="feature_collection_edit_title_modify">Edit collection</string>
+    <string name="feature_collection_role_editor">editor</string>
+    <string name="feature_collection_role_owner">owner</string>
+    <string name="feature_collection_role_viewer">viewer</string>
     <string name="feature_core_dialog_btn_cancel">OK</string>
     <string name="feature_core_update_data_step_download_file">Downloading file</string>
     <string name="feature_core_update_data_step_parse_items">Parsing items</string>
@@ -40,6 +43,7 @@
     <string name="feature_set_dashboard_navigation_drawer_btn_logout">Log Out</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_notification_settings">Notification Settings</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_reset_sets">Reset set data to %1$s</string>
+    <string name="feature_set_dashboard_navigation_drawer_btn_user_details">User Details</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Last refresh timestamp</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_never">never</string>
     <string name="feature_set_dashboard_navigation_drawer_title_collections">Collections</string>
@@ -228,6 +232,8 @@
     <string name="feature_user_delete_user_data_confirm_label">Do you really want to delete your user and your data? It cannot be undone!</string>
     <string name="feature_user_delete_user_data_confirm_title">Delete user data</string>
     <string name="feature_user_delete_user_data_message_success">Deleted user data!</string>
+    <string name="feature_user_details_label_uid">User identifier</string>
+    <string name="feature_user_details_title">User details</string>
     <string name="feature_user_form_field_email_hint">Enter your email address...</string>
     <string name="feature_user_form_field_email_invalid">The email you entered is not in the correct format. Please check.</string>
     <string name="feature_user_form_field_email_title">Email address</string>

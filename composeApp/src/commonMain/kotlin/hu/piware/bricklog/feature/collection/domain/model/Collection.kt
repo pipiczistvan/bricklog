@@ -18,14 +18,21 @@ import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.ui.graphics.vector.ImageVector
+import hu.piware.bricklog.feature.user.domain.model.UserId
 
 typealias CollectionId = String
 
 data class Collection(
     val id: CollectionId = "",
+    val owner: UserId,
     val name: String,
     val icon: CollectionIcon,
     val type: CollectionType,
+    val shares: Map<UserId, CollectionShare>,
+)
+
+data class CollectionShare(
+    val canWrite: Boolean,
 )
 
 enum class CollectionIcon(
@@ -44,7 +51,3 @@ enum class CollectionIcon(
 
 val Collection.isNew: Boolean
     get() = id == ""
-
-fun List<CollectionId>.toCollections(availableCollections: List<Collection>): List<Collection> {
-    return availableCollections.filter { this.contains(it.id) }
-}

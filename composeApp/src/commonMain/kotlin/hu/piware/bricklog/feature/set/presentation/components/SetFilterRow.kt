@@ -95,7 +95,7 @@ fun SetFilterRow(
             enabled = filterOverrides?.collectionIds == null,
             selectedCollections = mergedFilter.collectionIds
                 .mapNotNull { collectionId ->
-                    filterDomain.collections.firstOrNull { it.id == collectionId }
+                    filterDomain.collections.firstOrNull { it.collection.id == collectionId }?.collection
                 },
             onClick = { showCollectionFilterSheet = true },
         )

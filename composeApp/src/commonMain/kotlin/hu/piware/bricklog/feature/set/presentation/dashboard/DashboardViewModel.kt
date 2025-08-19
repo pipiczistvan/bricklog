@@ -16,7 +16,7 @@ import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.BuildKonfig
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollections
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
 import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.core.presentation.SnackbarAction
 import hu.piware.bricklog.feature.core.presentation.UiText
@@ -76,7 +76,7 @@ class DashboardViewModel(
     private val watchSetFilterDomain: WatchSetFilterDomain,
     private val watchNewChangelog: WatchNewChangelog,
     private val updateChangelogReadVersion: UpdateChangelogReadVersion,
-    private val watchCollections: WatchCollections,
+    private val watchCollectionDetails: WatchCollectionDetails,
     private val watchCurrentUser: WatchCurrentUser,
     @Provided private val logOutUser: LogOutUser,
     @Provided private val deleteUserData: DeleteUserData,
@@ -236,8 +236,10 @@ class DashboardViewModel(
             .distinctUntilChanged()
             .flatMapLatest { query ->
                 watchSetDetailsByPreferences(
-                    filterOverrides = SetFilter(limit = SEARCH_BAR_RESULT_LIMIT),
-                    query = query,
+                    filterOverrides = SetFilter(
+                        query = query,
+                        limit = SEARCH_BAR_RESULT_LIMIT,
+                    ),
                 )
             }
             .onEach { sets -> _searchBarState.update { it.copy(searchResults = sets) } }
@@ -293,7 +295,7 @@ class DashboardViewModel(
     }
 
     private fun observeCollections() {
-        watchCollections()
+        watchCollectionDetails()
             .onEach { collections -> _navigationDrawerState.update { it.copy(collections = collections) } }
             .launchIn(viewModelScope)
     }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 
 class MockRemoteUserDataSource : RemoteUserDataSource {
 
+    private var registeredUser: User? = null
     private var currentUser: User? = null
     private val firestore = MockFirestore
 
@@ -19,12 +20,20 @@ class MockRemoteUserDataSource : RemoteUserDataSource {
 
     override suspend fun login(method: AuthenticationMethod): Result<User?, UserError.Login> {
         delay(1000)
-        currentUser = PreviewData.user
+        currentUser = registeredUser
+        if (currentUser == null) {
+            return Result.Error(UserError.Login.INVALID_CREDENTIALS)
+        }
         return Result.Success(currentUser)
     }
 
     override suspend fun register(method: AuthenticationMethod): Result<User?, UserError.Register> {
         delay(1000)
+        if (method !is AuthenticationMethod.EmailPassword) {
+            return Result.Error(UserError.Register.UNKNOWN)
+        }
+
+        registeredUser = PreviewData.user
         currentUser = PreviewData.user
         return Result.Success(currentUser)
     }

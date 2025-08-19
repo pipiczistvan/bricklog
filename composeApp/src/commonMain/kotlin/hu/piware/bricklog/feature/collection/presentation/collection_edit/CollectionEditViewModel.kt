@@ -17,8 +17,11 @@ import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.core.presentation.toUiText
+import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +32,7 @@ class CollectionEditViewModel(
     private val saveCollections: SaveCollections,
     private val getCollection: GetCollection,
     private val deleteCollections: DeleteCollections,
+    private val watchCurrentUser: WatchCurrentUser,
 ) : ViewModel() {
 
     private val collectionId =
@@ -37,6 +41,7 @@ class CollectionEditViewModel(
     private val _eventChannel = Channel<CollectionEditEvent>()
 
     val uiState = _uiState.asStateFlowIn(viewModelScope) {
+        observeCurrentUser()
         if (collectionId != null) {
             loadCollection(collectionId)
         }
@@ -56,6 +61,26 @@ class CollectionEditViewModel(
             CollectionEditAction.OnDeleteClick -> deleteCollection()
 
             CollectionEditAction.OnSubmit -> submitData()
+
+            is CollectionEditAction.OnShareChanged -> {
+                _uiState.update {
+                    it.copy(
+                        shares = it.shares.toMutableMap().apply {
+                            put(action.share.userId, action.share.share)
+                        }.toMap(),
+                    )
+                }
+            }
+
+            is CollectionEditAction.OnShareDeleted -> {
+                _uiState.update {
+                    it.copy(
+                        shares = it.shares.toMutableMap().apply {
+                            remove(action.share.userId)
+                        }.toMap(),
+                    )
+                }
+            }
             else -> Unit
         }
     }
@@ -73,9 +98,11 @@ class CollectionEditViewModel(
             saveCollections(
                 Collection(
                     id = uiState.value.collection?.id ?: "",
+                    owner = uiState.value.collection?.owner ?: uiState.value.currentUser.uid,
                     name = uiState.value.name,
                     icon = uiState.value.icon,
                     type = uiState.value.collection?.type ?: CollectionType.USER_DEFINED,
+                    shares = uiState.value.shares,
                 ),
             )
                 .showSnackbarOnError()
@@ -98,15 +125,24 @@ class CollectionEditViewModel(
                             collection = collection,
                             name = collection.name,
                             icon = collection.icon,
+                            shares = collection.shares,
                         )
                     }
                 }
         }
     }
 
+    private fun observeCurrentUser() {
+        watchCurrentUser()
+            .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
+            .launchIn(viewModelScope)
+    }
+
     private fun deleteCollection() {
         viewModelScope.launch {
-            deleteCollections(uiState.value.collection?.id ?: "")
+            val collectionToDelete = uiState.value.collection ?: return@launch
+
+            deleteCollections(collectionToDelete)
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(CollectionEditEvent.Back)

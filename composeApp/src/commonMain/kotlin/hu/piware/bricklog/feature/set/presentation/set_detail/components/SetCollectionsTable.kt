@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_detail_collections_empty
 import bricklog.composeapp.generated.resources.feature_set_detail_collections_title
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ActionRow
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
+import hu.piware.bricklog.feature.set.domain.model.isInCollection
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.stringResource
@@ -40,8 +42,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SetCollectionsTable(
     modifier: Modifier = Modifier,
-    setCollections: List<Collection>,
-    availableCollections: List<Collection>,
+    setDetails: SetDetails,
+    availableCollections: List<CollectionDetails>,
     onToggleCollection: (CollectionId) -> Unit,
 ) {
     var showCollectionSheet by remember { mutableStateOf(false) }
@@ -80,20 +82,25 @@ fun SetCollectionsTable(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)),
         ) {
-            if (setCollections.isNotEmpty()) {
-                setCollections.forEach {
+            if (setDetails.collections.isNotEmpty()) {
+                setDetails.collections.forEach {
                     ActionRow(
                         title = it.name,
                         onClick = {
                         },
                         startIcon = {
                             Icon(
-                                imageVector = it.icon.filledIcon,
+                                imageVector =
+                                    if (setDetails.isInCollection(it.id)) {
+                                        it.icon.filledIcon
+                                    } else {
+                                        it.icon.outlinedIcon
+                                    },
                                 contentDescription = null,
                             )
                         },
                     )
-                    if (it != setCollections.last()) {
+                    if (it != setDetails.collections.last()) {
                         HorizontalDivider()
                     }
                 }
@@ -110,7 +117,7 @@ fun SetCollectionsTable(
     if (showCollectionSheet) {
         SetCollectionBottomSheet(
             availableOptions = availableCollections,
-            selectedItems = setCollections.map { it.id },
+            selectedItems = setDetails.collections.map { it.id },
             onToggleCollection = onToggleCollection,
             onDismiss = { showCollectionSheet = false },
         )
@@ -125,8 +132,8 @@ private fun SetCollectionsTablePreview() {
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
             SetCollectionsTable(
-                setCollections = PreviewData.collections,
-                availableCollections = PreviewData.collections,
+                setDetails = PreviewData.sets.first(),
+                availableCollections = PreviewData.collectionDetails,
                 onToggleCollection = {},
             )
         }

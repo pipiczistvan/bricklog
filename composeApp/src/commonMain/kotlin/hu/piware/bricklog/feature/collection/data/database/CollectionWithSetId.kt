@@ -5,6 +5,6 @@ import androidx.room.Embedded
 import hu.piware.bricklog.feature.set.domain.model.SetId
 
 data class CollectionWithSetId(
-    @Embedded val collection: CollectionEntity,
+    @Embedded val collectionWithShares: CollectionWithShares,
     @ColumnInfo(name = "setId") val setId: SetId,
 )

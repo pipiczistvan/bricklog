@@ -1,17 +1,20 @@
 package hu.piware.bricklog.feature.set.presentation.set_list
 
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetFilterDomain
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
+import hu.piware.bricklog.feature.set.presentation.set_list.components.SetListTitle
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 
 data class SetListState(
-    val title: String = "",
+    val title: SetListTitle? = null,
     val filterOverrides: SetFilter? = null,
     val filterPreferences: SetFilterPreferences = SetFilterPreferences(),
     val displayMode: SetListDisplayMode = SetListDisplayMode.COLUMN,
     val showFilterBar: Boolean = true,
     val filterDomain: SetFilterDomain = SetFilterDomain(),
     val currencyPreferenceDetails: CurrencyPreferenceDetails? = null,
+    val baseCollection: CollectionDetails? = null,
 )

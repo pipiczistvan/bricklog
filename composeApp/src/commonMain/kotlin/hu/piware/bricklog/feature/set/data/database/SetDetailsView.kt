@@ -2,10 +2,6 @@ package hu.piware.bricklog.feature.set.data.database
 
 import androidx.room.DatabaseView
 import androidx.room.Embedded
-import androidx.room.Junction
-import androidx.room.Relation
-import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
-import hu.piware.bricklog.feature.collection.data.database.SetCollectionEntity
 import hu.piware.bricklog.feature.set.domain.model.FUTURE_DAYS_COUNT
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 
@@ -37,15 +33,5 @@ const val FUTURE_MILLISECONDS = FUTURE_DAYS_COUNT * 24 * 60 * 60 * 1000L
 )
 data class SetDetailsView(
     @Embedded val legoSet: SetEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            value = SetCollectionEntity::class,
-            parentColumn = "setId",
-            entityColumn = "collectionId",
-        ),
-    )
-    val collections: List<CollectionEntity>,
     val status: SetStatus,
 )

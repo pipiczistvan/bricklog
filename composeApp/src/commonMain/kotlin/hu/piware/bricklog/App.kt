@@ -150,7 +150,7 @@ private fun observeNotificationEvents(
                 scope.launch {
                     navController.navigate(
                         SetRoute.SetListScreen(
-                            arguments = SetListArguments(
+                            arguments = SetListArguments.Filtered(
                                 title = getString(Res.string.feature_set_dashboard_title_new_items),
                                 filterOverrides = newItemsFilter.copy(
                                     appearanceDate = DateFilter.Custom(

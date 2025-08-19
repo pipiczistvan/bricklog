@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,12 +46,13 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_ean
 import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_upc
 import bricklog.composeapp.generated.resources.navigation_go_back
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
+import hu.piware.bricklog.feature.collection.domain.model.isEditable
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
-import hu.piware.bricklog.feature.set.domain.model.isFavourite
+import hu.piware.bricklog.feature.set.domain.model.isInCollection
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.BlurredImageBackground
@@ -132,23 +131,34 @@ private fun SetDetailScreen(
                     }
                 },
                 actions = {
-                    FilledIconButton(
-                        modifier = Modifier.testTag("set_detail:favourite_btn"),
-                        onClick = {
-                            onAction(
-                                SetDetailAction.OnToggleFavourite(state.setDetails.setID),
+                    if (state.baseCollection != null) {
+                        FilledIconButton(
+                            modifier = Modifier.testTag("set_detail:favourite_btn"),
+                            onClick = {
+                                onAction(
+                                    SetDetailAction.OnCollectionToggle(
+                                        state.setDetails.setID,
+                                        state.baseCollection.collection.id,
+                                    ),
+                                )
+                            },
+                            enabled = state.baseCollection.isEditable,
+                            colors = IconButtonDefaults.filledIconButtonColors().copy(
+                                containerColor = Color.White,
+                            ),
+                            shapes = IconButtonDefaults.shapes(),
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (state.setDetails.isInCollection(state.baseCollection.collection.id)) {
+                                        state.baseCollection.collection.icon.filledIcon
+                                    } else {
+                                        state.baseCollection.collection.icon.outlinedIcon
+                                    },
+                                contentDescription = null,
+                                tint = Color.Black,
                             )
-                        },
-                        colors = IconButtonDefaults.filledIconButtonColors().copy(
-                            containerColor = Color.White,
-                        ),
-                        shapes = IconButtonDefaults.shapes(),
-                    ) {
-                        Icon(
-                            imageVector = if (state.setDetails.isFavourite) Icons.Default.Star else Icons.Outlined.StarOutline,
-                            contentDescription = stringResource(Res.string.navigation_go_back),
-                            tint = Color.Black,
-                        )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors()
@@ -268,7 +278,7 @@ private fun SetHeaderImage(
 private fun SetDetails(
     setDetails: SetDetails,
     instructions: List<Instruction>?,
-    availableCollections: List<Collection>,
+    availableCollections: List<CollectionDetails>,
     onAction: (SetDetailAction) -> Unit,
 ) {
     Column(
@@ -292,10 +302,10 @@ private fun SetDetails(
 
         SetCollectionsTable(
             modifier = Modifier.clip(Shapes.medium),
-            setCollections = setDetails.collections,
+            setDetails = setDetails,
             availableCollections = availableCollections,
             onToggleCollection = {
-                onAction(SetDetailAction.OnToggleCollection(setDetails.setID, it))
+                onAction(SetDetailAction.OnCollectionToggle(setDetails.setID, it))
             },
         )
 

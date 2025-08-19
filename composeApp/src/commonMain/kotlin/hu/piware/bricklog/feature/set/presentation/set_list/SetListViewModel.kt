@@ -8,21 +8,27 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.usecase.ToggleFavouriteSetCollection
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
+import hu.piware.bricklog.feature.collection.domain.usecase.ToggleCollectionSet
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetailsById
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchFavouriteCollectionDetails
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.currency.domain.usecase.WatchCurrencyPreferenceDetails
+import hu.piware.bricklog.feature.set.domain.model.SetFilter
+import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.presentation.SetRoute
+import hu.piware.bricklog.feature.set.presentation.set_list.components.SetListTitle
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetListDisplayMode
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetListDisplayMode
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
+import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,38 +45,32 @@ import kotlin.reflect.typeOf
 class SetListViewModel(
     savedStateHandle: SavedStateHandle,
     watchSetDetailsPaged: WatchSetDetailsPaged,
-    private val toggleFavouriteSetCollection: ToggleFavouriteSetCollection,
+    private val toggleCollectionSet: ToggleCollectionSet,
     private val watchSetListDisplayMode: WatchSetListDisplayMode,
     private val saveSetListDisplayMode: SaveSetListDisplayMode,
     private val saveSetFilterPreferences: SaveSetFilterPreferences,
     private val watchSetFilterPreferences: WatchSetFilterPreferences,
     private val watchSetFilterDomain: WatchSetFilterDomain,
-    private val watchCollection: WatchCollection,
+    private val watchCollectionDetailsById: WatchCollectionDetailsById,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
+    private val watchCurrentUser: WatchCurrentUser,
+    private val watchFavouriteCollectionDetails: WatchFavouriteCollectionDetails,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
         typeMap = mapOf(typeOf<SetListArguments>() to CustomNavType.SetListArgumentsType),
     ).arguments
 
-    private val _uiState = MutableStateFlow(
-        SetListState(
-            title = arguments.title,
-            filterOverrides = arguments.filterOverrides,
-            showFilterBar = arguments.showFilterBar,
-        ),
-    )
+    private val _uiState = MutableStateFlow(SetListState())
 
     val uiState = _uiState
         .asStateFlowIn(viewModelScope) {
+            handleArguments(arguments)
+
             observeSetListDisplayMode()
             observeFilterPreferences()
             observeFilterDomain()
             observeCurrencyPreferenceDetails()
-
-            if (arguments.filterOverrides?.collectionIds?.count() == 1) {
-                observeCollection(arguments.filterOverrides.collectionIds.first())
-            }
         }
 
     private val filterOverrides = _uiState
@@ -78,27 +78,26 @@ class SetListViewModel(
         .distinctUntilChanged()
 
     val pagingData = filterOverrides
-        .flatMapLatest { filterOverrides ->
-            watchSetDetailsPaged(
-                filterOverrides,
-                arguments.searchQuery,
-            )
-        }
+        .flatMapLatest { watchSetDetailsPaged(it) }
         .flowOn(Dispatchers.Default)
         .cachedIn(viewModelScope)
 
     fun onAction(action: SetListAction) {
         when (action) {
-            is SetListAction.OnFavouriteClick -> toggleFavourite(action.setId)
+            is SetListAction.OnCollectionToggle -> toggleCollection(
+                action.setId,
+                action.collectionId,
+            )
+
             is SetListAction.OnFilterChange -> saveFilter(action.filterPreferences)
             is SetListAction.OnDisplayModeChange -> saveDisplayMode(action.mode)
             else -> Unit
         }
     }
 
-    private fun toggleFavourite(setId: Int) {
+    private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
         viewModelScope.launch {
-            toggleFavouriteSetCollection(setId)
+            toggleCollectionSet(setId, collectionId)
                 .showSnackbarOnError()
         }
     }
@@ -106,6 +105,32 @@ class SetListViewModel(
     private fun saveDisplayMode(mode: SetListDisplayMode) {
         viewModelScope.launch {
             saveSetListDisplayMode(mode)
+        }
+    }
+
+    private fun handleArguments(arguments: SetListArguments) {
+        when (arguments) {
+            is SetListArguments.Collection -> {
+                _uiState.update {
+                    it.copy(
+                        filterOverrides = SetFilter(
+                            collectionIds = listOf(arguments.collectionId),
+                        ),
+                    )
+                }
+                observeCollectionById(arguments.collectionId)
+            }
+
+            is SetListArguments.Filtered -> {
+                _uiState.update {
+                    it.copy(
+                        title = SetListTitle.SimpleText(arguments.title),
+                        filterOverrides = arguments.filterOverrides,
+                        showFilterBar = arguments.showFilterBar,
+                    )
+                }
+                observeFavouriteCollection()
+            }
         }
     }
 
@@ -133,9 +158,38 @@ class SetListViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeCollection(id: CollectionId) {
-        watchCollection(id)
-            .onEach { collection -> _uiState.update { it.copy(title = collection.name) } }
+    private fun observeCollectionById(id: CollectionId) {
+        watchCurrentUser()
+            .flatMapLatest { user ->
+                watchCollectionDetailsById(id)
+                    .onEach { collection ->
+                        if (collection == null) return@onEach
+
+                        _uiState.update {
+                            it.copy(
+                                baseCollection = collection,
+                                title = SetListTitle.CollectionName(
+                                    collection = collection,
+                                    showRole = user.isAuthenticated,
+                                ),
+                            )
+                        }
+                    }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeFavouriteCollection() {
+        watchFavouriteCollectionDetails()
+            .onEach { collection ->
+                if (collection == null) return@onEach
+
+                _uiState.update {
+                    it.copy(
+                        baseCollection = collection,
+                    )
+                }
+            }
             .launchIn(viewModelScope)
     }
 

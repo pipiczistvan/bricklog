@@ -2,32 +2,25 @@ package hu.piware.bricklog.feature.collection.data.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.domain.model.SetId
-import hu.piware.bricklog.feature.user.domain.model.UserId
 
 @Entity(
-    tableName = "set_collections",
+    tableName = "collection_sets",
     primaryKeys = [
-        "setId",
         "collectionId",
-        "userId",
+        "setId",
     ],
     foreignKeys = [
         ForeignKey(
             entity = CollectionEntity::class,
-            parentColumns = ["id", "userId"],
-            childColumns = ["collectionId", "userId"],
+            parentColumns = ["id"],
+            childColumns = ["collectionId"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [
-        Index("collectionId", "userId"),
-    ],
 )
-data class SetCollectionEntity(
+data class CollectionSetEntity(
     val setId: SetId,
     val collectionId: CollectionId,
-    val userId: UserId,
 )

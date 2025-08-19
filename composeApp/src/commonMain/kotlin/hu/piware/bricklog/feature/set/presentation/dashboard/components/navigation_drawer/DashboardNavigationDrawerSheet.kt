@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonOff
+import androidx.compose.material.icons.outlined.PsychologyAlt
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -62,6 +63,7 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_reset_sets
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_user_details
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_never
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_collections
@@ -69,10 +71,10 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
 import hu.piware.bricklog.BuildKonfig
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
+import hu.piware.bricklog.feature.collection.domain.model.CollectionRole
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.core.presentation.util.formatDateTime
-import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
@@ -150,7 +152,7 @@ fun DashboardNavigationDrawerSheet(
 @Composable
 private fun CollectionsSection(
     drawerState: DrawerState,
-    collections: List<Collection>,
+    collections: List<CollectionDetails>,
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
     NavigationSection(
@@ -170,35 +172,34 @@ private fun CollectionsSection(
             NavigationSectionButton(
                 modifier = Modifier.testTag("navigation_drawer:collection_btn"),
                 state = drawerState,
-                title = it.name,
+                title = it.collection.name,
                 onClick = {
                     onAction(
                         DashboardNavigationDrawerAction.OnSearchSets(
-                            SetListArguments(
-                                filterOverrides = SetFilter(
-                                    collectionIds = listOf(it.id),
-                                ),
-                                title = it.name,
+                            SetListArguments.Collection(
+                                collectionId = it.collection.id,
                             ),
                         ),
                     )
                 },
-                icon = it.icon.outlinedIcon,
+                icon = it.collection.icon.outlinedIcon,
                 trailingIcon = {
-                    IconButton(
-                        modifier = Modifier.testTag("navigation_drawer:collection_edit_btn"),
-                        onClick = {
-                            onAction(
-                                DashboardNavigationDrawerAction.OnCollectionEditClick(
-                                    it.id,
-                                ),
+                    if (it.role == CollectionRole.OWNER) {
+                        IconButton(
+                            modifier = Modifier.testTag("navigation_drawer:collection_edit_btn"),
+                            onClick = {
+                                onAction(
+                                    DashboardNavigationDrawerAction.OnCollectionEditClick(
+                                        it.collection.id,
+                                    ),
+                                )
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = null,
                             )
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = null,
-                        )
+                        }
                     }
                 },
             )
@@ -241,6 +242,15 @@ private fun SettingsSection(
                 }
             },
         )
+        if (isLoggedIn) {
+            NavigationSectionButton(
+                modifier = Modifier.testTag("navigation_drawer:user_details_btn"),
+                state = drawerState,
+                title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_user_details),
+                onClick = { onAction(DashboardNavigationDrawerAction.OnUserDetailsClick) },
+                icon = Icons.Outlined.PsychologyAlt,
+            )
+        }
         NavigationSectionButton(
             modifier = Modifier.testTag("navigation_drawer:notifications_btn"),
             state = drawerState,

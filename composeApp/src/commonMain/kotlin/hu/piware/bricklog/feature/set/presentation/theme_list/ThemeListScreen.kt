@@ -117,7 +117,7 @@ private fun ThemeListScreen(
                             onClick = {
                                 onAction(
                                     ThemeListAction.OnSearchSets(
-                                        arguments = SetListArguments(
+                                        arguments = SetListArguments.Filtered(
                                             filterOverrides = SetFilter(
                                                 themes = listOf(theme.name),
                                             ),

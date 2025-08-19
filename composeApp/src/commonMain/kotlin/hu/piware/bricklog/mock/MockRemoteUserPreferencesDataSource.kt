@@ -7,6 +7,7 @@ import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserPreferencesDa
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 class MockRemoteUserPreferencesDataSource : RemoteUserPreferencesDataSource {
@@ -14,7 +15,7 @@ class MockRemoteUserPreferencesDataSource : RemoteUserPreferencesDataSource {
     private val firestore = MockFirestore
 
     override fun watchUserPreferences(userId: UserId): Flow<UserPreferences?> {
-        return firestore.userPreferences
+        return firestore.userPreferences.map { it[userId] }
     }
 
     override suspend fun upsertUserPreferences(
@@ -22,7 +23,7 @@ class MockRemoteUserPreferencesDataSource : RemoteUserPreferencesDataSource {
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Remote> {
         firestore.userPreferences.update {
-            it
+            it + (userId to userPreferences)
         }
         return Result.Success(Unit)
     }

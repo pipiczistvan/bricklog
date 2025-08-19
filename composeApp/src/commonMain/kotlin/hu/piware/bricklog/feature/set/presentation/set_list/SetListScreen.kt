@@ -51,6 +51,7 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.SetFilterRow
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.components.PagedSetList
+import hu.piware.bricklog.feature.set.presentation.set_list.components.SetListTitle
 import hu.piware.bricklog.feature.set.presentation.set_list.components.SetSortBottomSheet
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -101,7 +102,11 @@ private fun SetListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(state.title)
+                    if (state.title != null) {
+                        SetListTitle(
+                            title = state.title,
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(SetListAction.OnBackClick) }) {
@@ -176,11 +181,12 @@ private fun SetListScreen(
                         .fillMaxSize(),
                     sets = sets,
                     currencyDetails = state.currencyPreferenceDetails,
+                    baseCollection = state.baseCollection,
                     onSetClick = {
                         onAction(SetListAction.OnSetClick(SetDetailArguments(it.setID, "set_list")))
                     },
-                    onFavouriteClick = {
-                        onAction(SetListAction.OnFavouriteClick(it.setID))
+                    onCollectionToggle = { setId, collectionId ->
+                        onAction(SetListAction.OnCollectionToggle(setId, collectionId))
                     },
                     displayMode = state.displayMode,
                 )

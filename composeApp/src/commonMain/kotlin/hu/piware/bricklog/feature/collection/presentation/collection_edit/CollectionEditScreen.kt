@@ -2,7 +2,9 @@
 
 package hu.piware.bricklog.feature.collection.presentation.collection_edit
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -12,7 +14,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -36,11 +40,14 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_collection_edit_title_create
 import bricklog.composeapp.generated.resources.feature_collection_edit_title_modify
 import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
-import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
+import hu.piware.bricklog.feature.collection.domain.util.DefaultCollections
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionDeleteConfirmDialog
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionIconBottomSheet
+import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.EditShareBottomSheet
+import hu.piware.bricklog.feature.collection.presentation.collection_edit.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
@@ -80,6 +87,8 @@ private fun CollectionEditScreen(
 ) {
     var showIconBottomSheet by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+    var showEditShareBottomSheet by remember { mutableStateOf(false) }
+    var shareToEdit: UserCollectionShare? by remember { mutableStateOf(null) }
 
     Scaffold(
         modifier = modifier
@@ -104,7 +113,7 @@ private fun CollectionEditScreen(
                     }
                 },
                 actions = {
-                    if (defaultCollections.none { it.type == state.collection?.type }) {
+                    if (DefaultCollections.entries.none { it.type == state.collection?.type }) {
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
@@ -179,6 +188,47 @@ private fun CollectionEditScreen(
                     color = MaterialTheme.colorScheme.error,
                 )
             }
+
+            if (state.collection != null && state.currentUser.isAuthenticated) {
+                Column {
+                    Text(
+                        text = "Shares",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+
+                    state.shares.forEach { (userId, share) ->
+                        Row {
+                            Text(userId)
+                            if (share.canWrite) {
+                                Text(" (write)")
+                            }
+                            IconButton(
+                                onClick = {
+                                    shareToEdit = UserCollectionShare(
+                                        userId = userId,
+                                        share = share,
+                                    )
+                                    showEditShareBottomSheet = true
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+                    }
+
+                    Button(
+                        onClick = {
+                            shareToEdit = null
+                            showEditShareBottomSheet = true
+                        },
+                    ) {
+                        Text("Share with new user")
+                    }
+                }
+            }
         }
     }
 
@@ -190,6 +240,22 @@ private fun CollectionEditScreen(
             },
             onDismiss = {
                 showIconBottomSheet = false
+            },
+        )
+    }
+
+    if (showEditShareBottomSheet) {
+        EditShareBottomSheet(
+            collectionShare = shareToEdit,
+            onConfirm = {
+                onAction(CollectionEditAction.OnShareChanged(it))
+            },
+            onDelete = {
+                onAction(CollectionEditAction.OnShareDeleted(it))
+            },
+            onDismiss = {
+                showEditShareBottomSheet = false
+                shareToEdit = null
             },
         )
     }

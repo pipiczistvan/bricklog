@@ -3,7 +3,7 @@ package hu.piware.bricklog.mock
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
-import hu.piware.bricklog.feature.collection.domain.util.defaultCollections
+import hu.piware.bricklog.feature.collection.domain.model.toCollectionDetails
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -13,6 +13,7 @@ import hu.piware.bricklog.feature.settings.domain.model.Change
 import hu.piware.bricklog.feature.settings.domain.model.ChangeType
 import hu.piware.bricklog.feature.settings.domain.model.Changelog
 import hu.piware.bricklog.feature.settings.domain.model.Release
+import hu.piware.bricklog.feature.user.domain.manager.SessionManager.Companion.USER_ID_GUEST
 import hu.piware.bricklog.feature.user.domain.model.User
 import kotlinx.datetime.Instant
 
@@ -51,7 +52,7 @@ object PreviewData {
 
         SetDetails(
             set = set,
-            collections = defaultCollections,
+            collections = emptyList(),
             status = SetStatus.ACTIVE,
             priceCategory = SetPriceCategory.UNKNOWN,
         )
@@ -79,10 +80,16 @@ object PreviewData {
     val collections = (1..10).map {
         Collection(
             id = "$it",
+            owner = USER_ID_GUEST,
             name = "Collection $it",
             icon = CollectionIcon.entries[it % CollectionIcon.entries.size],
             type = CollectionType.USER_DEFINED,
+            shares = emptyMap(),
         )
+    }
+
+    val collectionDetails = collections.map {
+        it.toCollectionDetails(USER_ID_GUEST)
     }
 
     val packagingTypes = (1..10).map {

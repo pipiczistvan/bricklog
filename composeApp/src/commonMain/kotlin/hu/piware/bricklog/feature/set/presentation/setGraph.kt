@@ -101,6 +101,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
+                    onUserDetailsClick = {
+                        navController.navigate(AuthenticationRoute.UserDetailsScreen) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
         }

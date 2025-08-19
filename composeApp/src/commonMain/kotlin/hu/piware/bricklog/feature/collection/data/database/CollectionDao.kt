@@ -12,29 +12,39 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CollectionDao {
 
-    @Query("SELECT * FROM collections WHERE userId = :userId AND id = :collectionId")
-    fun watchCollection(userId: UserId, collectionId: CollectionId): Flow<CollectionEntity>
+    @Query("SELECT * FROM collections WHERE id = :collectionId")
+    fun watchCollection(collectionId: CollectionId): Flow<CollectionWithShares?>
 
     @Query(
         """
-        SELECT * FROM collections 
-        WHERE userId = :userId 
-        AND (:type IS NULL OR type = :type)
-        AND (:setId IS NULL OR id IN (SELECT collectionId FROM set_collections WHERE setId = :setId))
+        SELECT collections.* FROM collections 
+        LEFT JOIN collection_shares ON collections.id = collection_shares.collectionId AND collection_shares.withUserId = :userId
+        WHERE (collections.owner = :userId OR collection_shares.withUserId = :userId)
+        AND (:type IS NULL OR collections.type = :type)
+        AND (:setId IS NULL OR collections.id IN (
+            SELECT collectionId FROM collection_sets 
+            WHERE setId = :setId 
+        ))
 """,
     )
-    fun watchCollections(
+    fun watchUserAndSharedCollections(
         userId: UserId,
         type: CollectionType? = null,
         setId: SetId? = null,
-    ): Flow<List<CollectionEntity>>
+    ): Flow<List<CollectionWithShares>>
 
     @Upsert
     suspend fun upsertCollections(collections: List<CollectionEntity>)
 
-    @Query("DELETE FROM collections WHERE userId = :userId")
-    suspend fun deleteCollections(userId: UserId)
+    @Query("DELETE FROM collection_shares WHERE collectionId IN (:collectionIds)")
+    suspend fun deleteCollectionShares(collectionIds: List<CollectionId>)
 
-    @Query("DELETE FROM collections WHERE userId = :userId AND id IN (:collectionIds)")
-    suspend fun deleteCollections(userId: UserId, collectionIds: List<CollectionId>)
+    @Upsert
+    suspend fun upsertCollectionShares(shares: List<CollectionShareEntity>)
+
+    @Query("DELETE FROM collections WHERE owner = :userId")
+    suspend fun deleteUserCollections(userId: UserId)
+
+    @Query("DELETE FROM collections WHERE id IN (:collectionIds)")
+    suspend fun deleteCollections(collectionIds: List<CollectionId>)
 }

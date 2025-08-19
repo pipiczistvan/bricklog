@@ -25,8 +25,11 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
     private val firestore by lazy { Firebase.firestore }
 
-    override fun watchCollections(userId: UserId): Flow<List<Collection>> {
-        return firestore.collection("user-data/$userId/collections").snapshots
+    override fun watchUserAndSharedCollections(userId: UserId): Flow<List<Collection>> {
+        return firestore
+            .collection("user-collections")
+            .where { ("owner" equalTo userId) or ("sharedWith" contains userId) }
+            .snapshots
             .mapNotNull { snapshot ->
                 try {
                     snapshot.documents.map { document ->
@@ -39,8 +42,11 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             }
     }
 
-    override fun watchCollectionsBySets(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
-        return firestore.collection("user-data/$userId/set-collections").snapshots
+    override fun watchUserAndSharedCollectionsBySets(userId: UserId): Flow<Map<SetId, List<CollectionId>>> {
+        return firestore
+            .collection("user-collections")
+            .where { ("owner" equalTo userId) or ("sharedWith" contains userId) }
+            .snapshots
             .mapNotNull { snapshot ->
                 try {
                     snapshot.documents.flatMap { document ->
@@ -57,7 +63,6 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
     }
 
     override suspend fun upsertCollections(
-        userId: UserId,
         collections: List<Collection>,
     ): EmptyResult<DataError.Remote> {
         return try {
@@ -65,10 +70,11 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                 batch().apply {
                     for (collection in collections) {
                         if (collection.isNew) {
-                            collection("user-data/$userId/collections").add(collection.toDocument())
+                            collection("user-collections")
+                                .add(collection.toDocument())
                             logger.d { "Collection created successfully" }
                         } else {
-                            collection("user-data/$userId/collections")
+                            collection("user-collections")
                                 .document(collection.id)
                                 .set(
                                     data = collection.toDocument(),
@@ -88,7 +94,6 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
     }
 
     override suspend fun addSetToCollections(
-        userId: UserId,
         setId: SetId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
@@ -96,14 +101,14 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             with(firestore) {
                 batch().apply {
                     for (collectionId in collectionIds) {
-                        collection("user-data/$userId/set-collections")
-                            .document(collectionId)
-                            .set(
-                                data = mapOf(
-                                    "setIds" to FieldValue.arrayUnion(setId),
-                                ),
-                                merge = true,
-                            )
+                        set(
+                            documentRef = collection("user-collections")
+                                .document(collectionId),
+                            data = mapOf(
+                                "setIds" to FieldValue.arrayUnion(setId),
+                            ),
+                            merge = true,
+                        )
                     }
                     commit()
                 }
@@ -116,15 +121,16 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
     }
 
     override suspend fun deleteCollections(
-        userId: UserId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
         return try {
             with(firestore) {
                 batch().apply {
                     for (id in collectionIds) {
-                        delete(collection("user-data/$userId/set-collections").document(id))
-                        delete(collection("user-data/$userId/collections").document(id))
+                        delete(
+                            documentRef = collection("user-collections")
+                                .document(id),
+                        )
                     }
                     commit()
                 }
@@ -137,7 +143,6 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
     }
 
     override suspend fun removeSetFromCollections(
-        userId: UserId,
         setId: SetId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote> {
@@ -145,14 +150,14 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             with(firestore) {
                 batch().apply {
                     for (id in collectionIds) {
-                        collection("user-data/$userId/set-collections")
-                            .document(id)
-                            .set(
-                                data = mapOf(
-                                    "setIds" to FieldValue.arrayRemove(setId),
-                                ),
-                                merge = true,
-                            )
+                        set(
+                            documentRef = collection("user-collections")
+                                .document(id),
+                            data = mapOf(
+                                "setIds" to FieldValue.arrayRemove(setId),
+                            ),
+                            merge = true,
+                        )
                     }
                     commit()
                 }
