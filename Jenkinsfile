@@ -12,6 +12,7 @@ pipeline {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select the environment')
         choice(name: 'MODE', choices: ['release', 'debug'], description: 'Select the mode')
         choice(name: 'DEV_LEVEL', choices: ['0', '1', '2', '3'], description: 'Select the development level. Available options are:\n0 - production mode\n1 - development mode\n2 - mock mode\n3 - benchmark mode')
+        booleanParam(name: 'TEST', defaultValue: true, description: 'Enable to run tests and generate coverage report')
         booleanParam(name: 'DISTRIBUTE', defaultValue: false, description: 'Enable to distribute to Firebase')
     }
 
@@ -83,6 +84,22 @@ pipeline {
             }
         }
 
+        stage('Run tests') {
+            when {
+                expression { params.TEST == true }
+            }
+            steps {
+                script {
+                    echo 'Running tests with coverage report'
+                    sh "./gradlew koverHtmlReport${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}"
+                }
+                script {
+                    echo 'Compressing test coverage report'
+                    zip zipFile: 'composeApp/build/reports/kover/coverage.zip', dir: "composeApp/build/reports/kover/html${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}"
+                }
+            }
+        }
+
         stage('Build AAB') {
             steps {
                 sh "./gradlew bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
@@ -144,7 +161,13 @@ pipeline {
         stage('Archive') {
             steps {
                 script {
-                    def artifactsToArchive = """
+                    def artifactsToArchive = ""
+
+                    if (params.TEST == true) {
+                        artifactsToArchive += "composeApp/build/reports/kover/coverage.zip,"
+                    }
+
+                    artifactsToArchive += """
                         composeApp/build/outputs/bundle/${params.ENVIRONMENT.toLowerCase()}${params.MODE.capitalize()}/*.aab,
                         composeApp/build/outputs/apk/${params.ENVIRONMENT.toLowerCase()}/${params.MODE.toLowerCase()}/*.apk
                     """

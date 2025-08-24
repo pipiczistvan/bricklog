@@ -19,6 +19,8 @@ plugins {
     alias(libs.plugins.baselineprofile) apply false
     alias(libs.plugins.firebaseAppdistribution) apply false
     alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.kover) apply false
+    alias(libs.plugins.mokkery) apply false
 }
 
 subprojects {

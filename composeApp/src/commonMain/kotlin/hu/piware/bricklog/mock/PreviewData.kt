@@ -4,6 +4,8 @@ import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.model.toCollectionDetails
+import hu.piware.bricklog.feature.currency.domain.model.CurrencyRate
+import hu.piware.bricklog.feature.currency.domain.util.CURRENCY_CODE_EUR
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Set
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -99,4 +101,11 @@ object PreviewData {
     val themes = (1..10).map {
         "Theme $it"
     }
+
+    val currencyRates = listOf(
+        CurrencyRate(
+            currencyCode = CURRENCY_CODE_EUR,
+            rate = 1.0,
+        ),
+    )
 }
