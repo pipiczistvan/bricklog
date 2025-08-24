@@ -28,18 +28,18 @@ val CollectionRole.containerColor: Color
     @Composable
     @ReadOnlyComposable
     get() = when (this) {
-        CollectionRole.OWNER -> BricklogTheme.colorScheme.active.colorContainer
-        CollectionRole.EDITOR -> BricklogTheme.colorScheme.futureVariant.colorContainer
-        CollectionRole.VIEWER -> BricklogTheme.colorScheme.retiredVariant.colorContainer
+        CollectionRole.OWNER -> BricklogTheme.colorScheme.green.colorContainer
+        CollectionRole.EDITOR -> BricklogTheme.colorScheme.blue.colorContainer
+        CollectionRole.VIEWER -> BricklogTheme.colorScheme.red.colorContainer
     }
 
 val CollectionRole.textColor: Color
     @Composable
     @ReadOnlyComposable
     get() = when (this) {
-        CollectionRole.OWNER -> BricklogTheme.colorScheme.active.onColorContainer
-        CollectionRole.EDITOR -> BricklogTheme.colorScheme.futureVariant.onColorContainer
-        CollectionRole.VIEWER -> BricklogTheme.colorScheme.retiredVariant.onColorContainer
+        CollectionRole.OWNER -> BricklogTheme.colorScheme.green.onColorContainer
+        CollectionRole.EDITOR -> BricklogTheme.colorScheme.blue.onColorContainer
+        CollectionRole.VIEWER -> BricklogTheme.colorScheme.red.onColorContainer
     }
 
 val CollectionDetails.isEditable: Boolean

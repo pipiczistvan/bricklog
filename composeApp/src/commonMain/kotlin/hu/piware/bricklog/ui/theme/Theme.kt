@@ -18,15 +18,12 @@ import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 
 @Immutable
 data class ExtendedColorScheme(
-    val future: ColorFamily,
-    val futureVariant: ColorFamily,
-    val active: ColorFamily,
-    val retired: ColorFamily,
-    val retiredVariant: ColorFamily,
-    val budget: ColorFamily,
-    val affordable: ColorFamily,
-    val expensive: ColorFamily,
-    val premium: ColorFamily,
+    val purple: ColorFamily,
+    val green: ColorFamily,
+    val red: ColorFamily,
+    val blue: ColorFamily,
+    val yellow: ColorFamily,
+    val orange: ColorFamily,
 )
 
 private val lightScheme = lightColorScheme(
@@ -106,116 +103,80 @@ private val darkScheme = darkColorScheme(
 )
 
 val extendedLight = ExtendedColorScheme(
-    future = ColorFamily(
-        futureLight,
-        onFutureLight,
-        futureContainerLight,
-        onFutureContainerLight,
+    purple = ColorFamily(
+        purpleLight,
+        onPurpleLight,
+        purpleContainerLight,
+        onPurpleContainerLight,
     ),
-    futureVariant = ColorFamily(
-        futureVariantLight,
-        onFutureVariantLight,
-        futureVariantContainerLight,
-        onFutureVariantContainerLight,
+    green = ColorFamily(
+        greenLight,
+        onGreenLight,
+        greenContainerLight,
+        onGreenContainerLight,
     ),
-    active = ColorFamily(
-        activeLight,
-        onActiveLight,
-        activeContainerLight,
-        onActiveContainerLight,
+    red = ColorFamily(
+        redLight,
+        onRedLight,
+        redContainerLight,
+        onRedContainerLight,
     ),
-    retired = ColorFamily(
-        retiredLight,
-        onRetiredLight,
-        retiredContainerLight,
-        onRetiredContainerLight,
+    blue = ColorFamily(
+        blueLight,
+        onBlueLight,
+        blueContainerLight,
+        onBlueContainerLight,
     ),
-    retiredVariant = ColorFamily(
-        retiredVariantLight,
-        onRetiredVariantLight,
-        retiredVariantContainerLight,
-        onRetiredVariantContainerLight,
+    yellow = ColorFamily(
+        yellowLight,
+        onYellowLight,
+        yellowContainerLight,
+        onYellowContainerLight,
     ),
-    budget = ColorFamily(
-        budgetLight,
-        onBudgetLight,
-        budgetContainerLight,
-        onBudgetContainerLight,
-    ),
-    affordable = ColorFamily(
-        affordableLight,
-        onAffordableLight,
-        affordableContainerLight,
-        onAffordableContainerLight,
-    ),
-    expensive = ColorFamily(
-        expensiveLight,
-        onExpensiveLight,
-        expensiveContainerLight,
-        onExpensiveContainerLight,
-    ),
-    premium = ColorFamily(
-        premiumLight,
-        onPremiumLight,
-        premiumContainerLight,
-        onPremiumContainerLight,
+    orange = ColorFamily(
+        orangeLight,
+        onOrangeLight,
+        orangeContainerLight,
+        onOrangeContainerLight,
     ),
 )
 
 val extendedDark = ExtendedColorScheme(
-    future = ColorFamily(
-        futureDark,
-        onFutureDark,
-        futureContainerDark,
-        onFutureContainerDark,
+    purple = ColorFamily(
+        purpleDark,
+        onPurpleDark,
+        purpleContainerDark,
+        onPurpleContainerDark,
     ),
-    futureVariant = ColorFamily(
-        futureVariantDark,
-        onFutureVariantDark,
-        futureVariantContainerDark,
-        onFutureVariantContainerDark,
+    green = ColorFamily(
+        greenDark,
+        onGreenDark,
+        greenContainerDark,
+        onGreenContainerDark,
     ),
-    active = ColorFamily(
-        activeDark,
-        onActiveDark,
-        activeContainerDark,
-        onActiveContainerDark,
+    red = ColorFamily(
+        redDark,
+        onRedDark,
+        redContainerDark,
+        onRedContainerDark,
     ),
-    retired = ColorFamily(
-        retiredDark,
-        onRetiredDark,
-        retiredContainerDark,
-        onRetiredContainerDark,
+    blue = ColorFamily(
+        blueDark,
+        onBlueDark,
+        blueContainerDark,
+        onBlueContainerDark,
     ),
-    retiredVariant = ColorFamily(
-        retiredVariantDark,
-        onRetiredVariantDark,
-        retiredVariantContainerDark,
-        onRetiredVariantContainerDark,
+    yellow = ColorFamily(
+        yellowDark,
+        onYellowDark,
+        yellowContainerDark,
+        onYellowContainerDark,
     ),
-    budget = ColorFamily(
-        budgetDark,
-        onBudgetDark,
-        budgetContainerDark,
-        onBudgetContainerDark,
-    ),
-    affordable = ColorFamily(
-        affordableDark,
-        onAffordableDark,
-        affordableContainerDark,
-        onAffordableContainerDark,
-    ),
-    expensive = ColorFamily(
-        expensiveDark,
-        onExpensiveDark,
-        expensiveContainerDark,
-        onExpensiveContainerDark,
-    ),
-    premium = ColorFamily(
-        premiumDark,
-        onPremiumDark,
-        premiumContainerDark,
-        onPremiumContainerDark,
+    orange = ColorFamily(
+        orangeDark,
+        onOrangeDark,
+        orangeContainerDark,
+        onOrangeContainerDark,
     ),
 )
 

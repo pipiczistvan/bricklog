@@ -66,11 +66,11 @@ val SetStatus.containerColor: Color
     @ReadOnlyComposable
     get() = when (this) {
         SetStatus.UNKNOWN -> Color.Gray
-        SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.future.colorContainer
-        SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.futureVariant.colorContainer
-        SetStatus.ACTIVE -> BricklogTheme.colorScheme.active.colorContainer
-        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.retiredVariant.colorContainer
-        SetStatus.RETIRED -> BricklogTheme.colorScheme.retired.colorContainer
+        SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.purple.colorContainer
+        SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.blue.colorContainer
+        SetStatus.ACTIVE -> BricklogTheme.colorScheme.green.colorContainer
+        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.orange.colorContainer
+        SetStatus.RETIRED -> BricklogTheme.colorScheme.red.colorContainer
     }
 
 val SetStatus.textColor: Color
@@ -78,11 +78,11 @@ val SetStatus.textColor: Color
     @ReadOnlyComposable
     get() = when (this) {
         SetStatus.UNKNOWN -> Color.Black
-        SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.future.onColorContainer
-        SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.futureVariant.onColorContainer
-        SetStatus.ACTIVE -> BricklogTheme.colorScheme.active.onColorContainer
-        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.retiredVariant.onColorContainer
-        SetStatus.RETIRED -> BricklogTheme.colorScheme.retired.onColorContainer
+        SetStatus.FUTURE_RELEASE -> BricklogTheme.colorScheme.purple.onColorContainer
+        SetStatus.ARRIVES_SOON -> BricklogTheme.colorScheme.blue.onColorContainer
+        SetStatus.ACTIVE -> BricklogTheme.colorScheme.green.onColorContainer
+        SetStatus.RETIRED_SOON -> BricklogTheme.colorScheme.orange.onColorContainer
+        SetStatus.RETIRED -> BricklogTheme.colorScheme.red.onColorContainer
     }
 
 enum class SetPriceCategory {
@@ -98,10 +98,10 @@ val SetPriceCategory.containerColor: Color
     @ReadOnlyComposable
     get() = when (this) {
         SetPriceCategory.UNKNOWN -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.budget.colorContainer
-        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.affordable.colorContainer
-        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.expensive.colorContainer
-        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.premium.colorContainer
+        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.green.colorContainer
+        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.yellow.colorContainer
+        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.orange.colorContainer
+        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.red.colorContainer
     }
 
 val SetPriceCategory.textColor: Color
@@ -109,8 +109,8 @@ val SetPriceCategory.textColor: Color
     @ReadOnlyComposable
     get() = when (this) {
         SetPriceCategory.UNKNOWN -> MaterialTheme.colorScheme.onBackground
-        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.budget.onColorContainer
-        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.affordable.onColorContainer
-        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.expensive.onColorContainer
-        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.premium.onColorContainer
+        SetPriceCategory.BUDGET -> BricklogTheme.colorScheme.green.onColorContainer
+        SetPriceCategory.AFFORDABLE -> BricklogTheme.colorScheme.yellow.onColorContainer
+        SetPriceCategory.EXPENSIVE -> BricklogTheme.colorScheme.orange.onColorContainer
+        SetPriceCategory.PREMIUM -> BricklogTheme.colorScheme.red.onColorContainer
     }
