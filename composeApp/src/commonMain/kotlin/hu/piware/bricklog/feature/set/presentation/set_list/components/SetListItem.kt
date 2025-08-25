@@ -110,6 +110,12 @@ fun SetListItem(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
+                        text = "# ${setDetails.setNumberWithVariant}",
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
                         text = setDetails.set.name ?: "",
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 20.sp,
@@ -124,10 +130,6 @@ fun SetListItem(
                         horizontalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
                         verticalArrangement = Arrangement.spacedBy(Dimens.ExtraSmallPadding.size),
                     ) {
-                        SetAttributeChip(
-                            text = "# ${setDetails.setNumberWithVariant}",
-                            size = ChipSize.SMALL,
-                        )
                         if (setDetails.status != SetStatus.UNKNOWN) {
                             SetAttributeChip(
                                 text = stringResource(setDetails.status.statusRes),
