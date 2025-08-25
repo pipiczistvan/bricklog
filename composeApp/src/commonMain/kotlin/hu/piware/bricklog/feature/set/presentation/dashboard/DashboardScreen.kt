@@ -81,6 +81,7 @@ fun DashboardScreenRoot(
     onThemeListClick: () -> Unit,
     onLoginClick: () -> Unit,
     onUserDetailsClick: () -> Unit,
+    onFriendListClick: () -> Unit,
 ) {
     App.firstScreenLoaded = true
 
@@ -129,6 +130,7 @@ fun DashboardScreenRoot(
 
                 is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
                 is DashboardNavigationDrawerAction.OnUserDetailsClick -> onUserDetailsClick()
+                is DashboardNavigationDrawerAction.OnFriendListClick -> onFriendListClick()
 
                 else -> Unit
             }

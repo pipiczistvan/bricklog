@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.ChildFriendly
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
@@ -59,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_about
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_appearance
+import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_friend_list
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_login
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
@@ -249,6 +251,13 @@ private fun SettingsSection(
                 title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_user_details),
                 onClick = { onAction(DashboardNavigationDrawerAction.OnUserDetailsClick) },
                 icon = Icons.Outlined.PsychologyAlt,
+            )
+            NavigationSectionButton(
+                modifier = Modifier.testTag("navigation_drawer:friend_list_btn"),
+                state = drawerState,
+                title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_friend_list),
+                onClick = { onAction(DashboardNavigationDrawerAction.OnFriendListClick) },
+                icon = Icons.Outlined.ChildFriendly,
             )
         }
         NavigationSectionButton(

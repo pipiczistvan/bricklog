@@ -44,7 +44,7 @@ fun EditShareBottomSheet(
         )
 
         Text(
-            text = "User identifier",
+            text = "User identifier", // TODO: localize
         )
         TextField(
             value = userIdentifier,

@@ -4,8 +4,8 @@ package hu.piware.bricklog.feature.user.domain.manager
 
 import hu.piware.bricklog.feature.core.domain.AppEvent
 import hu.piware.bricklog.feature.core.presentation.AppEventController
-import hu.piware.bricklog.feature.settings.data.firebase.UserPreferencesDocument
-import hu.piware.bricklog.feature.settings.data.firebase.toDomainModel
+import hu.piware.bricklog.feature.user.data.firebase.UserPreferencesDocument
+import hu.piware.bricklog.feature.user.data.firebase.toDomainModel
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager.Companion.USER_ID_GUEST
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.model.UserId

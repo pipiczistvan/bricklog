@@ -19,4 +19,5 @@ sealed interface DashboardNavigationDrawerAction {
     data object OnAboutClick : DashboardNavigationDrawerAction
     data object OnAppearanceClick : DashboardNavigationDrawerAction
     data object OnUserDetailsClick : DashboardNavigationDrawerAction
+    data object OnFriendListClick : DashboardNavigationDrawerAction
 }

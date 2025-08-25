@@ -1,4 +1,4 @@
-package hu.piware.bricklog.feature.settings.data.firebase
+package hu.piware.bricklog.feature.user.data.firebase
 
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType

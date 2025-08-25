@@ -44,6 +44,7 @@
     <string name="feature_set_dashboard_navigation_drawer_btn_notification_settings">Notification Settings</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_reset_sets">Reset set data to %1$s</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_user_details">User Details</string>
+    <string name="feature_set_dashboard_navigation_drawer_btn_friend_list">Friends</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Last refresh timestamp</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_never">never</string>
     <string name="feature_set_dashboard_navigation_drawer_title_collections">Collections</string>
@@ -249,6 +250,7 @@
     <string name="feature_user_login_label_or">Or</string>
     <string name="feature_user_login_message_success">Successfully logged in!</string>
     <string name="feature_user_login_title">Log In</string>
+    <string name="feature_user_friend_list_title">Friends</string>
     <string name="feature_user_logout_confirm_bottom_sheet_btn_cancel">No</string>
     <string name="feature_user_logout_confirm_bottom_sheet_btn_confirm">Yes</string>
     <string name="feature_user_logout_confirm_bottom_sheet_label">Are you sure, you want to log out?</string>
