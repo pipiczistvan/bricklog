@@ -21,12 +21,14 @@ plugins {
     alias(libs.plugins.baselineprofile)
     alias(libs.plugins.firebaseAppdistribution)
     alias(libs.plugins.kover)
-    alias(libs.plugins.mokkery)
+    alias(libs.plugins.mockkmp)
 }
 
 loadLocalProperties()
 configureGoogleServices()
-val archiveName = createArchiveName()
+val gitHashProvider = providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+}.standardOutput.asText.map { it.trim() }
 
 kotlin {
     androidTarget {
@@ -118,14 +120,13 @@ kotlin {
             implementation(libs.kmpauth.firebase)
             implementation(libs.kmpauth.uihelper)
         }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.test)
-            implementation(libs.mokkery)
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
     }
 
@@ -145,7 +146,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = libs.versions.app.release.get().toInt()
         versionName = libs.versions.app.version.get()
-        base.archivesName = archiveName
+        base.archivesName = createArchiveName()
     }
     packaging {
         resources {
@@ -228,14 +229,13 @@ buildkonfig {
     val bricksetApiKey = properties["BRICKSET_API_KEY"]?.toString() ?: "<BRICKSET_API_KEY>"
     val googleAuthWebClientId =
         properties["GOOGLE_AUTH_WEB_CLIENT_ID"]?.toString() ?: "<GOOGLE_AUTH_WEB_CLIENT_ID>"
-    val revision = properties["REVISION"]?.toString() ?: ""
     val devLevel = properties["DEV_LEVEL"]?.toString() ?: "0"
 
     defaultConfigs {
         buildConfigField(STRING, "BRICKSET_API_KEY", bricksetApiKey)
         buildConfigField(STRING, "GOOGLE_AUTH_WEB_CLIENT_ID", googleAuthWebClientId)
         buildConfigField(INT, "RELEASE_VERSION", libs.versions.app.release.get())
-        buildConfigField(STRING, "REVISION", revision)
+        buildConfigField(STRING, "REVISION", gitHashProvider.get())
         buildConfigField(INT, "DEV_LEVEL", devLevel)
     }
 
@@ -298,7 +298,8 @@ private fun configureGoogleServices() {
 private fun createArchiveName(): String {
     val versionCode = libs.versions.app.release.get().toInt()
     val versionName = libs.versions.app.version.get()
-    return "bricklog-$versionName-$versionCode"
+    val gitHash = gitHashProvider.get()
+    return "bricklog-$versionName-$versionCode-$gitHash"
 }
 
 private fun Project.configureBundleApkTask(environment: String, buildType: String) {
@@ -310,6 +311,7 @@ private fun Project.configureBundleApkTask(environment: String, buildType: Strin
         description =
             "Generate universal APK from the ${capitalizedEnvironment}${capitalizedBuildType} AAB"
 
+        val archiveName = createArchiveName()
         val aab =
             layout.buildDirectory.file("outputs/bundle/$environment$capitalizedBuildType/$archiveName-$environment-$buildType.aab")
         val apks =
@@ -393,5 +395,11 @@ kover {
                 packages("org.koin.ksp.generated")
             }
         }
+    }
+}
+
+mockmp {
+    onTest {
+        withHelper()
     }
 }

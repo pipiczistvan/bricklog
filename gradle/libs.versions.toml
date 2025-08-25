@@ -48,7 +48,7 @@ zoomable = "2.8.1"                              # https://github.com/usuiat/Zoom
 ktlint = "13.0.0"                               # https://github.com/JLLeitschuh/ktlint-gradle
 kotlinx-coroutines-test = "1.10.2"              # https://github.com/Kotlin/kotlinx.coroutines/tree/master
 kover = "0.9.1"                                 # https://github.com/Kotlin/kotlinx-kover
-mokkery = "2.9.0"                               # https://github.com/lupuuss/Mokkery
+mockkmp = "2.0.2"                               # https://github.com/kosi-libs/MocKMP
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -132,8 +132,6 @@ kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.r
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
 
-mokkery = { module = "dev.mokkery:mokkery-gradle", version.ref = "mokkery" }
-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -152,7 +150,7 @@ baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidx-bas
 firebaseAppdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppdistribution" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
+mockkmp = { id = "org.kodein.mock.mockmp", version.ref = "mockkmp" }
 
 [bundles]
 ktor = [

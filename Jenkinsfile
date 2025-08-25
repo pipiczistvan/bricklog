@@ -34,10 +34,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                script {
-                    env.GIT_COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    echo "Short Git commit hash: ${env.GIT_COMMIT_HASH}"
-                }
              }
         }
 
@@ -102,7 +98,7 @@ pipeline {
 
         stage('Build AAB') {
             steps {
-                sh "./gradlew bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PREVISION=${env.GIT_COMMIT_HASH} -PDEV_LEVEL=${params.DEV_LEVEL}"
+                sh "./gradlew bundle${params.ENVIRONMENT.capitalize()}${params.MODE.capitalize()}Apk -PDEV_LEVEL=${params.DEV_LEVEL}"
             }
         }
 

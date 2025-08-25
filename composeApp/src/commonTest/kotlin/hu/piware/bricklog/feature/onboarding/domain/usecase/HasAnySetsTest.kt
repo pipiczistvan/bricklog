@@ -1,13 +1,13 @@
 package hu.piware.bricklog.feature.onboarding.domain.usecase
 
-import dev.mokkery.answering.returns
-import dev.mokkery.everySuspend
-import dev.mokkery.mock
 import hu.piware.bricklog.di.testModule
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.repository.SetRepository
 import hu.piware.bricklog.feature.set.domain.usecase.HasAnySets
 import kotlinx.coroutines.test.runTest
+import org.kodein.mock.Mock
+import org.kodein.mock.generated.injectMocks
+import org.kodein.mock.tests.TestsWithMocks
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.bind
@@ -19,26 +19,29 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class HasAnySetsTest : KoinTest {
+class HasAnySetsTest : TestsWithMocks(), KoinTest {
+
+    override fun setUpMocks() = mocker.injectMocks(this)
 
     private val hasAnySets: HasAnySets by inject()
 
-    private val setRepository = mock<SetRepository>()
-
-    private val overrideModule = module {
-        single { setRepository }.bind<SetRepository>()
-    }
+    @Mock
+    lateinit var setRepository: SetRepository
 
     @BeforeTest
     fun setup() {
         startKoin {
-            modules(testModule + overrideModule)
+            modules(
+                testModule + module {
+                    single { setRepository }.bind<SetRepository>()
+                }
+            )
         }
     }
 
     @Test
     fun `HasAnySets returns true when sets exist`() = runTest {
-        everySuspend { setRepository.getSetCount() }.returns(Result.Success(1))
+        everySuspending { setRepository.getSetCount() }.returns(Result.Success(1))
 
         val result = hasAnySets()
         assertEquals(result, Result.Success(true))
@@ -46,7 +49,7 @@ class HasAnySetsTest : KoinTest {
 
     @Test
     fun `HasAnySets returns false when no sets exist`() = runTest {
-        everySuspend { setRepository.getSetCount() }.returns(Result.Success(0))
+        everySuspending { setRepository.getSetCount() }.returns(Result.Success(0))
 
         val result = hasAnySets()
         assertEquals(result, Result.Success(false))
