@@ -28,10 +28,10 @@ data class Collection(
     val name: String,
     val icon: CollectionIcon,
     val type: CollectionType,
-    val shares: Map<UserId, CollectionShare>,
+    val shares: Map<UserId, SharePermissions>,
 )
 
-data class CollectionShare(
+data class SharePermissions(
     val canWrite: Boolean,
 )
 

@@ -5,6 +5,7 @@ package hu.piware.bricklog.mock
 import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionDataSource
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.collection.domain.model.isNew
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -50,6 +51,38 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         return Result.Success(Unit)
     }
 
+    override suspend fun deleteCollections(
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote> {
+        val collectionIdSet = collectionIds.toSet()
+
+        // 1. Remove collections from the main collections list
+        firestore.collections.update { currentCollections ->
+            currentCollections.filterNot { it.id in collectionIdSet }
+        }
+
+        // 2. Remove from userSetCollections mapping
+        firestore.userSetCollections.update { currentMap ->
+            val updatedMap = currentMap.toMutableMap()
+
+            updatedMap.forEach { (userId, userMap) ->
+                val updatedUserMap = userMap.mapValues { (setId, collectionIds) ->
+                    collectionIds.filterNot { it in collectionIdSet }
+                }.filterValues { it.isNotEmpty() }
+
+                if (updatedUserMap.isEmpty()) {
+                    updatedMap.remove(userId)
+                } else {
+                    updatedMap[userId] = updatedUserMap
+                }
+            }
+
+            updatedMap
+        }
+
+        return Result.Success(Unit)
+    }
+
     override suspend fun addSetToCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,
@@ -81,38 +114,6 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
                         userMap[setId] = existingCollections
                         updatedMap[userId] = userMap
                     }
-                }
-            }
-
-            updatedMap
-        }
-
-        return Result.Success(Unit)
-    }
-
-    override suspend fun deleteCollections(
-        collectionIds: List<CollectionId>,
-    ): EmptyResult<DataError.Remote> {
-        val collectionIdSet = collectionIds.toSet()
-
-        // 1. Remove collections from the main collections list
-        firestore.collections.update { currentCollections ->
-            currentCollections.filterNot { it.id in collectionIdSet }
-        }
-
-        // 2. Remove from userSetCollections mapping
-        firestore.userSetCollections.update { currentMap ->
-            val updatedMap = currentMap.toMutableMap()
-
-            updatedMap.forEach { (userId, userMap) ->
-                val updatedUserMap = userMap.mapValues { (setId, collectionIds) ->
-                    collectionIds.filterNot { it in collectionIdSet }
-                }.filterValues { it.isNotEmpty() }
-
-                if (updatedUserMap.isEmpty()) {
-                    updatedMap.remove(userId)
-                } else {
-                    updatedMap[userId] = updatedUserMap
                 }
             }
 
@@ -156,6 +157,44 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
             }
 
             updatedMap
+        }
+
+        return Result.Success(Unit)
+    }
+
+    override suspend fun upsertCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Remote> {
+        firestore.collections.update { currentCollections ->
+            currentCollections.map { collection ->
+                if (collection.id == collectionId) {
+                    collection.copy(
+                        shares = collection.shares.filterNot { it.key == share.userId } + (share.userId to share.permissions),
+                    )
+                } else {
+                    collection
+                }
+            }
+        }
+
+        return Result.Success(Unit)
+    }
+
+    override suspend fun deleteCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Remote> {
+        firestore.collections.update { currentCollections ->
+            currentCollections.map { collection ->
+                if (collection.id == collectionId) {
+                    collection.copy(
+                        shares = collection.shares.filterNot { it.key == share.userId },
+                    )
+                } else {
+                    collection
+                }
+            }
         }
 
         return Result.Success(Unit)

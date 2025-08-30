@@ -3,6 +3,7 @@ package hu.piware.bricklog.feature.collection.domain.datasource
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.model.SetId
@@ -47,5 +48,15 @@ interface LocalCollectionDataSource {
     suspend fun removeSetFromCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Local>
+
+    suspend fun upsertCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Local>
+
+    suspend fun deleteCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
     ): EmptyResult<DataError.Local>
 }

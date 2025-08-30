@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.collection.data.database.CollectionDao
 import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
 import hu.piware.bricklog.feature.collection.data.database.CollectionSetDao
 import hu.piware.bricklog.feature.collection.data.database.CollectionSetEntity
+import hu.piware.bricklog.feature.collection.data.database.CollectionShareDao
 import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.CollectionWithSetIdDao
 import hu.piware.bricklog.feature.currency.data.database.CurrencyRateDao
@@ -24,6 +25,8 @@ import hu.piware.bricklog.feature.set.data.database.ThemeGroupDao
 import hu.piware.bricklog.feature.set.data.database.ThemeGroupView
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoDao
 import hu.piware.bricklog.feature.set.data.database.UpdateInfoEntity
+import hu.piware.bricklog.feature.user.data.database.FriendDao
+import hu.piware.bricklog.feature.user.data.database.FriendEntity
 import hu.piware.bricklog.feature.user.data.database.UserPreferencesDao
 import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
 
@@ -38,6 +41,7 @@ import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
         CollectionSetEntity::class,
         UserPreferencesEntity::class,
         CurrencyRateEntity::class,
+        FriendEntity::class,
     ],
     views = [
         SetDetailsView::class,
@@ -58,11 +62,13 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val setImagesDao: SetImageDao
     abstract val setInstructionsDao: SetInstructionDao
     abstract val collectionDao: CollectionDao
+    abstract val collectionShareDao: CollectionShareDao
     abstract val collectionWithSetIdDao: CollectionWithSetIdDao
     abstract val collectionSetDao: CollectionSetDao
     abstract val themeGroupDao: ThemeGroupDao
     abstract val userPreferencesDao: UserPreferencesDao
     abstract val currencyRateDao: CurrencyRateDao
+    abstract val friendDao: FriendDao
 
     companion object {
         const val DB_NAME = "bricklog.db"

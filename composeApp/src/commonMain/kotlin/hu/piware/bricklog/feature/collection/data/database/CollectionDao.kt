@@ -36,12 +36,6 @@ interface CollectionDao {
     @Upsert
     suspend fun upsertCollections(collections: List<CollectionEntity>)
 
-    @Query("DELETE FROM collection_shares WHERE collectionId IN (:collectionIds)")
-    suspend fun deleteCollectionShares(collectionIds: List<CollectionId>)
-
-    @Upsert
-    suspend fun upsertCollectionShares(shares: List<CollectionShareEntity>)
-
     @Query("DELETE FROM collections WHERE owner = :userId")
     suspend fun deleteUserCollections(userId: UserId)
 

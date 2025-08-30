@@ -9,9 +9,9 @@ import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollections
-import hu.piware.bricklog.feature.collection.domain.usecase.GetCollection
 import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollections
 import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
@@ -30,22 +30,23 @@ class CollectionEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val validateCollectionName: ValidateCollectionName,
     private val saveCollections: SaveCollections,
-    private val getCollection: GetCollection,
+    private val watchCollection: WatchCollection,
     private val deleteCollections: DeleteCollections,
     private val watchCurrentUser: WatchCurrentUser,
 ) : ViewModel() {
 
     private val collectionId =
         savedStateHandle.toRoute<CollectionRoute.CollectionEditScreen>().collectionId
-    private val _uiState = MutableStateFlow(CollectionEditState())
-    private val _eventChannel = Channel<CollectionEditEvent>()
 
+    private val _uiState = MutableStateFlow(CollectionEditState())
     val uiState = _uiState.asStateFlowIn(viewModelScope) {
         observeCurrentUser()
         if (collectionId != null) {
-            loadCollection(collectionId)
+            observeCollection(collectionId)
         }
     }
+
+    private val _eventChannel = Channel<CollectionEditEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
     fun onAction(action: CollectionEditAction) {
@@ -62,25 +63,6 @@ class CollectionEditViewModel(
 
             CollectionEditAction.OnSubmit -> submitData()
 
-            is CollectionEditAction.OnShareChanged -> {
-                _uiState.update {
-                    it.copy(
-                        shares = it.shares.toMutableMap().apply {
-                            put(action.share.userId, action.share.share)
-                        }.toMap(),
-                    )
-                }
-            }
-
-            is CollectionEditAction.OnShareDeleted -> {
-                _uiState.update {
-                    it.copy(
-                        shares = it.shares.toMutableMap().apply {
-                            remove(action.share.userId)
-                        }.toMap(),
-                    )
-                }
-            }
             else -> Unit
         }
     }
@@ -112,24 +94,26 @@ class CollectionEditViewModel(
         }
     }
 
-    private fun loadCollection(id: CollectionId) {
-        viewModelScope.launch {
-            getCollection(id)
-                .showSnackbarOnError()
-                .onError {
-                    _eventChannel.send(CollectionEditEvent.Back)
+    private fun observeCollection(id: CollectionId) {
+        watchCollection(id)
+            .onEach { collection ->
+                _uiState.update {
+                    it.copy(
+                        collection = collection,
+                    )
                 }
-                .onSuccess { collection ->
+
+                if (collection != null) {
                     _uiState.update {
                         it.copy(
-                            collection = collection,
                             name = collection.name,
                             icon = collection.icon,
                             shares = collection.shares,
                         )
                     }
                 }
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun observeCurrentUser() {

@@ -2,7 +2,7 @@ package hu.piware.bricklog.feature.collection.presentation.collection_edit
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
-import hu.piware.bricklog.feature.collection.domain.model.CollectionShare
+import hu.piware.bricklog.feature.collection.domain.model.SharePermissions
 import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager.Companion.GUEST_USER
 import hu.piware.bricklog.feature.user.domain.model.User
@@ -14,5 +14,5 @@ data class CollectionEditState(
     val name: String = "",
     val nameError: UiText? = null,
     val icon: CollectionIcon = CollectionIcon.STAR,
-    val shares: Map<UserId, CollectionShare> = emptyMap(),
+    val shares: Map<UserId, SharePermissions> = emptyMap(),
 )

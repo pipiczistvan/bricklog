@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -104,28 +105,36 @@ private fun UserDetailsContent(
     // Using deprecated manager because new clipboard API seems unfinished for KMP
     val clipboardManager = LocalClipboardManager.current
 
-    Column {
-        Text(
-            text = stringResource(Res.string.feature_user_details_label_uid),
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.MediumPadding.size),
         ) {
             Text(
-                text = user.uid,
+                text = stringResource(Res.string.feature_user_details_label_uid),
+                style = MaterialTheme.typography.titleMedium,
             )
-            IconButton(
-                onClick = {
-                    clipboardManager.setText(buildAnnotatedString { append(user.uid) })
-                },
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ContentCopy,
-                    contentDescription = null,
+                Text(
+                    text = user.uid,
                 )
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(buildAnnotatedString { append(user.uid) })
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.ContentCopy,
+                        contentDescription = null,
+                    )
+                }
             }
         }
     }

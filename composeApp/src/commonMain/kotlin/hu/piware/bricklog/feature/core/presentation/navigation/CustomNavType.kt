@@ -5,9 +5,11 @@ import androidx.savedstate.SavedState
 import androidx.savedstate.read
 import androidx.savedstate.write
 import com.eygraber.uri.UriCodec
+import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.CollectionShareEditArguments
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailArguments
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
+import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditArguments
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
@@ -49,4 +51,7 @@ object CustomNavType {
     val SetListArgumentsType = JsonEncodedNavType(SetListArguments.serializer())
     val SetDetailArgumentsType = JsonEncodedNavType(SetDetailArguments.serializer())
     val SetImageArgumentsType = JsonEncodedNavType(SetImageArguments.serializer())
+    val CollectionShareEditArgumentsType =
+        JsonEncodedNavType(CollectionShareEditArguments.serializer())
+    val FriendEditArgumentsType = JsonEncodedNavType(FriendEditArguments.serializer())
 }

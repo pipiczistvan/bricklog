@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.collection.domain.datasource.LocalCollectionDa
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.data.database.BricklogDatabase
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -26,6 +27,7 @@ class RoomCollectionDataSource(
     private val logger = Logger.withTag("RoomLocalCollectionDataSource")
 
     private val collectionDao = database.collectionDao
+    private val collectionShareDao = database.collectionShareDao
     private val collectionWithSetIdDao = database.collectionWithSetIdDao
     private val collectionSetDao = database.collectionSetDao
 
@@ -64,8 +66,8 @@ class RoomCollectionDataSource(
             database.useWriterConnection { transactor ->
                 transactor.immediateTransaction {
                     collectionDao.upsertCollections(entities.map { it.collection })
-                    collectionDao.deleteCollectionShares(entities.map { it.collection.id })
-                    collectionDao.upsertCollectionShares(entities.flatMap { it.shares })
+                    collectionShareDao.deleteCollectionShares(entities.map { it.collection.id })
+                    collectionShareDao.upsertCollectionShares(entities.flatMap { it.shares })
                 }
             }
             Result.Success(Unit)
@@ -190,6 +192,48 @@ class RoomCollectionDataSource(
             Result.Success(Unit)
         } catch (e: Exception) {
             logger.e(e) { "Error removing set $setId from collections $collectionIds" }
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun upsertCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Local> {
+        return try {
+            logger.d { "Upserting collection share for collection $collectionId with user ${share.userId}" }
+            collectionShareDao.upsertCollectionShares(
+                listOf(
+                    CollectionShareEntity(
+                        collectionId = collectionId,
+                        withUserId = share.userId,
+                        canWrite = share.permissions.canWrite,
+                    ),
+                ),
+            )
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "Error upserting collection share" }
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Local> {
+        return try {
+            logger.d { "Deleting collection share for collection $collectionId with user ${share.userId}" }
+            collectionShareDao.deleteCollectionShare(
+                CollectionShareEntity(
+                    collectionId = collectionId,
+                    withUserId = share.userId,
+                    canWrite = share.permissions.canWrite,
+                ),
+            )
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "Error deleting collection share" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

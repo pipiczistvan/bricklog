@@ -8,6 +8,7 @@ import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionD
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
 import hu.piware.bricklog.feature.core.domain.AccountSyncedRepository
 import hu.piware.bricklog.feature.core.domain.DataError
@@ -110,6 +111,30 @@ class OfflineFirstCollectionRepository(
             remoteDataSource.removeSetFromCollections(setId, collectionIds)
         } else {
             localDataSource.removeSetFromCollections(setId, collectionIds)
+        }
+    }
+
+    override suspend fun saveCollectionShare(
+        userId: UserId,
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError> {
+        return if (userId.isAuthenticated) {
+            remoteDataSource.upsertCollectionShare(collectionId, share)
+        } else {
+            localDataSource.upsertCollectionShare(collectionId, share)
+        }
+    }
+
+    override suspend fun deleteCollectionShare(
+        userId: UserId,
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError> {
+        return if (userId.isAuthenticated) {
+            remoteDataSource.deleteCollectionShare(collectionId, share)
+        } else {
+            localDataSource.deleteCollectionShare(collectionId, share)
         }
     }
 

@@ -6,7 +6,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.CollectionEditScreenRoot
+import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.CollectionShareEditArguments
+import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.CollectionShareEditScreenRoot
+import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
+import hu.piware.bricklog.feature.user.presentation.UserRoute
+import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditArguments
 import kotlinx.serialization.Serializable
+import kotlin.reflect.typeOf
 
 sealed interface CollectionRoute {
     @Serializable
@@ -14,6 +20,11 @@ sealed interface CollectionRoute {
 
     @Serializable
     data class CollectionEditScreen(val collectionId: CollectionId?) : CollectionRoute
+
+    @Serializable
+    data class CollectionShareEditScreen(
+        val arguments: CollectionShareEditArguments,
+    ) : CollectionRoute
 }
 
 fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
@@ -24,6 +35,30 @@ fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
             CollectionEditScreenRoot(
                 onBackClick = {
                     navController.navigateUp()
+                },
+                onCollectionShareEditClick = { collectionId, userId ->
+                    navController.navigate(
+                        CollectionRoute.CollectionShareEditScreen(
+                            CollectionShareEditArguments(
+                                collectionId = collectionId,
+                                userId = userId,
+                            ),
+                        ),
+                    )
+                },
+            )
+        }
+        composable<CollectionRoute.CollectionShareEditScreen>(
+            typeMap = mapOf(
+                typeOf<CollectionShareEditArguments>() to CustomNavType.CollectionShareEditArgumentsType,
+            ),
+        ) {
+            CollectionShareEditScreenRoot(
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onFriendEditClick = { friendId ->
+                    navController.navigate(UserRoute.FriendEditScreen(FriendEditArguments(friendId)))
                 },
             )
         }

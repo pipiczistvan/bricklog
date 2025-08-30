@@ -105,7 +105,7 @@ fun <T> MultiSelectBottomSheet(
 fun <T> SingleSelectBottomSheet(
     title: String,
     availableOptions: List<T>,
-    selectedItem: T,
+    selectedItem: T?,
     onSelectionChange: (T) -> Unit,
     isEnabled: (T) -> Boolean = { true },
     onDismiss: () -> Unit,

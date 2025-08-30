@@ -3,6 +3,7 @@ package hu.piware.bricklog.feature.collection.domain.repository
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.model.SetId
@@ -39,6 +40,18 @@ interface CollectionRepository {
         userId: UserId,
         setId: SetId,
         collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError>
+
+    suspend fun saveCollectionShare(
+        userId: UserId,
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError>
+
+    suspend fun deleteCollectionShare(
+        userId: UserId,
+        collectionId: CollectionId,
+        share: UserCollectionShare,
     ): EmptyResult<DataError>
 
     suspend fun forceSyncRemoteCollections(userId: UserId): EmptyResult<DataError>

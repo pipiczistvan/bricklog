@@ -2,7 +2,7 @@ package hu.piware.bricklog.feature.collection.data.firebase
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.model.CollectionShare
+import hu.piware.bricklog.feature.collection.domain.model.SharePermissions
 
 fun CollectionDocument.toDomainModel(id: CollectionId): Collection {
     return Collection(
@@ -15,8 +15,8 @@ fun CollectionDocument.toDomainModel(id: CollectionId): Collection {
     )
 }
 
-fun CollectionShareDocument.toDomainModel(): CollectionShare {
-    return CollectionShare(
+fun CollectionShareDocument.toDomainModel(): SharePermissions {
+    return SharePermissions(
         canWrite = canWrite,
     )
 }
@@ -32,7 +32,7 @@ fun Collection.toDocument(): CollectionDocument {
     )
 }
 
-fun CollectionShare.toDocument(): CollectionShareDocument {
+fun SharePermissions.toDocument(): CollectionShareDocument {
     return CollectionShareDocument(
         canWrite = canWrite,
     )

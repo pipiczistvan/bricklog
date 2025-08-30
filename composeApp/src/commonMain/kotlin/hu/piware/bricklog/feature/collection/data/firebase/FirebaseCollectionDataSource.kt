@@ -8,6 +8,7 @@ import dev.gitlive.firebase.firestore.firestore
 import hu.piware.bricklog.feature.collection.domain.datasource.RemoteCollectionDataSource
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.collection.domain.model.isNew
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -86,9 +87,35 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                     commit()
                 }
             }
+
+            logger.d { "Collection saved successfully" }
             Result.Success(Unit)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while saving collection" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteCollections(
+        collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote> {
+        return try {
+            with(firestore) {
+                batch().apply {
+                    for (id in collectionIds) {
+                        delete(
+                            documentRef = collection("user-collections")
+                                .document(id),
+                        )
+                    }
+                    commit()
+                }
+            }
+
+            logger.d { "Collection deleted successfully" }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while deleting collection" }
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }
@@ -113,31 +140,11 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                     commit()
                 }
             }
+
+            logger.d { "Set added to collections successfully" }
             Result.Success(Unit)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while adding set to collections" }
-            Result.Error(DataError.Remote.UNKNOWN)
-        }
-    }
-
-    override suspend fun deleteCollections(
-        collectionIds: List<CollectionId>,
-    ): EmptyResult<DataError.Remote> {
-        return try {
-            with(firestore) {
-                batch().apply {
-                    for (id in collectionIds) {
-                        delete(
-                            documentRef = collection("user-collections")
-                                .document(id),
-                        )
-                    }
-                    commit()
-                }
-            }
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            logger.e(e) { "An error occurred while deleting collection" }
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }
@@ -162,9 +169,57 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
                     commit()
                 }
             }
+
+            logger.d { "Set removed from collections successfully" }
             Result.Success(Unit)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while removing set from collections" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun upsertCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Remote> {
+        return try {
+            firestore
+                .collection("user-collections")
+                .document(collectionId)
+                .update(
+                    mapOf(
+                        "sharedWith" to FieldValue.arrayUnion(share.userId),
+                        "shares.${share.userId}" to share.permissions.toDocument(),
+                    ),
+                )
+
+            logger.d { "Collection shared successfully" }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while sharing collection" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun deleteCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Remote> {
+        return try {
+            firestore
+                .collection("user-collections")
+                .document(collectionId)
+                .update(
+                    mapOf(
+                        "sharedWith" to FieldValue.arrayRemove(share.userId),
+                        "shares.${share.userId}" to FieldValue.delete,
+                    ),
+                )
+
+            logger.d { "Collection unshared successfully" }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while unsharing collection" }
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }

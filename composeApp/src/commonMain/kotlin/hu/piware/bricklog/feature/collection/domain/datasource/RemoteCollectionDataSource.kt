@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.collection.domain.datasource
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.set.domain.model.SetId
@@ -18,17 +19,27 @@ interface RemoteCollectionDataSource {
         collections: List<Collection>,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun addSetToCollections(
-        setId: SetId,
+    suspend fun deleteCollections(
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote>
 
-    suspend fun deleteCollections(
+    suspend fun addSetToCollections(
+        setId: SetId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote>
 
     suspend fun removeSetFromCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,
+    ): EmptyResult<DataError.Remote>
+
+    suspend fun upsertCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
+    ): EmptyResult<DataError.Remote>
+
+    suspend fun deleteCollectionShare(
+        collectionId: CollectionId,
+        share: UserCollectionShare,
     ): EmptyResult<DataError.Remote>
 }

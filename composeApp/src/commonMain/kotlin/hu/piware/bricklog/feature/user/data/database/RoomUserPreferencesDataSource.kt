@@ -18,7 +18,7 @@ class RoomUserPreferencesDataSource(
     database: BricklogDatabase,
 ) : LocalUserPreferencesDataSource {
 
-    private val logger = Logger.withTag("RoomLocalUserPreferencesDataSource")
+    private val logger = Logger.withTag("RoomUserPreferencesDataSource")
 
     private val userPreferencesDao = database.userPreferencesDao
 
@@ -32,7 +32,7 @@ class RoomUserPreferencesDataSource(
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Upserting user preferences $userPreferences" }
+            logger.d { "Upserting user preferences $userPreferences for user $userId" }
             userPreferencesDao.upsertUserPreferences(userPreferences.toEntity(userId))
             Result.Success(Unit)
         } catch (e: Exception) {
@@ -43,11 +43,11 @@ class RoomUserPreferencesDataSource(
 
     override suspend fun deleteUserPreferences(userId: UserId): EmptyResult<DataError.Local> {
         return try {
-            logger.d { "Deleting user preferences" }
+            logger.d { "Deleting user preferences for user $userId" }
             userPreferencesDao.deleteUserPreferences(userId)
             Result.Success(Unit)
         } catch (e: Exception) {
-            logger.e(e) { "Error deleting user preferences" }
+            logger.e(e) { "Error deleting user preferences for user $userId" }
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

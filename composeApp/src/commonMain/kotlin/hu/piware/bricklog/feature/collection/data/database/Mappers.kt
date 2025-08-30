@@ -3,7 +3,7 @@
 package hu.piware.bricklog.feature.collection.data.database
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
-import hu.piware.bricklog.feature.collection.domain.model.CollectionShare
+import hu.piware.bricklog.feature.collection.domain.model.SharePermissions
 import hu.piware.bricklog.feature.collection.domain.model.isNew
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -15,7 +15,7 @@ fun CollectionWithShares.toDomainModel(): Collection {
         name = collection.name,
         icon = collection.icon,
         type = collection.type,
-        shares = shares.associate { it.withUserId to CollectionShare(it.canWrite) },
+        shares = shares.associate { it.withUserId to SharePermissions(it.canWrite) },
     )
 }
 
@@ -26,7 +26,7 @@ fun CollectionEntity.toDomainModel(shares: List<CollectionShareEntity>): Collect
         name = name,
         icon = icon,
         type = type,
-        shares = shares.associate { it.withUserId to CollectionShare(it.canWrite) },
+        shares = shares.associate { it.withUserId to SharePermissions(it.canWrite) },
     )
 }
 

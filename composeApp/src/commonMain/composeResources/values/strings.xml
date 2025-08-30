@@ -24,6 +24,13 @@
     <string name="feature_collection_role_editor">editor</string>
     <string name="feature_collection_role_owner">owner</string>
     <string name="feature_collection_role_viewer">viewer</string>
+    <string name="feature_collection_share_edit_form_field_user_identifier_supporting_text_1">You can check the user identifier on the other user's details screen or select a </string>
+    <string name="feature_collection_share_edit_form_field_user_identifier_supporting_text_2">friend</string>
+    <string name="feature_collection_share_edit_form_field_user_identifier_supporting_text_3">.</string>
+    <string name="feature_collection_share_edit_form_field_user_identifier_title">User identifier</string>
+    <string name="feature_collection_share_edit_form_field_write_access_supporting_text">Allow the user to add or remove sets from the collection.</string>
+    <string name="feature_collection_share_edit_form_field_write_access_title">Write access</string>
+    <string name="feature_collection_share_edit_title">Share collection</string>
     <string name="feature_core_dialog_btn_cancel">OK</string>
     <string name="feature_core_update_data_step_download_file">Downloading file</string>
     <string name="feature_core_update_data_step_parse_items">Parsing items</string>
@@ -39,6 +46,7 @@
     <string name="feature_set_dashboard_label_show_more">Show more</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_about">About</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_appearance">Appearance</string>
+    <string name="feature_set_dashboard_navigation_drawer_btn_friend_list">Friends</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_login">Log In</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_logout">Log Out</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_notification_settings">Notification Settings</string>
@@ -242,6 +250,15 @@
     <string name="feature_user_form_field_password_hint">Enter your password...</string>
     <string name="feature_user_form_field_password_invalid">Password is invalid.</string>
     <string name="feature_user_form_field_password_title">Password</string>
+    <string name="feature_user_friend_delete_confirm_dialog_btn_cancel">Cancel</string>
+    <string name="feature_user_friend_delete_confirm_dialog_btn_confirm">Confirm</string>
+    <string name="feature_user_friend_delete_confirm_dialog_label">Are you sure you want to delete this friend?</string>
+    <string name="feature_user_friend_delete_confirm_dialog_title">Delete friend</string>
+    <string name="feature_user_friend_edit_form_field_name">Name</string>
+    <string name="feature_user_friend_edit_form_field_user_identifier">User identifier</string>
+    <string name="feature_user_friend_edit_title_create">Add friend</string>
+    <string name="feature_user_friend_edit_title_edit">Edit friend</string>
+    <string name="feature_user_friend_list_title">Friends</string>
     <string name="feature_user_login_btn_google_sign_in">Continue with Google</string>
     <string name="feature_user_login_btn_register">Sign up</string>
     <string name="feature_user_login_form_btn_submit">Log In</string>

@@ -6,9 +6,6 @@ import dev.gitlive.firebase.firestore.firestore
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
 import hu.piware.bricklog.feature.core.domain.Result
-import hu.piware.bricklog.feature.settings.data.firebase.UserPreferencesDocument
-import hu.piware.bricklog.feature.settings.data.firebase.toDocument
-import hu.piware.bricklog.feature.settings.data.firebase.toDomainModel
 import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserPreferencesDataSource
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.UserPreferences
@@ -24,7 +21,9 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
     private val firestore by lazy { Firebase.firestore }
 
     override fun watchUserPreferences(userId: UserId): Flow<UserPreferences?> {
-        return firestore.document("user-data/$userId").snapshots
+        return firestore
+            .document("user-data/$userId")
+            .snapshots
             .mapNotNull { snapshot ->
                 try {
                     snapshot.data<UserPreferencesDocument>().toDomainModel()
@@ -40,7 +39,8 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Remote> {
         return try {
-            firestore.document("user-data/$userId")
+            firestore
+                .document("user-data/$userId")
                 .set(
                     data = userPreferences.toDocument(),
                     merge = true,

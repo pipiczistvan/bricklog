@@ -39,14 +39,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_collection_edit_title_create
 import bricklog.composeapp.generated.resources.feature_collection_edit_title_modify
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.collection.domain.util.DefaultCollections
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionDeleteConfirmDialog
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.CollectionIconBottomSheet
-import hu.piware.bricklog.feature.collection.presentation.collection_edit.components.EditShareBottomSheet
-import hu.piware.bricklog.feature.collection.presentation.collection_edit.model.UserCollectionShare
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -58,6 +58,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CollectionEditScreenRoot(
     viewModel: CollectionEditViewModel = koinViewModel(),
     onBackClick: () -> Unit,
+    onCollectionShareEditClick: (CollectionId, UserId?) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     observeAsEvents(viewModel.eventChannel) { event ->
@@ -72,6 +73,11 @@ fun CollectionEditScreenRoot(
         onAction = { action ->
             when (action) {
                 is CollectionEditAction.OnBackClick -> onBackClick()
+                is CollectionEditAction.OnShareClick -> onCollectionShareEditClick(
+                    action.collectionId,
+                    action.userId,
+                )
+
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -87,8 +93,6 @@ private fun CollectionEditScreen(
 ) {
     var showIconBottomSheet by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
-    var showEditShareBottomSheet by remember { mutableStateOf(false) }
-    var shareToEdit: UserCollectionShare? by remember { mutableStateOf(null) }
 
     Scaffold(
         modifier = modifier
@@ -204,11 +208,12 @@ private fun CollectionEditScreen(
                             }
                             IconButton(
                                 onClick = {
-                                    shareToEdit = UserCollectionShare(
-                                        userId = userId,
-                                        share = share,
+                                    onAction(
+                                        CollectionEditAction.OnShareClick(
+                                            collectionId = state.collection.id,
+                                            userId = userId,
+                                        ),
                                     )
-                                    showEditShareBottomSheet = true
                                 },
                             ) {
                                 Icon(
@@ -221,8 +226,12 @@ private fun CollectionEditScreen(
 
                     Button(
                         onClick = {
-                            shareToEdit = null
-                            showEditShareBottomSheet = true
+                            onAction(
+                                CollectionEditAction.OnShareClick(
+                                    collectionId = state.collection.id,
+                                    userId = null,
+                                ),
+                            )
                         },
                     ) {
                         Text("Share with new user")
@@ -240,22 +249,6 @@ private fun CollectionEditScreen(
             },
             onDismiss = {
                 showIconBottomSheet = false
-            },
-        )
-    }
-
-    if (showEditShareBottomSheet) {
-        EditShareBottomSheet(
-            collectionShare = shareToEdit,
-            onConfirm = {
-                onAction(CollectionEditAction.OnShareChanged(it))
-            },
-            onDelete = {
-                onAction(CollectionEditAction.OnShareDeleted(it))
-            },
-            onDismiss = {
-                showEditShareBottomSheet = false
-                shareToEdit = null
             },
         )
     }
