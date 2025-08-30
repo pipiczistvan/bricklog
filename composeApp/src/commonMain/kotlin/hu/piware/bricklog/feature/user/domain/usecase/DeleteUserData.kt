@@ -14,7 +14,7 @@ class DeleteUserData(
 ) {
     suspend operator fun invoke(userId: UserId = sessionManager.currentUserId): EmptyResult<UserError> {
         syncedRepositories.forEach {
-            it.clearLocalData(userId)
+            it.clearData(userId)
         }
 
         return userRepository.deleteUser()

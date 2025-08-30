@@ -39,13 +39,17 @@ class OfflineFirstFriendRepository(
     override fun startSync(scope: CoroutineScope) {
         syncJob?.cancel()
         syncJob = sessionManager.userId
-            .filterAuthenticated()
+            .filterAuthenticated(sessionManager)
             .syncRemoteFriends()
             .launchIn(scope)
     }
 
-    override suspend fun clearLocalData(userId: UserId): EmptyResult<DataError> {
-        return localDataSource.deleteUserFriends(userId)
+    override suspend fun clearData(userId: UserId): EmptyResult<DataError> {
+        return if (sessionManager.isAuthenticated(userId)) {
+            remoteDataSource.deleteUserFriends(userId)
+        } else {
+            localDataSource.deleteUserFriends(userId)
+        }
     }
 
     override fun watchFriends(userId: UserId): Flow<List<Friend>> {
@@ -60,7 +64,7 @@ class OfflineFirstFriendRepository(
         userId: UserId,
         friends: List<Friend>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.upsertFriends(userId, friends)
         } else {
             localDataSource.upsertFriends(userId, friends)
@@ -71,7 +75,7 @@ class OfflineFirstFriendRepository(
         userId: UserId,
         friendIds: List<UserId>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.deleteFriends(userId, friendIds)
         } else {
             localDataSource.deleteFriends(userId, friendIds)

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -117,7 +116,14 @@ private fun CollectionEditScreen(
                     }
                 },
                 actions = {
-                    if (DefaultCollections.entries.none { it.type == state.collection?.type }) {
+                    IconButton(onClick = { onAction(CollectionEditAction.OnSubmit) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Save,
+                            contentDescription = null,
+                        )
+                    }
+
+                    if (!state.isNew && DefaultCollections.entries.none { it.type == state.collection?.type }) {
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
@@ -125,22 +131,6 @@ private fun CollectionEditScreen(
                             )
                         }
                     }
-                },
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    onAction(CollectionEditAction.OnSubmit)
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Save,
-                        contentDescription = null,
-                    )
-                },
-                text = {
-                    Text("Save")
                 },
             )
         },

@@ -135,10 +135,8 @@ private fun CollectionShareEditScreen(
                         }
                     },
                     actions = {
-                        if (state.share != null) {
-                            IconButton(
-                                onClick = { showDeleteConfirmDialog = true },
-                            ) {
+                        if (!state.isNew) {
+                            IconButton(onClick = { showDeleteConfirmDialog = true }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Delete,
                                     contentDescription = null,

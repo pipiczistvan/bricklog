@@ -38,13 +38,17 @@ class OfflineFirstUserPreferencesRepository(
     override fun startSync(scope: CoroutineScope) {
         syncJob?.cancel()
         syncJob = sessionManager.userId
-            .filterAuthenticated()
+            .filterAuthenticated(sessionManager)
             .syncRemoteUserPreferences()
             .launchIn(scope)
     }
 
-    override suspend fun clearLocalData(userId: UserId): EmptyResult<DataError> {
-        return localDataSource.deleteUserPreferences(userId)
+    override suspend fun clearData(userId: UserId): EmptyResult<DataError> {
+        return if (sessionManager.isAuthenticated(userId)) {
+            remoteDataSource.deleteUserPreferences(userId)
+        } else {
+            localDataSource.deleteUserPreferences(userId)
+        }
     }
 
     override fun watchUserPreferences(userId: UserId): Flow<UserPreferences> {
@@ -55,7 +59,7 @@ class OfflineFirstUserPreferencesRepository(
         userId: UserId,
         userPreferences: UserPreferences,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.upsertUserPreferences(userId, userPreferences)
         } else {
             localDataSource.upsertUserPreferences(userId, userPreferences)

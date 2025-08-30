@@ -52,4 +52,17 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }
+
+    override suspend fun deleteUserPreferences(userId: UserId): EmptyResult<DataError.Remote> {
+        return try {
+            firestore
+                .document("user-data/$userId")
+                .delete()
+
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while deleting user preferences" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
 }

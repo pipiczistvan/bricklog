@@ -99,4 +99,27 @@ class FirebaseFriendDataSource : RemoteFriendDataSource {
             Result.Error(DataError.Remote.UNKNOWN)
         }
     }
+
+    override suspend fun deleteUserFriends(userId: UserId): EmptyResult<DataError.Remote> {
+        return try {
+            with(firestore) {
+                batch().apply {
+                    for (
+                    document in document("user-data/$userId")
+                        .collection("user-collections")
+                        .get()
+                        .documents
+                    ) {
+                        delete(document.reference)
+                    }
+                    commit()
+                }
+            }
+
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while deleting user friends" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
 }

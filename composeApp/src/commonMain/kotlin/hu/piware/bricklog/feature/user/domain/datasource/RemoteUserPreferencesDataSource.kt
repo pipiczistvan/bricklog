@@ -14,4 +14,6 @@ interface RemoteUserPreferencesDataSource {
         userId: UserId,
         userPreferences: UserPreferences,
     ): EmptyResult<DataError.Remote>
+
+    suspend fun deleteUserPreferences(userId: UserId): EmptyResult<DataError.Remote>
 }

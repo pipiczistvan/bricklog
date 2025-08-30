@@ -16,4 +16,6 @@ interface RemoteFriendDataSource {
         userId: UserId,
         friendIds: List<UserId>,
     ): EmptyResult<DataError.Remote>
+
+    suspend fun deleteUserFriends(userId: UserId): EmptyResult<DataError.Remote>
 }

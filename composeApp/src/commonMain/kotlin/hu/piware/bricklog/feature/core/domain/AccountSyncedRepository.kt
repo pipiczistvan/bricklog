@@ -5,5 +5,5 @@ import kotlinx.coroutines.CoroutineScope
 
 interface AccountSyncedRepository {
     fun startSync(scope: CoroutineScope)
-    suspend fun clearLocalData(userId: UserId): EmptyResult<DataError>
+    suspend fun clearData(userId: UserId): EmptyResult<DataError>
 }

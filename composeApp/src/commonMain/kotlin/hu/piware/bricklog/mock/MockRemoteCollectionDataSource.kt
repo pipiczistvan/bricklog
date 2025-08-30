@@ -83,6 +83,17 @@ class MockRemoteCollectionDataSource : RemoteCollectionDataSource {
         return Result.Success(Unit)
     }
 
+    override suspend fun deleteUserCollections(userId: UserId): EmptyResult<DataError.Remote> {
+        firestore.collections.update { currentCollections ->
+            currentCollections.filterNot { it.owner == userId }
+        }
+        firestore.userSetCollections.update { currentMap ->
+            currentMap.filterNot { it.key == userId }
+        }
+
+        return Result.Success(Unit)
+    }
+
     override suspend fun addSetToCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,

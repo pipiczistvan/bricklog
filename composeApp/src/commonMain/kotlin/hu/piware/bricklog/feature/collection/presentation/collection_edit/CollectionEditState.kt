@@ -16,3 +16,6 @@ data class CollectionEditState(
     val icon: CollectionIcon = CollectionIcon.STAR,
     val shares: Map<UserId, SharePermissions> = emptyMap(),
 )
+
+val CollectionEditState.isNew: Boolean
+    get() = collection == null

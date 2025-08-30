@@ -46,14 +46,18 @@ class OfflineFirstCollectionRepository(
     override fun startSync(scope: CoroutineScope) {
         syncJob?.cancel()
         syncJob = sessionManager.userId
-            .filterAuthenticated()
+            .filterAuthenticated(sessionManager)
             .syncRemoteCollections()
             .syncRemoteCollectionSets()
             .launchIn(scope)
     }
 
-    override suspend fun clearLocalData(userId: UserId): EmptyResult<DataError> {
-        return localDataSource.deleteUserCollections(userId)
+    override suspend fun clearData(userId: UserId): EmptyResult<DataError> {
+        return if (sessionManager.isAuthenticated(userId)) {
+            remoteDataSource.deleteUserCollections(userId)
+        } else {
+            localDataSource.deleteUserCollections(userId)
+        }
     }
 
     override fun watchCollection(collectionId: CollectionId): Flow<Collection?> {
@@ -72,7 +76,7 @@ class OfflineFirstCollectionRepository(
         userId: UserId,
         collections: List<Collection>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.upsertCollections(collections)
         } else {
             localDataSource.upsertCollections(collections)
@@ -84,7 +88,7 @@ class OfflineFirstCollectionRepository(
         setId: SetId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.addSetToCollections(setId, collectionIds)
         } else {
             localDataSource.addSetToCollections(setId, collectionIds)
@@ -95,7 +99,7 @@ class OfflineFirstCollectionRepository(
         userId: UserId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.deleteCollections(collectionIds)
         } else {
             localDataSource.deleteCollections(collectionIds)
@@ -107,7 +111,7 @@ class OfflineFirstCollectionRepository(
         setId: SetId,
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.removeSetFromCollections(setId, collectionIds)
         } else {
             localDataSource.removeSetFromCollections(setId, collectionIds)
@@ -119,7 +123,7 @@ class OfflineFirstCollectionRepository(
         collectionId: CollectionId,
         share: UserCollectionShare,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.upsertCollectionShare(collectionId, share)
         } else {
             localDataSource.upsertCollectionShare(collectionId, share)
@@ -131,7 +135,7 @@ class OfflineFirstCollectionRepository(
         collectionId: CollectionId,
         share: UserCollectionShare,
     ): EmptyResult<DataError> {
-        return if (userId.isAuthenticated) {
+        return if (sessionManager.isAuthenticated(userId)) {
             remoteDataSource.deleteCollectionShare(collectionId, share)
         } else {
             localDataSource.deleteCollectionShare(collectionId, share)

@@ -27,4 +27,11 @@ class MockRemoteUserPreferencesDataSource : RemoteUserPreferencesDataSource {
         }
         return Result.Success(Unit)
     }
+
+    override suspend fun deleteUserPreferences(userId: UserId): EmptyResult<DataError.Remote> {
+        firestore.userPreferences.update {
+            it - userId
+        }
+        return Result.Success(Unit)
+    }
 }

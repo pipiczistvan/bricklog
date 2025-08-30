@@ -119,7 +119,7 @@ private fun FriendEditScreen(
                         }
                     },
                     actions = {
-                        if (state.friend != null) {
+                        if (!state.isNew) {
                             IconButton(
                                 onClick = { showDeleteConfirmDialog = true },
                             ) {

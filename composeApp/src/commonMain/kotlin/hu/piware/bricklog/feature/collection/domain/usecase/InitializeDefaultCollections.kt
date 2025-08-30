@@ -25,7 +25,7 @@ class InitializeDefaultCollections(
     private val logger = Logger.withTag("InitializeDefaultCollections")
 
     suspend operator fun invoke(userId: UserId = sessionManager.currentUserId): EmptyResult<DataError> {
-        if (userId.isAuthenticated) {
+        if (sessionManager.isAuthenticated(userId)) {
             collectionRepository.forceSyncRemoteCollections(userId)
                 .onError { return it }
         }
@@ -33,6 +33,7 @@ class InitializeDefaultCollections(
         val collections = getCollections(userId)
             .onError { return it }
             .data()
+            .filter { it.owner == userId }
 
         val missingCollections = DefaultCollections.entries
             .filter { default -> collections.none { it.type == default.type } }

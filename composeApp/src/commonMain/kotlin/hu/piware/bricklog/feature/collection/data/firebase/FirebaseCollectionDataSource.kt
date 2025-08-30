@@ -120,6 +120,29 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
         }
     }
 
+    override suspend fun deleteUserCollections(userId: UserId): EmptyResult<DataError.Remote> {
+        return try {
+            with(firestore) {
+                batch().apply {
+                    for (
+                    document in collection("user-collections")
+                        .where { "owner" equalTo userId }
+                        .get()
+                        .documents
+                    ) {
+                        delete(document.reference)
+                    }
+                    commit()
+                }
+            }
+            logger.d { "User collections deleted successfully" }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while deleting user collections" }
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
     override suspend fun addSetToCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,

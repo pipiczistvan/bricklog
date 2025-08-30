@@ -23,6 +23,8 @@ interface RemoteCollectionDataSource {
         collectionIds: List<CollectionId>,
     ): EmptyResult<DataError.Remote>
 
+    suspend fun deleteUserCollections(userId: UserId): EmptyResult<DataError.Remote>
+
     suspend fun addSetToCollections(
         setId: SetId,
         collectionIds: List<CollectionId>,

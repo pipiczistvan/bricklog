@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -33,8 +32,6 @@ class SessionManager {
     }.map { it.uid }
     val currentUserId: UserId
         get() = user.value.uid
-    val isAuthenticated: Boolean
-        get() = currentUserId.isAuthenticated
 
     suspend fun setCurrentUser(user: User?) {
         authenticatedUser.update { user ?: GUEST_USER }
@@ -48,11 +45,12 @@ class SessionManager {
     }
 }
 
-val UserId.isAuthenticated: Boolean
-    get() = this != USER_ID_GUEST
+fun SessionManager.isAuthenticated(userId: UserId): Boolean {
+    return userId == currentUserId && userId != USER_ID_GUEST
+}
 
-fun Flow<UserId>.filterAuthenticated() = filter { it.isAuthenticated }
-fun Flow<UserId>.filterGuest() = filterNot { it.isAuthenticated }
+fun Flow<UserId>.filterAuthenticated(sessionManager: SessionManager) =
+    filter { sessionManager.isAuthenticated(it) }
 
 fun <T> SessionManager.userBoundFlow(userId: UserId? = null, flow: (UserId) -> Flow<T>): Flow<T> {
     val userIdFlow = userId?.let { flowOf(userId) } ?: this.userId
