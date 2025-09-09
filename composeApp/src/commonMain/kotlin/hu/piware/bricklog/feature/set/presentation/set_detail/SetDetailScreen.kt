@@ -33,7 +33,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,6 +56,8 @@ import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.isInCollection
 import hu.piware.bricklog.feature.set.domain.model.setID
+import hu.piware.bricklog.feature.set.presentation.components.CombinedFilledIconButton
+import hu.piware.bricklog.feature.set.presentation.components.PreferredCollectionBottomSheet
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.BlurredImageBackground
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetBarcode
@@ -65,6 +69,8 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.util.createFirstSe
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createSecondSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createThirdSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
+import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -132,8 +138,11 @@ private fun SetDetailScreen(
                 },
                 actions = {
                     if (state.baseCollection != null) {
-                        FilledIconButton(
-                            modifier = Modifier.testTag("set_detail:favourite_btn"),
+                        PreferredCollectionToggleIconButton(
+                            collection = state.baseCollection,
+                            showRoleAndOwner = state.user.isAuthenticated,
+                            availableCollections = state.availableCollections,
+                            toggled = state.setDetails.isInCollection(state.baseCollection.collection.id),
                             onClick = {
                                 onAction(
                                     SetDetailAction.OnCollectionToggle(
@@ -142,23 +151,10 @@ private fun SetDetailScreen(
                                     ),
                                 )
                             },
-                            enabled = state.baseCollection.isEditable,
-                            colors = IconButtonDefaults.filledIconButtonColors().copy(
-                                containerColor = Color.White,
-                            ),
-                            shapes = IconButtonDefaults.shapes(),
-                        ) {
-                            Icon(
-                                imageVector =
-                                    if (state.setDetails.isInCollection(state.baseCollection.collection.id)) {
-                                        state.baseCollection.collection.icon.filledIcon
-                                    } else {
-                                        state.baseCollection.collection.icon.outlinedIcon
-                                    },
-                                contentDescription = null,
-                                tint = Color.Black,
-                            )
-                        }
+                            onPreferredCollectionChange = {
+                                onAction(SetDetailAction.OnPreferredCollectionChange(it))
+                            },
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors()
@@ -177,6 +173,50 @@ private fun SetDetailScreen(
             sharedElementPrefix = state.sharedElementPrefix,
             onAction = onAction,
             paddingValues = padding,
+        )
+    }
+}
+
+@Composable
+private fun PreferredCollectionToggleIconButton(
+    collection: CollectionDetails,
+    showRoleAndOwner: Boolean,
+    availableCollections: List<CollectionDetails>,
+    onPreferredCollectionChange: (CollectionDetails) -> Unit,
+    toggled: Boolean,
+    onClick: () -> Unit,
+) {
+    var showPreferredCollectionBottomSheet by remember { mutableStateOf(false) }
+
+    CombinedFilledIconButton(
+        onClick = onClick,
+        onLongClick = { showPreferredCollectionBottomSheet = true },
+        enabled = collection.isEditable,
+        colors = IconButtonDefaults.filledIconButtonColors().copy(
+            containerColor = Color.White,
+        ),
+    ) {
+        Icon(
+            imageVector =
+                if (toggled) {
+                    collection.collection.icon.filledIcon
+                } else {
+                    collection.collection.icon.outlinedIcon
+                },
+            contentDescription = null,
+            tint = Color.Black,
+        )
+    }
+
+    if (showPreferredCollectionBottomSheet) {
+        PreferredCollectionBottomSheet(
+            showRoleAndOwner = showRoleAndOwner,
+            availableCollections = availableCollections,
+            preferredCollection = collection,
+            onPreferredCollectionChange = onPreferredCollectionChange,
+            onDismiss = {
+                showPreferredCollectionBottomSheet = false
+            },
         )
     }
 }
@@ -236,6 +276,7 @@ private fun Content(
             setDetails = state.setDetails,
             instructions = state.instructions,
             availableCollections = state.availableCollections,
+            user = state.user,
             onAction = onAction,
         )
     }
@@ -279,6 +320,7 @@ private fun SetDetails(
     setDetails: SetDetails,
     instructions: List<Instruction>?,
     availableCollections: List<CollectionDetails>,
+    user: User,
     onAction: (SetDetailAction) -> Unit,
 ) {
     Column(
@@ -303,6 +345,7 @@ private fun SetDetails(
         SetCollectionsTable(
             modifier = Modifier.clip(Shapes.medium),
             setDetails = setDetails,
+            showRoleAndOwner = user.isAuthenticated,
             availableCollections = availableCollections,
             onToggleCollection = {
                 onAction(SetDetailAction.OnCollectionToggle(setDetails.setID, it))

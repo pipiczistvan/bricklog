@@ -119,6 +119,8 @@ kotlin {
             implementation(libs.kmpauth.google)
             implementation(libs.kmpauth.firebase)
             implementation(libs.kmpauth.uihelper)
+
+            implementation(libs.reorderable)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -1,21 +1,17 @@
 package hu.piware.bricklog.feature.collection.presentation.collection_edit
 
 import hu.piware.bricklog.feature.collection.domain.model.Collection
-import hu.piware.bricklog.feature.collection.domain.model.CollectionIcon
-import hu.piware.bricklog.feature.collection.domain.model.SharePermissions
-import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager.Companion.GUEST_USER
 import hu.piware.bricklog.feature.user.domain.model.User
-import hu.piware.bricklog.feature.user.domain.model.UserId
 
 data class CollectionEditState(
+    val isLoading: Boolean = false,
     val currentUser: User = GUEST_USER,
     val collection: Collection? = null,
-    val name: String = "",
-    val nameError: UiText? = null,
-    val icon: CollectionIcon = CollectionIcon.STAR,
-    val shares: Map<UserId, SharePermissions> = emptyMap(),
 )
 
 val CollectionEditState.isNew: Boolean
     get() = collection == null
+
+val CollectionEditState.isOwner: Boolean
+    get() = collection != null && collection.owner == currentUser.uid

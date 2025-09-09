@@ -23,6 +23,7 @@ fun UserPreferencesDocument.toDomainModel(): UserPreferences {
         hiddenFeaturedSets = hiddenFeaturedSets ?: emptyList(),
         currencyRegion = currencyRegion ?: CurrencyRegion.EU,
         targetCurrencyCode = targetCurrencyCode ?: CURRENCY_CODE_EUR,
+        preferredCollectionId = preferredCollectionId,
     )
 }
 
@@ -34,6 +35,7 @@ fun UserPreferences.toDocument(): UserPreferencesDocument {
         hiddenFeaturedSets = hiddenFeaturedSets,
         currencyRegion = currencyRegion,
         targetCurrencyCode = targetCurrencyCode,
+        preferredCollectionId = preferredCollectionId,
     )
 }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.usecase.SavePreferredCollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleCollectionSet
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchFavouriteCollectionDetails
@@ -19,6 +20,7 @@ import hu.piware.bricklog.feature.set.domain.usecase.GetInstructions
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsById
 import hu.piware.bricklog.feature.set.domain.util.combineSetWithCurrencyPreference
 import hu.piware.bricklog.feature.set.presentation.SetRoute
+import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -36,6 +38,8 @@ class SetDetailViewModel(
     private val watchCollectionDetails: WatchCollectionDetails,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
     private val watchFavouriteCollectionDetails: WatchFavouriteCollectionDetails,
+    private val watchCurrentUser: WatchCurrentUser,
+    private val savePreferredCollectionId: SavePreferredCollectionId,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(
@@ -52,6 +56,7 @@ class SetDetailViewModel(
             observeAvailableCollections()
             observePreferredCurrencyPrice()
             observeFavouriteCollection()
+            observeCurrentUser()
             loadInstructions(arguments.setId)
         }
 
@@ -61,6 +66,13 @@ class SetDetailViewModel(
                 action.setId,
                 action.collectionId,
             )
+
+            is SetDetailAction.OnPreferredCollectionChange -> {
+                viewModelScope.launch {
+                    savePreferredCollectionId(action.collection.collection.id)
+                        .showSnackbarOnError()
+                }
+            }
 
             else -> Unit
         }
@@ -110,6 +122,13 @@ class SetDetailViewModel(
         watchFavouriteCollectionDetails()
             .onEach { baseCollection ->
                 _uiState.update { it.copy(baseCollection = baseCollection) }
+            }.launchIn(viewModelScope)
+    }
+
+    private fun observeCurrentUser() {
+        watchCurrentUser()
+            .onEach { user ->
+                _uiState.update { it.copy(user = user) }
             }.launchIn(viewModelScope)
     }
 

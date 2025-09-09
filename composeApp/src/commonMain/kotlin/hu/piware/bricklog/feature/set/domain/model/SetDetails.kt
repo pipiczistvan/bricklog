@@ -11,7 +11,7 @@ import bricklog.composeapp.generated.resources.feature_set_search_status_future_
 import bricklog.composeapp.generated.resources.feature_set_search_status_retired
 import bricklog.composeapp.generated.resources.feature_set_search_status_retired_soon
 import bricklog.composeapp.generated.resources.feature_set_search_status_unknown
-import hu.piware.bricklog.feature.collection.domain.model.Collection
+import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.datetime.LocalDateTime
@@ -21,13 +21,13 @@ import org.jetbrains.compose.resources.StringResource
 
 data class SetDetails(
     val set: Set,
-    val collections: List<Collection>,
+    val collections: List<CollectionDetails>,
     val status: SetStatus,
     val priceCategory: SetPriceCategory,
 )
 
 fun SetDetails.isInCollection(collectionId: CollectionId): Boolean {
-    return collections.any { it.id == collectionId }
+    return collections.any { it.collection.id == collectionId }
 }
 
 val SetDetails.setID: Int

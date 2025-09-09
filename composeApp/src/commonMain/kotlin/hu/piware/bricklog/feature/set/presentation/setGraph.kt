@@ -76,11 +76,6 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
-                    onCollectionEditClick = {
-                        navController.navigate(CollectionRoute.CollectionEditScreen(it)) {
-                            launchSingleTop = true
-                        }
-                    },
                     onAboutClick = {
                         navController.navigate(SettingsRoute.AboutScreen) {
                             launchSingleTop = true
@@ -108,6 +103,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                     },
                     onFriendListClick = {
                         navController.navigate(UserRoute.FriendListScreen) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onCollectionListClick = {
+                        navController.navigate(CollectionRoute.CollectionListScreen) {
                             launchSingleTop = true
                         }
                     },
@@ -150,6 +150,11 @@ fun NavGraphBuilder.setGraph(navController: NavHostController) {
                 onBackClick = navController::navigateUp,
                 onSetClick = { arguments ->
                     navController.navigate(SetRoute.SetDetails(arguments)) {
+                        launchSingleTop = true
+                    }
+                },
+                onCollectionEditClick = {
+                    navController.navigate(CollectionRoute.CollectionEditScreen(it)) {
                         launchSingleTop = true
                     }
                 },

@@ -12,4 +12,5 @@ sealed interface SetListAction {
     data class OnCollectionToggle(val setId: SetId, val collectionId: CollectionId) : SetListAction
     data class OnFilterChange(val filterPreferences: SetFilterPreferences) : SetListAction
     data class OnDisplayModeChange(val mode: SetListDisplayMode) : SetListAction
+    data class OnCollectionEditClick(val collectionId: CollectionId) : SetListAction
 }

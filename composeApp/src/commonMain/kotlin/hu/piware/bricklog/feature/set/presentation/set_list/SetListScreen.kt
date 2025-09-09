@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.GridOn
 import androidx.compose.material.icons.outlined.Window
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +46,8 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_list_empty
 import bricklog.composeapp.generated.resources.lego_brick_2x3
 import hu.piware.bricklog.App
+import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.isEditable
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
@@ -67,6 +70,7 @@ fun SetListScreenRoot(
     viewModel: SetListViewModel = koinViewModel(),
     onBackClick: () -> Unit,
     onSetClick: (SetDetailArguments) -> Unit,
+    onCollectionEditClick: (CollectionId) -> Unit,
 ) {
     App.firstScreenLoaded = true
 
@@ -81,6 +85,7 @@ fun SetListScreenRoot(
             when (action) {
                 is SetListAction.OnBackClick -> onBackClick()
                 is SetListAction.OnSetClick -> onSetClick(action.arguments)
+                is SetListAction.OnCollectionEditClick -> onCollectionEditClick(action.collectionId)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -117,6 +122,22 @@ private fun SetListScreen(
                     }
                 },
                 actions = {
+                    if (state.title is SetListTitle.CollectionSearch && state.title.collection.isEditable) {
+                        IconButton(
+                            onClick = {
+                                onAction(
+                                    SetListAction.OnCollectionEditClick(
+                                        collectionId = state.title.collection.collection.id,
+                                    ),
+                                )
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = null,
+                            )
+                        }
+                    }
                     IconButton(
                         modifier = Modifier.testTag("set_list:display_mode_btn"),
                         onClick = {
@@ -166,6 +187,7 @@ private fun SetListScreen(
                     filterOverrides = state.filterOverrides,
                     onFilterPreferencesChange = { onAction(SetListAction.OnFilterChange(it)) },
                     filterDomain = state.filterDomain,
+                    currentUser = state.user,
                 )
             }
 

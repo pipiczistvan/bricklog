@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,11 +32,13 @@ import bricklog.composeapp.generated.resources.feature_set_detail_collections_em
 import bricklog.composeapp.generated.resources.feature_set_detail_collections_title
 import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.core.presentation.components.ActionRow
+import hu.piware.bricklog.feature.collection.domain.model.containerColor
+import hu.piware.bricklog.feature.collection.domain.model.textColor
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.isInCollection
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
+import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -43,6 +46,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SetCollectionsTable(
     modifier: Modifier = Modifier,
     setDetails: SetDetails,
+    showRoleAndOwner: Boolean,
     availableCollections: List<CollectionDetails>,
     onToggleCollection: (CollectionId) -> Unit,
 ) {
@@ -84,21 +88,10 @@ fun SetCollectionsTable(
         ) {
             if (setDetails.collections.isNotEmpty()) {
                 setDetails.collections.forEach {
-                    ActionRow(
-                        title = it.name,
-                        onClick = {
-                        },
-                        startIcon = {
-                            Icon(
-                                imageVector =
-                                    if (setDetails.isInCollection(it.id)) {
-                                        it.icon.filledIcon
-                                    } else {
-                                        it.icon.outlinedIcon
-                                    },
-                                contentDescription = null,
-                            )
-                        },
+                    CollectionsTableRow(
+                        details = it,
+                        showRoleAndOwner = showRoleAndOwner,
+                        isSelected = setDetails.isInCollection(it.collection.id),
                     )
                     if (it != setDetails.collections.last()) {
                         HorizontalDivider()
@@ -117,10 +110,59 @@ fun SetCollectionsTable(
     if (showCollectionSheet) {
         SetCollectionBottomSheet(
             availableOptions = availableCollections,
-            selectedItems = setDetails.collections.map { it.id },
+            showRoleAndOwner = showRoleAndOwner,
+            selectedItems = setDetails.collections.map { it.collection.id },
             onToggleCollection = onToggleCollection,
             onDismiss = { showCollectionSheet = false },
         )
+    }
+}
+
+@Composable
+private fun CollectionsTableRow(
+    details: CollectionDetails,
+    showRoleAndOwner: Boolean,
+    isSelected: Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Dimens.SmallPadding.size),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                modifier = Modifier
+                    .padding(end = Dimens.SmallPadding.size),
+                imageVector = if (isSelected) {
+                    details.collection.icon.filledIcon
+                } else {
+                    details.collection.icon.outlinedIcon
+                },
+                contentDescription = null,
+            )
+            Column {
+                Text(
+                    text = details.collection.name,
+                )
+                if (showRoleAndOwner) {
+                    Text(
+                        text = details.collection.owner,
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                }
+            }
+        }
+        if (showRoleAndOwner) {
+            Badge(
+                containerColor = details.role.containerColor,
+                contentColor = details.role.textColor,
+            ) {
+                Text(stringResource(details.role.stringRes))
+            }
+        }
     }
 }
 
@@ -135,6 +177,7 @@ private fun SetCollectionsTablePreview() {
                 setDetails = PreviewData.sets.first(),
                 availableCollections = PreviewData.collectionDetails,
                 onToggleCollection = {},
+                showRoleAndOwner = true,
             )
         }
     }

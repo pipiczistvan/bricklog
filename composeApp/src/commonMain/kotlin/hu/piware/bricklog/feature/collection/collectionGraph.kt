@@ -6,9 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.presentation.collection_edit.CollectionEditScreenRoot
+import hu.piware.bricklog.feature.collection.presentation.collection_list.CollectionListScreenRoot
 import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.CollectionShareEditArguments
 import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.CollectionShareEditScreenRoot
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
+import hu.piware.bricklog.feature.set.presentation.SetRoute
+import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.presentation.UserRoute
 import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditArguments
 import kotlinx.serialization.Serializable
@@ -25,6 +28,9 @@ sealed interface CollectionRoute {
     data class CollectionShareEditScreen(
         val arguments: CollectionShareEditArguments,
     ) : CollectionRoute
+
+    @Serializable
+    data object CollectionListScreen : CollectionRoute
 }
 
 fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
@@ -35,6 +41,9 @@ fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
             CollectionEditScreenRoot(
                 onBackClick = {
                     navController.navigateUp()
+                },
+                onCollectionDeleted = {
+                    navController.popBackStack(SetRoute.SetListScreen::class, true)
                 },
                 onCollectionShareEditClick = { collectionId, userId ->
                     navController.navigate(
@@ -59,6 +68,23 @@ fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
                 },
                 onFriendEditClick = { friendId ->
                     navController.navigate(UserRoute.FriendEditScreen(FriendEditArguments(friendId)))
+                },
+            )
+        }
+        composable<CollectionRoute.CollectionListScreen> {
+            CollectionListScreenRoot(
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onCollectionEditClick = { collectionId ->
+                    navController.navigate(CollectionRoute.CollectionEditScreen(collectionId))
+                },
+                onCollectionClick = { collectionId ->
+                    navController.navigate(
+                        SetRoute.SetListScreen(
+                            SetListArguments.Collection(collectionId),
+                        ),
+                    )
                 },
             )
         }

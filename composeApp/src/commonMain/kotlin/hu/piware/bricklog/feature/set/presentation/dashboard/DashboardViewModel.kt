@@ -17,6 +17,7 @@ import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionSetDetails
 import hu.piware.bricklog.feature.core.domain.UserError
 import hu.piware.bricklog.feature.core.presentation.SnackbarAction
 import hu.piware.bricklog.feature.core.presentation.UiText
@@ -82,6 +83,7 @@ class DashboardViewModel(
     @Provided private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
     private val watchUserPreferences: WatchUserPreferences,
+    private val watchCollectionSetDetails: WatchCollectionSetDetails,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("DashboardViewModel")
@@ -101,6 +103,7 @@ class DashboardViewModel(
             observeNewChangelog()
             observeCurrentUser()
             observeUserPreferences()
+            observeCollectionSetDetails()
             if (BuildKonfig.DEV_LEVEL < DevLevels.BENCHMARK) {
                 askNotificationPermission()
             }
@@ -309,6 +312,7 @@ class DashboardViewModel(
     private fun observeCurrentUser() {
         watchCurrentUser()
             .onEach { user -> _uiState.update { it.copy(currentUser = user) } }
+            .onEach { user -> _searchBarState.update { it.copy(user = user) } }
             .onEach { user -> _navigationDrawerState.update { it.copy(currentUser = user) } }
             .launchIn(viewModelScope)
     }
@@ -316,6 +320,15 @@ class DashboardViewModel(
     private fun observeUserPreferences() {
         watchUserPreferences()
             .onEach { preferences -> _uiState.update { it.copy(userPreferences = preferences) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCollectionSetDetails() {
+        watchCollectionSetDetails(
+            collectionLimit = FEATURED_COLLECTIONS_ROW_LIMIT,
+            setLimit = 4,
+        )
+            .onEach { collectionSetDetails -> _uiState.update { it.copy(collectionSetDetails = collectionSetDetails) } }
             .launchIn(viewModelScope)
     }
 
@@ -359,5 +372,6 @@ class DashboardViewModel(
     companion object {
         const val SEARCH_BAR_RESULT_LIMIT = 10
         const val FEATURED_SETS_ROW_LIMIT = 9
+        const val FEATURED_COLLECTIONS_ROW_LIMIT = 4
     }
 }

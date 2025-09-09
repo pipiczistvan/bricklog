@@ -124,7 +124,7 @@ class SetListViewModel(
             is SetListArguments.Filtered -> {
                 _uiState.update {
                     it.copy(
-                        title = SetListTitle.SimpleText(arguments.title),
+                        title = SetListTitle.SetSearch(arguments.title),
                         filterOverrides = arguments.filterOverrides,
                         showFilterBar = arguments.showFilterBar,
                     )
@@ -160,6 +160,7 @@ class SetListViewModel(
 
     private fun observeCollectionById(id: CollectionId) {
         watchCurrentUser()
+            .onEach { user -> _uiState.update { it.copy(user = user) } }
             .flatMapLatest { user ->
                 watchCollectionDetailsById(id)
                     .onEach { collection ->
@@ -168,7 +169,7 @@ class SetListViewModel(
                         _uiState.update {
                             it.copy(
                                 baseCollection = collection,
-                                title = SetListTitle.CollectionName(
+                                title = SetListTitle.CollectionSearch(
                                     collection = collection,
                                     showRole = user.isAuthenticated,
                                 ),

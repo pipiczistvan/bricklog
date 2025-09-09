@@ -9,17 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
@@ -67,17 +63,13 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_user_details
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_never
-import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_collections
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
 import hu.piware.bricklog.BuildKonfig
-import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
-import hu.piware.bricklog.feature.collection.domain.model.CollectionRole
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
 import hu.piware.bricklog.feature.core.presentation.util.formatDateTime
 import hu.piware.bricklog.feature.set.domain.model.UpdateInfo
-import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.OverpassMonoTypography
@@ -104,19 +96,6 @@ fun DashboardNavigationDrawerSheet(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.statusBarsPadding())
-        Spacer(modifier = Modifier.height(24.dp))
-
-        CollectionsSection(
-            drawerState = drawerState,
-            collections = state.collections,
-            onAction = onAction,
-        )
-
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        )
-
         SettingsSection(
             drawerState = drawerState,
             currentUser = state.currentUser,
@@ -147,64 +126,6 @@ fun DashboardNavigationDrawerSheet(
         )
 
         Spacer(modifier = Modifier.navigationBarsPadding())
-    }
-}
-
-@Composable
-private fun CollectionsSection(
-    drawerState: DrawerState,
-    collections: List<CollectionDetails>,
-    onAction: (DashboardNavigationDrawerAction) -> Unit,
-) {
-    NavigationSection(
-        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_collections),
-        trailingIcon = {
-            IconButton(
-                onClick = { onAction(DashboardNavigationDrawerAction.OnCollectionEditClick(null)) },
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                )
-            }
-        },
-    ) {
-        collections.map {
-            NavigationSectionButton(
-                modifier = Modifier.testTag("navigation_drawer:collection_btn"),
-                state = drawerState,
-                title = it.collection.name,
-                onClick = {
-                    onAction(
-                        DashboardNavigationDrawerAction.OnSearchSets(
-                            SetListArguments.Collection(
-                                collectionId = it.collection.id,
-                            ),
-                        ),
-                    )
-                },
-                icon = it.collection.icon.outlinedIcon,
-                trailingIcon = {
-                    if (it.role == CollectionRole.OWNER) {
-                        IconButton(
-                            modifier = Modifier.testTag("navigation_drawer:collection_edit_btn"),
-                            onClick = {
-                                onAction(
-                                    DashboardNavigationDrawerAction.OnCollectionEditClick(
-                                        it.collection.id,
-                                    ),
-                                )
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                },
-            )
-        }
     }
 }
 

@@ -42,6 +42,9 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_b
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.search_bar.components.ThemeFilterBottomSheet
 import hu.piware.bricklog.feature.settings.domain.model.DEFAULT_SET_FILTER_PREFERENCES
 import hu.piware.bricklog.feature.settings.domain.model.SetFilterPreferences
+import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
+import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -52,6 +55,7 @@ fun SetFilterRow(
     filterOverrides: SetFilter? = null,
     onFilterPreferencesChange: (SetFilterPreferences) -> Unit,
     filterDomain: SetFilterDomain,
+    currentUser: User,
     modifier: Modifier = Modifier,
 ) {
     val mergedFilter = remember(filterPreferences, filterOverrides) {
@@ -153,6 +157,7 @@ fun SetFilterRow(
     if (showCollectionFilterSheet) {
         CollectionFilterBottomSheet(
             availableOptions = filterDomain.collections,
+            showRoleAndOwner = currentUser.isAuthenticated,
             selected = filterPreferences.collectionIds,
             onSelectionChange = { onFilterPreferencesChange(filterPreferences.copy(collectionIds = it)) },
             onDismiss = { showCollectionFilterSheet = false },
@@ -340,6 +345,7 @@ private fun SetFilterRowPreview() {
                 filterOverrides = null,
                 onFilterPreferencesChange = {},
                 filterDomain = SetFilterDomain(),
+                currentUser = PreviewData.user,
             )
         }
     }

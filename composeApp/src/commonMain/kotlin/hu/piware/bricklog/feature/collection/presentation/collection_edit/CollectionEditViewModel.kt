@@ -7,16 +7,12 @@ import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.CollectionRoute
 import hu.piware.bricklog.feature.collection.domain.model.Collection
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.model.CollectionType
 import hu.piware.bricklog.feature.collection.domain.usecase.DeleteCollections
 import hu.piware.bricklog.feature.collection.domain.usecase.SaveCollections
-import hu.piware.bricklog.feature.collection.domain.usecase.ValidateCollectionName
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollection
-import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
-import hu.piware.bricklog.feature.core.presentation.toUiText
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +24,6 @@ import kotlinx.coroutines.launch
 
 class CollectionEditViewModel(
     savedStateHandle: SavedStateHandle,
-    private val validateCollectionName: ValidateCollectionName,
     private val saveCollections: SaveCollections,
     private val watchCollection: WatchCollection,
     private val deleteCollections: DeleteCollections,
@@ -51,68 +46,15 @@ class CollectionEditViewModel(
 
     fun onAction(action: CollectionEditAction) {
         when (action) {
-            is CollectionEditAction.OnNameChanged -> {
-                _uiState.update { it.copy(name = action.name) }
-            }
-
-            is CollectionEditAction.OnIconChanged -> {
-                _uiState.update { it.copy(icon = action.icon) }
-            }
-
-            CollectionEditAction.OnDeleteClick -> deleteCollection()
-
-            CollectionEditAction.OnSubmit -> submitData()
-
+            is CollectionEditAction.OnCollectionChange -> onCollectionChange(action.collection)
+            is CollectionEditAction.OnCollectionDelete -> onCollectionDelete(action.collection)
             else -> Unit
-        }
-    }
-
-    private fun submitData() {
-        _uiState.update { it.copy(nameError = null) }
-
-        validateCollectionName(uiState.value.name)
-            .onError { error ->
-                _uiState.update { it.copy(nameError = error.error.toUiText()) }
-                return
-            }
-
-        viewModelScope.launch {
-            saveCollections(
-                Collection(
-                    id = uiState.value.collection?.id ?: "",
-                    owner = uiState.value.collection?.owner ?: uiState.value.currentUser.uid,
-                    name = uiState.value.name,
-                    icon = uiState.value.icon,
-                    type = uiState.value.collection?.type ?: CollectionType.USER_DEFINED,
-                    shares = uiState.value.shares,
-                ),
-            )
-                .showSnackbarOnError()
-                .onSuccess {
-                    _eventChannel.send(CollectionEditEvent.Back)
-                }
         }
     }
 
     private fun observeCollection(id: CollectionId) {
         watchCollection(id)
-            .onEach { collection ->
-                _uiState.update {
-                    it.copy(
-                        collection = collection,
-                    )
-                }
-
-                if (collection != null) {
-                    _uiState.update {
-                        it.copy(
-                            name = collection.name,
-                            icon = collection.icon,
-                            shares = collection.shares,
-                        )
-                    }
-                }
-            }
+            .onEach { collection -> _uiState.update { it.copy(collection = collection) } }
             .launchIn(viewModelScope)
     }
 
@@ -122,15 +64,27 @@ class CollectionEditViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun deleteCollection() {
+    private fun onCollectionChange(collection: Collection) {
         viewModelScope.launch {
-            val collectionToDelete = uiState.value.collection ?: return@launch
-
-            deleteCollections(collectionToDelete)
+            _uiState.update { it.copy(isLoading = true) }
+            saveCollections(collection)
                 .showSnackbarOnError()
                 .onSuccess {
                     _eventChannel.send(CollectionEditEvent.Back)
                 }
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    private fun onCollectionDelete(collection: Collection) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            deleteCollections(collection)
+                .showSnackbarOnError()
+                .onSuccess {
+                    _eventChannel.send(CollectionEditEvent.Deleted)
+                }
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 }

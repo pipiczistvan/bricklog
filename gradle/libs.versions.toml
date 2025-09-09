@@ -49,6 +49,7 @@ ktlint = "13.0.0"                               # https://github.com/JLLeitschuh
 kotlinx-coroutines-test = "1.10.2"              # https://github.com/Kotlin/kotlinx.coroutines/tree/master
 kover = "0.9.1"                                 # https://github.com/Kotlin/kotlinx-kover
 mockkmp = "2.0.2"                               # https://github.com/kosi-libs/MocKMP
+reorderable = "3.0.0"                           # https://github.com/Calvin-LL/Reorderable/
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -131,6 +132,8 @@ mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning"
 kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauth" }
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
+
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

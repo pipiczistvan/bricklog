@@ -100,6 +100,7 @@ private fun Content(
             filterPreferences = state.filterPreferences,
             onFilterPreferencesChange = { onAction(SetSearchBarAction.OnFilterChange(it)) },
             filterDomain = state.filterDomain,
+            currentUser = state.user,
         )
 
         if (state.searchResults.isNotEmpty()) {

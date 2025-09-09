@@ -19,11 +19,11 @@ fun SetListTitle(
     title: SetListTitle,
 ) {
     when (title) {
-        is SetListTitle.SimpleText -> {
+        is SetListTitle.SetSearch -> {
             Text(text = title.value)
         }
 
-        is SetListTitle.CollectionName -> {
+        is SetListTitle.CollectionSearch -> {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -44,8 +44,8 @@ fun SetListTitle(
 }
 
 sealed interface SetListTitle {
-    data class SimpleText(val value: String) : SetListTitle
-    data class CollectionName(
+    data class SetSearch(val value: String) : SetListTitle
+    data class CollectionSearch(
         val collection: CollectionDetails,
         val showRole: Boolean,
     ) : SetListTitle

@@ -31,10 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_btn_show_themes
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_greetings
 import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
-import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
@@ -43,6 +43,7 @@ import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationDialog
+import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedCollectionsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.LogoutConfirmationBottomSheet
@@ -76,12 +77,12 @@ fun DashboardScreenRoot(
     onNotificationSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     onAppearanceClick: () -> Unit,
-    onCollectionEditClick: (CollectionId?) -> Unit,
     onScanClick: () -> Unit,
     onThemeListClick: () -> Unit,
     onLoginClick: () -> Unit,
     onUserDetailsClick: () -> Unit,
     onFriendListClick: () -> Unit,
+    onCollectionListClick: () -> Unit,
 ) {
     App.firstScreenLoaded = true
 
@@ -103,6 +104,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnSetClick -> onSetClick(action.arguments)
                 is DashboardAction.OnSearchSets -> onSearchSets(action.arguments)
                 is DashboardAction.OnThemeListClick -> onThemeListClick()
+                is DashboardAction.OnCollectionListClick -> onCollectionListClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -120,14 +122,9 @@ fun DashboardScreenRoot(
         navigationDrawerState = navigationDrawerState,
         onNavigationDrawerAction = { action ->
             when (action) {
-                is DashboardNavigationDrawerAction.OnSearchSets -> onSearchSets(action.arguments)
                 is DashboardNavigationDrawerAction.OnNotificationSettingsClick -> onNotificationSettingsClick()
                 is DashboardNavigationDrawerAction.OnAboutClick -> onAboutClick()
                 is DashboardNavigationDrawerAction.OnAppearanceClick -> onAppearanceClick()
-                is DashboardNavigationDrawerAction.OnCollectionEditClick -> onCollectionEditClick(
-                    action.id,
-                )
-
                 is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
                 is DashboardNavigationDrawerAction.OnUserDetailsClick -> onUserDetailsClick()
                 is DashboardNavigationDrawerAction.OnFriendListClick -> onFriendListClick()
@@ -254,13 +251,42 @@ private fun DashboardScreen(
                                 .align(Alignment.End),
                             onClick = { onAction(DashboardAction.OnThemeListClick) },
                         ) {
-                            Text("Show all themes")
+                            Text(stringResource(Res.string.feature_set_dashboard_btn_show_themes))
                         }
 
-                        FeaturedSets(
-                            state = state,
-                            onAction = onAction,
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(Dimens.MediumPadding.size),
+                        ) {
+                            FeaturedCollectionsRow(
+                                collections = state.collectionSetDetails,
+                                showRoleAndOwner = state.currentUser.isAuthenticated,
+                                onShowMoreClick = { onAction(DashboardAction.OnCollectionListClick) },
+                                onCollectionClick = {
+                                    onAction(
+                                        DashboardAction.OnSearchSets(
+                                            SetListArguments.Collection(
+                                                collectionId = it.collection.collection.id,
+                                            ),
+                                        ),
+                                    )
+                                },
+                                onSetClick = { collection, set ->
+                                    onAction(
+                                        DashboardAction.OnSetClick(
+                                            SetDetailArguments(
+                                                set.setID,
+                                                collection.collection.id,
+                                            ),
+                                        ),
+                                    )
+                                },
+                            )
+
+                            FeaturedSets(
+                                state = state,
+                                onAction = onAction,
+                            )
+                        }
                     }
                 }
             }
@@ -347,7 +373,7 @@ private fun DashboardFeaturedSetsRow(
     title: String,
     filterOverrides: SetFilter,
     sharedElementPrefix: String,
-    sets: List<SetDetails>,
+    sets: List<SetDetails>?,
     onAction: (DashboardAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {

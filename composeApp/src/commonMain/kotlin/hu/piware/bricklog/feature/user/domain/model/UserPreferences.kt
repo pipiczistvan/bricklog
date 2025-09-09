@@ -11,4 +11,5 @@ data class UserPreferences(
     val hiddenFeaturedSets: List<FeaturedSetType>,
     val currencyRegion: CurrencyRegion,
     val targetCurrencyCode: String,
+    val preferredCollectionId: CollectionId?,
 )

@@ -43,6 +43,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_theme_list_title
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.SetTheme
 import hu.piware.bricklog.feature.set.domain.model.SetThemeGroup
@@ -50,6 +52,7 @@ import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -85,7 +88,7 @@ private fun ThemeListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Theme List")
+                    Text(stringResource(Res.string.feature_theme_list_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(ThemeListAction.OnBackClick) }) {

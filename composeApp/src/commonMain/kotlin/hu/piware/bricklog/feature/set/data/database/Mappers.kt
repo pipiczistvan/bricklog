@@ -3,6 +3,7 @@ package hu.piware.bricklog.feature.set.data.database
 import hu.piware.bricklog.feature.collection.data.database.CollectionEntity
 import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.toDomainModel
+import hu.piware.bricklog.feature.collection.domain.model.toCollectionDetails
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Instruction
@@ -96,7 +97,8 @@ fun SetDetailsWithCollections.toDomainModel(queryOptions: SetQueryOptions): SetD
             .filter { (collection, shares) ->
                 collection.ownerIs(userId) || collection.sharedWith(userId, shares)
             }
-            .map { (collection, shares) -> collection.toDomainModel(shares) },
+            .map { (collection, shares) -> collection.toDomainModel(shares) }
+            .map { it.toCollectionDetails(userId) },
         status = detailsView.status,
         priceCategory = detailsView.priceCategory(queryOptions),
     )

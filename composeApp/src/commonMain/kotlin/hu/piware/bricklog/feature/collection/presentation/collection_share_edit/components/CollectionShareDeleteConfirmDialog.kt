@@ -7,6 +7,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_collection_share_delete_confirm_dialog_btn_cancel
+import bricklog.composeapp.generated.resources.feature_collection_share_delete_confirm_dialog_btn_confirm
+import bricklog.composeapp.generated.resources.feature_collection_share_delete_confirm_dialog_label
+import bricklog.composeapp.generated.resources.feature_collection_share_delete_confirm_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionShareDeleteConfirmDialog(
@@ -21,24 +27,24 @@ fun CollectionShareDeleteConfirmDialog(
             )
         },
         title = {
-            Text("Delete collection share")
+            Text(stringResource(Res.string.feature_collection_share_delete_confirm_dialog_title))
         },
         text = {
-            Text("Are you sure you want to delete this collection share?")
+            Text(stringResource(Res.string.feature_collection_share_delete_confirm_dialog_label))
         },
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = onConfirmation,
             ) {
-                Text("Confirm")
+                Text(stringResource(Res.string.feature_collection_share_delete_confirm_dialog_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
             ) {
-                Text("Cancel")
+                Text(stringResource(Res.string.feature_collection_share_delete_confirm_dialog_btn_cancel))
             }
         },
     )
