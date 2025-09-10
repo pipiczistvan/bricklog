@@ -5,4 +5,5 @@ enum class DataType {
     EUR_RATES,
     ADDITIONAL_IMAGES,
     INSTRUCTIONS,
+    CMF_CODES,
 }

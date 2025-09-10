@@ -11,7 +11,7 @@ interface SetInstructionDao {
     suspend fun getInstructions(setId: Int): List<SetInstructionEntity>
 
     @Upsert
-    suspend fun upsertInstructions(images: List<SetInstructionEntity>)
+    suspend fun upsertInstructions(instructions: List<SetInstructionEntity>)
 
     @Query("DELETE FROM set_instructions WHERE setId = :setId")
     suspend fun deleteInstructions(setId: Int)

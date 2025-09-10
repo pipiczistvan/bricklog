@@ -35,7 +35,7 @@ interface SetRepository {
         sets: List<Set>,
         chunkSize: Int,
         onChunkInserted: suspend (insertCount: Int) -> Unit,
-    ): EmptyResult<DataError.Local>
+    ): EmptyResult<DataError>
 
-    suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError.Local>
+    suspend fun deleteSetsUpdatedAfter(date: Instant): EmptyResult<DataError>
 }

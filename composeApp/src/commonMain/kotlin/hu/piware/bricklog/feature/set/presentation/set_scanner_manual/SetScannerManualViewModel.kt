@@ -3,7 +3,7 @@ package hu.piware.bricklog.feature.set.presentation.set_scanner_manual
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
-import hu.piware.bricklog.feature.set.domain.usecase.WatchCollectibleSetDetails
+import hu.piware.bricklog.feature.set.domain.usecase.WatchSupportedCmfSeriesSetDetails
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -12,7 +12,7 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class SetScannerManualViewModel(
-    private val watchCollectibleSetDetails: WatchCollectibleSetDetails,
+    private val watchSupportedCmfSeriesSetDetails: WatchSupportedCmfSeriesSetDetails,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(SetScannerManualState())
@@ -21,7 +21,7 @@ class SetScannerManualViewModel(
     }
 
     private fun observeCollectibleSetDetails() {
-        watchCollectibleSetDetails()
+        watchSupportedCmfSeriesSetDetails()
             .onEach { sets -> _uiState.update { it.copy(collectibleSetDetails = sets) } }
             .launchIn(viewModelScope)
     }

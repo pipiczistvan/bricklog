@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
+import hu.piware.bricklog.feature.settings.domain.usecase.GetCmfCodesDataSyncInfo
 import hu.piware.bricklog.feature.settings.domain.usecase.GetEurRateDataSyncInfo
 import hu.piware.bricklog.feature.settings.domain.usecase.GetSetDataSyncInfo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import org.koin.android.annotation.KoinViewModel
 class AboutViewModel(
     private val getEurRateDataSyncInfo: GetEurRateDataSyncInfo,
     private val getSetDataSyncInfo: GetSetDataSyncInfo,
+    private val getCmfCodesDataSyncInfo: GetCmfCodesDataSyncInfo,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AboutState())
@@ -24,6 +26,7 @@ class AboutViewModel(
         .asStateFlowIn(viewModelScope) {
             loadEurRateDataSyncInfo()
             loadSetDataSyncInfo()
+            loadCmfCodesDataSyncInfo()
         }
 
     private fun loadEurRateDataSyncInfo() {
@@ -43,6 +46,16 @@ class AboutViewModel(
                 .data()
 
             _uiState.update { it.copy(setDataSyncInfo = dataSyncInfo) }
+        }
+    }
+
+    private fun loadCmfCodesDataSyncInfo() {
+        viewModelScope.launch {
+            val dataSyncInfo = getCmfCodesDataSyncInfo()
+                .showSnackbarOnError()
+                .data()
+
+            _uiState.update { it.copy(cmfCodesDataSyncInfo = dataSyncInfo) }
         }
     }
 }

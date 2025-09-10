@@ -5,6 +5,7 @@ import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.toDomainModel
 import hu.piware.bricklog.feature.collection.domain.model.toCollectionDetails
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
+import hu.piware.bricklog.feature.set.domain.model.CmfCode
 import hu.piware.bricklog.feature.set.domain.model.Image
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.PriceFilterOption
@@ -190,5 +191,23 @@ fun Instruction.toEntity(setId: Int): SetInstructionEntity {
         setId = setId,
         URL = URL,
         description = description,
+    )
+}
+
+fun CmfCodeEntity.toDomainModel(): CmfCode {
+    return CmfCode(
+        code = code,
+        setId = setId,
+        seriesSetId = seriesSetId,
+        manufacturerId = manufacturerId,
+    )
+}
+
+fun CmfCode.toEntity(): CmfCodeEntity {
+    return CmfCodeEntity(
+        code = code,
+        setId = setId,
+        seriesSetId = seriesSetId,
+        manufacturerId = manufacturerId,
     )
 }

@@ -5,12 +5,9 @@ import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
-import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -44,10 +41,6 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
         )
     }
 
-    override fun watchCollectibles(): Flow<List<Collectible>> {
-        return emptyFlow()
-    }
-
     override suspend fun getEurRateExportInfo(): Result<ExportInfo, DataError.Remote> {
         logger.w("Using mock implementation")
 
@@ -62,6 +55,28 @@ class MockRemoteDataServiceDataSource : RemoteDataServiceDataSource {
                                     "eur-rates-export.csv.gz?" +
                                     "rlkey=9zlzd29snypncal4qlnpcimz5&dl=1",
                             fileId = "eur-rates-export.csv.gz",
+                            priority = 1,
+                        ),
+                    ),
+                lastUpdated = Clock.System.now(),
+            ),
+        )
+    }
+
+    override suspend fun getCmfCodesExportInfo(): Result<ExportInfo, DataError.Remote> {
+        logger.w("Using mock implementation")
+
+        return Result.Success(
+            ExportInfo(
+                id = 1,
+                fileUploads =
+                    listOf(
+                        FileUploadResult(
+                            serviceId = "dropbox",
+                            url = "https://www.dropbox.com/scl/fi/iloa1quh6djcihs8tq5la/" +
+                                    "cmf-codes-export.json.gz?" +
+                                    "rlkey=apj2jjtrg378vye83mewp1ylb&st=shu6hv2r&dl=1",
+                            fileId = "cmf-codes-export.json.gz",
                             priority = 1,
                         ),
                     ),

@@ -10,7 +10,7 @@ import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.usecase.FindCollectibleSet
+import hu.piware.bricklog.feature.set.domain.usecase.FindSetDetailsByCmfCode
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsByPreferences
 import hu.piware.bricklog.feature.set.presentation.set_scanner.util.SetBarcodeDetection
 import hu.piware.bricklog.feature.set.presentation.set_scanner.util.parseCmfBoxDataMatrix
@@ -27,7 +27,7 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class SetScannerViewModel(
     private val watchSetDetailsByPreferences: WatchSetDetailsByPreferences,
-    private val findCollectibleSet: FindCollectibleSet,
+    private val findSetDetailsByCmfCode: FindSetDetailsByCmfCode,
 ) : ViewModel() {
 
     private val logger = Logger.withTag("SetScannerViewModel")
@@ -87,7 +87,7 @@ class SetScannerViewModel(
         val cmfBoxDataMatrix = barcode.parseCmfBoxDataMatrix()
 
         return if (cmfBoxDataMatrix != null) {
-            findCollectibleSet(cmfBoxDataMatrix.productNumber)
+            findSetDetailsByCmfCode(cmfBoxDataMatrix.productNumber)
                 .showSnackbarOnError()
                 .onError { return null }
                 .data()

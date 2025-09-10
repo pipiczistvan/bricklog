@@ -23,7 +23,7 @@ class GetSetDataSyncInfo(
         val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.SET_DATA)
             .asResult()
             .onError { return it }
-            .data()!!
+            .data()
 
         return Result.Success(
             DataSyncInfo(

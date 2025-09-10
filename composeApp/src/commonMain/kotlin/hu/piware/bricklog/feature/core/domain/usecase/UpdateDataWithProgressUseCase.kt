@@ -8,9 +8,9 @@ import bricklog.composeapp.generated.resources.feature_core_update_data_step_sav
 import bricklog.composeapp.generated.resources.feature_core_update_data_step_store_items
 import bricklog.composeapp.generated.resources.feature_core_update_data_step_uncompress_file
 import co.touchlab.kermit.Logger
-import hu.piware.bricklog.feature.core.data.csv.CsvParser
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
+import hu.piware.bricklog.feature.core.domain.FlowProgressCollector
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.core.domain.UpdateProgress
 import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
@@ -38,10 +38,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.measureTimedValue
 
-abstract class UpdateDataWithProgressUseCase<R, D>(
+abstract class UpdateDataWithProgressUseCase<T>(
     private val updateInfoRepository: UpdateInfoRepository,
     private val downloadFileByPriority: DownloadFileByPriority,
-    private val csvParser: CsvParser<R, D>,
 ) {
     private val logger = Logger.withTag("UpdateDataWithProgressUseCase")
 
@@ -108,6 +107,11 @@ abstract class UpdateDataWithProgressUseCase<R, D>(
 
     protected abstract suspend fun getBatchFilterMinimumDate(): Result<Instant?, DataError>
 
+    protected abstract suspend fun FlowProgressCollector<UpdateDataProgress>.parseItems(
+        rawData: ByteArray,
+        linesCount: Int,
+    ): Result<List<T>, DataError>
+
     private fun processBatches(batches: List<ExportBatch>) = flowForResult {
         val totalRows = batches.sumOf { it.rowCount }
         val weighedBatches = batches
@@ -139,12 +143,12 @@ abstract class UpdateDataWithProgressUseCase<R, D>(
                 }
         }.onError { return@flowForResult it }.data()
 
-        val csvFile = awaitInProgressRange(0.25f..0.5f) {
+        val rawData = awaitInProgressRange(0.25f..0.5f) {
             uncompressFile(downloadedFile)
         }.onError { return@flowForResult it }.data()
 
         val parsedItems = awaitInProgressRange(0.5f..0.75f) {
-            parseItems(csvFile, batch.rowCount)
+            parseData(rawData, batch.rowCount)
         }.onError { return@flowForResult it }.data()
 
         awaitInProgressRange(0.75f..1f) { storeItems(parsedItems) }
@@ -173,8 +177,8 @@ abstract class UpdateDataWithProgressUseCase<R, D>(
         }
     }
 
-    private fun parseItems(csv: ByteArray, linesCount: Int) = flowForResult {
-        logger.i { "Parsing items" }
+    private fun parseData(rawData: ByteArray, linesCount: Int) = flowForResult {
+        logger.i { "Parsing data" }
         emitProgress(
             UpdateDataProgress(
                 0f,
@@ -182,31 +186,13 @@ abstract class UpdateDataWithProgressUseCase<R, D>(
             ),
         )
         val (parseResult, parseTimeTaken) = measureTimedValue {
-            try {
-                val parsedItems = mutableListOf<D>()
-                csvParser.parseInChunksAsync(csv) { items ->
-                    parsedItems.addAll(items)
-                    if (linesCount > 0) {
-                        val progress = parsedItems.size.toFloat() / linesCount
-                        emitProgress(
-                            UpdateDataProgress(
-                                progress,
-                                PARSE_ITEMS,
-                            ),
-                        )
-                    }
-                }
-                Result.Success(parsedItems)
-            } catch (e: Exception) {
-                logger.e("Failed to parse items", e)
-                Result.Error(DataError.Local.UNKNOWN)
-            }
+            parseItems(rawData, linesCount)
         }
-        logger.i { "Parsing items took $parseTimeTaken" }
+        logger.i { "Parsing data took $parseTimeTaken" }
         parseResult
     }
 
-    private fun storeItems(items: List<D>) = flowForResult {
+    private fun storeItems(items: List<T>) = flowForResult {
         logger.i { "Storing ${items.size} items" }
         emitProgress(
             UpdateDataProgress(
@@ -232,9 +218,9 @@ abstract class UpdateDataWithProgressUseCase<R, D>(
     }
 
     protected abstract suspend fun saveItems(
-        items: List<D>,
+        items: List<T>,
         updateProgress: suspend (insertCount: Int) -> Unit,
-    ): EmptyResult<DataError.Local>
+    ): EmptyResult<DataError>
 
     private fun saveUpdateInfo() = flowForValue {
         emitProgress(

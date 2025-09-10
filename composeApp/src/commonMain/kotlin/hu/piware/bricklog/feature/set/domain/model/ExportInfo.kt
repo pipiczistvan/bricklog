@@ -7,3 +7,12 @@ data class ExportInfo(
     val fileUploads: List<FileUploadResult>,
     val lastUpdated: Instant,
 )
+
+fun ExportInfo.toExportBatch(): ExportBatch {
+    return ExportBatch(
+        validFrom = lastUpdated,
+        validTo = lastUpdated,
+        rowCount = 0,
+        fileUploads = fileUploads,
+    )
+}

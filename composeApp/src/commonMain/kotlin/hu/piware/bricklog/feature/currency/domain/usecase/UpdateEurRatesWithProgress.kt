@@ -7,7 +7,7 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.map
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.usecase.DownloadFileByPriority
-import hu.piware.bricklog.feature.core.domain.usecase.UpdateDataWithProgressUseCase
+import hu.piware.bricklog.feature.core.domain.usecase.UpdateCsvDataWithProgressUseCase
 import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateCsvParser
 import hu.piware.bricklog.feature.currency.data.csv.CurrencyRateRow
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyRate
@@ -15,7 +15,7 @@ import hu.piware.bricklog.feature.currency.domain.repository.CurrencyRepository
 import hu.piware.bricklog.feature.currency.domain.util.CURRENCY_CODE_EUR
 import hu.piware.bricklog.feature.set.domain.model.DataType
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
-import hu.piware.bricklog.feature.set.domain.model.ExportInfo
+import hu.piware.bricklog.feature.set.domain.model.toExportBatch
 import hu.piware.bricklog.feature.set.domain.repository.DataServiceRepository
 import hu.piware.bricklog.feature.set.domain.repository.UpdateInfoRepository
 import hu.piware.bricklog.util.asResultOrNull
@@ -29,7 +29,7 @@ class UpdateEurRatesWithProgress(
     csvParser: CurrencyRateCsvParser,
     private val currencyRepository: CurrencyRepository,
     private val dataServiceRepository: DataServiceRepository,
-) : UpdateDataWithProgressUseCase<CurrencyRateRow, CurrencyRate>(
+) : UpdateCsvDataWithProgressUseCase<CurrencyRateRow, CurrencyRate>(
     updateInfoRepository = updateInfoRepository,
     downloadFileByPriority = downloadFileByPriority,
     csvParser = csvParser,
@@ -42,7 +42,7 @@ class UpdateEurRatesWithProgress(
     }
 
     override suspend fun getBatchFilterMinimumDate(): Result<Instant?, DataError> {
-        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.EUR_RATES)
+        val updateInfo = updateInfoRepository.watchUpdateInfo(dataType)
             .asResultOrNull()
             .onError { it }
             .data()
@@ -56,13 +56,4 @@ class UpdateEurRatesWithProgress(
     ): EmptyResult<DataError.Local> {
         return currencyRepository.updateRates(CURRENCY_CODE_EUR, items)
     }
-}
-
-private fun ExportInfo.toExportBatch(): ExportBatch {
-    return ExportBatch(
-        validFrom = lastUpdated,
-        validTo = lastUpdated,
-        rowCount = 0,
-        fileUploads = fileUploads,
-    )
 }

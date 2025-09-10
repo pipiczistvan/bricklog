@@ -203,6 +203,7 @@
     <string name="feature_settings_about_btn_source_code">Check out the source code!</string>
     <string name="feature_settings_about_label_brickset">https://brickset.com/</string>
     <string name="feature_settings_about_label_build_version">%1$s-%2$s\n(revision %3$s)</string>
+    <string name="feature_settings_about_label_cmf_codes">u/omgbricks</string>
     <string name="feature_settings_about_label_developer">piware</string>
     <string name="feature_settings_about_label_eur_rates_api">fawazahmed0/exchange-api</string>
     <string name="feature_settings_about_label_export_date">last exported on %1$s</string>
@@ -210,10 +211,12 @@
     <string name="feature_settings_about_label_made_in">Composed in Hungary 🇭🇺</string>
     <string name="feature_settings_about_label_update_date">last refreshed on %1$s</string>
     <string name="feature_settings_about_link_brickset">https://brickset.com/</string>
+    <string name="feature_settings_about_link_cmf_codes">https://www.reddit.com/user/omgbricks/</string>
     <string name="feature_settings_about_link_eur_rates_api">https://github.com/fawazahmed0/exchange-api</string>
     <string name="feature_settings_about_link_kmp">https://kotlinlang.org/docs/multiplatform.html</string>
     <string name="feature_settings_about_link_source_code">https://github.com/pipiczistvan/bricklog</string>
     <string name="feature_settings_about_title">About</string>
+    <string name="feature_settings_about_title_cmf_codes">CMF codes data</string>
     <string name="feature_settings_about_title_developed_by">Developed by</string>
     <string name="feature_settings_about_title_eur_rates_api">EUR rates data</string>
     <string name="feature_settings_about_title_framework">Framework</string>

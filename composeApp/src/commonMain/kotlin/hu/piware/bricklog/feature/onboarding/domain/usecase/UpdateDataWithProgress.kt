@@ -4,6 +4,7 @@ import hu.piware.bricklog.feature.core.domain.awaitInProgressRange
 import hu.piware.bricklog.feature.core.domain.flowForResult
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.currency.domain.usecase.UpdateEurRatesWithProgress
+import hu.piware.bricklog.feature.set.domain.usecase.UpdateCmfCodesWithProgress
 import hu.piware.bricklog.feature.set.domain.usecase.UpdateSetsWithProgress
 import org.koin.core.annotation.Single
 
@@ -11,9 +12,14 @@ import org.koin.core.annotation.Single
 class UpdateDataWithProgress(
     private val updateSetsWithProgress: UpdateSetsWithProgress,
     private val updateEurRatesWithProgress: UpdateEurRatesWithProgress,
+    private val updateCmfCodesWithProgress: UpdateCmfCodesWithProgress,
 ) {
     operator fun invoke(force: Boolean = false) = flowForResult {
-        awaitInProgressRange(0f..0.9f) {
+        awaitInProgressRange(0.0f..0.1f) {
+            updateCmfCodesWithProgress(force)
+        }.onError { return@flowForResult it }
+
+        awaitInProgressRange(0.1f..0.9f) {
             updateSetsWithProgress(force)
         }.onError { return@flowForResult it }
 

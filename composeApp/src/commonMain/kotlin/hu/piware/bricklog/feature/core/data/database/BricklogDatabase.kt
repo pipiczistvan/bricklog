@@ -13,6 +13,8 @@ import hu.piware.bricklog.feature.collection.data.database.CollectionShareEntity
 import hu.piware.bricklog.feature.collection.data.database.CollectionWithSetIdDao
 import hu.piware.bricklog.feature.currency.data.database.CurrencyRateDao
 import hu.piware.bricklog.feature.currency.data.database.CurrencyRateEntity
+import hu.piware.bricklog.feature.set.data.database.CmfCodeDao
+import hu.piware.bricklog.feature.set.data.database.CmfCodeEntity
 import hu.piware.bricklog.feature.set.data.database.SetDao
 import hu.piware.bricklog.feature.set.data.database.SetDetailsDao
 import hu.piware.bricklog.feature.set.data.database.SetDetailsView
@@ -42,6 +44,7 @@ import hu.piware.bricklog.feature.user.data.database.UserPreferencesEntity
         UserPreferencesEntity::class,
         CurrencyRateEntity::class,
         FriendEntity::class,
+        CmfCodeEntity::class,
     ],
     views = [
         SetDetailsView::class,
@@ -69,6 +72,7 @@ abstract class BricklogDatabase : RoomDatabase() {
     abstract val userPreferencesDao: UserPreferencesDao
     abstract val currencyRateDao: CurrencyRateDao
     abstract val friendDao: FriendDao
+    abstract val cmfCodeDao: CmfCodeDao
 
     companion object {
         const val DB_NAME = "bricklog.db"

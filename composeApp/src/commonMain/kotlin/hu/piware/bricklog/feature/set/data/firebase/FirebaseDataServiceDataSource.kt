@@ -2,16 +2,12 @@ package hu.piware.bricklog.feature.set.data.firebase
 
 import co.touchlab.kermit.Logger
 import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import dev.gitlive.firebase.firestore.firestore
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import hu.piware.bricklog.feature.set.domain.datasource.RemoteDataServiceDataSource
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
-import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
 import org.koin.core.annotation.Single
 
 @Single
@@ -38,20 +34,6 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
         }
     }
 
-    override fun watchCollectibles(): Flow<List<Collectible>> {
-        return firestore.collection("collectibles").snapshots
-            .mapNotNull { snapshot ->
-                try {
-                    snapshot.documents.map { document ->
-                        document.data<CollectibleDocument>().toDomainModel(document.id)
-                    }
-                } catch (e: FirebaseFirestoreException) {
-                    logger.w(e) { "An error occurred while fetching collections" }
-                    null
-                }
-            }
-    }
-
     override suspend fun getEurRateExportInfo(): Result<ExportInfo, DataError.Remote> {
         try {
             logger.d { "Fetching eur rate export info from Firestore" }
@@ -65,6 +47,23 @@ class FirebaseDataServiceDataSource : RemoteDataServiceDataSource {
             return Result.Success(exportInfo)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while fetching eur rate export info" }
+            return Result.Error(DataError.Remote.UNKNOWN)
+        }
+    }
+
+    override suspend fun getCmfCodesExportInfo(): Result<ExportInfo, DataError.Remote> {
+        try {
+            logger.d { "Fetching cmf codes export info from Firestore" }
+            val exportInfo = firestore
+                .collection("bricklog-data-service")
+                .document("cmf-codes-export-info")
+                .get()
+                .data<ExportInfoDocument>()
+                .toDomainModel()
+
+            return Result.Success(exportInfo)
+        } catch (e: Exception) {
+            logger.e(e) { "An error occurred while fetching cmf codes export info" }
             return Result.Error(DataError.Remote.UNKNOWN)
         }
     }

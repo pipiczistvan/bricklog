@@ -44,6 +44,7 @@ import bricklog.composeapp.generated.resources.feature_settings_about_btn_licens
 import bricklog.composeapp.generated.resources.feature_settings_about_btn_source_code
 import bricklog.composeapp.generated.resources.feature_settings_about_label_brickset
 import bricklog.composeapp.generated.resources.feature_settings_about_label_build_version
+import bricklog.composeapp.generated.resources.feature_settings_about_label_cmf_codes
 import bricklog.composeapp.generated.resources.feature_settings_about_label_developer
 import bricklog.composeapp.generated.resources.feature_settings_about_label_eur_rates_api
 import bricklog.composeapp.generated.resources.feature_settings_about_label_export_date
@@ -51,10 +52,12 @@ import bricklog.composeapp.generated.resources.feature_settings_about_label_kmp
 import bricklog.composeapp.generated.resources.feature_settings_about_label_made_in
 import bricklog.composeapp.generated.resources.feature_settings_about_label_update_date
 import bricklog.composeapp.generated.resources.feature_settings_about_link_brickset
+import bricklog.composeapp.generated.resources.feature_settings_about_link_cmf_codes
 import bricklog.composeapp.generated.resources.feature_settings_about_link_eur_rates_api
 import bricklog.composeapp.generated.resources.feature_settings_about_link_kmp
 import bricklog.composeapp.generated.resources.feature_settings_about_link_source_code
 import bricklog.composeapp.generated.resources.feature_settings_about_title
+import bricklog.composeapp.generated.resources.feature_settings_about_title_cmf_codes
 import bricklog.composeapp.generated.resources.feature_settings_about_title_developed_by
 import bricklog.composeapp.generated.resources.feature_settings_about_title_eur_rates_api
 import bricklog.composeapp.generated.resources.feature_settings_about_title_framework
@@ -230,6 +233,30 @@ private fun ToolsSection(
                     text = stringResource(
                         Res.string.feature_settings_about_label_update_date,
                         state.eurRateDataSyncInfo?.formattedUpdateDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            InfoCard(
+                title = stringResource(Res.string.feature_settings_about_title_cmf_codes),
+                description = stringResource(Res.string.feature_settings_about_label_cmf_codes),
+                onClick = {
+                    scope.launch {
+                        uriHandler.openUri(getString(Res.string.feature_settings_about_link_cmf_codes))
+                    }
+                },
+            ) {
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_export_date,
+                        state.cmfCodesDataSyncInfo?.formattedExportDate ?: "",
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                AutoResizedText(
+                    text = stringResource(
+                        Res.string.feature_settings_about_label_update_date,
+                        state.cmfCodesDataSyncInfo?.formattedUpdateDate ?: "",
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                 )

@@ -12,15 +12,15 @@ import hu.piware.bricklog.util.asResult
 import org.koin.core.annotation.Single
 
 @Single
-class GetEurRateDataSyncInfo(
+class GetCmfCodesDataSyncInfo(
     private val dataServiceRepository: DataServiceRepository,
     private val updateInfoRepository: UpdateInfoRepository,
 ) {
     suspend operator fun invoke(): Result<DataSyncInfo, DataError> {
-        val exportInfo = dataServiceRepository.getEurRateExportInfo()
+        val exportInfo = dataServiceRepository.getCmfCodesExportInfo()
             .onError { return it }
             .data()
-        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.EUR_RATES)
+        val updateInfo = updateInfoRepository.watchUpdateInfo(DataType.CMF_CODES)
             .asResult()
             .onError { return it }
             .data()

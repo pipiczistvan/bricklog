@@ -5,4 +5,5 @@ import hu.piware.bricklog.feature.settings.domain.model.DataSyncInfo
 data class AboutState(
     val setDataSyncInfo: DataSyncInfo? = null,
     val eurRateDataSyncInfo: DataSyncInfo? = null,
+    val cmfCodesDataSyncInfo: DataSyncInfo? = null,
 )

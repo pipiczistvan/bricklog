@@ -1,5 +1,6 @@
 package hu.piware.bricklog.feature.set.data.network
 
+import hu.piware.bricklog.feature.set.domain.model.SetId
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,4 +35,19 @@ data class BricksetInstructionsDto(
 data class InstructionDto(
     val URL: String? = null,
     val description: String? = null,
+)
+
+@Serializable
+data class CmfSeriesDto(
+    val setNum: String,
+    val setId: SetId,
+    val setName: String,
+    val codes: List<CmfCodeListDto>,
+)
+
+@Serializable
+data class CmfCodeListDto(
+    val setId: SetId,
+    val r: List<String>,
+    val s: List<String>,
 )

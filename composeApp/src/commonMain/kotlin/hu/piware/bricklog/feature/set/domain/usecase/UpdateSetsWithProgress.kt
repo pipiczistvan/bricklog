@@ -7,7 +7,7 @@ import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.map
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.usecase.DownloadFileByPriority
-import hu.piware.bricklog.feature.core.domain.usecase.UpdateDataWithProgressUseCase
+import hu.piware.bricklog.feature.core.domain.usecase.UpdateCsvDataWithProgressUseCase
 import hu.piware.bricklog.feature.set.data.csv.SetCsvParser
 import hu.piware.bricklog.feature.set.data.csv.SetRow
 import hu.piware.bricklog.feature.set.domain.model.DataType
@@ -26,7 +26,7 @@ class UpdateSetsWithProgress(
     csvParser: SetCsvParser,
     private val dataServiceRepository: DataServiceRepository,
     private val setRepository: SetRepository,
-) : UpdateDataWithProgressUseCase<SetRow, Set>(
+) : UpdateCsvDataWithProgressUseCase<SetRow, Set>(
     updateInfoRepository = updateInfoRepository,
     downloadFileByPriority = downloadFileByPriority,
     csvParser = csvParser,
@@ -49,7 +49,7 @@ class UpdateSetsWithProgress(
     override suspend fun saveItems(
         items: List<Set>,
         updateProgress: suspend (Int) -> Unit,
-    ): EmptyResult<DataError.Local> {
+    ): EmptyResult<DataError> {
         return setRepository.updateSetsChunked(items, SET_CHUNK_SIZE, updateProgress)
     }
 

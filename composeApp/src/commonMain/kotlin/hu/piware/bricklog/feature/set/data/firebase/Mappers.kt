@@ -2,8 +2,6 @@ package hu.piware.bricklog.feature.set.data.firebase
 
 import dev.gitlive.firebase.firestore.toMilliseconds
 import hu.piware.bricklog.feature.set.domain.model.BatchExportInfo
-import hu.piware.bricklog.feature.set.domain.model.CodeList
-import hu.piware.bricklog.feature.set.domain.model.Collectible
 import hu.piware.bricklog.feature.set.domain.model.ExportBatch
 import hu.piware.bricklog.feature.set.domain.model.ExportInfo
 import hu.piware.bricklog.feature.set.domain.model.FileUploadResult
@@ -38,21 +36,5 @@ fun ExportBatchDocument.toDomainModel(): ExportBatch {
         validTo = Instant.fromEpochMilliseconds(validTo!!.toMilliseconds().toLong()),
         rowCount = rowCount,
         fileUploads = fileUploads.map { it.toDomainModel() },
-    )
-}
-
-fun CodeListDocument.toDomainModel(): CodeList {
-    return CodeList(
-        r = r,
-        s = s,
-    )
-}
-
-fun CollectibleDocument.toDomainModel(id: String): Collectible {
-    return Collectible(
-        setNumber = id,
-        setId = setId,
-        name = name,
-        codes = codes.mapValues { it.value.toDomainModel() },
     )
 }
