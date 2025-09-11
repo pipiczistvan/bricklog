@@ -251,35 +251,35 @@ class DashboardViewModel(
     }
 
     private fun observeLatestSets() {
-        watchSetDetailsByPreferences(filterOverrides = latestSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = latestSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT + 1))
             .onEach { sets -> _uiState.update { it.copy(latestSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeLatestReleases() {
-        watchSetDetailsByPreferences(filterOverrides = latestReleasesFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = latestReleasesFilter.copy(limit = FEATURED_SETS_ROW_LIMIT + 1))
             .onEach { sets -> _uiState.update { it.copy(latestReleases = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeArrivingSets() {
-        watchSetDetailsByPreferences(filterOverrides = arrivingSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = arrivingSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT + 1))
             .onEach { sets -> _uiState.update { it.copy(arrivingSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeRetiringSets() {
-        watchSetDetailsByPreferences(filterOverrides = retiringSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = retiringSetsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT + 1))
             .onEach { sets -> _uiState.update { it.copy(retiringSets = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
     }
 
     private fun observeNewItems() {
-        watchSetDetailsByPreferences(filterOverrides = newItemsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT))
+        watchSetDetailsByPreferences(filterOverrides = newItemsFilter.copy(limit = FEATURED_SETS_ROW_LIMIT + 1))
             .onEach { sets -> _uiState.update { it.copy(newItems = sets) } }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
@@ -325,7 +325,7 @@ class DashboardViewModel(
 
     private fun observeCollectionSetDetails() {
         watchCollectionSetDetails(
-            collectionLimit = FEATURED_COLLECTIONS_ROW_LIMIT,
+            collectionLimit = FEATURED_COLLECTIONS_ROW_LIMIT + 1,
             setLimit = 4,
         )
             .onEach { collectionSetDetails -> _uiState.update { it.copy(collectionSetDetails = collectionSetDetails) } }

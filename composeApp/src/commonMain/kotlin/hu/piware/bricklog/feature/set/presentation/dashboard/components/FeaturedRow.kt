@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_label_empty
 import bricklog.composeapp.generated.resources.feature_set_dashboard_label_show_more
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
@@ -34,11 +35,11 @@ fun <T> FeaturedRow(
     title: String,
     items: List<T>?,
     onShowMoreClick: () -> Unit,
-    placeholderLimit: Int = Int.MAX_VALUE,
+    limit: Int = 10,
     modifier: Modifier = Modifier,
-    itemContent: @Composable (T?) -> Unit,
+    placeHolderContent: @Composable () -> Unit,
+    itemContent: @Composable (T) -> Unit,
 ) {
-    // TODO: Handle empty items
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
@@ -52,7 +53,8 @@ fun <T> FeaturedRow(
         HorizontalItemList(
             items = items,
             onShowMoreClick = onShowMoreClick,
-            placeholderLimit = placeholderLimit,
+            limit = limit,
+            placeHolderContent = placeHolderContent,
             itemContent = itemContent,
         )
     }
@@ -85,9 +87,10 @@ private fun Title(
 private fun <T> HorizontalItemList(
     items: List<T>?,
     onShowMoreClick: () -> Unit,
-    placeholderLimit: Int,
+    limit: Int,
     modifier: Modifier = Modifier,
-    itemContent: @Composable (T?) -> Unit,
+    placeHolderContent: @Composable () -> Unit,
+    itemContent: @Composable (T) -> Unit,
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -96,23 +99,33 @@ private fun <T> HorizontalItemList(
         item {
             Spacer(modifier = Modifier.width(4.dp))
         }
+
         if (items != null) {
-            items(items) { item ->
-                itemContent(item)
-            }
-        } else {
-            repeat(placeholderLimit) {
+            if (items.isEmpty()) {
                 item {
-                    itemContent(null)
+                    EmptyItem(
+                        placeHolderContent = placeHolderContent,
+                    )
+                }
+            } else {
+                items(items.take(limit)) { item ->
+                    itemContent(item)
+                }
+                if (items.size > limit) {
+                    item {
+                        ShowMoreItem(
+                            onClick = onShowMoreClick,
+                            placeHolderContent = placeHolderContent,
+                        )
+                    }
                 }
             }
-        }
-
-        item {
-            ShowMoreItem(
-                onClick = onShowMoreClick,
-                itemContent = itemContent,
-            )
+        } else {
+            repeat(limit) {
+                item {
+                    placeHolderContent()
+                }
+            }
         }
 
         item {
@@ -122,9 +135,9 @@ private fun <T> HorizontalItemList(
 }
 
 @Composable
-private fun <T> ShowMoreItem(
+private fun ShowMoreItem(
     onClick: () -> Unit,
-    itemContent: @Composable (T?) -> Unit,
+    placeHolderContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -139,7 +152,7 @@ private fun <T> ShowMoreItem(
             Box(
                 modifier = Modifier.alpha(0f),
             ) {
-                itemContent(null)
+                placeHolderContent()
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,6 +162,33 @@ private fun <T> ShowMoreItem(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyItem(
+    placeHolderContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                modifier = Modifier.alpha(0f),
+            ) {
+                placeHolderContent()
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(stringResource(Res.string.feature_set_dashboard_label_empty))
             }
         }
     }

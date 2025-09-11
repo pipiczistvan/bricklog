@@ -30,6 +30,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_collections
 import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionSetDetails
 import hu.piware.bricklog.feature.collection.domain.model.containerColor
@@ -39,6 +41,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
+import hu.piware.bricklog.feature.set.presentation.dashboard.DashboardViewModel.Companion.FEATURED_COLLECTIONS_ROW_LIMIT
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
 import org.jetbrains.compose.resources.stringResource
@@ -55,27 +58,26 @@ fun FeaturedCollectionsRow(
     modifier: Modifier = Modifier,
 ) {
     FeaturedRow(
-        title = "Collections", // TODO: Localize
+        modifier = modifier,
+        title = stringResource(Res.string.feature_set_dashboard_title_collections),
         items = collections,
         onShowMoreClick = onShowMoreClick,
-        placeholderLimit = 1,
-        modifier = modifier,
-    ) { collection ->
-        if (collection != null) {
-            CollectionCard(
-                modifier = Modifier
-                    .testTag("collection_card"),
-                collectionSetDetails = collection,
-                showRoleAndOwner = showRoleAndOwner,
-                onClick = { onCollectionClick(collection) },
-                onSetClick = { onSetClick(collection.collection, it) },
-                sharedElementPrefix = collection.collection.collection.id,
-            )
-        } else {
+        limit = FEATURED_COLLECTIONS_ROW_LIMIT,
+        placeHolderContent = {
             CollectionCardPlaceholder(
                 showRoleAndOwner = showRoleAndOwner,
             )
         }
+    ) { collection ->
+        CollectionCard(
+            modifier = Modifier
+                .testTag("collection_card"),
+            collectionSetDetails = collection,
+            showRoleAndOwner = showRoleAndOwner,
+            onClick = { onCollectionClick(collection) },
+            onSetClick = { onSetClick(collection.collection, it) },
+            sharedElementPrefix = collection.collection.collection.id,
+        )
     }
 }
 

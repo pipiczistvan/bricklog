@@ -43,23 +43,22 @@ fun FeaturedSetsRow(
     modifier: Modifier = Modifier,
 ) {
     FeaturedRow(
+        modifier = modifier,
         title = title,
         items = sets,
         onShowMoreClick = onShowMoreClick,
-        placeholderLimit = FEATURED_SETS_ROW_LIMIT,
-        modifier = modifier,
-    ) { set ->
-        if (set != null) {
-            SetCard(
-                modifier = Modifier
-                    .testTag("set_card")
-                    .sharedElement("$sharedElementPrefix/image/${set.setID}"),
-                setDetails = set,
-                onClick = { onSetClick(set) },
-            )
-        } else {
+        limit = FEATURED_SETS_ROW_LIMIT,
+        placeHolderContent = {
             SetCardPlaceholder()
         }
+    ) { set ->
+        SetCard(
+            modifier = Modifier
+                .testTag("set_card")
+                .sharedElement("$sharedElementPrefix/image/${set.setID}"),
+            setDetails = set,
+            onClick = { onSetClick(set) },
+        )
     }
 }
 
