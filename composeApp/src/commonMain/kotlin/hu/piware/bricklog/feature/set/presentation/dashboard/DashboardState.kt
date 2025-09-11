@@ -16,7 +16,6 @@ data class DashboardState(
     val newItems: List<SetDetails>? = null,
     val currentUser: User = GUEST_USER,
     val showLogoutConfirm: Boolean = false,
-    val showDeleteUserConfirm: Boolean = false,
     val areSetsRefreshing: Boolean = false,
     val changelog: Changelog? = null,
     val userPreferences: UserPreferences = GUEST_PREFERENCES,

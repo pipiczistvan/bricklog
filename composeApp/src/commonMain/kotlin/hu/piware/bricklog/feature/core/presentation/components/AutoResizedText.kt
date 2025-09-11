@@ -11,12 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun AutoResizedText(
     text: String,
     style: TextStyle = LocalTextStyle.current,
     color: Color = Color.Unspecified,
+    fontWeight: FontWeight? = null,
     modifier: Modifier = Modifier,
 ) {
     var resizedTextStyle by remember {
@@ -36,6 +38,7 @@ fun AutoResizedText(
         style = resizedTextStyle,
         color = color,
         softWrap = false,
+        fontWeight = fontWeight,
         onTextLayout = { result ->
             if (result.didOverflowWidth) {
                 resizedTextStyle = resizedTextStyle.copy(

@@ -40,7 +40,7 @@ class SessionManager {
 
     companion object {
         const val USER_ID_GUEST = "guest"
-        val GUEST_USER = User(USER_ID_GUEST, null)
+        val GUEST_USER = User(USER_ID_GUEST, null, null)
         val GUEST_PREFERENCES = UserPreferencesDocument().toDomainModel()
     }
 }

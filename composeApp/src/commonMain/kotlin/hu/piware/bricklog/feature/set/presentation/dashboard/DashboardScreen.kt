@@ -2,6 +2,7 @@
 
 package hu.piware.bricklog.feature.set.presentation.dashboard
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,23 +27,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_dashboard_btn_show_themes
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_greetings
+import bricklog.composeapp.generated.resources.feature_set_dashboard_title_unknown_user
 import bricklog.composeapp.generated.resources.feature_set_detail_title_by_theme
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
-import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.presentation.components.PullToRefreshColumn
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.ChangelogBottomSheet
-import hu.piware.bricklog.feature.set.presentation.dashboard.components.DeleteUserConfirmationDialog
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedCollectionsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedSetsRow
 import hu.piware.bricklog.feature.set.presentation.dashboard.components.FeaturedThemesCarousel
@@ -63,6 +65,7 @@ import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.Shapes
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -86,12 +89,6 @@ fun DashboardScreenRoot(
 ) {
     App.firstScreenLoaded = true
 
-    observeAsEvents(viewModel.eventChannel) { event ->
-        when (event) {
-            DashboardEvent.LoginProposed -> onLoginClick()
-        }
-    }
-
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
     val navigationDrawerState by viewModel.navigationDrawerState.collectAsStateWithLifecycle()
@@ -105,6 +102,7 @@ fun DashboardScreenRoot(
                 is DashboardAction.OnSearchSets -> onSearchSets(action.arguments)
                 is DashboardAction.OnThemeListClick -> onThemeListClick()
                 is DashboardAction.OnCollectionListClick -> onCollectionListClick()
+                is DashboardAction.OnUserDetailsClick -> onUserDetailsClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -126,7 +124,6 @@ fun DashboardScreenRoot(
                 is DashboardNavigationDrawerAction.OnAboutClick -> onAboutClick()
                 is DashboardNavigationDrawerAction.OnAppearanceClick -> onAppearanceClick()
                 is DashboardNavigationDrawerAction.OnLoginClick -> onLoginClick()
-                is DashboardNavigationDrawerAction.OnUserDetailsClick -> onUserDetailsClick()
                 is DashboardNavigationDrawerAction.OnFriendListClick -> onFriendListClick()
 
                 else -> Unit
@@ -210,7 +207,11 @@ private fun DashboardScreen(
                                 Greetings(
                                     modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
                                     displayName = state.userPreferences.displayName
-                                        ?: state.currentUser.displayName?.split(" ")?.firstOrNull(),
+                                        ?: state.currentUser.email
+                                        ?: stringResource(Res.string.feature_set_dashboard_title_unknown_user),
+                                    onDisplayNameClick = {
+                                        onAction(DashboardAction.OnUserDetailsClick)
+                                    },
                                 )
                             }
                         }
@@ -306,18 +307,12 @@ private fun DashboardScreen(
             onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnLogoutConfirm) },
         )
     }
-
-    if (state.showDeleteUserConfirm) {
-        DeleteUserConfirmationDialog(
-            onDismiss = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserDismiss) },
-            onConfirm = { onNavigationDrawerAction(DashboardNavigationDrawerAction.OnDeleteUserConfirm) },
-        )
-    }
 }
 
 @Composable
 private fun Greetings(
-    displayName: String?,
+    displayName: String,
+    onDisplayNameClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -328,14 +323,20 @@ private fun Greetings(
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
         )
-        if (displayName != null) {
-            Text(
-                text = " $displayName",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
+        Text(
+            modifier = Modifier
+                .clip(Shapes.large)
+                .clickable {
+                    onDisplayNameClick()
+                }
+                .padding(horizontal = Dimens.SmallPadding.size),
+            text = displayName,
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

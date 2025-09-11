@@ -8,6 +8,7 @@ sealed interface DashboardAction {
     data class OnSearchSets(val arguments: SetListArguments) : DashboardAction
     data object OnThemeListClick : DashboardAction
     data object OnCollectionListClick : DashboardAction
+    data object OnUserDetailsClick : DashboardAction
     data object OnRefreshData : DashboardAction
     data object OnUpdateChangelogReadVersion : DashboardAction
 }

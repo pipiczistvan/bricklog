@@ -23,7 +23,8 @@ object PreviewData {
 
     val user = User(
         uid = "mock",
-        displayName = "Mock",
+        email = "mock@mock.com",
+        name = "Mock",
     )
 
     val sets = (1..100).map {

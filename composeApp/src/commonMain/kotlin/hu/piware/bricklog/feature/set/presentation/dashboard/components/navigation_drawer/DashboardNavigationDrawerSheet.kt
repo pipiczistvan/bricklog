@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
@@ -60,7 +59,6 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_reset_sets
-import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_user_details
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_never
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
@@ -148,27 +146,8 @@ private fun SettingsSection(
                 onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick)
             },
             icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
-            trailingIcon = {
-                if (isLoggedIn) {
-                    IconButton(onClick = { onAction(DashboardNavigationDrawerAction.OnDeleteUserClick) }) {
-                        Icon(
-                            imageVector = Icons.Outlined.DeleteOutline,
-                            contentDescription = null,
-                        )
-                    }
-                } else {
-                    Unit
-                }
-            },
         )
         if (isLoggedIn) {
-            NavigationSectionButton(
-                modifier = Modifier.testTag("navigation_drawer:user_details_btn"),
-                state = drawerState,
-                title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_user_details),
-                onClick = { onAction(DashboardNavigationDrawerAction.OnUserDetailsClick) },
-                icon = Icons.Outlined.Person,
-            )
             NavigationSectionButton(
                 modifier = Modifier.testTag("navigation_drawer:friend_list_btn"),
                 state = drawerState,

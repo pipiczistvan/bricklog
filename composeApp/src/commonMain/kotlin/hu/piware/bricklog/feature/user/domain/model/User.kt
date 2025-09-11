@@ -6,7 +6,8 @@ typealias UserId = String
 
 data class User(
     val uid: UserId,
-    val displayName: String?,
+    val email: String?,
+    val name: String?,
 )
 
 val User.isAuthenticated: Boolean

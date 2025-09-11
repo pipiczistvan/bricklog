@@ -22,7 +22,7 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
     ],
     indices = [
         Index("setId"),
-    ]
+    ],
 )
 data class CollectionSetEntity(
     val setId: SetId,

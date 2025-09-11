@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_user_register_form_btn_submit
+import bricklog.composeapp.generated.resources.feature_user_login_btn_login
 import bricklog.composeapp.generated.resources.feature_user_register_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
@@ -87,7 +87,7 @@ private fun RegisterScreen(
                     },
                     actions = {
                         TextButton(onClick = { onAction(RegisterAction.OnLoginClick) }) {
-                            Text(text = stringResource(Res.string.feature_user_register_form_btn_submit))
+                            Text(text = stringResource(Res.string.feature_user_login_btn_login))
                         }
                     },
                 )

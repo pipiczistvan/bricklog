@@ -97,6 +97,14 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
         composable<UserRoute.UserDetailsScreen> {
             UserDetailsScreenRoot(
                 onBackClick = navController::navigateUp,
+                onLoginClick = {
+                    navController.navigate(UserRoute.LoginScreen) {
+                        launchSingleTop = true
+                    }
+                },
+                onUserDeleted = {
+                    navController.popBackStack<UserRoute.Graph>(inclusive = true)
+                },
             )
         }
         composable<UserRoute.FriendListScreen> {

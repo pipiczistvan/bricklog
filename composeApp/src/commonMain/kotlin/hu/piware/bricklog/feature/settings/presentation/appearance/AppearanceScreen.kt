@@ -11,11 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
@@ -44,7 +40,6 @@ import bricklog.composeapp.generated.resources.feature_settings_appearance_title
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_currency
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_dashboard
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_featured_sets
-import bricklog.composeapp.generated.resources.feature_settings_appearance_title_greetings
 import bricklog.composeapp.generated.resources.feature_settings_appearance_title_theme
 import hu.piware.bricklog.feature.core.presentation.components.AlertIconButton
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
@@ -57,9 +52,6 @@ import hu.piware.bricklog.feature.settings.domain.model.ThemeOption
 import hu.piware.bricklog.feature.settings.presentation.appearance.components.CurrencyCodeBottomSheet
 import hu.piware.bricklog.feature.settings.presentation.appearance.components.CurrencyRegionBottomSheet
 import hu.piware.bricklog.feature.settings.presentation.appearance.components.DoubleHorizontalDivider
-import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
-import hu.piware.bricklog.feature.user.presentation.components.NameField
-import hu.piware.bricklog.feature.user.presentation.util.isValidName
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
@@ -177,33 +169,6 @@ private fun DashboardSettings(
                 )
             },
         )
-
-        if (state.currentUser.isAuthenticated) {
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
-            )
-
-            GreetingsSettings(
-                hideGreetings = state.userPreferences.hideGreetings,
-                onHideGreetingsChange = { hideGreetings ->
-                    onAction(
-                        AppearanceAction.OnUserPreferencesChange(
-                            state.userPreferences.copy(hideGreetings = hideGreetings),
-                            true,
-                        ),
-                    )
-                },
-                displayName = state.userPreferences.displayName,
-                onDisplayNameChange = { displayName ->
-                    onAction(
-                        AppearanceAction.OnUserPreferencesChange(
-                            state.userPreferences.copy(displayName = displayName),
-                            true,
-                        ),
-                    )
-                },
-            )
-        }
     }
 }
 
@@ -245,70 +210,6 @@ private fun FeaturedSetsSettings(
                             },
                         )
                     },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun GreetingsSettings(
-    hideGreetings: Boolean,
-    onHideGreetingsChange: (Boolean) -> Unit,
-    displayName: String?,
-    onDisplayNameChange: (String) -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(Res.string.feature_settings_appearance_title_greetings),
-                style = MaterialTheme.typography.titleLarge,
-            )
-
-            Switch(
-                checked = !hideGreetings,
-                onCheckedChange = {
-                    onHideGreetingsChange(!it)
-                },
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            val focusManager = LocalFocusManager.current
-
-            var name by remember { mutableStateOf("") }
-            var isNameValid by remember { mutableStateOf(true) }
-            NameField(
-                modifier = Modifier.weight(1f),
-                value = name,
-                onValueChange = { name = it },
-                labelValue = displayName?.ifEmpty { null },
-                onValidate = { isNameValid = it },
-            )
-
-            FilledIconButton(
-                onClick = {
-                    focusManager.clearFocus()
-                    if (isValidName(name)) {
-                        onDisplayNameChange(name)
-                    }
-                },
-                enabled = isNameValid,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Save,
-                    contentDescription = null,
                 )
             }
         }

@@ -8,12 +8,8 @@ sealed interface DashboardNavigationDrawerAction {
     data object OnLogoutClick : DashboardNavigationDrawerAction
     data object OnLogoutConfirm : DashboardNavigationDrawerAction
     data object OnLogoutDismiss : DashboardNavigationDrawerAction
-    data object OnDeleteUserClick : DashboardNavigationDrawerAction
-    data object OnDeleteUserDismiss : DashboardNavigationDrawerAction
-    data object OnDeleteUserConfirm : DashboardNavigationDrawerAction
     data object OnNotificationSettingsClick : DashboardNavigationDrawerAction
     data object OnAboutClick : DashboardNavigationDrawerAction
     data object OnAppearanceClick : DashboardNavigationDrawerAction
-    data object OnUserDetailsClick : DashboardNavigationDrawerAction
     data object OnFriendListClick : DashboardNavigationDrawerAction
 }

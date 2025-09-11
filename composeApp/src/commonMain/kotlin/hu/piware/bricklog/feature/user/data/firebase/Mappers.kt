@@ -11,7 +11,8 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 fun FirebaseUser.toUser(): User {
     return User(
         uid = uid,
-        displayName = displayName,
+        email = email?.ifBlank { null },
+        name = displayName?.ifBlank { null },
     )
 }
 

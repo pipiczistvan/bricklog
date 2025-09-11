@@ -67,7 +67,7 @@ fun FeaturedCollectionsRow(
             CollectionCardPlaceholder(
                 showRoleAndOwner = showRoleAndOwner,
             )
-        }
+        },
     ) { collection ->
         CollectionCard(
             modifier = Modifier

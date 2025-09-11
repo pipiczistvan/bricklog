@@ -5,8 +5,6 @@ package hu.piware.bricklog.feature.set.presentation.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_user_delete_user_data_action_reauthenticate
-import bricklog.composeapp.generated.resources.feature_user_delete_user_data_message_success
 import bricklog.composeapp.generated.resources.feature_user_logout_message_success
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.permissions.DeniedAlwaysException
@@ -18,9 +16,6 @@ import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionSetDetails
-import hu.piware.bricklog.feature.core.domain.UserError
-import hu.piware.bricklog.feature.core.presentation.SnackbarAction
-import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.debounceAfterFirst
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
@@ -44,14 +39,12 @@ import hu.piware.bricklog.feature.set.presentation.dashboard.utils.newItemsFilte
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.retiringSetsFilter
 import hu.piware.bricklog.feature.settings.domain.usecase.SaveSetFilterPreferences
 import hu.piware.bricklog.feature.settings.domain.usecase.WatchSetFilterPreferences
-import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchCurrentUser
 import hu.piware.bricklog.feature.user.domain.usecase.WatchUserPreferences
 import hu.piware.bricklog.util.DevLevels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -59,7 +52,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
@@ -80,7 +72,6 @@ class DashboardViewModel(
     private val watchCollectionDetails: WatchCollectionDetails,
     private val watchCurrentUser: WatchCurrentUser,
     @Provided private val logOutUser: LogOutUser,
-    @Provided private val deleteUserData: DeleteUserData,
     private val watchSetUpdateInfo: WatchSetUpdateInfo,
     private val watchUserPreferences: WatchUserPreferences,
     private val watchCollectionSetDetails: WatchCollectionSetDetails,
@@ -108,9 +99,6 @@ class DashboardViewModel(
                 askNotificationPermission()
             }
         }
-
-    private val _eventChannel = Channel<DashboardEvent>()
-    val eventChannel = _eventChannel.receiveAsFlow()
 
     val searchBarState = _searchBarState
         .asStateFlowIn(viewModelScope) {
@@ -179,37 +167,6 @@ class DashboardViewModel(
                 logOutUser()
                     .showSnackbarOnSuccess(Res.string.feature_user_logout_message_success)
                     .showSnackbarOnError()
-            }
-
-            DashboardNavigationDrawerAction.OnDeleteUserClick -> _uiState.update {
-                it.copy(
-                    showDeleteUserConfirm = true,
-                )
-            }
-
-            DashboardNavigationDrawerAction.OnDeleteUserDismiss -> _uiState.update {
-                it.copy(
-                    showDeleteUserConfirm = false,
-                )
-            }
-
-            DashboardNavigationDrawerAction.OnDeleteUserConfirm -> viewModelScope.launch {
-                deleteUserData()
-                    .showSnackbarOnSuccess(Res.string.feature_user_delete_user_data_message_success)
-                    .showSnackbarOnError { error ->
-                        if (error == UserError.General.REAUTHENTICATION_REQUIRED) {
-                            SnackbarAction(
-                                name = UiText.StringResourceId(Res.string.feature_user_delete_user_data_action_reauthenticate),
-                                action = {
-                                    viewModelScope.launch {
-                                        _eventChannel.send(DashboardEvent.LoginProposed)
-                                    }
-                                },
-                            )
-                        } else {
-                            null
-                        }
-                    }
             }
 
             else -> Unit

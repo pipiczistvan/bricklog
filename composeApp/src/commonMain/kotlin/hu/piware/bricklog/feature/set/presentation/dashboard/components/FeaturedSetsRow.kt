@@ -50,7 +50,7 @@ fun FeaturedSetsRow(
         limit = FEATURED_SETS_ROW_LIMIT,
         placeHolderContent = {
             SetCardPlaceholder()
-        }
+        },
     ) { set ->
         SetCard(
             modifier = Modifier
