@@ -2,12 +2,14 @@ package hu.piware.bricklog.feature.collection.data.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CollectionWithSetIdDao {
 
+    @Transaction
     @Query(
         """
             SELECT collections.*, collection_sets.setId FROM collections 

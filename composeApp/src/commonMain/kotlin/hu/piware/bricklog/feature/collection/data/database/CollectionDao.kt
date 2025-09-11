@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.collection.data.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionType
@@ -12,9 +13,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CollectionDao {
 
+    @Transaction
     @Query("SELECT * FROM collections WHERE id = :collectionId")
     fun watchCollection(collectionId: CollectionId): Flow<CollectionWithShares?>
 
+    @Transaction
     @Query(
         """
         SELECT collections.* FROM collections 

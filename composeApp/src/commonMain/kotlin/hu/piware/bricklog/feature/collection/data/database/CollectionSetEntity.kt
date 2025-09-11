@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.collection.data.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.set.domain.model.SetId
 
@@ -19,6 +20,9 @@ import hu.piware.bricklog.feature.set.domain.model.SetId
             onDelete = ForeignKey.CASCADE,
         ),
     ],
+    indices = [
+        Index("setId"),
+    ]
 )
 data class CollectionSetEntity(
     val setId: SetId,
