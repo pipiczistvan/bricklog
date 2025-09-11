@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
-package hu.piware.bricklog.feature.set.presentation.set_detail.components
+package hu.piware.bricklog.feature.collection.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,16 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import bricklog.composeapp.generated.resources.Res
-import bricklog.composeapp.generated.resources.feature_set_detail_collections_sheet_title
+import bricklog.composeapp.generated.resources.feature_collection_toggle_bottom_sheet_title
 import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.containerColor
@@ -28,16 +24,18 @@ import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SetCollectionBottomSheet(
+fun CollectionToggleBottomSheet(
+    title: String = stringResource(Res.string.feature_collection_toggle_bottom_sheet_title),
     availableOptions: List<CollectionDetails>,
-    showRoleAndOwner: Boolean,
     selectedItems: List<CollectionId>,
     onToggleCollection: (CollectionId) -> Unit,
     onDismiss: () -> Unit,
+    showRoleAndOwner: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     MultiSelectBottomSheet(
-        modifier = Modifier.testTag("set_details:set_collection_bottom_sheet"),
-        title = stringResource(Res.string.feature_set_detail_collections_sheet_title),
+        modifier = modifier,
+        title = title,
         availableOptions = availableOptions,
         selectedItems = availableOptions.filter { it.collection.id in selectedItems },
         onSelectionChange = { collections ->
@@ -49,10 +47,10 @@ fun SetCollectionBottomSheet(
                 onToggleCollection(collectionId)
             }
         },
-        isEnabled = { it.isEditable },
+        isItemEnabled = { it.isEditable },
         onDismiss = onDismiss,
     ) { collection, isSelected ->
-        SetCollectionBottomSheetItem(
+        CollectionBottomSheetItem(
             details = collection,
             isSelected = isSelected,
             showRoleAndOwner = showRoleAndOwner,
@@ -61,7 +59,7 @@ fun SetCollectionBottomSheet(
 }
 
 @Composable
-private fun SetCollectionBottomSheetItem(
+fun CollectionBottomSheetItem(
     details: CollectionDetails,
     isSelected: Boolean,
     showRoleAndOwner: Boolean,

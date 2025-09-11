@@ -5,11 +5,9 @@ import hu.piware.bricklog.feature.currency.domain.model.CurrencyRegion
 import hu.piware.bricklog.feature.set.presentation.dashboard.utils.FeaturedSetType
 
 data class UserPreferences(
-    val hideGreetings: Boolean,
     val displayName: String?,
     val collectionOrder: List<CollectionId>,
     val hiddenFeaturedSets: List<FeaturedSetType>,
     val currencyRegion: CurrencyRegion,
     val targetCurrencyCode: String,
-    val preferredCollectionId: CollectionId?,
 )

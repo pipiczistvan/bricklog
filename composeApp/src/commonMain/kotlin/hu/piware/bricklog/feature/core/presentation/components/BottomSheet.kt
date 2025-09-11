@@ -51,7 +51,7 @@ fun <T> MultiSelectBottomSheet(
     availableOptions: List<T>,
     selectedItems: List<T>,
     onSelectionChange: (List<T>) -> Unit,
-    isEnabled: (T) -> Boolean = { true },
+    isItemEnabled: (T) -> Boolean = { true },
     onDismiss: () -> Unit,
     skipPartiallyExpanded: Boolean = false,
     headerPrimaryActionIcon: ImageVector? = null,
@@ -85,7 +85,7 @@ fun <T> MultiSelectBottomSheet(
                     SelectableSheetOption(
                         item = option,
                         isSelected = selectedItems.contains(option),
-                        isEnabled = isEnabled(option),
+                        isEnabled = isItemEnabled(option),
                         onClick = {
                             if (selectedItems.contains(option)) {
                                 onSelectionChange(selectedItems - option)

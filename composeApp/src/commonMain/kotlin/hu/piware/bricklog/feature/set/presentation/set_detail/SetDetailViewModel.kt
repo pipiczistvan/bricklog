@@ -5,17 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.usecase.SavePreferredCollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleCollectionSet
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchFavouriteCollectionDetails
 import hu.piware.bricklog.feature.core.domain.data
 import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.currency.domain.usecase.WatchCurrencyPreferenceDetails
-import hu.piware.bricklog.feature.set.domain.model.SetId
+import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.usecase.GetInstructions
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsById
 import hu.piware.bricklog.feature.set.domain.util.combineSetWithCurrencyPreference
@@ -37,9 +35,7 @@ class SetDetailViewModel(
     private val toggleCollectionSet: ToggleCollectionSet,
     private val watchCollectionDetails: WatchCollectionDetails,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
-    private val watchFavouriteCollectionDetails: WatchFavouriteCollectionDetails,
     private val watchCurrentUser: WatchCurrentUser,
-    private val savePreferredCollectionId: SavePreferredCollectionId,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetDetails>(
@@ -55,24 +51,13 @@ class SetDetailViewModel(
             observeSet()
             observeAvailableCollections()
             observePreferredCurrencyPrice()
-            observeFavouriteCollection()
             observeCurrentUser()
             loadInstructions(arguments.setId)
         }
 
     fun onAction(action: SetDetailAction) {
         when (action) {
-            is SetDetailAction.OnCollectionToggle -> toggleCollection(
-                action.setId,
-                action.collectionId,
-            )
-
-            is SetDetailAction.OnPreferredCollectionChange -> {
-                viewModelScope.launch {
-                    savePreferredCollectionId(action.collection.collection.id)
-                        .showSnackbarOnError()
-                }
-            }
+            is SetDetailAction.OnCollectionToggle -> toggleCollection(action.collectionId)
 
             else -> Unit
         }
@@ -118,13 +103,6 @@ class SetDetailViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun observeFavouriteCollection() {
-        watchFavouriteCollectionDetails()
-            .onEach { baseCollection ->
-                _uiState.update { it.copy(baseCollection = baseCollection) }
-            }.launchIn(viewModelScope)
-    }
-
     private fun observeCurrentUser() {
         watchCurrentUser()
             .onEach { user ->
@@ -132,9 +110,11 @@ class SetDetailViewModel(
             }.launchIn(viewModelScope)
     }
 
-    private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
+    private fun toggleCollection(collectionId: CollectionId) {
+        val setDetails = _uiState.value.setDetails ?: return
+
         viewModelScope.launch {
-            toggleCollectionSet(setId, collectionId)
+            toggleCollectionSet(setDetails.setID, collectionId)
                 .showSnackbarOnError()
         }
     }

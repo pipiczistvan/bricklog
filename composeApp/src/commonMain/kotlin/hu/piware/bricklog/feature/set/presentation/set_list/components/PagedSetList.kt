@@ -12,7 +12,16 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Remove
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -25,13 +34,16 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
+import hu.piware.bricklog.feature.collection.domain.model.isEditable
+import hu.piware.bricklog.feature.collection.presentation.components.CollectionToggleBottomSheet
 import hu.piware.bricklog.feature.currency.domain.model.CurrencyPreferenceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
-import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.util.combineSetWithCurrencyPreference
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
+import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import kotlinx.coroutines.flow.flowOf
@@ -41,9 +53,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun PagedSetList(
     sets: LazyPagingItems<SetDetails>,
     currencyDetails: CurrencyPreferenceDetails?,
+    currentUser: User,
     baseCollection: CollectionDetails?,
+    availableCollections: List<CollectionDetails>,
     onSetClick: (SetDetails) -> Unit,
-    onCollectionToggle: (SetId, CollectionId) -> Unit,
+    onCollectionToggle: (SetDetails, CollectionId) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(
         top = 12.dp,
@@ -75,13 +89,20 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
-                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .widthIn(max = 700.dp)
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onCollectionToggle = onCollectionToggle,
+                            collectionActionItem = {
+                                CollectionActionButton(
+                                    setDetails = set,
+                                    baseCollection = baseCollection,
+                                    availableCollections = availableCollections,
+                                    onCollectionToggle = onCollectionToggle,
+                                    showRoleAndOwner = currentUser.isAuthenticated,
+                                )
+                            },
                         )
                     }
                 }
@@ -107,12 +128,19 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
-                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onCollectionToggle = onCollectionToggle,
+                            collectionActionItem = {
+                                CollectionActionButton(
+                                    setDetails = set,
+                                    baseCollection = baseCollection,
+                                    availableCollections = availableCollections,
+                                    onCollectionToggle = onCollectionToggle,
+                                    showRoleAndOwner = currentUser.isAuthenticated,
+                                )
+                            },
                             imageSize = ImageSize.SMALL,
                         )
                     }
@@ -139,16 +167,65 @@ fun PagedSetList(
                                 set,
                                 currencyDetails,
                             ),
-                            baseCollection = baseCollection,
                             modifier = Modifier
                                 .testTag("set_list:item")
                                 .fillMaxWidth(),
                             onClick = onSetClick,
-                            onCollectionToggle = onCollectionToggle,
+                            collectionActionItem = {
+                                CollectionActionButton(
+                                    setDetails = set,
+                                    baseCollection = baseCollection,
+                                    availableCollections = availableCollections,
+                                    onCollectionToggle = onCollectionToggle,
+                                    showRoleAndOwner = currentUser.isAuthenticated,
+                                )
+                            },
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun CollectionActionButton(
+    setDetails: SetDetails,
+    baseCollection: CollectionDetails?,
+    availableCollections: List<CollectionDetails>,
+    onCollectionToggle: (SetDetails, CollectionId) -> Unit,
+    showRoleAndOwner: Boolean,
+) {
+    if (baseCollection != null) {
+        IconButton(
+            onClick = { onCollectionToggle(setDetails, baseCollection.collection.id) },
+            enabled = baseCollection.isEditable,
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Remove,
+                contentDescription = null,
+            )
+        }
+    } else {
+        var showCollectionBottomSheet by remember { mutableStateOf(false) }
+
+        IconButton(
+            onClick = { showCollectionBottomSheet = true },
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Add,
+                contentDescription = null,
+            )
+        }
+
+        if (showCollectionBottomSheet) {
+            CollectionToggleBottomSheet(
+                availableOptions = availableCollections,
+                selectedItems = setDetails.collections.map { it.collection.id },
+                onToggleCollection = { onCollectionToggle(setDetails, it) },
+                onDismiss = { showCollectionBottomSheet = false },
+                showRoleAndOwner = showRoleAndOwner,
+            )
         }
     }
 }
@@ -170,7 +247,9 @@ private fun PagedSetListPreview() {
                 ),
             ).collectAsLazyPagingItems(),
             currencyDetails = null,
+            currentUser = PreviewData.user,
             baseCollection = null,
+            availableCollections = PreviewData.collectionDetails,
             onSetClick = {},
             onCollectionToggle = { _, _ -> },
         )

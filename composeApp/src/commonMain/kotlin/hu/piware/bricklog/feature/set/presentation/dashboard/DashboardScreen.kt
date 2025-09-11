@@ -203,17 +203,15 @@ private fun DashboardScreen(
                         ),
                     ) {
                         if (state.currentUser.isAuthenticated) {
-                            if (!state.userPreferences.hideGreetings) {
-                                Greetings(
-                                    modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
-                                    displayName = state.userPreferences.displayName
-                                        ?: state.currentUser.email
-                                        ?: stringResource(Res.string.feature_set_dashboard_title_unknown_user),
-                                    onDisplayNameClick = {
-                                        onAction(DashboardAction.OnUserDetailsClick)
-                                    },
-                                )
-                            }
+                            Greetings(
+                                modifier = Modifier.padding(bottom = Dimens.MediumPadding.size),
+                                displayName = state.userPreferences.displayName
+                                    ?: state.currentUser.email
+                                    ?: stringResource(Res.string.feature_set_dashboard_title_unknown_user),
+                                onDisplayNameClick = {
+                                    onAction(DashboardAction.OnUserDetailsClick)
+                                },
+                            )
                         }
 
                         FeaturedThemesCarousel(

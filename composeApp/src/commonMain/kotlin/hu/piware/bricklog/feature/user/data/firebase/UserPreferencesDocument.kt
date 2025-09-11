@@ -7,11 +7,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferencesDocument(
-    val hideGreetings: Boolean? = null,
     val displayName: String? = null,
     val collectionOrder: List<CollectionId>? = null,
     val hiddenFeaturedSets: List<FeaturedSetType>? = null,
     val currencyRegion: CurrencyRegion? = null,
     val targetCurrencyCode: String? = null,
-    val preferredCollectionId: CollectionId? = null,
 )

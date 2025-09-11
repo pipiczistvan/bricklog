@@ -7,7 +7,6 @@ import hu.piware.bricklog.feature.user.domain.model.UserPreferences
 
 fun UserPreferencesEntity.toDomainModel(): UserPreferences {
     return UserPreferences(
-        hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
         hiddenFeaturedSets = hiddenFeaturedSets
@@ -15,20 +14,17 @@ fun UserPreferencesEntity.toDomainModel(): UserPreferences {
             .map { FeaturedSetType.valueOf(it) },
         currencyRegion = currencyRegion,
         targetCurrencyCode = targetCurrencyCode,
-        preferredCollectionId = preferredCollectionId,
     )
 }
 
 fun UserPreferences.toEntity(userId: UserId): UserPreferencesEntity {
     return UserPreferencesEntity(
         userId = userId,
-        hideGreetings = hideGreetings,
         displayName = displayName,
         collectionOrder = collectionOrder,
         hiddenFeaturedSets = hiddenFeaturedSets.map { it.name },
         currencyRegion = currencyRegion,
         targetCurrencyCode = targetCurrencyCode,
-        preferredCollectionId = preferredCollectionId,
     )
 }
 

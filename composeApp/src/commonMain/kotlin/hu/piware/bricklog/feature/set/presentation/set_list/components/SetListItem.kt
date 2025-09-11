@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,16 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
-import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.model.isEditable
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
-import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetPriceDetails
 import hu.piware.bricklog.feature.set.domain.model.SetStatus
 import hu.piware.bricklog.feature.set.domain.model.containerColor
-import hu.piware.bricklog.feature.set.domain.model.isInCollection
-import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.model.setNumberWithVariant
 import hu.piware.bricklog.feature.set.domain.model.textColor
 import hu.piware.bricklog.feature.set.presentation.components.ImageSize
@@ -56,9 +48,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SetListItem(
     setDetails: SetDetails,
     setPriceDetails: SetPriceDetails?,
-    baseCollection: CollectionDetails?,
     onClick: (SetDetails) -> Unit,
-    onCollectionToggle: (SetId, CollectionId) -> Unit,
+    collectionActionItem: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -150,32 +141,12 @@ fun SetListItem(
                 }
             }
 
-            if (baseCollection != null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.TopEnd,
-                ) {
-                    IconButton(
-                        onClick = {
-                            onCollectionToggle(
-                                setDetails.setID,
-                                baseCollection.collection.id,
-                            )
-                        },
-                        enabled = baseCollection.isEditable,
-                    ) {
-                        Icon(
-                            imageVector =
-                                if (setDetails.isInCollection(baseCollection.collection.id)) {
-                                    baseCollection.collection.icon.filledIcon
-                                } else {
-                                    baseCollection.collection.icon.outlinedIcon
-                                },
-                            contentDescription = null,
-                        )
-                    }
-                }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.TopEnd,
+            ) {
+                collectionActionItem()
             }
         }
     }
@@ -188,9 +159,8 @@ private fun SetListItemPreview() {
         SetListItem(
             setDetails = PreviewData.sets[0],
             setPriceDetails = null,
-            baseCollection = null,
             onClick = {},
-            onCollectionToggle = { _, _ -> },
+            collectionActionItem = {},
         )
     }
 }

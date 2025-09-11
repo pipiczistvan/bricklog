@@ -36,6 +36,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_user_details_form_field_name_placeholder
+import bricklog.composeapp.generated.resources.feature_user_details_form_field_name_title
 import bricklog.composeapp.generated.resources.feature_user_details_label_uid
 import bricklog.composeapp.generated.resources.feature_user_details_title
 import hu.piware.bricklog.feature.core.domain.Result
@@ -233,14 +235,14 @@ private fun UserNameField(
     ) {
         Text(
             modifier = Modifier.padding(vertical = Dimens.SmallPadding.size),
-            text = "User name", // TODO: localize
+            text = stringResource(Res.string.feature_user_details_form_field_name_title),
             style = MaterialTheme.typography.titleMedium,
         )
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
-            placeholder = { "Enter user name" },
+            placeholder = { Text(stringResource(Res.string.feature_user_details_form_field_name_placeholder)) },
             singleLine = true,
         )
         SupportingRow {

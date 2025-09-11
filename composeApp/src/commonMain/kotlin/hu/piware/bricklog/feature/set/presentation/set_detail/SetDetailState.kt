@@ -13,6 +13,5 @@ data class SetDetailState(
     val sharedElementPrefix: String = "",
     val availableCollections: List<CollectionDetails> = emptyList(),
     val setPriceDetails: SetPriceDetails? = null,
-    val baseCollection: CollectionDetails? = null,
     val user: User = GUEST_USER,
 )

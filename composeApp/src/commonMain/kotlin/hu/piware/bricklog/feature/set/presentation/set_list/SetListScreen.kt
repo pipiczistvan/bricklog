@@ -203,12 +203,14 @@ private fun SetListScreen(
                         .fillMaxSize(),
                     sets = sets,
                     currencyDetails = state.currencyPreferenceDetails,
+                    currentUser = state.user,
                     baseCollection = state.baseCollection,
+                    availableCollections = state.availableCollections,
                     onSetClick = {
                         onAction(SetListAction.OnSetClick(SetDetailArguments(it.setID, "set_list")))
                     },
-                    onCollectionToggle = { setId, collectionId ->
-                        onAction(SetListAction.OnCollectionToggle(setId, collectionId))
+                    onCollectionToggle = { setDetails, collectionId ->
+                        onAction(SetListAction.OnCollectionToggle(setDetails, collectionId))
                     },
                     displayMode = state.displayMode,
                 )

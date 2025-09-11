@@ -3,7 +3,8 @@ package hu.piware.bricklog.feature.collection.domain.usecase
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.repository.CollectionRepository
 import hu.piware.bricklog.feature.core.domain.DataError
-import hu.piware.bricklog.feature.core.domain.EmptyResult
+import hu.piware.bricklog.feature.core.domain.Result
+import hu.piware.bricklog.feature.core.domain.map
 import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.user.domain.manager.SessionManager
 import hu.piware.bricklog.feature.user.domain.model.UserId
@@ -20,7 +21,7 @@ class ToggleCollectionSet(
         setId: SetId,
         collectionID: CollectionId,
         userId: UserId = sessionManager.currentUserId,
-    ): EmptyResult<DataError> {
+    ): Result<Boolean, DataError> {
         val setCollections = watchCollections(setId = setId)
             .firstOrNull()
 
@@ -28,8 +29,10 @@ class ToggleCollectionSet(
 
         return if (setIsInCollection) {
             collectionRepository.removeSetFromCollections(userId, setId, listOf(collectionID))
+                .map { false }
         } else {
             collectionRepository.addSetToCollections(userId, setId, listOf(collectionID))
+                .map { true }
         }
     }
 }

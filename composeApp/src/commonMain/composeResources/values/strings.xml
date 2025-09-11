@@ -39,7 +39,11 @@
     <string name="feature_collection_share_edit_form_field_user_identifier_title">User identifier</string>
     <string name="feature_collection_share_edit_form_field_write_access_supporting_text">Allow the user to add or remove sets from the collection.</string>
     <string name="feature_collection_share_edit_form_field_write_access_title">Write access</string>
+    <string name="feature_collection_share_edit_friend_select_bottom_sheet_title">Select friend</string>
     <string name="feature_collection_share_edit_title">Share collection</string>
+    <string name="feature_collection_toggle_bottom_sheet_title">Collections</string>
+    <string name="feature_collection_toggle_message_removed">%1$s was removed from %2$s.</string>
+    <string name="feature_collection_toggle_message_undo">Undo</string>
     <string name="feature_core_dialog_btn_cancel">OK</string>
     <string name="feature_core_update_data_step_download_file">Downloading file</string>
     <string name="feature_core_update_data_step_parse_items">Parsing items</string>
@@ -53,6 +57,7 @@
     <string name="feature_set_dashboard_changelog_bottom_sheet_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title">Changelog</string>
     <string name="feature_set_dashboard_changelog_title_build_version">%1$s (build %2$s)</string>
+    <string name="feature_set_dashboard_featured_collections_empty">No items in this collection.</string>
     <string name="feature_set_dashboard_label_empty">This list is empty</string>
     <string name="feature_set_dashboard_label_show_more">Show more</string>
     <string name="feature_set_dashboard_navigation_drawer_btn_about">About</string>
@@ -77,9 +82,6 @@
     <string name="feature_set_dashboard_title_new_items">New Items</string>
     <string name="feature_set_dashboard_title_retiring_sets">Retiring Sets</string>
     <string name="feature_set_dashboard_title_unknown_user">Unknown User</string>
-    <string name="feature_set_detail_collections_empty">Not in any collections</string>
-    <string name="feature_set_detail_collections_sheet_title">Collections</string>
-    <string name="feature_set_detail_collections_title">Collections</string>
     <string name="feature_set_detail_instructions_btn_download">Download</string>
     <string name="feature_set_detail_instructions_empty">No instructions found</string>
     <string name="feature_set_detail_instructions_info_dialog_label">'NA' or 'V39' indicates the US/Canadian version, 'IN' or 'V29' the international version, 'V55' the Chinese version.</string>
@@ -253,6 +255,8 @@
     <string name="feature_user_delete_user_data_confirm_label">Do you really want to delete your user and your data? It cannot be undone!</string>
     <string name="feature_user_delete_user_data_confirm_title">Delete user data</string>
     <string name="feature_user_delete_user_data_message_success">Deleted user data!</string>
+    <string name="feature_user_details_form_field_name_placeholder">Enter user name</string>
+    <string name="feature_user_details_form_field_name_title">User name</string>
     <string name="feature_user_details_label_uid">User identifier</string>
     <string name="feature_user_details_title">User details</string>
     <string name="feature_user_form_field_email_hint">Enter your email address...</string>

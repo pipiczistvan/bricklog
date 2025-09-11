@@ -18,25 +18,21 @@ fun FirebaseUser.toUser(): User {
 
 fun UserPreferencesDocument.toDomainModel(): UserPreferences {
     return UserPreferences(
-        hideGreetings = hideGreetings ?: false,
         displayName = displayName,
         collectionOrder = collectionOrder ?: emptyList(),
         hiddenFeaturedSets = hiddenFeaturedSets ?: emptyList(),
         currencyRegion = currencyRegion ?: CurrencyRegion.EU,
         targetCurrencyCode = targetCurrencyCode ?: CURRENCY_CODE_EUR,
-        preferredCollectionId = preferredCollectionId,
     )
 }
 
 fun UserPreferences.toDocument(): UserPreferencesDocument {
     return UserPreferencesDocument(
-        hideGreetings = hideGreetings,
         displayName = displayName?.ifEmpty { null },
         collectionOrder = collectionOrder,
         hiddenFeaturedSets = hiddenFeaturedSets,
         currencyRegion = currencyRegion,
         targetCurrencyCode = targetCurrencyCode,
-        preferredCollectionId = preferredCollectionId,
     )
 }
 

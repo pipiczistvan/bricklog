@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,20 +49,15 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_ean
 import bricklog.composeapp.generated.resources.feature_set_detail_label_barcode_upc
 import bricklog.composeapp.generated.resources.navigation_go_back
-import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
-import hu.piware.bricklog.feature.collection.domain.model.isEditable
+import hu.piware.bricklog.feature.collection.presentation.components.CollectionToggleBottomSheet
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.core.presentation.sharedElement
 import hu.piware.bricklog.feature.set.domain.model.Instruction
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
-import hu.piware.bricklog.feature.set.domain.model.isInCollection
 import hu.piware.bricklog.feature.set.domain.model.setID
-import hu.piware.bricklog.feature.set.presentation.components.CombinedFilledIconButton
-import hu.piware.bricklog.feature.set.presentation.components.PreferredCollectionBottomSheet
 import hu.piware.bricklog.feature.set.presentation.components.SetImage
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.BlurredImageBackground
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetBarcode
-import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetCollectionsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetDetailsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetInstructionsTable
 import hu.piware.bricklog.feature.set.presentation.set_detail.components.SetPriceLabel
@@ -69,7 +65,6 @@ import hu.piware.bricklog.feature.set.presentation.set_detail.util.createFirstSe
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createSecondSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_detail.util.createThirdSetDetailTableColumns
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageArguments
-import hu.piware.bricklog.feature.user.domain.model.User
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.mock.PreviewData
 import hu.piware.bricklog.ui.theme.BricklogTheme
@@ -116,6 +111,8 @@ private fun SetDetailScreen(
         return
     }
 
+    var showCollectionBottomSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -137,23 +134,17 @@ private fun SetDetailScreen(
                     }
                 },
                 actions = {
-                    if (state.baseCollection != null) {
-                        PreferredCollectionToggleIconButton(
-                            collection = state.baseCollection,
-                            showRoleAndOwner = state.user.isAuthenticated,
-                            availableCollections = state.availableCollections,
-                            toggled = state.setDetails.isInCollection(state.baseCollection.collection.id),
-                            onClick = {
-                                onAction(
-                                    SetDetailAction.OnCollectionToggle(
-                                        state.setDetails.setID,
-                                        state.baseCollection.collection.id,
-                                    ),
-                                )
-                            },
-                            onPreferredCollectionChange = {
-                                onAction(SetDetailAction.OnPreferredCollectionChange(it))
-                            },
+                    FilledIconButton(
+                        onClick = { showCollectionBottomSheet = true },
+                        colors = IconButtonDefaults.filledIconButtonColors().copy(
+                            containerColor = Color.White,
+                        ),
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = null,
+                            tint = Color.Black,
                         )
                     }
                 },
@@ -175,48 +166,14 @@ private fun SetDetailScreen(
             paddingValues = padding,
         )
     }
-}
 
-@Composable
-private fun PreferredCollectionToggleIconButton(
-    collection: CollectionDetails,
-    showRoleAndOwner: Boolean,
-    availableCollections: List<CollectionDetails>,
-    onPreferredCollectionChange: (CollectionDetails) -> Unit,
-    toggled: Boolean,
-    onClick: () -> Unit,
-) {
-    var showPreferredCollectionBottomSheet by remember { mutableStateOf(false) }
-
-    CombinedFilledIconButton(
-        onClick = onClick,
-        onLongClick = { showPreferredCollectionBottomSheet = true },
-        enabled = collection.isEditable,
-        colors = IconButtonDefaults.filledIconButtonColors().copy(
-            containerColor = Color.White,
-        ),
-    ) {
-        Icon(
-            imageVector =
-                if (toggled) {
-                    collection.collection.icon.filledIcon
-                } else {
-                    collection.collection.icon.outlinedIcon
-                },
-            contentDescription = null,
-            tint = Color.Black,
-        )
-    }
-
-    if (showPreferredCollectionBottomSheet) {
-        PreferredCollectionBottomSheet(
-            showRoleAndOwner = showRoleAndOwner,
-            availableCollections = availableCollections,
-            preferredCollection = collection,
-            onPreferredCollectionChange = onPreferredCollectionChange,
-            onDismiss = {
-                showPreferredCollectionBottomSheet = false
-            },
+    if (showCollectionBottomSheet) {
+        CollectionToggleBottomSheet(
+            availableOptions = state.availableCollections,
+            selectedItems = state.setDetails.collections.map { it.collection.id },
+            onToggleCollection = { onAction(SetDetailAction.OnCollectionToggle(it)) },
+            onDismiss = { showCollectionBottomSheet = false },
+            showRoleAndOwner = state.user.isAuthenticated,
         )
     }
 }
@@ -275,9 +232,6 @@ private fun Content(
         SetDetails(
             setDetails = state.setDetails,
             instructions = state.instructions,
-            availableCollections = state.availableCollections,
-            user = state.user,
-            onAction = onAction,
         )
     }
 }
@@ -319,9 +273,6 @@ private fun SetHeaderImage(
 private fun SetDetails(
     setDetails: SetDetails,
     instructions: List<Instruction>?,
-    availableCollections: List<CollectionDetails>,
-    user: User,
-    onAction: (SetDetailAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -340,16 +291,6 @@ private fun SetDetails(
         SetInstructionsTable(
             modifier = Modifier.clip(Shapes.medium),
             instructions = instructions,
-        )
-
-        SetCollectionsTable(
-            modifier = Modifier.clip(Shapes.medium),
-            setDetails = setDetails,
-            showRoleAndOwner = user.isAuthenticated,
-            availableCollections = availableCollections,
-            onToggleCollection = {
-                onAction(SetDetailAction.OnCollectionToggle(setDetails.setID, it))
-            },
         )
 
         setDetails.set.barcodeEAN?.let {

@@ -18,6 +18,7 @@ data class SetListState(
     val showFilterBar: Boolean = true,
     val filterDomain: SetFilterDomain = SetFilterDomain(),
     val currencyPreferenceDetails: CurrencyPreferenceDetails? = null,
+    val availableCollections: List<CollectionDetails> = emptyList(),
     val baseCollection: CollectionDetails? = null,
     val user: User = GUEST_USER,
 )

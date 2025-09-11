@@ -7,17 +7,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_collection_toggle_message_removed
+import bricklog.composeapp.generated.resources.feature_collection_toggle_message_undo
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.usecase.ToggleCollectionSet
+import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetails
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetailsById
-import hu.piware.bricklog.feature.collection.domain.usecase.WatchFavouriteCollectionDetails
+import hu.piware.bricklog.feature.core.domain.onSuccess
+import hu.piware.bricklog.feature.core.presentation.SnackbarAction
+import hu.piware.bricklog.feature.core.presentation.SnackbarController
+import hu.piware.bricklog.feature.core.presentation.SnackbarEvent
+import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.currency.domain.usecase.WatchCurrencyPreferenceDetails
+import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetFilter
-import hu.piware.bricklog.feature.set.domain.model.SetId
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
+import hu.piware.bricklog.feature.set.domain.model.setID
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetDetailsPaged
 import hu.piware.bricklog.feature.set.domain.usecase.WatchSetFilterDomain
 import hu.piware.bricklog.feature.set.presentation.SetRoute
@@ -54,7 +63,7 @@ class SetListViewModel(
     private val watchCollectionDetailsById: WatchCollectionDetailsById,
     private val watchCurrencyPreferenceDetails: WatchCurrencyPreferenceDetails,
     private val watchCurrentUser: WatchCurrentUser,
-    private val watchFavouriteCollectionDetails: WatchFavouriteCollectionDetails,
+    private val watchCollectionDetails: WatchCollectionDetails,
 ) : ViewModel() {
 
     private val arguments = savedStateHandle.toRoute<SetRoute.SetListScreen>(
@@ -71,6 +80,7 @@ class SetListViewModel(
             observeFilterPreferences()
             observeFilterDomain()
             observeCurrencyPreferenceDetails()
+            observeCollectionDetails()
         }
 
     private val filterOverrides = _uiState
@@ -85,7 +95,7 @@ class SetListViewModel(
     fun onAction(action: SetListAction) {
         when (action) {
             is SetListAction.OnCollectionToggle -> toggleCollection(
-                action.setId,
+                action.setDetails,
                 action.collectionId,
             )
 
@@ -95,10 +105,32 @@ class SetListViewModel(
         }
     }
 
-    private fun toggleCollection(setId: SetId, collectionId: CollectionId) {
+    private fun toggleCollection(setDetails: SetDetails, collectionId: CollectionId) {
         viewModelScope.launch {
-            toggleCollectionSet(setId, collectionId)
+            toggleCollectionSet(setDetails.setID, collectionId)
                 .showSnackbarOnError()
+                .onSuccess { added ->
+                    val baseCollection = _uiState.value.baseCollection
+                    val isCollectionSetList =
+                        baseCollection?.collection?.id == collectionId
+                    val setWasRemoved = !added
+
+                    if (isCollectionSetList && setWasRemoved) {
+                        SnackbarController.sendEvent(
+                            SnackbarEvent(
+                                message = UiText.StringResourceId(
+                                    Res.string.feature_collection_toggle_message_removed,
+                                    setDetails.set.name ?: "",
+                                    baseCollection.collection.name,
+                                ),
+                                action = SnackbarAction(
+                                    name = UiText.StringResourceId(Res.string.feature_collection_toggle_message_undo),
+                                    action = { toggleCollection(setDetails, collectionId) },
+                                ),
+                            ),
+                        )
+                    }
+                }
         }
     }
 
@@ -129,7 +161,6 @@ class SetListViewModel(
                         showFilterBar = arguments.showFilterBar,
                     )
                 }
-                observeFavouriteCollection()
             }
         }
     }
@@ -180,23 +211,15 @@ class SetListViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeFavouriteCollection() {
-        watchFavouriteCollectionDetails()
-            .onEach { collection ->
-                if (collection == null) return@onEach
-
-                _uiState.update {
-                    it.copy(
-                        baseCollection = collection,
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     private fun observeCurrencyPreferenceDetails() {
         watchCurrencyPreferenceDetails()
             .onEach { details -> _uiState.update { it.copy(currencyPreferenceDetails = details) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCollectionDetails() {
+        watchCollectionDetails()
+            .onEach { details -> _uiState.update { it.copy(availableCollections = details) } }
             .launchIn(viewModelScope)
     }
 }

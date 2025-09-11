@@ -19,11 +19,15 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnError(
     }
 }
 
-suspend fun <T, E : Error> Result<T, E>.showSnackbarOnSuccess(res: StringResource): Result<T, E> {
-    return onSuccess {
+suspend fun <T, E : Error> Result<T, E>.showSnackbarOnSuccess(
+    res: StringResource,
+    action: (T) -> SnackbarAction? = { null },
+): Result<T, E> {
+    return onSuccess { result ->
         SnackbarController.sendEvent(
             SnackbarEvent(
                 message = UiText.StringResourceId(res),
+                action = action(result),
             ),
         )
     }

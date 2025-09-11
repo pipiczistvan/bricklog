@@ -18,7 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DragHandle
-import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Reorder
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -105,7 +105,7 @@ private fun CollectionListScreen(
                         },
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Edit,
+                            imageVector = Icons.Outlined.Reorder,
                             contentDescription = null,
                         )
                     }

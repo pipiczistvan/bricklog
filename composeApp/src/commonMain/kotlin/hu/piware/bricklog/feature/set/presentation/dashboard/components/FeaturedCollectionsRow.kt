@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import bricklog.composeapp.generated.resources.Res
+import bricklog.composeapp.generated.resources.feature_set_dashboard_featured_collections_empty
 import bricklog.composeapp.generated.resources.feature_set_dashboard_title_collections
 import hu.piware.bricklog.feature.collection.domain.model.CollectionDetails
 import hu.piware.bricklog.feature.collection.domain.model.CollectionSetDetails
@@ -136,7 +137,7 @@ private fun CollectionCard(
             ) {
                 Text(
                     modifier = Modifier.padding(Dimens.MediumPadding.size),
-                    text = "No items in this collection.",
+                    text = stringResource(Res.string.feature_set_dashboard_featured_collections_empty),
                     textAlign = TextAlign.Center,
                 )
             }
