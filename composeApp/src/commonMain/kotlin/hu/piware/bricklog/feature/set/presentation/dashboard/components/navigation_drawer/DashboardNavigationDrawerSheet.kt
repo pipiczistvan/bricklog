@@ -64,7 +64,6 @@ import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_never
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_developer_tools
-import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_title_settings
 import bricklog.composeapp.generated.resources.feature_set_search_date_filter_sheet_btn_confirm
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.feature.core.presentation.util.formatDate
@@ -135,9 +134,7 @@ private fun SettingsSection(
     currentUser: User,
     onAction: (DashboardNavigationDrawerAction) -> Unit,
 ) {
-    NavigationSection(
-        title = stringResource(Res.string.feature_set_dashboard_navigation_drawer_title_settings),
-    ) {
+    NavigationSection {
         val isLoggedIn = currentUser.isAuthenticated
         NavigationSectionButton(
             modifier = Modifier.testTag("navigation_drawer:login_btn"),
@@ -271,15 +268,17 @@ private fun DeveloperSection(
 
 @Composable
 private fun NavigationSection(
-    title: String,
+    title: String? = null,
     trailingIcon: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
-        NavigationSectionHeader(
-            title = title,
-            action = trailingIcon,
-        )
+        if (title != null) {
+            NavigationSectionHeader(
+                title = title,
+                action = trailingIcon,
+            )
+        }
         content()
     }
 }

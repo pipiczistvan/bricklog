@@ -66,7 +66,6 @@
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_info">Last refresh timestamp</string>
     <string name="feature_set_dashboard_navigation_drawer_label_set_update_never">never</string>
     <string name="feature_set_dashboard_navigation_drawer_title_developer_tools">Developer Tools</string>
-    <string name="feature_set_dashboard_navigation_drawer_title_settings">Settings</string>
     <string name="feature_set_dashboard_pull_to_refresh_label_complete">Up-to-date!</string>
     <string name="feature_set_dashboard_pull_to_refresh_label_loading">Refreshing…</string>
     <string name="feature_set_dashboard_pull_to_refresh_label_pull">Pull down…</string>
