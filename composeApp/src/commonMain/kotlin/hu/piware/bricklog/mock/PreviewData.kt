@@ -92,7 +92,7 @@ object PreviewData {
     }
 
     val collectionDetails = collections.map {
-        it.toCollectionDetails(USER_ID_GUEST)
+        it.toCollectionDetails(USER_ID_GUEST, emptyList())
     }
 
     val packagingTypes = (1..10).map {

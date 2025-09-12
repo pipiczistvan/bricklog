@@ -62,6 +62,7 @@ import hu.piware.bricklog.feature.core.presentation.components.LoadingOverlay
 import hu.piware.bricklog.feature.core.presentation.components.SupportingRow
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.user.domain.model.UserId
+import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import hu.piware.bricklog.ui.theme.Dimens
 import hu.piware.bricklog.ui.theme.Shapes
@@ -200,7 +201,7 @@ private fun CollectionEditScreen(
                 )
 
                 state.collection?.let { collection ->
-                    if (collection.owner == state.currentUser.uid) {
+                    if (state.currentUser.isAuthenticated && collection.owner == state.currentUser.uid) {
                         SharesTable(
                             shares = collection.shares,
                             onShareClick = {

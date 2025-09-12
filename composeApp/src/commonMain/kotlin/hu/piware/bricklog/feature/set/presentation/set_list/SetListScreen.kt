@@ -47,7 +47,7 @@ import bricklog.composeapp.generated.resources.feature_set_list_empty
 import bricklog.composeapp.generated.resources.lego_brick_2x3
 import hu.piware.bricklog.App
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
-import hu.piware.bricklog.feature.collection.domain.model.isEditable
+import hu.piware.bricklog.feature.collection.domain.model.CollectionRole
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.set.domain.model.SetListDisplayMode
 import hu.piware.bricklog.feature.set.domain.model.setID
@@ -122,7 +122,7 @@ private fun SetListScreen(
                     }
                 },
                 actions = {
-                    if (state.title is SetListTitle.CollectionSearch && state.title.collection.isEditable) {
+                    if (state.title is SetListTitle.CollectionSearch && state.title.collection.role == CollectionRole.OWNER) {
                         IconButton(
                             onClick = {
                                 onAction(

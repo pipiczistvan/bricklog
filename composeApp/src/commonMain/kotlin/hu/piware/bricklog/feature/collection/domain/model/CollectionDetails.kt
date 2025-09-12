@@ -7,6 +7,7 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_collection_role_editor
 import bricklog.composeapp.generated.resources.feature_collection_role_owner
 import bricklog.composeapp.generated.resources.feature_collection_role_viewer
+import hu.piware.bricklog.feature.user.domain.model.Friend
 import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.ui.theme.BricklogTheme
 import org.jetbrains.compose.resources.StringResource
@@ -14,6 +15,7 @@ import org.jetbrains.compose.resources.StringResource
 data class CollectionDetails(
     val collection: Collection,
     val role: CollectionRole,
+    val ownerFriendlyName: String?,
 )
 
 enum class CollectionRole(
@@ -45,10 +47,11 @@ val CollectionRole.textColor: Color
 val CollectionDetails.isEditable: Boolean
     get() = role == CollectionRole.OWNER || role == CollectionRole.EDITOR
 
-fun Collection.toCollectionDetails(userId: UserId): CollectionDetails {
+fun Collection.toCollectionDetails(userId: UserId, friends: List<Friend>): CollectionDetails {
     return CollectionDetails(
         collection = this,
         role = getRole(userId),
+        ownerFriendlyName = friends.find { it.id == owner }?.name,
     )
 }
 

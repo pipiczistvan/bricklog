@@ -5,7 +5,6 @@ package hu.piware.bricklog.feature.collection.presentation.collection_list
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,12 +18,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.Reorder
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,8 +38,7 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_collection_list_title
 import hu.piware.bricklog.feature.collection.domain.model.CollectionId
 import hu.piware.bricklog.feature.collection.domain.model.CollectionSetDetails
-import hu.piware.bricklog.feature.collection.domain.model.containerColor
-import hu.piware.bricklog.feature.collection.domain.model.textColor
+import hu.piware.bricklog.feature.collection.presentation.components.CollectionItem
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
@@ -183,35 +179,12 @@ private fun ReorderableCollectionItemScope.CollectionSetDetailsItem(
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size),
         ) {
-            Row(
+            CollectionItem(
                 modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    modifier = Modifier.padding(end = Dimens.SmallPadding.size),
-                    imageVector = details.collection.collection.icon.outlinedIcon,
-                    contentDescription = null,
-                )
-                Column {
-                    Text(
-                        text = details.collection.collection.name,
-                    )
-                    if (showRoleAndOwner) {
-                        Text(
-                            text = details.collection.collection.owner,
-                            style = MaterialTheme.typography.labelSmall,
-                        )
-                    }
-                }
-            }
-            if (showRoleAndOwner) {
-                Badge(
-                    containerColor = details.collection.role.containerColor,
-                    contentColor = details.collection.role.textColor,
-                ) {
-                    Text(stringResource(details.collection.role.stringRes))
-                }
-            }
+                details = details.collection,
+                isSelected = false,
+                showRoleAndOwner = showRoleAndOwner,
+            )
             AnimatedVisibility(
                 modifier = Modifier
                     .fillMaxHeight()

@@ -25,7 +25,10 @@ class WatchSetDetailsById(
         val userIdFlow = sessionManager.userId
         val currencyDetailsFlow = watchCurrencyPreferenceDetails()
 
-        return combine(userIdFlow, currencyDetailsFlow) { userId, currencyDetails ->
+        return combine(
+            userIdFlow,
+            currencyDetailsFlow,
+        ) { userId, currencyDetails ->
             SetQueryOptions(
                 userId = userId,
                 setIds = listOf(setId),

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -139,6 +141,7 @@ fun PagedSetList(
                                     availableCollections = availableCollections,
                                     onCollectionToggle = onCollectionToggle,
                                     showRoleAndOwner = currentUser.isAuthenticated,
+                                    iconColor = Color.Black,
                                 )
                             },
                             imageSize = ImageSize.SMALL,
@@ -178,6 +181,7 @@ fun PagedSetList(
                                     availableCollections = availableCollections,
                                     onCollectionToggle = onCollectionToggle,
                                     showRoleAndOwner = currentUser.isAuthenticated,
+                                    iconColor = Color.Black,
                                 )
                             },
                         )
@@ -195,6 +199,7 @@ private fun CollectionActionButton(
     availableCollections: List<CollectionDetails>,
     onCollectionToggle: (SetDetails, CollectionId) -> Unit,
     showRoleAndOwner: Boolean,
+    iconColor: Color = LocalContentColor.current,
 ) {
     if (baseCollection != null) {
         IconButton(
@@ -204,6 +209,7 @@ private fun CollectionActionButton(
             Icon(
                 imageVector = Icons.Outlined.Remove,
                 contentDescription = null,
+                tint = iconColor,
             )
         }
     } else {
@@ -215,13 +221,14 @@ private fun CollectionActionButton(
             Icon(
                 imageVector = Icons.Outlined.Add,
                 contentDescription = null,
+                tint = iconColor,
             )
         }
 
         if (showCollectionBottomSheet) {
             CollectionToggleBottomSheet(
                 availableOptions = availableCollections,
-                selectedItems = setDetails.collections.map { it.collection.id },
+                selectedItems = setDetails.collections.map { it.id },
                 onToggleCollection = { onCollectionToggle(setDetails, it) },
                 onDismiss = { showCollectionBottomSheet = false },
                 showRoleAndOwner = showRoleAndOwner,

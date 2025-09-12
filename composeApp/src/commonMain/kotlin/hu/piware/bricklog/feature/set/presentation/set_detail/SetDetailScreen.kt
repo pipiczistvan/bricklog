@@ -170,7 +170,7 @@ private fun SetDetailScreen(
     if (showCollectionBottomSheet) {
         CollectionToggleBottomSheet(
             availableOptions = state.availableCollections,
-            selectedItems = state.setDetails.collections.map { it.collection.id },
+            selectedItems = state.setDetails.collections.map { it.id },
             onToggleCollection = { onAction(SetDetailAction.OnCollectionToggle(it)) },
             onDismiss = { showCollectionBottomSheet = false },
             showRoleAndOwner = state.user.isAuthenticated,

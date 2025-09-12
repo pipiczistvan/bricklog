@@ -76,6 +76,7 @@ class SetListViewModel(
         .asStateFlowIn(viewModelScope) {
             handleArguments(arguments)
 
+            observeCurrentUser()
             observeSetListDisplayMode()
             observeFilterPreferences()
             observeFilterDomain()
@@ -189,9 +190,14 @@ class SetListViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeCollectionById(id: CollectionId) {
+    private fun observeCurrentUser() {
         watchCurrentUser()
             .onEach { user -> _uiState.update { it.copy(user = user) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCollectionById(id: CollectionId) {
+        uiState.map { it.user }
             .flatMapLatest { user ->
                 watchCollectionDetailsById(id)
                     .onEach { collection ->
