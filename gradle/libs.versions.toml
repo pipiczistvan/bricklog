@@ -101,7 +101,8 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 korlibs-io = { module = "com.soywiz:korlibs-io", version.ref = "korlibsIo" }
 
-qrose = { module = "io.github.alexzhirkevich:qrose-oned", version.ref = "qrose" }
+qrose-qr = { module = "io.github.alexzhirkevich:qrose", version.ref = "qrose" }
+qrose-oned = { module = "io.github.alexzhirkevich:qrose-oned", version.ref = "qrose" }
 
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 

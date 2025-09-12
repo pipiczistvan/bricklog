@@ -12,8 +12,6 @@ import hu.piware.bricklog.feature.collection.presentation.collection_share_edit.
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.set.presentation.SetRoute
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListArguments
-import hu.piware.bricklog.feature.user.presentation.UserRoute
-import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditArguments
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -65,9 +63,6 @@ fun NavGraphBuilder.collectionGraph(navController: NavHostController) {
             CollectionShareEditScreenRoot(
                 onBackClick = {
                     navController.navigateUp()
-                },
-                onFriendEditClick = { friendId ->
-                    navController.navigate(UserRoute.FriendEditScreen(FriendEditArguments(friendId)))
                 },
             )
         }

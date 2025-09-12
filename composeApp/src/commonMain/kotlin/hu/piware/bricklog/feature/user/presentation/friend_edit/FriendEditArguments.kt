@@ -5,5 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FriendEditArguments(
-    val friendId: UserId?,
+    val isNew: Boolean,
+    val userId: UserId?,
+    val userName: String?,
 )

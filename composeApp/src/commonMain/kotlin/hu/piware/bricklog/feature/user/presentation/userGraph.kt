@@ -12,6 +12,7 @@ import hu.piware.bricklog.feature.user.presentation.friend_list.FriendListScreen
 import hu.piware.bricklog.feature.user.presentation.login.LoginScreenRoot
 import hu.piware.bricklog.feature.user.presentation.password_reset.PasswordResetScreenRoot
 import hu.piware.bricklog.feature.user.presentation.register.RegisterScreenRoot
+import hu.piware.bricklog.feature.user.presentation.user_scanner.UserScannerScreenRoot
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -38,6 +39,9 @@ sealed interface UserRoute {
     data class FriendEditScreen(
         val arguments: FriendEditArguments,
     ) : UserRoute
+
+    @Serializable
+    data object UserScannerScreen : UserRoute
 }
 
 fun NavGraphBuilder.authenticationGraph(navController: NavController) {
@@ -110,8 +114,19 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
         composable<UserRoute.FriendListScreen> {
             FriendListScreenRoot(
                 onBackClick = navController::navigateUp,
-                onFriendEditClick = { friendId ->
-                    navController.navigate(UserRoute.FriendEditScreen(FriendEditArguments(friendId)))
+                onFriendEditClick = { friend ->
+                    navController.navigate(
+                        UserRoute.FriendEditScreen(
+                            FriendEditArguments(
+                                isNew = friend == null,
+                                userId = friend?.id,
+                                userName = friend?.name,
+                            ),
+                        ),
+                    )
+                },
+                onUserScannerClick = {
+                    navController.navigate(UserRoute.UserScannerScreen)
                 },
             )
         }
@@ -121,7 +136,27 @@ fun NavGraphBuilder.authenticationGraph(navController: NavController) {
             ),
         ) {
             FriendEditScreenRoot(
+                onBackClick = {
+                    if (!navController.popBackStack(UserRoute.UserScannerScreen, true)) {
+                        navController.navigateUp()
+                    }
+                },
+            )
+        }
+        composable<UserRoute.UserScannerScreen> {
+            UserScannerScreenRoot(
                 onBackClick = navController::navigateUp,
+                onUserScanned = { userId, userName ->
+                    navController.navigate(
+                        UserRoute.FriendEditScreen(
+                            FriendEditArguments(
+                                isNew = true,
+                                userId = userId,
+                                userName = userName,
+                            ),
+                        ),
+                    )
+                },
             )
         }
     }

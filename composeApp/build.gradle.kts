@@ -89,7 +89,8 @@ kotlin {
 
             implementation(projects.thirdparty.androidx.paging.compose)
             implementation(projects.thirdparty.barcodeScanner)
-            implementation(libs.qrose)
+            implementation(libs.qrose.oned)
+            implementation(libs.qrose.qr)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)

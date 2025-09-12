@@ -2,13 +2,18 @@
 
 package hu.piware.bricklog.feature.user.presentation.details
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -31,9 +36,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_user_details_form_field_name_placeholder
@@ -47,9 +55,12 @@ import hu.piware.bricklog.feature.core.presentation.components.SupportingRow
 import hu.piware.bricklog.feature.core.presentation.observeAsEvents
 import hu.piware.bricklog.feature.set.domain.usecase.ValidateUserName
 import hu.piware.bricklog.feature.user.domain.model.User
+import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.model.isAuthenticated
 import hu.piware.bricklog.feature.user.presentation.details.components.UserDeleteConfirmDialog
 import hu.piware.bricklog.ui.theme.Dimens
+import hu.piware.bricklog.ui.theme.Shapes
+import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -159,6 +170,7 @@ private fun UserDetailsScreen(
             ) {
                 UserDetailsContent(
                     user = state.currentUser,
+                    userName = userName,
                 )
 
                 UserNameField(
@@ -185,10 +197,8 @@ private fun UserDetailsScreen(
 @Composable
 private fun UserDetailsContent(
     user: User,
+    userName: String,
 ) {
-    // Using deprecated manager because new clipboard API seems unfinished for KMP
-    val clipboardManager = LocalClipboardManager.current
-
     Card(
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -196,29 +206,20 @@ private fun UserDetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimens.MediumPadding.size),
+            verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding.size),
         ) {
             Text(
                 text = stringResource(Res.string.feature_user_details_label_uid),
                 style = MaterialTheme.typography.titleMedium,
             )
-            Row(
+            Box(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = user.uid,
+                UserIdQRCode(
+                    userId = user.uid,
+                    userName = userName,
                 )
-                IconButton(
-                    onClick = {
-                        clipboardManager.setText(buildAnnotatedString { append(user.uid) })
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ContentCopy,
-                        contentDescription = null,
-                    )
-                }
             }
         }
     }
@@ -249,6 +250,59 @@ private fun UserNameField(
             Text(
                 text = "${value.length}/${ValidateUserName.MAX_LENGTH}",
             )
+        }
+    }
+}
+
+@Composable
+fun UserIdQRCode(
+    userId: UserId,
+    userName: String,
+    modifier: Modifier = Modifier,
+) {
+    // Using deprecated manager because new clipboard API seems unfinished for KMP
+    val clipboardManager = LocalClipboardManager.current
+
+    Column(
+        modifier = modifier
+            .clip(Shapes.large)
+            .background(Color.White)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        val qrCodePainter = rememberQrCodePainter(
+            data = "$userId:$userName",
+        )
+
+        Image(
+            painter = qrCodePainter,
+            contentDescription = null,
+            modifier = Modifier
+                .widthIn(max = 250.dp)
+                .fillMaxWidth()
+                .heightIn(max = 100.dp),
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = userId,
+                color = Color.Black,
+            )
+            IconButton(
+                onClick = {
+                    clipboardManager.setText(buildAnnotatedString { append(userId) })
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ContentCopy,
+                    contentDescription = null,
+                    tint = Color.Black,
+                )
+            }
         }
     }
 }

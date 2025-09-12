@@ -4,12 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import hu.piware.bricklog.feature.core.domain.data
+import hu.piware.bricklog.feature.core.domain.onError
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
 import hu.piware.bricklog.feature.core.presentation.showSnackbarOnError
 import hu.piware.bricklog.feature.user.domain.model.Friend
-import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteFriends
 import hu.piware.bricklog.feature.user.domain.usecase.GetFriend
 import hu.piware.bricklog.feature.user.domain.usecase.SaveFriends
@@ -34,9 +35,12 @@ class FriendEditViewModel(
 
     private val _uiState = MutableStateFlow(FriendEditState())
     val uiState = _uiState.asStateFlowIn(viewModelScope) {
-        if (arguments.friendId != null) {
-            _uiState.update { it.copy(friendIdentifierArg = arguments.friendId) }
-            loadFriend(arguments.friendId)
+        _uiState.update {
+            it.copy(
+                friendIdentifierArg = arguments.userId ?: "",
+                friendNameArg = arguments.userName ?: "",
+                isNew = arguments.isNew,
+            )
         }
     }
 
@@ -46,20 +50,8 @@ class FriendEditViewModel(
     fun onAction(action: FriendEditAction) {
         when (action) {
             is FriendEditAction.OnFriendChange -> saveFriend(action.friend)
-            is FriendEditAction.OnFriendDelete -> deleteFriend(action.friend)
+            is FriendEditAction.OnFriendDelete -> deleteFriend()
             else -> Unit
-        }
-    }
-
-    private fun loadFriend(friendId: UserId) {
-        viewModelScope.launch {
-            getFriend(friendId)
-                .showSnackbarOnError()
-                .onSuccess { friend ->
-                    _uiState.value = _uiState.value.copy(
-                        friend = friend,
-                    )
-                }
         }
     }
 
@@ -73,8 +65,13 @@ class FriendEditViewModel(
         }
     }
 
-    private fun deleteFriend(friend: Friend) {
+    private fun deleteFriend() {
         viewModelScope.launch {
+            val friend = getFriend(_uiState.value.friendIdentifierArg)
+                .showSnackbarOnError()
+                .onError { return@launch }
+                .data() ?: return@launch
+
             deleteFriends(friend)
                 .showSnackbarOnError()
                 .onSuccess {

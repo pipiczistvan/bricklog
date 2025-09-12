@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,7 +31,6 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_user_friend_list_title
 import hu.piware.bricklog.feature.core.presentation.components.ContentColumn
 import hu.piware.bricklog.feature.user.domain.model.Friend
-import hu.piware.bricklog.feature.user.domain.model.UserId
 import hu.piware.bricklog.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,7 +39,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun FriendListScreenRoot(
     viewModel: FriendListViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onFriendEditClick: (UserId?) -> Unit,
+    onFriendEditClick: (Friend?) -> Unit,
+    onUserScannerClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -49,7 +50,8 @@ fun FriendListScreenRoot(
         onAction = { action ->
             when (action) {
                 FriendListAction.OnBackClick -> onBackClick()
-                is FriendListAction.OnFriendEditClick -> onFriendEditClick(action.friendId)
+                is FriendListAction.OnFriendEditClick -> onFriendEditClick(action.friend)
+                FriendListAction.OnUserScannerClick -> onUserScannerClick()
             }
         },
     )
@@ -75,6 +77,12 @@ private fun FriendListScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { onAction(FriendListAction.OnUserScannerClick) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.QrCodeScanner,
+                            contentDescription = null,
+                        )
+                    }
                     IconButton(onClick = { onAction(FriendListAction.OnFriendEditClick(null)) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
@@ -98,7 +106,7 @@ private fun FriendListScreen(
             state.friends.forEach { friend ->
                 FriendItem(
                     friend = friend,
-                    onEditClick = { onAction(FriendListAction.OnFriendEditClick(friend.id)) },
+                    onEditClick = { onAction(FriendListAction.OnFriendEditClick(friend)) },
                 )
             }
         }

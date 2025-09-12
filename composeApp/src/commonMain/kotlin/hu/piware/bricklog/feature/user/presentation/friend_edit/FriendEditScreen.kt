@@ -91,10 +91,8 @@ private fun FriendEditScreen(
         var friendIdentifier by rememberSaveable(state.friendIdentifierArg) {
             mutableStateOf(state.friendIdentifierArg)
         }
-        var friendName by rememberSaveable(state.friend) {
-            mutableStateOf(
-                state.friend?.name ?: "",
-            )
+        var friendName by rememberSaveable(state.friendNameArg) {
+            mutableStateOf(state.friendNameArg)
         }
 
         Scaffold(
@@ -131,11 +129,9 @@ private fun FriendEditScreen(
                         }
                         IconButton(
                             onClick = {
-                                val friend = state.friend ?: emptyFriend()
-
                                 onAction(
                                     FriendEditAction.OnFriendChange(
-                                        friend.copy(
+                                        Friend(
                                             name = friendName,
                                             id = friendIdentifier,
                                         ),
@@ -180,7 +176,7 @@ private fun FriendEditScreen(
             FriendDeleteConfirmDialog(
                 onConfirmation = {
                     showDeleteConfirmDialog = false
-                    onAction(FriendEditAction.OnFriendDelete(state.friend!!))
+                    onAction(FriendEditAction.OnFriendDelete)
                 },
                 onDismiss = {
                     showDeleteConfirmDialog = false
@@ -235,9 +231,3 @@ private fun NameField(
         )
     }
 }
-
-private fun emptyFriend() =
-    Friend(
-        name = "",
-        id = "",
-    )

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -71,7 +70,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CollectionShareEditScreenRoot(
     viewModel: CollectionShareEditViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onFriendEditClick: (UserId) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     observeAsEvents(viewModel.eventChannel) { event ->
@@ -87,7 +85,6 @@ fun CollectionShareEditScreenRoot(
         onAction = { action ->
             when (action) {
                 CollectionShareEditAction.OnBackClick -> onBackClick()
-                is CollectionShareEditAction.OnFriendEditClick -> onFriendEditClick(action.friendId)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -184,7 +181,6 @@ private fun CollectionShareEditScreen(
                     onValueChange = { userIdentifier = it },
                     friends = state.friends,
                     enabled = state.isNew,
-                    onFriendEditClick = { onAction(CollectionShareEditAction.OnFriendEditClick(it)) },
                 )
 
                 WriteAccessCheckbox(
@@ -212,7 +208,6 @@ private fun CollectionShareEditScreen(
 private fun UserIdentifierField(
     value: String,
     onValueChange: (String) -> Unit,
-    onFriendEditClick: (UserId) -> Unit,
     friends: List<Friend>,
     enabled: Boolean,
 ) {
@@ -235,16 +230,6 @@ private fun UserIdentifierField(
             label = {
                 if (selectedFriend != null) {
                     Text(selectedFriend.name)
-                }
-            },
-            trailingIcon = {
-                if (selectedFriend == null) {
-                    IconButton(onClick = { onFriendEditClick(value) }) {
-                        Icon(
-                            imageVector = Icons.Outlined.PersonAdd,
-                            contentDescription = null,
-                        )
-                    }
                 }
             },
         )

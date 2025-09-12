@@ -105,9 +105,7 @@ private fun SetScannerScreen(
     ) {
         BarcodeScannerWithPermission(
             permissionsController = koinInject<PermissionsController>(),
-            onScanResult = { results ->
-                onAction(SetScannerAction.OnBarcodeDetected(results))
-            },
+            onScanResult = { onAction(SetScannerAction.OnBarcodeDetected(it)) },
             formats = supportedBarcodeFormats,
         )
 
