@@ -7,12 +7,14 @@ sealed interface DataError : Error {
         NO_INTERNET,
         SERVER,
         SERIALIZATION,
+        FIREBASE,
         UNKNOWN,
     }
 
     enum class Local : DataError {
         DISK_FULL,
         BUSY,
+        PROTECTED,
         UNKNOWN,
     }
 }

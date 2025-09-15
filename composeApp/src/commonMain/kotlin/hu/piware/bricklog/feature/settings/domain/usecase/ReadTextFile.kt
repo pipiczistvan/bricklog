@@ -3,6 +3,7 @@
 package hu.piware.bricklog.feature.settings.domain.usecase
 
 import bricklog.composeapp.generated.resources.Res
+import co.touchlab.kermit.Logger
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.Result
 import kotlinx.coroutines.Dispatchers
@@ -14,12 +15,15 @@ import org.koin.core.annotation.Single
 @Single
 class ReadTextFile {
 
+    private val logger = Logger.withTag("ReadTextFile")
+
     suspend operator fun invoke(path: String): Result<String, DataError.Local> =
         withContext(Dispatchers.IO) {
             try {
                 val license = Res.readBytes(path).decodeToString()
                 Result.Success(license)
             } catch (e: Exception) {
+                logger.e(e) { "Error reading text file" }
                 Result.Error(DataError.Local.UNKNOWN)
             }
         }

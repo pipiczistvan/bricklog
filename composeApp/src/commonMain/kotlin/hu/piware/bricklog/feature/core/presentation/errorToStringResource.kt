@@ -6,8 +6,10 @@ import bricklog.composeapp.generated.resources.error_disk_full
 import bricklog.composeapp.generated.resources.error_field_blank
 import bricklog.composeapp.generated.resources.error_field_too_long
 import bricklog.composeapp.generated.resources.error_field_too_short
+import bricklog.composeapp.generated.resources.error_firebase
 import bricklog.composeapp.generated.resources.error_invalid_credentials
 import bricklog.composeapp.generated.resources.error_no_internet
+import bricklog.composeapp.generated.resources.error_protected
 import bricklog.composeapp.generated.resources.error_reauthentication_required
 import bricklog.composeapp.generated.resources.error_request_timeout
 import bricklog.composeapp.generated.resources.error_serialization
@@ -31,12 +33,14 @@ private fun toUiText(error: DataError): UiText {
     val stringRes = when (error) {
         DataError.Local.DISK_FULL -> Res.string.error_disk_full
         DataError.Local.BUSY -> Res.string.error_busy
+        DataError.Local.PROTECTED -> Res.string.error_protected
         DataError.Local.UNKNOWN -> Res.string.error_unknown
         DataError.Remote.REQUEST_TIMEOUT -> Res.string.error_request_timeout
         DataError.Remote.TOO_MANY_REQUESTS -> Res.string.error_too_many_requests
         DataError.Remote.NO_INTERNET -> Res.string.error_no_internet
         DataError.Remote.SERVER -> Res.string.error_unknown
         DataError.Remote.SERIALIZATION -> Res.string.error_serialization
+        DataError.Remote.FIREBASE -> Res.string.error_firebase
         DataError.Remote.UNKNOWN -> Res.string.error_unknown
     }
 

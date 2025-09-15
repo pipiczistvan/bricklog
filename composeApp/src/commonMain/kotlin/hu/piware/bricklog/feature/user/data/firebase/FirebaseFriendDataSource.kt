@@ -68,6 +68,9 @@ class FirebaseFriendDataSource : RemoteFriendDataSource {
             }
 
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while saving friends" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while saving friends" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -94,6 +97,9 @@ class FirebaseFriendDataSource : RemoteFriendDataSource {
             }
 
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while deleting friends" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting friends" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -117,6 +123,9 @@ class FirebaseFriendDataSource : RemoteFriendDataSource {
             }
 
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while deleting user friends" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting user friends" }
             Result.Error(DataError.Remote.UNKNOWN)

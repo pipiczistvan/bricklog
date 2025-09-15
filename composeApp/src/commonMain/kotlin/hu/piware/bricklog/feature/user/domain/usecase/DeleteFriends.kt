@@ -20,7 +20,7 @@ class DeleteFriends(
         userId: UserId = sessionManager.currentUserId,
     ): EmptyResult<DataError> {
         if (friends.any { it.isNew }) {
-            return Result.Error(DataError.Local.UNKNOWN)
+            return Result.Error(DataError.Local.PROTECTED)
         }
 
         val friendIds = friends.map { it.id }

@@ -90,6 +90,12 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Collection saved successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while saving collection" }
+            Result.Error(DataError.Remote.FIREBASE)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while saving collection" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while saving collection" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -114,6 +120,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Collection deleted successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while deleting collection" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting collection" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -137,6 +146,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
             }
             logger.d { "User collections deleted successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while deleting user collections" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting user collections" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -166,6 +178,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Set added to collections successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while adding set to collections" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while adding set to collections" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -195,6 +210,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Set removed from collections successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while removing set from collections" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while removing set from collections" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -218,6 +236,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Collection shared successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while sharing collection" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while sharing collection" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -241,6 +262,9 @@ class FirebaseCollectionDataSource : RemoteCollectionDataSource {
 
             logger.d { "Collection unshared successfully" }
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while unsharing collection" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while unsharing collection" }
             Result.Error(DataError.Remote.UNKNOWN)

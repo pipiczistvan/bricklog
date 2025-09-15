@@ -27,7 +27,7 @@ class DeleteCollections(
         userId: UserId = sessionManager.currentUserId,
     ): EmptyResult<DataError> {
         if (collections.any { it.isNew || DefaultCollections.entries.any { default -> it.type == default.type } }) {
-            return Result.Error(DataError.Local.UNKNOWN)
+            return Result.Error(DataError.Local.PROTECTED)
         }
 
         val collectionIds = collections.map { it.id }

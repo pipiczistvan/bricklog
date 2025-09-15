@@ -2,6 +2,7 @@ package hu.piware.bricklog.feature.user.data.firebase
 
 import co.touchlab.kermit.Logger
 import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import dev.gitlive.firebase.firestore.firestore
 import hu.piware.bricklog.feature.core.domain.DataError
 import hu.piware.bricklog.feature.core.domain.EmptyResult
@@ -47,6 +48,9 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
                 )
 
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while saving user preferences" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while saving user preferences" }
             Result.Error(DataError.Remote.UNKNOWN)
@@ -60,6 +64,9 @@ class FirebaseUserPreferencesDataSource : RemoteUserPreferencesDataSource {
                 .delete()
 
             Result.Success(Unit)
+        } catch (e: FirebaseFirestoreException) {
+            logger.e(e) { "A Firebase error occurred while deleting user preferences" }
+            Result.Error(DataError.Remote.FIREBASE)
         } catch (e: Exception) {
             logger.e(e) { "An error occurred while deleting user preferences" }
             Result.Error(DataError.Remote.UNKNOWN)
