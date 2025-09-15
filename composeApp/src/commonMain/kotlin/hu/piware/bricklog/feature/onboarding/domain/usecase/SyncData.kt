@@ -71,7 +71,7 @@ class SyncData(
 }
 
 private fun Set?.createAppearanceDateFilter() = DateFilter.Custom(
-    startDate = this
+    startDateMs = this
         ?.infoCompleteDate
         ?.toEpochMilliseconds()
         ?.plus(1),

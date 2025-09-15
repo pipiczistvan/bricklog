@@ -16,8 +16,8 @@ import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetai
 import hu.piware.bricklog.feature.collection.domain.usecase.WatchCollectionDetailsById
 import hu.piware.bricklog.feature.core.domain.onSuccess
 import hu.piware.bricklog.feature.core.presentation.SnackbarAction
-import hu.piware.bricklog.feature.core.presentation.SnackbarController
 import hu.piware.bricklog.feature.core.presentation.SnackbarEvent
+import hu.piware.bricklog.feature.core.presentation.SnackbarEventController
 import hu.piware.bricklog.feature.core.presentation.UiText
 import hu.piware.bricklog.feature.core.presentation.asStateFlowIn
 import hu.piware.bricklog.feature.core.presentation.navigation.CustomNavType
@@ -117,7 +117,7 @@ class SetListViewModel(
                     val setWasRemoved = !added
 
                     if (isCollectionSetList && setWasRemoved) {
-                        SnackbarController.sendEvent(
+                        SnackbarEventController.sendEvent(
                             SnackbarEvent(
                                 message = UiText.StringResourceId(
                                     Res.string.feature_collection_toggle_message_removed,

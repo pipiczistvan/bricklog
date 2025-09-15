@@ -10,7 +10,7 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnError(
     action: (E) -> SnackbarAction? = { null },
 ): Result<T, E> {
     return onError { result ->
-        SnackbarController.sendEvent(
+        SnackbarEventController.sendEvent(
             SnackbarEvent(
                 message = result.error.toUiText(),
                 action = action(result.error),
@@ -24,7 +24,7 @@ suspend fun <T, E : Error> Result<T, E>.showSnackbarOnSuccess(
     action: (T) -> SnackbarAction? = { null },
 ): Result<T, E> {
     return onSuccess { result ->
-        SnackbarController.sendEvent(
+        SnackbarEventController.sendEvent(
             SnackbarEvent(
                 message = UiText.StringResourceId(res),
                 action = action(result),

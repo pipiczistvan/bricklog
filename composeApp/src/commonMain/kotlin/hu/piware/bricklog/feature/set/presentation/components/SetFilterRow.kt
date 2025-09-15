@@ -197,7 +197,13 @@ private fun ReleaseDateChip(
 }
 
 private fun DateFilter.Custom.format(): String {
-    return "${startDate?.let { formatDate(it.toLocalDateTime()) }} - ${endDate?.let { formatDate(it.toLocalDateTime()) }}"
+    return "${startDateMs?.let { formatDate(it.toLocalDateTime()) }} - ${
+        endDateMs?.let {
+            formatDate(
+                it.toLocalDateTime()
+            )
+        }
+    }"
 }
 
 @Composable

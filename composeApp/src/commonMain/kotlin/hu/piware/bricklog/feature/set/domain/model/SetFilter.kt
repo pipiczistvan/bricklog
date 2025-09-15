@@ -91,7 +91,7 @@ sealed class DateFilter(
     data object OneYear : DateFilter(DateFilterOption.ONE_YEAR)
 
     @Serializable
-    data class Custom(val startDate: Long? = null, val endDate: Long? = null) :
+    data class Custom(val startDateMs: Long? = null, val endDateMs: Long? = null) :
         DateFilter(DateFilterOption.CUSTOM)
 }
 

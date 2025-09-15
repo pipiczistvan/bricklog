@@ -70,8 +70,8 @@ fun DateFilterBottomSheet(
             else -> null
         }
         val dateRangePickerState = rememberDateRangePickerState(
-            customDateRangeFilter?.startDate,
-            customDateRangeFilter?.endDate,
+            customDateRangeFilter?.startDateMs,
+            customDateRangeFilter?.endDateMs,
         )
 
         DateRangePickerModalDialog(

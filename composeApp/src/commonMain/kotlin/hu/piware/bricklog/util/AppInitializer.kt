@@ -10,8 +10,8 @@ import com.mmk.kmpnotifier.notification.PayloadData
 import hu.piware.bricklog.BuildKonfig
 import hu.piware.bricklog.di.initKoin
 import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
-import hu.piware.bricklog.feature.core.NotificationController
-import hu.piware.bricklog.feature.core.NotificationEvent
+import hu.piware.bricklog.feature.core.domain.AppEvent
+import hu.piware.bricklog.feature.core.presentation.AppEventController
 import hu.piware.bricklog.feature.onboarding.domain.background_task.SyncDataPeriodicBackgroundTaskScheduler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -27,7 +27,11 @@ object AppInitializer : KoinComponent {
         GoogleAuthProvider.create(credentials = GoogleAuthCredentials(serverId = BuildKonfig.GOOGLE_AUTH_WEB_CLIENT_ID))
 
         initKoin(config)
+        initializeNotificationManager()
+        scheduleSyncDataBackgroundTask()
+    }
 
+    private fun initializeNotificationManager() {
         NotifierManager.addListener(object : NotifierManager.Listener {
             override fun onNewToken(token: String) {
                 logger.d("FirebaseOnNewToken: $token")
@@ -36,18 +40,14 @@ object AppInitializer : KoinComponent {
             override fun onNotificationClicked(data: PayloadData) {
                 super.onNotificationClicked(data)
 
-                GlobalScope.launch {
-                    NotificationController.sendEvent(data.toNotificationEvent())
-                    logger.d { "Notification event sent" }
+                data.toAppEvent()?.let {
+                    GlobalScope.launch {
+                        AppEventController.sendEvent(it)
+                        logger.d { "Notification event sent" }
+                    }
                 }
             }
         })
-
-        scheduleSyncDataBackgroundTask()
-    }
-
-    fun shouldInitializeFirebase(): Boolean {
-        return BuildKonfig.DEV_LEVEL < DevLevels.MOCK
     }
 
     private fun scheduleSyncDataBackgroundTask() {
@@ -56,16 +56,10 @@ object AppInitializer : KoinComponent {
     }
 }
 
-private fun PayloadData.toNotificationEvent(): NotificationEvent {
+private fun PayloadData.toAppEvent(): AppEvent? {
     if (this["type"] == NOTIFICATION_EVENT_NEW_SETS) {
-        val minAppearanceDate = (this["minAppearanceDate"] as? String)?.toLong()
-
-        if (minAppearanceDate != null) {
-            return NotificationEvent.NewSets(
-                startDate = minAppearanceDate,
-            )
-        }
+        return (this["minAppearanceDateMs"] as? String)?.toLong()?.let { AppEvent.ShowNewSets(it) }
     }
 
-    return NotificationEvent.Empty
+    return null
 }

@@ -1,8 +1,8 @@
 package hu.piware.bricklog.feature.set.domain.usecase
 
 import co.touchlab.kermit.Logger
-import com.mmk.kmpnotifier.notification.NotifierManager
-import hu.piware.bricklog.feature.core.NOTIFICATION_EVENT_NEW_SETS
+import hu.piware.bricklog.feature.core.NotificationEvent
+import hu.piware.bricklog.feature.core.NotificationEventController
 import hu.piware.bricklog.feature.set.domain.model.SetDetails
 import hu.piware.bricklog.feature.settings.domain.model.NotificationPreferences
 import hu.piware.bricklog.feature.settings.domain.repository.SettingsRepository
@@ -23,15 +23,14 @@ class SendNewSetNotification(
         logger.i { "Read notification preferences" }
         if (newSets.isNotEmpty() && notificationPreferences.newSets) {
             logger.i { "Sending notifications" }
-            NotifierManager.getLocalNotifier().notify {
-                title = "New items"
-                body = newSets.buildNotificationMessage()
-                payloadData = mapOf(
-                    "type" to NOTIFICATION_EVENT_NEW_SETS,
-                    "minAppearanceDate" to newSets.minOf { it.set.infoCompleteDate!! }
-                        .toEpochMilliseconds().toString(),
-                )
-            }
+
+            val firstAppearanceDate = newSets.minOf { it.set.infoCompleteDate!! }
+            NotificationEventController.sendEvent(
+                NotificationEvent.NewSets(
+                    message = newSets.buildNotificationMessage(),
+                    firstAppearanceDateMs = firstAppearanceDate.toEpochMilliseconds(),
+                ),
+            )
         }
     }
 }

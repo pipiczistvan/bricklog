@@ -84,8 +84,8 @@ private fun buildDateFilterSelect(
         DateFilter.OneMonth -> Pair(now - 30.days, now)
         DateFilter.OneYear -> Pair(now - 365.days, now)
         is DateFilter.Custom -> Pair(
-            instantConverter.toInstant(dateFilter.startDate),
-            instantConverter.toInstant(dateFilter.endDate),
+            instantConverter.toInstant(dateFilter.startDateMs),
+            instantConverter.toInstant(dateFilter.endDateMs),
         )
     }
 
