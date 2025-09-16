@@ -200,7 +200,7 @@ private fun DateFilter.Custom.format(): String {
     return "${startDateMs?.let { formatDate(it.toLocalDateTime()) }} - ${
         endDateMs?.let {
             formatDate(
-                it.toLocalDateTime()
+                it.toLocalDateTime(),
             )
         }
     }"
