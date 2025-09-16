@@ -9,9 +9,6 @@ import hu.piware.bricklog.feature.user.presentation.details.UserDetailsScreenRoo
 import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditArguments
 import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditScreenRoot
 import hu.piware.bricklog.feature.user.presentation.friend_list.FriendListScreenRoot
-import hu.piware.bricklog.feature.user.presentation.login.LoginScreenRoot
-import hu.piware.bricklog.feature.user.presentation.password_reset.PasswordResetScreenRoot
-import hu.piware.bricklog.feature.user.presentation.register.RegisterScreenRoot
 import hu.piware.bricklog.feature.user.presentation.user_scanner.UserScannerScreenRoot
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
@@ -19,15 +16,6 @@ import kotlin.reflect.typeOf
 sealed interface UserRoute {
     @Serializable
     data object Graph : UserRoute
-
-    @Serializable
-    data object LoginScreen : UserRoute
-
-    @Serializable
-    data object RegisterScreen : UserRoute
-
-    @Serializable
-    data object PasswordResetScreen : UserRoute
 
     @Serializable
     data object UserDetailsScreen : UserRoute
@@ -44,65 +32,15 @@ sealed interface UserRoute {
     data object UserScannerScreen : UserRoute
 }
 
-fun NavGraphBuilder.authenticationGraph(navController: NavController) {
+fun NavGraphBuilder.userGraph(navController: NavController) {
     navigation<UserRoute.Graph>(
-        startDestination = UserRoute.LoginScreen,
+        startDestination = UserRoute.UserDetailsScreen,
     ) {
-        composable<UserRoute.LoginScreen> {
-            LoginScreenRoot(
-                onRegisterClick = {
-                    navController.navigate(UserRoute.RegisterScreen) {
-                        launchSingleTop = true
-                        popUpTo<UserRoute.RegisterScreen> {
-                            inclusive = true
-                        }
-                    }
-                },
-                onPasswordResetClick = {
-                    navController.navigate(UserRoute.PasswordResetScreen) {
-                        launchSingleTop = true
-                    }
-                },
-                onUserLoggedIn = {
-                    navController.popBackStack<UserRoute.Graph>(inclusive = true)
-                },
-                onBackClick = navController::navigateUp,
-            )
-        }
-        composable<UserRoute.RegisterScreen> {
-            RegisterScreenRoot(
-                onLoginClick = {
-                    navController.navigate(UserRoute.LoginScreen) {
-                        launchSingleTop = true
-                        popUpTo<UserRoute.LoginScreen> {
-                            inclusive = true
-                        }
-                    }
-                },
-                onUserRegistered = {
-                    navController.popBackStack<UserRoute.Graph>(inclusive = true)
-                },
-                onBackClick = navController::navigateUp,
-            )
-        }
-        composable<UserRoute.PasswordResetScreen> {
-            PasswordResetScreenRoot(
-                onEmailSent = {
-                    navController.navigate(UserRoute.LoginScreen) {
-                        launchSingleTop = true
-                        popUpTo<UserRoute.LoginScreen> {
-                            inclusive = true
-                        }
-                    }
-                },
-                onBackClick = navController::navigateUp,
-            )
-        }
         composable<UserRoute.UserDetailsScreen> {
             UserDetailsScreenRoot(
                 onBackClick = navController::navigateUp,
-                onLoginClick = {
-                    navController.navigate(UserRoute.LoginScreen) {
+                onLoginRequired = {
+                    navController.navigate(AuthenticationRoute.LoginScreen) {
                         launchSingleTop = true
                     }
                 },

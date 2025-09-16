@@ -69,14 +69,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun UserDetailsScreenRoot(
     viewModel: UserDetailsViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
+    onLoginRequired: () -> Unit,
     onUserDeleted: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     observeAsEvents(viewModel.eventChannel) { event ->
         when (event) {
             UserDetailsEvent.Back -> onBackClick()
-            UserDetailsEvent.LoginProposed -> onLoginClick()
+            UserDetailsEvent.LoginRequired -> onLoginRequired()
             UserDetailsEvent.UserDeleted -> onUserDeleted()
         }
     }

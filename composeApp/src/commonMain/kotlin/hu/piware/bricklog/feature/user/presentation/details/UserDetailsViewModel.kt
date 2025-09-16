@@ -70,7 +70,7 @@ class UserDetailsViewModel(
                                 name = UiText.StringResourceId(Res.string.feature_user_delete_user_data_action_reauthenticate),
                                 action = {
                                     viewModelScope.launch {
-                                        _eventChannel.send(UserDetailsEvent.LoginProposed)
+                                        _eventChannel.send(UserDetailsEvent.LoginRequired)
                                     }
                                 },
                             )
