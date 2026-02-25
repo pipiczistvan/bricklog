@@ -1,6 +1,48 @@
 {
   "releases": [
     {
+      "version": "1.4.0",
+      "build": 26022501,
+      "changes": [
+        {
+          "description": "Display estimated RRP in preferred currency on set details and list items",
+          "type": "feat"
+        },
+        {
+          "description": "Refactor default collection initialization due to iOS errors and fix notification permission crash",
+          "type": "fix"
+        },
+        {
+          "description": "Implement price filter and sorting",
+          "type": "feat"
+        },
+        {
+          "description": "Implement price categories and update set query options",
+          "type": "feat"
+        },
+        {
+          "description": "Display data sync info on About screen",
+          "type": "feat"
+        },
+        {
+          "description": "Implement friend list and improve collection sharing",
+          "type": "feat"
+        },
+        {
+          "description": "Implement user QR code scanner and display",
+          "type": "feat"
+        },
+        {
+          "description": "Improve error messages",
+          "type": "refactor"
+        },
+        {
+          "description": "Handle notifications in app if in foreground",
+          "type": "refactor"
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "build": 25073001,
       "changes": [
