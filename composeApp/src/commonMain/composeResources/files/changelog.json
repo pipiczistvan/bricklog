@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "1.4.1",
+      "build": 26022601,
+      "changes": [
+        {
+          "description": "Change update labels",
+          "type": "refactor"
+        },
+        {
+          "description": "Disable user authentication and data sync",
+          "type": "refactor"
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "build": 26022501,
       "changes": [
