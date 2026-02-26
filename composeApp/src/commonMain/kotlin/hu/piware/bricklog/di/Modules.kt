@@ -9,9 +9,11 @@ import hu.piware.bricklog.feature.core.data.network.HttpClientFactory
 import hu.piware.bricklog.feature.set.presentation.set_detail.SetDetailViewModel
 import hu.piware.bricklog.feature.set.presentation.set_image.SetImageViewModel
 import hu.piware.bricklog.feature.set.presentation.set_list.SetListViewModel
+import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserDataSource
 import hu.piware.bricklog.feature.user.domain.usecase.DeleteUserData
 import hu.piware.bricklog.feature.user.domain.usecase.LogOutUser
 import hu.piware.bricklog.feature.user.presentation.friend_edit.FriendEditViewModel
+import hu.piware.bricklog.mock.GuestOnlyUserDataSource
 import io.ktor.client.engine.HttpClientEngine
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -78,6 +80,9 @@ class DataModule {
     fun preferencesDatastore(
         @Provided factory: DatastoreFactory,
     ) = factory.create()
+
+    @Single
+    fun guestOnlyUserDataSource(): RemoteUserDataSource = GuestOnlyUserDataSource()
 }
 
 @Module

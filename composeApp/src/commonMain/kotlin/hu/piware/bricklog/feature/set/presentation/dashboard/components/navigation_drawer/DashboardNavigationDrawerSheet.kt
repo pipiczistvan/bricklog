@@ -19,8 +19,6 @@ import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -55,8 +53,6 @@ import bricklog.composeapp.generated.resources.Res
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_about
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_appearance
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_friend_list
-import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_login
-import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_logout
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_notification_settings
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_btn_reset_sets
 import bricklog.composeapp.generated.resources.feature_set_dashboard_navigation_drawer_label_set_update_info
@@ -134,19 +130,19 @@ private fun SettingsSection(
 ) {
     NavigationSection {
         val isLoggedIn = currentUser.isAuthenticated
-        NavigationSectionButton(
-            modifier = Modifier.testTag("navigation_drawer:login_btn"),
-            state = drawerState,
-            title = if (isLoggedIn) {
-                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_logout)
-            } else {
-                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login)
-            },
-            onClick = {
-                onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick)
-            },
-            icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
-        )
+//        NavigationSectionButton(
+//            modifier = Modifier.testTag("navigation_drawer:login_btn"),
+//            state = drawerState,
+//            title = if (isLoggedIn) {
+//                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_logout)
+//            } else {
+//                stringResource(Res.string.feature_set_dashboard_navigation_drawer_btn_login)
+//            },
+//            onClick = {
+//                onAction(if (isLoggedIn) DashboardNavigationDrawerAction.OnLogoutClick else DashboardNavigationDrawerAction.OnLoginClick)
+//            },
+//            icon = if (!isLoggedIn) Icons.Outlined.Person else Icons.Outlined.PersonOff,
+//        )
         if (isLoggedIn) {
             NavigationSectionButton(
                 modifier = Modifier.testTag("navigation_drawer:friend_list_btn"),

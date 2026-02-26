@@ -17,9 +17,8 @@ import hu.piware.bricklog.feature.user.domain.datasource.RemoteUserDataSource
 import hu.piware.bricklog.feature.user.domain.model.AuthenticationMethod
 import hu.piware.bricklog.feature.user.domain.model.User
 import kotlinx.coroutines.CancellationException
-import org.koin.core.annotation.Single
 
-@Single
+//@Single
 class FirebaseUserDataSource : RemoteUserDataSource {
 
     private val logger = Logger.withTag("FirebaseUserDataSource")
