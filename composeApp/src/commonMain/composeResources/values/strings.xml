@@ -47,12 +47,12 @@
     <string name="feature_collection_toggle_message_removed">%1$s was removed from %2$s.</string>
     <string name="feature_collection_toggle_message_undo">Undo</string>
     <string name="feature_core_dialog_btn_cancel">OK</string>
-    <string name="feature_core_update_data_step_download_file">Downloading file</string>
+    <string name="feature_core_update_data_step_download_file">Downloading dataset segment</string>
     <string name="feature_core_update_data_step_parse_items">Parsing items</string>
-    <string name="feature_core_update_data_step_prepare_export_info">Preparing export info</string>
+    <string name="feature_core_update_data_step_prepare_export_info">Preparing dataset info</string>
     <string name="feature_core_update_data_step_save_update_info">Saving update information</string>
     <string name="feature_core_update_data_step_store_items">Storing items</string>
-    <string name="feature_core_update_data_step_uncompress_file">Uncompressing file</string>
+    <string name="feature_core_update_data_step_uncompress_file">Preprocessing dataset segment</string>
     <string name="feature_currency_region_name_eu">Europe</string>
     <string name="feature_currency_region_name_us">United States</string>
     <string name="feature_set_dashboard_btn_show_themes">Show all themes</string>
